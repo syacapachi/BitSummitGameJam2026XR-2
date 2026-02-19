@@ -1008,7 +1008,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   playerRootTransform: {fileID: 2977821444102550308}
   charactorRigidbody: {fileID: 7474965305199655511}
-  bombPrefab: {fileID: 0}
+  bombPrefab: {fileID: 1644059155779339719, guid: 7f1f45b44fc138e4285f9b3d5c2577c5, type: 3}
   animator: {fileID: 458400088118680365}
   networkAnimator: {fileID: 3045048266575453708}
   jumpForce: 5
@@ -3587,8 +3587,6 @@ GameObject:
   - component: {fileID: 542549105770932128}
   - component: {fileID: 458400088118680365}
   - component: {fileID: 3045048266575453708}
-  - component: {fileID: 4583488852614937918}
-  - component: {fileID: 509018669341990232}
   - component: {fileID: 812784851703488863}
   - component: {fileID: 2927620275465168496}
   m_Layer: 0
@@ -3744,7 +3742,7 @@ Animator:
   m_GameObject: {fileID: 4463208289577428301}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
-  m_Controller: {fileID: 9100000, guid: 212b3a957fa7bee41a0bf8c3b14ce293, type: 2}
+  m_Controller: {fileID: 9100000, guid: 8d5a0e0d58f4e4176a844a1a03976c19, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3775,62 +3773,31 @@ MonoBehaviour:
   TransitionStateInfoList: []
   AnimatorParameterEntries:
     ParameterEntries:
-    - name: Next
-      NameHash: -1541554430
+    - name: Speed
+      NameHash: -823668238
+      Synchronize: 1
+      ParameterType: 1
+    - name: Direction
+      NameHash: -1128574192
+      Synchronize: 1
+      ParameterType: 1
+    - name: Jump
+      NameHash: 125937960
       Synchronize: 1
       ParameterType: 4
-    - name: Back
-      NameHash: -839094775
+    - name: Rest
+      NameHash: 1562808046
       Synchronize: 1
       ParameterType: 4
+    - name: JumpHeight
+      NameHash: 881024350
+      Synchronize: 1
+      ParameterType: 1
+    - name: GravityControl
+      NameHash: 112175263
+      Synchronize: 1
+      ParameterType: 1
   AnimatorParametersExpanded: 0
---- !u!114 &4583488852614937918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4463208289577428301}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 058a2736f2afd564eae55007a87eed87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _random: 0
-  _threshold: 0.5
-  _interval: 10
---- !u!114 &509018669341990232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4463208289577428301}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e658bfc1e524494b9e54a1c92d8c1e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animations:
-  - {fileID: 7400000, guid: 6394472d24c9347e5bb789ec1f15e5bb, type: 2}
-  - {fileID: 7400000, guid: 06b76ba9895174fc19d91c361e7c911b, type: 2}
-  - {fileID: 7400000, guid: 901d9b98ec9a64ade8f264b6e32c1341, type: 2}
-  - {fileID: 7400000, guid: 2d64a878e09fc46ce9d3079357ebb3a5, type: 2}
-  - {fileID: 7400000, guid: ff0ec808b24b748e482e13ebfc9305ad, type: 2}
-  - {fileID: 7400000, guid: 689da6f371ad8441395f39acaf2c7ae3, type: 2}
-  - {fileID: 7400000, guid: 66c6a39c175f346f6b2e3016fa5ae35b, type: 2}
-  - {fileID: 7400000, guid: fc07439899bf64b59b05471e3d59be6a, type: 2}
-  - {fileID: 7400000, guid: 4f32f4345ffde43aca2270c41dcf6e81, type: 2}
-  - {fileID: 7400000, guid: 73cb3ae8fc1de47a0a307cb5f95ec701, type: 2}
-  - {fileID: 7400000, guid: 3555863ff4ef948e298b8d11ea795ec4, type: 2}
-  - {fileID: 7400000, guid: a20620e3db1a64f2f9a3e3339b884479, type: 2}
-  - {fileID: 7400000, guid: aaf4f40e5f852472f9eb781bef3a2c17, type: 2}
-  - {fileID: 7400000, guid: 5da03c4c995e34f35a8c17702e9d6012, type: 2}
-  - {fileID: 7400000, guid: 69a5af149623d4592b3764b7cb6a7482, type: 2}
-  - {fileID: 7400000, guid: 63e3bd86527074923b9dc38ddb715245, type: 2}
-  - {fileID: 7400000, guid: 8564dc45968774e70ad835503fda627e, type: 2}
-  delayWeight: 0.3
-  isKeepFace: 0
 --- !u!114 &812784851703488863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4510,6 +4477,7 @@ GameObject:
   - component: {fileID: 1200941030132683328}
   - component: {fileID: 9048396871517692906}
   - component: {fileID: 251496687654785873}
+  - component: {fileID: 3192781613288896778}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -4627,6 +4595,14 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!81 &3192781613288896778
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5162937181801436709}
+  m_Enabled: 1
 --- !u!1 &5177950553705432007
 GameObject:
   m_ObjectHideFlags: 0
