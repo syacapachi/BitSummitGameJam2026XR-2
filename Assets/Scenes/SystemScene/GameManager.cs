@@ -16,6 +16,12 @@ public class GameManager : MonoBehaviour
     float timer;
     int lastSeconds;
 
+    public EnemySpawner spawner; // Inspectorでセット
+
+    public static GameManager Instance;
+
+    private int score = 0;
+
     void Start()
     {
         phase = Phase.Tutorial;
@@ -50,22 +56,38 @@ public class GameManager : MonoBehaviour
         {
             phase = Phase.Phase1;
             timer = 30f;
+
+            spawner.SpawnEnemies();  // フェーズ1開始で敵を出す
         }
         else if (phase == Phase.Phase1)
         {
             phase = Phase.Phase2;
             timer = 30f;
+
+            spawner.SpawnEnemies();  // フェーズ2開始で敵を出す
         }
         else if (phase == Phase.Phase2)
         {
             phase = Phase.Phase3;
             timer = 30f;
+
+            spawner.SpawnEnemies();  // フェーズ3開始で敵を出す
         }
         else if (phase == Phase.Phase3)
         {
             phase = Phase.Clear;
         }
-
-        Debug.Log("Phase Changed : " + phase);
     }
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    public void AddScore(int value)
+    {
+        score += value;
+        Debug.Log("Score: " + score);
+    }
+
 }
