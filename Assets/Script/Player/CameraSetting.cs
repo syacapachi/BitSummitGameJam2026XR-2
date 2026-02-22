@@ -139,6 +139,7 @@ public class CameraSetting : NetworkBehaviour
     }
     private void OnGUI()
     {
+        if(!IsClient) return;
         if(!IsOwner)
         {
             //オーナーでないプレイヤーの情報を表示するためのコード。オーナーでないプレイヤーのカメラが有効な場合は、そのカメラの位置にプレイヤーのIDとジャンプ回数を表示する。
