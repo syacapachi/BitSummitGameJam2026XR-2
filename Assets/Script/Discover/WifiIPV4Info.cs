@@ -71,9 +71,6 @@ public sealed class WifiIPV4Info
         string name = nic.Name.ToLowerInvariant();
         string desc = nic.Description.ToLowerInvariant();
 
-        // Wi-Fi以外のものを除外
-        if (nic.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)
-            return false;
         if (name.Contains("virtual")
             || name.Contains("veth")
             || desc.Contains("hyper-v")
