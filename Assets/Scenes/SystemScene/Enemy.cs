@@ -27,6 +27,8 @@ public class Enemy : MonoBehaviour
     {
         // スコア加算
         GameManager.Instance.AddScore(scoreValue);
+        // GameManager に通知して全撃破ボーナス判定
+        GameManager.Instance.EnemyKilled();
 
         // 敵を削除
         Destroy(gameObject);
