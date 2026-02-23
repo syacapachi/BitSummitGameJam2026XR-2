@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
             lastSeconds = currentSeconds;
         }
 
-        if (timer <= 0)
+        if (timer <= 0 && phase != Phase.Clear)
         {
             NextPhase();
         }
@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
 
     void NextPhase()
     {
+        if(phase != Phase.Tutorial) CheckPhaseBonus();
         if (phase == Phase.Tutorial)
         {
             phase = Phase.Phase1;
@@ -90,4 +91,18 @@ public class GameManager : MonoBehaviour
         Debug.Log("Score: " + score);
     }
 
+    void CheckPhaseBonus()
+    {
+        Debug.Log("hello");
+        if (spawner.remain == 0)
+        {
+            Debug.Log("全撃破ボーナス +500");
+            AddScore(500);
+        }
+    }
+
+    public void EnemyKilled()
+    {
+        spawner.remain--;
+    }
 }

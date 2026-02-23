@@ -26,6 +26,7 @@ public class EnemySpawner : MonoBehaviour
  */
 
 //被らないver
+
 using UnityEngine;
 using System.Collections.Generic; // Listを使う
 
@@ -34,10 +35,12 @@ public class EnemySpawner : MonoBehaviour
     public GameObject[] enemies;        // ゾンビ、幽霊など
     public Transform[] spawnPoints;     // スポーンポイント
     public int spawnCount = 3;          // フェーズごとに出す敵の数
+    public int remain = 0;
 
     public void SpawnEnemies()
     {
-        // spawnPoints のコピーを作る
+        remain += spawnCount;
+
         List<Transform> availablePoints = new List<Transform>(spawnPoints);
 
         for (int i = 0; i < spawnCount; i++)
@@ -48,7 +51,6 @@ public class EnemySpawner : MonoBehaviour
                 break;
             }
 
-            // 敵とスポーンポイントをランダムに選ぶ
             int enemyIndex = Random.Range(0, enemies.Length);
             int spawnIndex = Random.Range(0, availablePoints.Count);
 
@@ -60,8 +62,37 @@ public class EnemySpawner : MonoBehaviour
                 spawnPoint.rotation
             );
 
-            // ここで使ったスポーンポイントは削除
             availablePoints.RemoveAt(spawnIndex);
         }
     }
 }
+
+
+/*
+//全撃破ボーナスver
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemySpawner : MonoBehaviour
+{
+    public GameObject[] enemies;
+    public Transform[] spawnPoints;
+    public int spawnCount = 3;
+
+    public List<GameObject> spawnedEnemies = new List<GameObject>(); // 今のフェーズの敵リスト
+
+    public void SpawnEnemies()
+    {
+        spawnedEnemies.Clear(); // 前のフェーズのリストをクリア
+
+        for (int i = 0; i < spawnCount; i++)
+        {
+            int enemyIndex = Random.Range(0, enemies.Length);
+            int spawnIndex = Random.Range(0, spawnPoints.Length);
+
+            GameObject e = Instantiate(enemies[enemyIndex], spawnPoints[spawnIndex].position, spawnPoints[spawnIndex].rotation);
+            spawnedEnemies.Add(e); // リストに追加
+        }
+    }
+}
+*/
