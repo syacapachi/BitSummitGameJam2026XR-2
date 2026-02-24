@@ -1,6 +1,6 @@
 using UnityEngine;
-
-public class NGameManager : MonoBehaviour
+using Unity.Netcode;
+public class NGameManager : NetworkBehaviour
 {
     public enum Phase
     {
@@ -17,12 +17,12 @@ public class NGameManager : MonoBehaviour
     int lastSeconds;
 
     public NEnemySpawner spawner; // Inspector�ŃZ�b�g
+    [SerializeField] float duration = 30f;
 
-    public static NGameManager Instance;
 
     private int score = 0;
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
         phase = Phase.Tutorial;
         timer = 10f;
@@ -34,6 +34,7 @@ public class NGameManager : MonoBehaviour
 
     void Update()
     {
+        if(!IsServer) return;
         if(timer > 0) timer -= Time.deltaTime;
 
         int currentSeconds = Mathf.CeilToInt(timer);
@@ -41,7 +42,7 @@ public class NGameManager : MonoBehaviour
         //Debug.Log("debug : " + currentSeconds);
         if (currentSeconds != lastSeconds)
         {
-            Debug.Log("�c�莞�� : " + currentSeconds);
+            Debug.Log("Time : " + currentSeconds);
             lastSeconds = currentSeconds;
         }
 
@@ -57,33 +58,28 @@ public class NGameManager : MonoBehaviour
         if (phase == Phase.Tutorial)
         {
             phase = Phase.Phase1;
-            timer = 30f;
+            timer = duration;
 
-            spawner.SpawnEnemies();  // �t�F�[�Y1�J�n�œG���o��
+            spawner.SpawnEnemiesRpc();  // �t�F�[�Y1�J�n�œG���o��
         }
         else if (phase == Phase.Phase1)
         {
             phase = Phase.Phase2;
-            timer = 30f;
+            timer = duration;
 
-            spawner.SpawnEnemies();  // �t�F�[�Y2�J�n�œG���o��
+            spawner.SpawnEnemiesRpc();  // �t�F�[�Y2�J�n�œG���o��
         }
         else if (phase == Phase.Phase2)
         {
             phase = Phase.Phase3;
-            timer = 30f;
+            timer = duration;
 
-            spawner.SpawnEnemies();  // �t�F�[�Y3�J�n�œG���o��
+            spawner.SpawnEnemiesRpc();  // �t�F�[�Y3�J�n�œG���o��
         }
         else if (phase == Phase.Phase3)
         {
             phase = Phase.Clear;
         }
-    }
-
-    void Awake()
-    {
-        Instance = this;
     }
 
     public void AddScore(int value)
@@ -94,10 +90,9 @@ public class NGameManager : MonoBehaviour
 
     void CheckPhaseBonus()
     {
-        Debug.Log("hello");
         if (spawner.remain == 0)
         {
-            Debug.Log("�S���j�{�[�i�X +500");
+            Debug.Log("All Enemy Broken: +500");
             AddScore(500);
         }
     }
