@@ -69,12 +69,17 @@ public class CharactorControll : NetworkBehaviour
     //ネット上でオブジェクトがデスポーンしたときに呼ばれる
     public override void OnNetworkDespawn()
     {
-        moveAction.performed -= MoveActionCallback;
-        jumpAction.canceled -= JumpActionCallback;
-        jumpAction.performed -= JumpActionCallback;
-        setObjectAction.performed -= OnSetObjectCallback;
-
-        jumpCount.OnValueChanged -= OnJumoCountChanged;
+        if(moveAction != null)
+            moveAction.performed -= MoveActionCallback;
+        if(jumpAction != null)
+        {
+            jumpAction.canceled -= JumpActionCallback;
+            jumpAction.performed -= JumpActionCallback;
+        }
+        if(setObjectAction != null)
+            setObjectAction.performed -= OnSetObjectCallback;
+        if(jumpCount != null)
+            jumpCount.OnValueChanged -= OnJumoCountChanged;
     }
     private void OnJumoCountChanged(int oldValue, int newValue)
     {

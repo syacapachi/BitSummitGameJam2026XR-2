@@ -89,7 +89,7 @@ public class CameraSetting : NetworkBehaviour
     }
     public override void OnNetworkDespawn()
     {
-        if (IsOwner)
+        if (IsOwner && switchCameraAction != null)
         { 
             switchCameraAction.performed -= SwitchCamera;
         }
@@ -130,7 +130,7 @@ public class CameraSetting : NetworkBehaviour
     private void SwitchCamera(InputAction.CallbackContext context)
     {
         //Debug.Log("SwitchCamera");
-        if (CurrentActiveCamera = localCamera)
+        if (CurrentActiveCamera == localCamera)
         {
             CurrentActiveCamera = mainCamera;
             //カーソルの設定を行う。これにより、ゲーム中にカーソルが画面内に固定され、プレイヤーがマウスを動かすことでカメラを回転させることができるようになる。
