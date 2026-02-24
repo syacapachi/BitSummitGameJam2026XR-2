@@ -1,36 +1,39 @@
 using UnityEngine;
-
-public class NEnemy : MonoBehaviour
+using Unity.Netcode;
+public class NEnemy : NetworkBehaviour
 {
     public int maxHP = 1;       // ���̓G�������œ|��邩
     public int scoreValue = 100; // �|�����Ƃ��ɓ���X�R�A
 
     private int currentHP;
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
         currentHP = maxHP;
     }
 
     // �e�����������Ƃ��ɌĂ�
+
     public void TakeDamage(int damage = 1)
     {
+        Debug.Log("Take damage");
         currentHP -= damage;
 
         if (currentHP <= 0)
         {
-            Die();
+            DieRpc();
         }
     }
-
-    void Die()
+    [Rpc(SendTo.Server,InvokePermission = RpcInvokePermission.Server)]
+    void DieRpc()
     {
+         Debug.Log("Die");
         // �X�R�A���Z
-        NGameManager.Instance.AddScore(scoreValue);
+        ManagerLocator.Instance.GameManager.AddScore(scoreValue);
         // GameManager �ɒʒm���đS���j�{�[�i�X����
-        NGameManager.Instance.EnemyKilled();
+        ManagerLocator.Instance.GameManager.EnemyKilled();
 
         // �G���폜
-        Destroy(gameObject);
+        GetComponent<NetworkObject>().Despawn(true);
     }
 }

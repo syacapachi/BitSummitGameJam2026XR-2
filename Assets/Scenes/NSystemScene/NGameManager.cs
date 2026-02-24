@@ -1,6 +1,6 @@
 using UnityEngine;
-
-public class NGameManager : MonoBehaviour
+using Unity.Netcode;
+public class NGameManager : NetworkBehaviour
 {
     public enum Phase
     {
@@ -18,11 +18,10 @@ public class NGameManager : MonoBehaviour
 
     public NEnemySpawner spawner; // Inspector�ŃZ�b�g
 
-    public static NGameManager Instance;
 
     private int score = 0;
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
         phase = Phase.Tutorial;
         timer = 10f;
@@ -34,6 +33,7 @@ public class NGameManager : MonoBehaviour
 
     void Update()
     {
+        if(!IsServer) return;
         if(timer > 0) timer -= Time.deltaTime;
 
         int currentSeconds = Mathf.CeilToInt(timer);
@@ -59,31 +59,26 @@ public class NGameManager : MonoBehaviour
             phase = Phase.Phase1;
             timer = 30f;
 
-            spawner.SpawnEnemies();  // �t�F�[�Y1�J�n�œG���o��
+            spawner.SpawnEnemiesRpc();  // �t�F�[�Y1�J�n�œG���o��
         }
         else if (phase == Phase.Phase1)
         {
             phase = Phase.Phase2;
             timer = 30f;
 
-            spawner.SpawnEnemies();  // �t�F�[�Y2�J�n�œG���o��
+            spawner.SpawnEnemiesRpc();  // �t�F�[�Y2�J�n�œG���o��
         }
         else if (phase == Phase.Phase2)
         {
             phase = Phase.Phase3;
             timer = 30f;
 
-            spawner.SpawnEnemies();  // �t�F�[�Y3�J�n�œG���o��
+            spawner.SpawnEnemiesRpc();  // �t�F�[�Y3�J�n�œG���o��
         }
         else if (phase == Phase.Phase3)
         {
             phase = Phase.Clear;
         }
-    }
-
-    void Awake()
-    {
-        Instance = this;
     }
 
     public void AddScore(int value)

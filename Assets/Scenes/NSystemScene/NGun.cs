@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Timeline;
+using Unity.Netcode;
 
-public class NGun : MonoBehaviour
+public class NGun : NetworkBehaviour
 {
     public GameObject bulletPrefab;
     public Transform firePoint;
@@ -43,23 +44,29 @@ public class NGun : MonoBehaviour
             laserLine.SetPosition(1, firePoint.position + forward * laserDistance);
         }
     }
-    void Awake()
+    public override void OnNetworkSpawn()
     {
+        if(!IsOwner) return;
         controls = new PlayerControls();
-        controls.Player.Fire.performed += ctx => Shoot();
+        controls.Player.Fire.performed += ctx => ShootRpc();
         controls.Player.Marker.performed += ctx => PlaceMarker();
+        
+        controls.Enable();
+    }
+    public override void OnNetworkDespawn()
+    {
+        controls.Disable();
     }
 
-    void OnEnable() => controls.Enable();
-    void OnDisable() => controls.Disable();
-
-    void Shoot()
+    [Rpc(SendTo.Server)]
+    void ShootRpc()
     {
         if (Time.time < nextFire) return;
 
         nextFire = Time.time + fireRate;
 
-        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        obj.GetComponent<NetworkObject>().Spawn();
     }
 
     void PlaceMarker()

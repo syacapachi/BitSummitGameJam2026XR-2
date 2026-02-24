@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -2837489296520038675}
   - component: {fileID: 5158083865324121612}
   - component: {fileID: -8259086916710431242}
+  - component: {fileID: 2438645337064451966}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -225,3 +226,20 @@ MonoBehaviour:
   speed: 50
   lifeTime: 5
   damage: 1
+--- !u!114 &2438645337064451966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4022916156752048900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 0
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
