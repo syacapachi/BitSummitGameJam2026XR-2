@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Timeline;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 
 public class NGun : NetworkBehaviour
 {
@@ -11,11 +12,13 @@ public class NGun : NetworkBehaviour
     public float laserDistance = 50f;
 
     public float fireRate = 0.2f;
-
-    public GameObject markerPrefab;
+    [SerializeField] PlayerItemControll itemControll;
+    public Transform playerMarker;
 
     PlayerControls controls;
     float nextFire;
+
+    bool isMarkAttached = true;
 
     void Update()
     {
@@ -49,9 +52,13 @@ public class NGun : NetworkBehaviour
         if(!IsOwner) return;
         controls = new PlayerControls();
         controls.Player.Fire.performed += ctx => ShootRpc();
-        controls.Player.Marker.performed += ctx => PlaceMarker();
+        controls.Player.Marker.performed += ctx => PlaceMarkerRpc();
         
         controls.Enable();
+        if(itemControll.TryGetItem("Marker",out GameObject item))
+        {
+            playerMarker = item.transform;
+        }
     }
     public override void OnNetworkDespawn()
     {
@@ -69,25 +76,30 @@ public class NGun : NetworkBehaviour
         obj.GetComponent<NetworkObject>().Spawn();
     }
 
-    void PlaceMarker()
+    [Rpc(SendTo.Server)]
+    void PlaceMarkerRpc()
     {
-        if (markerPrefab == null || firePoint == null) return;
+        if (playerMarker == null || firePoint == null) return;
 
         RaycastHit hit;
         Vector3 forward = firePoint.forward;
 
         if (Physics.Raycast(firePoint.position, forward, out hit, laserDistance))
         {
-            // �}�[�J�[Prefab�𐶐�
-            GameObject markerObj = Instantiate(markerPrefab, hit.point, Quaternion.identity);
-
-            // Marker.cs �����Ă���ΐF������Ȃǂ̐ݒ�͎����ōs����
-            Marker markerScript = markerObj.GetComponent<Marker>();
-            if (markerScript != null)
-            {
-                markerScript.color = Color.red;   // �D���ȐF�ɕύX�\
-                markerScript.lifeTime = 5f;      // ������܂ł̎���
-            }
+            MoveMarkerClientRpc(hit.point);
         }
+        isMarkAttached = false;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    void MoveMarkerClientRpc(Vector3 pos)
+    {
+        if (!IsOwner) return;   // ★これ
+
+        if(isMarkAttached) playerMarker.GetComponentInChildren<AttachableBehaviour>().Detach();
+        playerMarker.position = pos;
+        
+        var renderer = playerMarker.GetComponent<MeshRenderer>();
+        renderer.enabled = true;
     }
 }
