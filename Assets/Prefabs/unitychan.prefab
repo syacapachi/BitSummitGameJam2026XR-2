@@ -932,7 +932,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3892752720117763187}
-  - component: {fileID: 6316248628005720663}
+  - component: {fileID: 7341424401213183122}
   - component: {fileID: 1253958484371836754}
   - component: {fileID: 7046346039521220327}
   - component: {fileID: 7836387624157748051}
@@ -958,7 +958,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2977821444102550308}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6316248628005720663
+--- !u!114 &7341424401213183122
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -967,7 +967,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1150173000286658365}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce7a9a87d797fb14c84592474db11d13, type: 3}
+  m_Script: {fileID: 11500000, guid: 0835fe71733853a448fc369c1d0fb102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
@@ -1032,6 +1032,7 @@ MonoBehaviour:
   localCamera: {fileID: 9048396871517692906}
   mainCamera: {fileID: 0}
   characterControll: {fileID: 7046346039521220327}
+  playerHealth: {fileID: 1253958484371836754}
   mouseSensitivity: 1
   yMinLimit: -89
   yMaxLimit: 89
@@ -3675,9 +3676,9 @@ MonoBehaviour:
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -3770,7 +3771,14 @@ MonoBehaviour:
   NetworkAnimatorExpanded: 0
   AuthorityMode: 0
   m_Animator: {fileID: 458400088118680365}
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -2089788878
+    DestinationState: 125937960
+    TransitionDuration: 0.23076922
+    TriggerNameHash: 125937960
+    TransitionIndex: 1
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Speed
@@ -3784,7 +3792,7 @@ MonoBehaviour:
     - name: Jump
       NameHash: 125937960
       Synchronize: 1
-      ParameterType: 4
+      ParameterType: 9
     - name: Rest
       NameHash: 1562808046
       Synchronize: 1

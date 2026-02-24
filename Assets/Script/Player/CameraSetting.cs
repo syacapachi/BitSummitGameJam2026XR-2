@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using System;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +15,7 @@ public class CameraSetting : NetworkBehaviour
     /// </summary>
     [SerializeField] Camera mainCamera;
     [SerializeField] CharactorControll characterControll;
+    [SerializeField] PlayerHealth playerHealth;
     [SerializeField] float mouseSensitivity = 1f;
     [SerializeField] float yMinLimit = -89f;
     [SerializeField] float yMaxLimit = 89f;
@@ -21,10 +23,11 @@ public class CameraSetting : NetworkBehaviour
     Vector2 lastSendRotation;
     InputAction switchCameraAction;
     InputAction lookAction;
-    public bool IsMainCameraActive => currentActiveCamera == mainCamera;
+    public bool IsMainCameraActive => CurrentActiveCamera == mainCamera;
+    public event Action<Camera> OnCameraChanged;
     // シーン内のアクティブなカメラを追跡するためのフィールド。これにより、どのカメラが現在アクティブであるかを簡単に確認できるようになる。
     private Camera activeCamera;
-    public Camera currentActiveCamera { 
+    public Camera CurrentActiveCamera { 
         get => activeCamera; 
         private set
         {
@@ -38,11 +41,14 @@ public class CameraSetting : NetworkBehaviour
                 if (activeCamera != null)
                 {
                     activeCamera.enabled = false;
+                    if(activeCamera.gameObject.TryGetComponent<AudioListener>(out var lisnteb)) lisnteb.enabled = false;
                 }
                 activeCamera = value;
                 if (activeCamera != null)
                 {
                     activeCamera.enabled = true;
+                    if (activeCamera.gameObject.TryGetComponent<AudioListener>(out var lisnteb)) lisnteb.enabled = true;
+                    OnCameraChanged?.Invoke(activeCamera);
                 }
             }
         }
@@ -59,16 +65,17 @@ public class CameraSetting : NetworkBehaviour
             Cursor.lockState = CursorLockMode.Locked;
 
             mainCamera.enabled = false;
-            localCamera.enabled = true;
-            activeCamera = localCamera;
+            if(mainCamera.gameObject.TryGetComponent<AudioListener>(out AudioListener listener)) listener.enabled = false;
+            CurrentActiveCamera = localCamera;
+
 
             Vector3 angle = localCamera.transform.eulerAngles;
             //xとyを入れ替える。これにより、カメラの回転がプレイヤーの入力に対して正しく反応するようになる。
             cameraAngle.x = angle.y;
             cameraAngle.y = angle.x;
 
-            switchCameraAction = PlayerManager.Instance.playerInput.actions["SwitchCamera"];
-            lookAction = PlayerManager.Instance.playerInput.actions["Look"];
+            switchCameraAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["SwitchCamera"];
+            lookAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Look"];
 
             switchCameraAction.performed += SwitchCamera;
         }
@@ -76,6 +83,7 @@ public class CameraSetting : NetworkBehaviour
         {
             //他の奴は無効にし、破壊する。これにより、他のプレイヤーのカメラが有効にならないようにし、リソースを節約する。
             localCamera.enabled = false;
+            localCamera.GetComponent<AudioListener>().enabled = false;
             //Destroy(localCamera);
         }
     }
@@ -91,7 +99,7 @@ public class CameraSetting : NetworkBehaviour
         if (IsOwner)
         {
             //オーナーのクライアントで、現在アクティブなカメラがローカルカメラである場合、ローカルカメラの位置と回転をプレイヤーの位置と回転に合わせて更新する。これにより、ローカルカメラがプレイヤーの動きに追従するようになる。
-            if (currentActiveCamera == localCamera)
+            if (CurrentActiveCamera == localCamera)
             {
                 
                 Vector2 rotation = lookAction.ReadValue<Vector2>();
@@ -121,10 +129,10 @@ public class CameraSetting : NetworkBehaviour
     }
     private void SwitchCamera(InputAction.CallbackContext context)
     {
-        Debug.Log("SwitchCamera");
-        if (localCamera.enabled)
+        //Debug.Log("SwitchCamera");
+        if (CurrentActiveCamera = localCamera)
         {
-            currentActiveCamera = mainCamera;
+            CurrentActiveCamera = mainCamera;
             //カーソルの設定を行う。これにより、ゲーム中にカーソルが画面内に固定され、プレイヤーがマウスを動かすことでカメラを回転させることができるようになる。
             //None 自由
             //Locked 画面中央に固定
@@ -133,7 +141,7 @@ public class CameraSetting : NetworkBehaviour
         }
         else
         {
-            currentActiveCamera = localCamera;
+            CurrentActiveCamera = localCamera;
             Cursor.lockState = CursorLockMode.Locked;
         }
     }
@@ -143,19 +151,19 @@ public class CameraSetting : NetworkBehaviour
         if(!IsOwner)
         {
             //オーナーでないプレイヤーの情報を表示するためのコード。オーナーでないプレイヤーのカメラが有効な場合は、そのカメラの位置にプレイヤーのIDとジャンプ回数を表示する。
-            Vector3 positon = PlayerManager.Instance.cameraSetting.currentActiveCamera.WorldToScreenPoint(playerRootTransform.position);
+            Vector3 positon = ManagerLocator.Instance.PlayerManager.OwnerPlayer.cameraSetting.CurrentActiveCamera.WorldToScreenPoint(playerRootTransform.position);
              GUI.Label(new Rect(positon.x, Screen.height - positon.y - 120, 100, 20), $"{OwnerClientId}");
              GUI.Label(new Rect(positon.x, Screen.height - positon.y - 100, 100, 20), $"jump: {characterControll.JumpCount}");
                             
         }
 
-        else if (mainCamera != null && mainCamera.enabled)
+        else if (mainCamera != null && CurrentActiveCamera == mainCamera)
         {
             Vector3 positon = mainCamera.WorldToScreenPoint(playerRootTransform.position);
             if (positon.z < 0) return; // カメラの前にいる場合のみ表示
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 60, 100, 20), IsOwner ? "You" : "");
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 30, 100, 20), $"jump: {characterControll.JumpCount}");
-            GUI.Label(new Rect(positon.x, Screen.height - positon.y, 100, 20), $"HP: {PlayerManager.Instance.playerHealth.Health.Value}/{PlayerManager.Instance.playerHealth.MaxHealth}");
+            GUI.Label(new Rect(positon.x, Screen.height - positon.y, 100, 20), $"HP: {playerHealth.Health.Value}/{playerHealth.MaxHealth}");
         }
             
     }

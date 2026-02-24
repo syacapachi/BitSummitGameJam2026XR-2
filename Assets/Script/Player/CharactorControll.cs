@@ -45,15 +45,15 @@ public class CharactorControll : NetworkBehaviour
         if (IsOwner)
         {
             Debug.Log("CharactorControll spawned on owner client.");
-            if (PlayerManager.Instance.playerInput == null)
+            if (ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput == null)
             {
                 Debug.LogError("PlayerInput component is not assigned.");
                 return;
             }
 
-            moveAction = PlayerManager.Instance.playerInput.actions["Move"];
-            jumpAction = PlayerManager.Instance.playerInput.actions["Jump"];
-            setObjectAction = PlayerManager.Instance.playerInput.actions["Interact"];
+            moveAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Move"];
+            jumpAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Jump"];
+            setObjectAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Interact"];
 
             moveAction.performed += MoveActionCallback;
             moveAction.canceled += MoveActionCallback; // 入力がキャンセルされたときもコールバックを呼び出す(ゼロの検出)
@@ -134,7 +134,7 @@ public class CharactorControll : NetworkBehaviour
             animator.SetFloat("Direction", moveInput.Value.x);
 
             //カメラの向きに応じた移動をするかどうかは、PlayerManagerのCameraSettingで管理する、サーバーに送るときに一緒に送る
-            MoveCharactorServerRpc(moveInput.Value,PlayerManager.Instance.cameraSetting.IsMainCameraActive);
+            MoveCharactorServerRpc(moveInput.Value,ManagerLocator.Instance.PlayerManager.OwnerPlayer.cameraSetting.IsMainCameraActive);
         }
 
     }
