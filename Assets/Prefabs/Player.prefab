@@ -966,7 +966,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 971797369539823923}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -991,7 +991,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 632381429
+  GlobalObjectIdHash: 2958398600
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1442,6 +1442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12800a4a08bb2134f84a5490beaede0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   bulletPrefab: {fileID: 4022916156752048900, guid: 87e947bf715886f4d984cdaecf68c937, type: 3}
   firePoint: {fileID: 1896185644797937927}
   laserLine: {fileID: 7458030537166218599}
@@ -7701,6 +7702,7 @@ GameObject:
   - component: {fileID: 665557257924823836}
   - component: {fileID: 6318645026461716593}
   - component: {fileID: 7286141763081320128}
+  - component: {fileID: 2917867650338131591}
   m_Layer: 0
   m_Name: ScriptRoot
   m_TagString: Untagged
@@ -7741,6 +7743,7 @@ MonoBehaviour:
   playerInput: {fileID: 3417897009391509307}
   characterControll: {fileID: 6318645026461716593}
   playerHealth: {fileID: 665557257924823836}
+  propaty: {fileID: 2917867650338131591}
   cameraSetting: {fileID: 7286141763081320128}
 --- !u!114 &665557257924823836
 MonoBehaviour:
@@ -7801,6 +7804,20 @@ MonoBehaviour:
   mouseSensitivity: 1
   yMinLimit: -89
   yMaxLimit: 89
+--- !u!114 &2917867650338131591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8511196050132363270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d2d5ebc452a3614597b0c2eb37f2896, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  playerjob: 0
 --- !u!1 &8813988879381198354
 GameObject:
   m_ObjectHideFlags: 0

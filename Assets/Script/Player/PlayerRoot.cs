@@ -8,6 +8,7 @@ public class PlayerRoot : NetworkBehaviour
     public PlayerInput playerInput;
     public CharactorControll characterControll;
     public PlayerHealth playerHealth;
+    public PlayerPropaty propaty;
     public CameraSetting cameraSetting;
 
     public override void OnNetworkSpawn()
