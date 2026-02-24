@@ -17,6 +17,7 @@ public class NGameManager : NetworkBehaviour
     int lastSeconds;
 
     public NEnemySpawner spawner; // Inspector�ŃZ�b�g
+    [SerializeField] float duration = 30f;
 
 
     private int score = 0;
@@ -41,7 +42,7 @@ public class NGameManager : NetworkBehaviour
         //Debug.Log("debug : " + currentSeconds);
         if (currentSeconds != lastSeconds)
         {
-            Debug.Log("�c�莞�� : " + currentSeconds);
+            Debug.Log("Time : " + currentSeconds);
             lastSeconds = currentSeconds;
         }
 
@@ -57,21 +58,21 @@ public class NGameManager : NetworkBehaviour
         if (phase == Phase.Tutorial)
         {
             phase = Phase.Phase1;
-            timer = 30f;
+            timer = duration;
 
             spawner.SpawnEnemiesRpc();  // �t�F�[�Y1�J�n�œG���o��
         }
         else if (phase == Phase.Phase1)
         {
             phase = Phase.Phase2;
-            timer = 30f;
+            timer = duration;
 
             spawner.SpawnEnemiesRpc();  // �t�F�[�Y2�J�n�œG���o��
         }
         else if (phase == Phase.Phase2)
         {
             phase = Phase.Phase3;
-            timer = 30f;
+            timer = duration;
 
             spawner.SpawnEnemiesRpc();  // �t�F�[�Y3�J�n�œG���o��
         }
@@ -89,10 +90,9 @@ public class NGameManager : NetworkBehaviour
 
     void CheckPhaseBonus()
     {
-        Debug.Log("hello");
         if (spawner.remain == 0)
         {
-            Debug.Log("�S���j�{�[�i�X +500");
+            Debug.Log("All Enemy Broken: +500");
             AddScore(500);
         }
     }
