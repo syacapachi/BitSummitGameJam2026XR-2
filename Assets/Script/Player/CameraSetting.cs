@@ -62,22 +62,7 @@ public class CameraSetting : NetworkBehaviour
         }
         if (IsOwner)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-
-            mainCamera.enabled = false;
-            if(mainCamera.gameObject.TryGetComponent<AudioListener>(out AudioListener listener)) listener.enabled = false;
-            CurrentActiveCamera = localCamera;
-
-
-            Vector3 angle = localCamera.transform.eulerAngles;
-            //xとyを入れ替える。これにより、カメラの回転がプレイヤーの入力に対して正しく反応するようになる。
-            cameraAngle.x = angle.y;
-            cameraAngle.y = angle.x;
-
-            switchCameraAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["SwitchCamera"];
-            lookAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Look"];
-
-            switchCameraAction.performed += SwitchCamera;
+            ResistAction();
         }
         else
         {
@@ -86,6 +71,24 @@ public class CameraSetting : NetworkBehaviour
             localCamera.GetComponent<AudioListener>().enabled = false;
             //Destroy(localCamera);
         }
+    }
+    private void ResistAction()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+
+        mainCamera.enabled = false;
+        if(mainCamera.gameObject.TryGetComponent<AudioListener>(out AudioListener listener)) listener.enabled = false;
+        CurrentActiveCamera = localCamera;
+
+
+        Vector3 angle = localCamera.transform.eulerAngles;
+        //xとyを入れ替える。これにより、カメラの回転がプレイヤーの入力に対して正しく反応するようになる。
+        cameraAngle.x = angle.y;
+        cameraAngle.y = angle.x;
+        switchCameraAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["SwitchCamera"];
+        lookAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Look"];
+
+        switchCameraAction.performed += SwitchCamera;
     }
     public override void OnNetworkDespawn()
     {

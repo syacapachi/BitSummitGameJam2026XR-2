@@ -37,7 +37,6 @@ public class CharactorControll : NetworkBehaviour
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server
         );
-
     // Net上でオブジェクトがスポーンしたときに呼ばれる
     public override void OnNetworkSpawn()
     {
@@ -50,8 +49,13 @@ public class CharactorControll : NetworkBehaviour
                 Debug.LogError("PlayerInput component is not assigned.");
                 return;
             }
-
-            moveAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Move"];
+            ResistAction();
+            
+        }
+    }
+    private void ResistAction()
+    {
+        moveAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Move"];
             jumpAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Jump"];
             setObjectAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Interact"];
 
@@ -63,8 +67,6 @@ public class CharactorControll : NetworkBehaviour
             setObjectAction.performed += OnSetObjectCallback;
 
             jumpCount.OnValueChanged += OnJumoCountChanged;
-        }
-
     }
     //ネット上でオブジェクトがデスポーンしたときに呼ばれる
     public override void OnNetworkDespawn()
