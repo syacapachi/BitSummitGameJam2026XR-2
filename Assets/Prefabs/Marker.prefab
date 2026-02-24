@@ -259,4 +259,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   StartEnabled: 1
-  Components: []
+  Components:
+  - name: Marker-Child (Mesh Renderer)
+    InvertEnabled: 1
+    EnableDelay: 0
+    DisableDelay: 0
+    Component: {fileID: 1103239692597537299}
+  - name: Marker-Child (Sphere Collider)
+    InvertEnabled: 0
+    EnableDelay: 0
+    DisableDelay: 0
+    Component: {fileID: 8763190035426447647}
+  - name: Marker-Child (N Marker)
+    InvertEnabled: 0
+    EnableDelay: 0
+    DisableDelay: 0
+    Component: {fileID: 3336580506596078715}
