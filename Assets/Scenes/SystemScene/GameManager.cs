@@ -34,10 +34,11 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        timer -= Time.deltaTime;
+        if(timer > 0) timer -= Time.deltaTime;
 
         int currentSeconds = Mathf.CeilToInt(timer);
 
+        //Debug.Log("debug : " + currentSeconds);
         if (currentSeconds != lastSeconds)
         {
             Debug.Log("Žc‚èŽžŠÔ : " + currentSeconds);
