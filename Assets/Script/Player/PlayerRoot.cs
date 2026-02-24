@@ -9,6 +9,7 @@ public class PlayerRoot : NetworkBehaviour
     public CharactorControll characterControll;
     public PlayerHealth playerHealth;
     public CameraSetting cameraSetting;
+
     public override void OnNetworkSpawn()
     {
         PlayerManager player = ManagerLocator.Instance.PlayerManager;

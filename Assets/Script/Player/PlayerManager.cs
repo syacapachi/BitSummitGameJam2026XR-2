@@ -19,5 +19,6 @@ public class PlayerManager : MonoBehaviour
     public void ResistOwner(PlayerRoot playerRoot)
     {
         OwnerPlayer = playerRoot;
+        Debug.Log("Resiist owner");
     }
 }
