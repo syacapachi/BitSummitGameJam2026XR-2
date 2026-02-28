@@ -171,7 +171,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   AutoDetach: 3
-  ComponentControllers: []
+  ComponentControllers:
+  - name: Marker (Component Controller)
+    AutoTrigger: 3
+    EnableOnAttach: 0
+    ComponentController: {fileID: 6041186734524869414}
+    HasInitialized: 1
 --- !u!114 &3336580506596078715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,20 +263,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  StartEnabled: 1
+  StartEnabled: 0
   Components:
   - name: Marker-Child (Mesh Renderer)
     InvertEnabled: 1
     EnableDelay: 0
     DisableDelay: 0
     Component: {fileID: 1103239692597537299}
-  - name: Marker-Child (Sphere Collider)
-    InvertEnabled: 0
-    EnableDelay: 0
-    DisableDelay: 0
-    Component: {fileID: 8763190035426447647}
-  - name: Marker-Child (N Marker)
-    InvertEnabled: 0
-    EnableDelay: 0
-    DisableDelay: 0
-    Component: {fileID: 3336580506596078715}

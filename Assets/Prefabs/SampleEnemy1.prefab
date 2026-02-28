@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 5065070154564922853}
   - component: {fileID: 2177648759337277281}
   - component: {fileID: -828718607023672952}
+  - component: {fileID: 8918169865320920554}
   m_Layer: 0
   m_Name: SampleEnemy1
   m_TagString: Untagged
@@ -240,5 +241,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0524e63ef5ed9c147a5ee84c8312ae66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   maxHP: 1
   scoreValue: 100
+--- !u!114 &8918169865320920554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5058385944009780280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b308c020f10cb748885d3ca367dfda3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  meshRenderer: {fileID: 441315367259764646}
