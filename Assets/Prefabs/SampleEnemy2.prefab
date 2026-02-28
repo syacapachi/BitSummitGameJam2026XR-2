@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: -7239861256494833878}
   - component: {fileID: -8294159004967176423}
   - component: {fileID: 3781930495081845121}
+  - component: {fileID: 1503477330887373722}
   m_Layer: 0
   m_Name: SampleEnemy2
   m_TagString: Untagged
@@ -258,3 +259,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   meshRenderer: {fileID: 6194709231385801897}
+--- !u!114 &1503477330887373722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105836037167788384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2291fafe88de16c4ea6f7314393346d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  moveSpeed: 1

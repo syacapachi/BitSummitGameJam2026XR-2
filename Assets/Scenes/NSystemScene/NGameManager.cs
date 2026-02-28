@@ -22,6 +22,9 @@ public class NGameManager : NetworkBehaviour
 
     private int score = 0;
 
+    public GameObject protectArea;
+    private bool isEnemycome = false;
+
     public override void OnNetworkSpawn()
     {
         phase = Phase.Tutorial;
@@ -54,7 +57,11 @@ public class NGameManager : NetworkBehaviour
 
     void NextPhase()
     {
-        if(phase != Phase.Tutorial) CheckPhaseBonus();
+        if (phase != Phase.Tutorial)
+        {
+            CheckPhaseBonus();
+            isEnemycome = false;
+        }
         if (phase == Phase.Tutorial)
         {
             phase = Phase.Phase1;
@@ -90,7 +97,7 @@ public class NGameManager : NetworkBehaviour
 
     void CheckPhaseBonus()
     {
-        if (spawner.remain == 0)
+        if (spawner.remain == 0 && !isEnemycome)
         {
             Debug.Log("All Enemy Broken: +500");
             AddScore(500);
@@ -100,5 +107,10 @@ public class NGameManager : NetworkBehaviour
     public void EnemyKilled()
     {
         spawner.remain--;
+    }
+
+    public void Enemycome()
+    {
+        isEnemycome = true;
     }
 }
