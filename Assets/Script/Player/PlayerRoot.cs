@@ -5,6 +5,7 @@ public class PlayerRoot : NetworkBehaviour
 {
     public GameObject playerPrefab;
     public Transform playerRoot;
+    public Canvas playerCanvas;
     public PlayerInput playerInput;
     public CharactorControll characterControll;
     public PlayerHealth playerHealth;
@@ -28,13 +29,16 @@ public class PlayerRoot : NetworkBehaviour
             //オーナーでないクライアントでは、PlayerInputを無効にする。これにより、他のプレイヤーの入力が誤って処理されるのを防ぐ。
             playerPrefab.name = $"Player_{OwnerClientId}";
             playerInput.enabled = false;
+            playerCanvas.enabled = false;
         }
     }
     public override void OnNetworkDespawn()
     {
-        ManagerLocator.Instance.PlayerManager.UnResistPlayer(this);
+        PlayerManager player = ManagerLocator.Instance.PlayerManager;
+        player.UnResistPlayer(this);
         if (IsOwner)
         {
+            player.UnResistOwner(this);
             playerInput.DeactivateInput();
             playerInput.enabled = false;
         }

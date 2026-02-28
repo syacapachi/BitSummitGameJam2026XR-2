@@ -1,12 +1,21 @@
 ﻿using Unity.XR.CoreUtils;
 using UnityEngine;
 using Unity.Netcode;
+using System;
+using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class PlayerPropaty : NetworkBehaviour
 {
     [SerializeField] GameObject PlayerRoot;
     public enum PlayerJob { Human, Ghost, Both }
-    [SerializeField] PlayerJob playerjob;
+    public event Action<PlayerJob> OnJobChanged;
+    private readonly NetworkVariable<int> PlayerLayer = new (
+        0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+        );
+    [SerializeField] PlayerJob playerjob = PlayerJob.Human;
     public PlayerJob Job {
         get => playerjob; 
         set 
@@ -21,12 +30,66 @@ public class PlayerPropaty : NetworkBehaviour
                     PlayerJob.Both => "Default",
                     _ => throw new System.NotImplementedException(),
                 };
-                PlayerRoot.layer = LayerMask.NameToLayer(layerName);
+                PlayerLayer.Value = LayerMask.NameToLayer(layerName);         
+                OnJobChanged?.Invoke(playerjob);
             }
         }
     }
     public bool CanSeeEnemy
     {
         get => playerjob != PlayerJob.Human;
+    }
+    
+    private InputAction changeJobAction;
+    public override void OnNetworkSpawn()
+    {
+        if(IsOwner)
+        {
+            changeJobAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["SwitchJob"];
+            changeJobAction.performed += OnJobChangeHandle;
+        }
+        PlayerLayer.OnValueChanged += OnValueChanged;
+    }
+    public override void OnNetworkDespawn()
+    {
+        if (IsOwner)
+        {
+            changeJobAction.performed -= OnJobChangeHandle;
+        }
+        PlayerLayer.OnValueChanged -= OnValueChanged;
+    }
+    public override void OnGainedOwnership()
+    {
+        changeJobAction.performed += OnJobChangeHandle;
+    }
+    public override void OnLostOwnership()
+    {
+        changeJobAction.performed -= OnJobChangeHandle;
+    }
+    /// <summary>
+    /// 物理演算はサーバーで行われるため、クライアント側でレイヤーを変更しても意味がない。
+    /// </summary>
+    /// <param name="previousValue"></param>
+    /// <param name="newValue"></param>
+    private void OnValueChanged(int previousValue, int newValue)
+    {
+        PlayerRoot.SetLayerRecursively(newValue);
+    }
+    private void OnJobChangeHandle(InputAction.CallbackContext context)
+    {
+        Job = Job switch
+        {
+            PlayerJob.Human => PlayerJob.Ghost,
+            PlayerJob.Ghost => PlayerJob.Both,
+            PlayerJob.Both => PlayerJob.Human,
+            _ => throw new System.NotImplementedException(),
+        };
+    }
+    private void OnGUI()
+    {
+        if (IsOwner)
+        {
+            GUI.Label(new Rect(10, 10, 200, 20), $"Job: {Job}");
+        }
     }
 }

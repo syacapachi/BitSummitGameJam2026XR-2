@@ -1,9 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Timeline;
 using Unity.Netcode;
 using Unity.Netcode.Components;
-
 public class NGun : NetworkBehaviour
 {
     public GameObject bulletPrefab;
@@ -22,6 +21,8 @@ public class NGun : NetworkBehaviour
 
     void Update()
     {
+        if (!IsOwner) return;
+
         UpdateLaser();
     }
 
@@ -49,20 +50,31 @@ public class NGun : NetworkBehaviour
     }
     public override void OnNetworkSpawn()
     {
-        if(!IsOwner) return;
+        if (itemControll.TryGetItem("Marker", out AttachableBehaviour item))
+        {
+            playerMarker = item.gameObject.transform;
+        }
+        else
+        {
+            Debug.LogWarning("Marker item not found in PlayerItemControll.");
+        }
+
+        if (!IsOwner) return;
         controls = new PlayerControls();
         controls.Player.Fire.performed += ctx => ShootRpc();
         controls.Player.Marker.performed += ctx => PlaceMarkerRpc();
         
         controls.Enable();
-        if(itemControll.TryGetItem("Marker",out GameObject item))
-        {
-            playerMarker = item.transform;
-        }
+        
     }
     public override void OnNetworkDespawn()
     {
+        if (!IsOwner) return;
         controls.Disable();
+    }
+    public override void OnLostOwnership()
+    {
+       controls.Disable();
     }
 
     [Rpc(SendTo.Server)]
@@ -91,11 +103,9 @@ public class NGun : NetworkBehaviour
         isMarkAttached = false;
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Server)]
     void MoveMarkerClientRpc(Vector3 pos)
     {
-        if (!IsOwner) return;   // ★これ
-
         if(isMarkAttached) playerMarker.GetComponentInChildren<AttachableBehaviour>().Detach();
         playerMarker.position = pos;
         
