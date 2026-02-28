@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Timeline;
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using System.Collections;
 public class NGun : NetworkBehaviour
 {
     public GameObject bulletPrefab;
@@ -12,12 +13,16 @@ public class NGun : NetworkBehaviour
 
     public float fireRate = 0.2f;
     [SerializeField] PlayerItemControll itemControll;
+    /// <summary>
+    /// サーバーのみ参照を持つフィールド。プレイヤーのマーカーオブジェクトを参照するために使用される。クライアントはこのフィールドを直接参照せず、RPCを介してマーカーの位置を更新する。
+    /// </summary>
     public Transform playerMarker;
-
+    AttachableNode node;
     PlayerControls controls;
     float nextFire;
 
     bool isMarkAttached = true;
+    Coroutine markerCoroutine;
 
     void Update()
     {
@@ -50,34 +55,52 @@ public class NGun : NetworkBehaviour
     }
     protected override void OnNetworkPostSpawn()
     {
+        
+        if (IsServer) 
+        {
+            TryGetPlayerMarker();
+        }
+        
+
+        if (IsOwner)
+        {
+            controls = new PlayerControls();
+            controls.Player.Fire.performed += ctx => ShootRpc();
+            controls.Player.Marker.performed += ctx => PlaceMarkerRpc();
+
+            controls.Enable();
+        }
+    }
+    public override void OnNetworkDespawn()
+    {
+        if (IsOwner) 
+        {
+            controls.Disable();
+        }
+            
+    }
+    private bool TryGetPlayerMarker()
+    {
+        if (!IsServer) return false;
         if (itemControll.TryGetItem("Marker", out NetworkBehaviourReference item))
         {
-            if(item.TryGet(out NetworkBehaviour obj))
+            if (item.TryGet(out NetworkBehaviour obj))
             {
                 playerMarker = obj.gameObject.transform;
+                node = obj.GetComponentInParent<AttachableNode>();
+                return true;
             }
             else
             {
                 Debug.LogWarning("NetworkBehaviour item not found in PlayerItemControll.");
+                return false;
             }
         }
         else
         {
             Debug.LogWarning("Marker item not found in PlayerItemControll.");
+            return false;
         }
-
-        if (!IsOwner) return;
-        controls = new PlayerControls();
-        controls.Player.Fire.performed += ctx => ShootRpc();
-        controls.Player.Marker.performed += ctx => PlaceMarkerRpc();
-        
-        controls.Enable();
-        
-    }
-    public override void OnNetworkDespawn()
-    {
-        if (!IsOwner) return;
-        controls.Disable();
     }
     public override void OnLostOwnership()
     {
@@ -85,7 +108,7 @@ public class NGun : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    void ShootRpc()
+    private void ShootRpc()
     {
         if (Time.time < nextFire) return;
 
@@ -96,9 +119,19 @@ public class NGun : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    void PlaceMarkerRpc()
+    private void PlaceMarkerRpc()
     {
-        if (playerMarker == null || firePoint == null) return;
+        if (firePoint == null) return;
+
+        if (playerMarker == null)
+        {
+            if(!TryGetPlayerMarker())
+             {
+                 Debug.LogWarning("Player marker not found. Cannot place marker.");
+                 return;
+            }
+        }
+        
 
         RaycastHit hit;
         Vector3 forward = firePoint.forward;
@@ -111,12 +144,30 @@ public class NGun : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    void MoveMarkerClientRpc(Vector3 pos)
+    private void MoveMarkerClientRpc(Vector3 pos)
     {
-        if(isMarkAttached) playerMarker.GetComponentInChildren<AttachableBehaviour>().Detach();
-        playerMarker.position = pos;
-        
-        var renderer = playerMarker.GetComponent<MeshRenderer>();
-        renderer.enabled = true;
+        if (isMarkAttached) 
+        { 
+            playerMarker.GetComponentInChildren<AttachableBehaviour>().Detach(); 
+        }
+        else
+        {
+            StopCoroutine(markerCoroutine);
+        }
+            playerMarker.position = pos;
+        markerCoroutine =  StartCoroutine(MarkerBackCorutine());
+
+        //var renderer = playerMarker.GetComponent<MeshRenderer>();
+        //renderer.enabled = true;
+    }
+    private IEnumerator MarkerBackCorutine()
+    {
+        yield return new WaitForSeconds(5f);
+        if(playerMarker != null)
+        {
+            playerMarker.GetComponentInChildren<AttachableBehaviour>().Attach(node);
+            playerMarker.localPosition = Vector3.zero;
+            isMarkAttached = true;
+        }
     }
 }

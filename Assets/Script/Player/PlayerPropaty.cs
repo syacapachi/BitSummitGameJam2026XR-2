@@ -8,7 +8,13 @@ using System.Collections.Generic;
 public class PlayerPropaty : NetworkBehaviour
 {
     [SerializeField] GameObject PlayerRoot;
-    public enum PlayerJob { Human, Ghost, Both }
+    [Flags]
+    public enum PlayerJob { 
+        Nothing = 0,
+        Human = 1,
+        Ghost = 1<<1,
+        Both = Human | Ghost,
+    }
     public event Action<PlayerJob> OnJobChanged;
     private readonly NetworkVariable<int> PlayerLayer = new (
         0,
@@ -25,6 +31,7 @@ public class PlayerPropaty : NetworkBehaviour
                 playerjob = value;
                 string layerName = playerjob switch
                 {
+                    PlayerJob.Nothing => "Default",
                     PlayerJob.Human => "Human",
                     PlayerJob.Ghost => "Ghost",
                     PlayerJob.Both => "Default",
@@ -47,6 +54,7 @@ public class PlayerPropaty : NetworkBehaviour
         {
             changeJobAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["SwitchJob"];
             changeJobAction.performed += OnJobChangeHandle;
+            OnJobChanged?.Invoke(Job);
         }
         PlayerLayer.OnValueChanged += OnValueChanged;
     }
@@ -79,6 +87,7 @@ public class PlayerPropaty : NetworkBehaviour
     {
         Job = Job switch
         {
+            PlayerJob.Nothing => PlayerJob.Human,
             PlayerJob.Human => PlayerJob.Ghost,
             PlayerJob.Ghost => PlayerJob.Both,
             PlayerJob.Both => PlayerJob.Human,

@@ -1,8 +1,14 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+/// <summary>
+/// プレイヤークラスのルートコンポーネント。プレイヤーに関連するすべてのコンポーネントを管理するためのクラス。プレイヤーの入力、キャラクターコントロール、ヘルス、プロパティ、カメラ設定などを統括する役割を持つ。
+/// </summary>
 public class PlayerRoot : NetworkBehaviour
 {
+    /// <summary>
+    /// オブジェクトの参照
+    /// </summary>
     public GameObject playerPrefab;
     public Transform playerRoot;
     public Canvas playerCanvas;
