@@ -48,11 +48,18 @@ public class NGun : NetworkBehaviour
             laserLine.SetPosition(1, firePoint.position + forward * laserDistance);
         }
     }
-    public override void OnNetworkSpawn()
+    protected override void OnNetworkPostSpawn()
     {
-        if (itemControll.TryGetItem("Marker", out AttachableBehaviour item))
+        if (itemControll.TryGetItem("Marker", out NetworkBehaviourReference item))
         {
-            playerMarker = item.gameObject.transform;
+            if(item.TryGet(out NetworkBehaviour obj))
+            {
+                playerMarker = obj.gameObject.transform;
+            }
+            else
+            {
+                Debug.LogWarning("NetworkBehaviour item not found in PlayerItemControll.");
+            }
         }
         else
         {
