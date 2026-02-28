@@ -30,11 +30,12 @@ public class PlayerItemControll : NetworkBehaviour
         GameObject markerInstance = NetworkObject.InstantiateAndSpawn(markerPrefab,NetworkManager,OwnerClientId).gameObject;
         AttachableBehaviour attach = markerInstance.GetComponentInChildren<AttachableBehaviour>();
         attach.Attach(node);
-        AddDictionaryRpc("Marker",attach.NetworkBehaviourId);
+        typeObjectDic.Add("Marker",attach);
+        //AddDictionaryRpc("Marker",attach.NetworkBehaviourId);
     }
     [Rpc(SendTo.Everyone,InvokePermission = RpcInvokePermission.Server)]
     private void AddDictionaryRpc(FixedString64Bytes name,ushort networkBehaviourId)
     {
-        typeObjectDic.Add(name, (AttachableBehaviour)NetworkObject.GetNetworkBehaviourAtOrderIndex(networkBehaviourId));
+        //typeObjectDic.Add(name, (AttachableBehaviour)NetworkObject.GetNetworkBehaviourAtOrderIndex(networkBehaviourId));
     }
 }
