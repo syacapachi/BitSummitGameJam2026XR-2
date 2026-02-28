@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 6499727074601204235}
   - component: {fileID: -1042397203540713297}
   - component: {fileID: 3140736013045747397}
+  - component: {fileID: 7692104524545060064}
   m_Layer: 0
   m_Name: SampleEnemy3
   m_TagString: Untagged
@@ -260,3 +261,17 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   meshRenderer: {fileID: 1611893630893251245}
   lookableJob: -1
+--- !u!114 &7692104524545060064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226233504691106808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2291fafe88de16c4ea6f7314393346d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  moveSpeed: 1
