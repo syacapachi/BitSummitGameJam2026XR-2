@@ -68,7 +68,11 @@ public class CameraSetting : NetworkBehaviour
         {
             //他の奴は無効にし、破壊する。これにより、他のプレイヤーのカメラが有効にならないようにし、リソースを節約する。
             localCamera.enabled = false;
-            localCamera.GetComponent<AudioListener>().enabled = false;
+            foreach(Component component in localCamera.gameObject.GetComponents<Component>())
+            {
+                if (component is Transform) continue;
+                Destroy(component);
+            }
             //Destroy(localCamera);
         }
     }

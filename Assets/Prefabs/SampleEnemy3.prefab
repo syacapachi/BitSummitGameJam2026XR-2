@@ -243,6 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  enemySO: {fileID: 0}
   maxHP: 3
   scoreValue: 300
 --- !u!114 &3140736013045747397
@@ -259,6 +260,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   meshRenderer: {fileID: 1611893630893251245}
+  lookableJob: -1
 --- !u!114 &7692104524545060064
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,7 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 public class NEnemy : NetworkBehaviour
 {
+    [SerializeField] EnemySO enemySO;
     public int maxHP = 1;       // ���̓G�������œ|��邩
     public int scoreValue = 100; // �|�����Ƃ��ɓ���X�R�A
 
@@ -17,7 +18,7 @@ public class NEnemy : NetworkBehaviour
     public void TakeDamage(int damage = 1)
     {
         Debug.Log("Take damage");
-        currentHP -= damage;
+        currentHP -= enemySO.Damage;
 
         if (currentHP <= 0)
         {

@@ -13,9 +13,8 @@ public class PlayerItemControll : NetworkBehaviour
     [SerializeField] GameObject markerPrefab;
 
     private readonly NetworkList<NetworkEntry> typeObjectList = new();
-
-    [SerializeField] public int DicSize = 0;
-
+    public event Action<string, NetworkBehaviourReference> OnItemAdded;
+    public AttachableNode Node => node;
     public bool TryGetItem(string name,out NetworkBehaviourReference instance)
     {
         foreach(NetworkEntry entry in typeObjectList)
@@ -32,8 +31,30 @@ public class PlayerItemControll : NetworkBehaviour
     }
     public override void OnNetworkSpawn()
     {
-        if(!IsOwner) return;
+        typeObjectList.OnListChanged += OnListChangedHandle;
+        if (!IsOwner) return;
             SpawnMarkerRpc();
+    }
+    private void OnListChangedHandle(NetworkListEvent<NetworkEntry> changeEvent)
+    {
+        Debug.Log($"List changed: {changeEvent.Type}");
+        switch(changeEvent.Type)
+        {
+            case NetworkListEvent<NetworkEntry>.EventType.Add : 
+                Debug.Log($"Added entry: {changeEvent.Value.Key}");
+                OnItemAdded?.Invoke(changeEvent.Value.Key.ToString(), changeEvent.Value.Reference);
+                break;
+            case NetworkListEvent<NetworkEntry>.EventType.Remove : 
+                Debug.Log($"Removed entry: {changeEvent.Value.Key}"); 
+                break;
+            case NetworkListEvent<NetworkEntry>.EventType.Value : 
+                Debug.Log($"Updated entry: {changeEvent.Value.Key}");
+                break;
+
+            default : 
+                Debug.Log("Unknown change type");
+                break;
+        }
     }
     [Rpc(SendTo.Server)]
     private void SpawnMarkerRpc()
@@ -41,27 +62,12 @@ public class PlayerItemControll : NetworkBehaviour
         var markerInstance =
             NetworkObject.InstantiateAndSpawn(markerPrefab, NetworkManager, OwnerClientId);
 
+        markerInstance.gameObject.name = $"Marker_{OwnerClientId}";
+
         var attach = markerInstance.GetComponentInChildren<AttachableBehaviour>();
         attach.Attach(node);
 
-        
-        SendMarkerReferenceClientRpc(node.NetworkObject);
-    }
-
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Server)]
-    private void SendMarkerReferenceClientRpc(NetworkObjectReference markerRef)
-    {
-        if (markerRef.TryGet(out NetworkObject obj))
-        {
-            Debug.Log(obj.gameObject.name);
-            var attach = obj.GetComponentInChildren<AttachableBehaviour>();
-            NetworkEntry entry = new NetworkEntry("Marker",attach);
-            typeObjectList.Add(entry);
-            DicSize = typeObjectList.Count;
-        }
-        else
-        {
-            Debug.LogError("Marker is null");
-        }
+        NetworkEntry entry = new NetworkEntry("Marker", attach);
+        typeObjectList.Add(entry);
     }
 }
