@@ -434,10 +434,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  enemies:
-  - {fileID: 5058385944009780280, guid: c21a4ea6af13bee4192ed201947e88eb, type: 3}
-  - {fileID: 2105836037167788384, guid: a016579188040ef409a81af685d0d865, type: 3}
-  - {fileID: 226233504691106808, guid: 878451c683359d14287b6fff1ebb81ec, type: 3}
   spawnPoints:
   - {fileID: 257093670}
   - {fileID: 1900339566}
@@ -448,8 +444,6 @@ MonoBehaviour:
   - {fileID: 1137725901}
   - {fileID: 1395990037}
   - {fileID: 30932656}
-  spawnCount: 2
-  remain: 0
 --- !u!4 &269016450
 Transform:
   m_ObjectHideFlags: 0
@@ -2576,9 +2570,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  phase: 0
+  phases:
+  - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
+  - {fileID: 11400000, guid: 9130db537808a9a4bbf5f8c246970b30, type: 2}
+  - {fileID: 11400000, guid: 09e28c63f7a683f46919a5d21940185b, type: 2}
   spawner: {fileID: 269016448}
-  duration: 30
   protectArea: {fileID: 1008058028}
 --- !u!4 &1601539024
 Transform:
@@ -3765,7 +3761,7 @@ Transform:
   m_GameObject: {fileID: 2102196812}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 9.3, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

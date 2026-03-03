@@ -2,24 +2,12 @@ using UnityEngine;
 using Unity.Netcode;
 public class NGameManager : NetworkBehaviour
 {
-    public enum Phase
-    {
-        Tutorial,
-        Phase1,
-        Phase2,
-        Phase3,
-        Clear
-    }
+    public PhaseSO[] phases;
 
-    public Phase phase;
+    private int currentPhaseIndex = -1;
+    private float timer;
 
-    float timer;
-    int lastSeconds;
-
-    public NEnemySpawner spawner; // Inspector�ŃZ�b�g
-    [SerializeField] float duration = 30f;
-
-
+    public NEnemySpawner spawner; 
     private int score = 0;
 
     public GameObject protectArea;
@@ -27,86 +15,69 @@ public class NGameManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        phase = Phase.Tutorial;
-        timer = 10f;
+        if (!IsServer) return;
 
-        lastSeconds = Mathf.CeilToInt(timer);
-
-        Debug.Log("Start Phase : " + phase);
+        spawner = GetComponentInChildren<NEnemySpawner>();
+        StartNextPhase();
     }
 
     void Update()
     {
-        if(!IsServer) return;
-        if(timer > 0) timer -= Time.deltaTime;
+        if (!IsServer) return;
+        if (currentPhaseIndex >= phases.Length) return;
 
-        int currentSeconds = Mathf.CeilToInt(timer);
+        timer -= Time.deltaTime;
 
-        //Debug.Log("debug : " + currentSeconds);
-        if (currentSeconds != lastSeconds)
+        if (timer <= 0) //spawerAllDead()
         {
-            Debug.Log("Time : " + currentSeconds);
-            lastSeconds = currentSeconds;
-        }
-
-        if (timer <= 0 && phase != Phase.Clear)
-        {
-            NextPhase();
+            EndPhase();
         }
     }
 
-    void NextPhase()
+    void StartNextPhase()
     {
-        if (phase != Phase.Tutorial)
-        {
-            CheckPhaseBonus();
-            isEnemycome = false;
-        }
-        if (phase == Phase.Tutorial)
-        {
-            phase = Phase.Phase1;
-            timer = duration;
+        currentPhaseIndex++;
 
-            spawner.SpawnEnemiesRpc();  // �t�F�[�Y1�J�n�œG���o��
-        }
-        else if (phase == Phase.Phase1)
+        if (currentPhaseIndex >= phases.Length)
         {
-            phase = Phase.Phase2;
-            timer = duration;
+            Debug.Log("GAME CLEAR");
+            return;
+        }
 
-            spawner.SpawnEnemiesRpc();  // �t�F�[�Y2�J�n�œG���o��
-        }
-        else if (phase == Phase.Phase2)
-        {
-            phase = Phase.Phase3;
-            timer = duration;
+        PhaseSO phase = phases[currentPhaseIndex];
 
-            spawner.SpawnEnemiesRpc();  // �t�F�[�Y3�J�n�œG���o��
-        }
-        else if (phase == Phase.Phase3)
+        timer = phase.phaseTime;
+
+        spawner.SpawnFromPhase(phase);
+
+        Debug.Log("Start Phase: " + currentPhaseIndex);
+    }
+
+    void EndPhase()
+    {
+        PhaseSO phase = phases[currentPhaseIndex];
+
+        if (spawner.AllDead() && !isEnemycome)
         {
-            phase = Phase.Clear;
+            Debug.Log("Clear Bonus");
+            AddScore(phase.clearBonus);
         }
+
+        StartNextPhase();
+    }
+
+    public void EnemyKilled(int scoreValue)
+    {
+        AddScore(scoreValue);
+        spawner.EnemyKilled();
     }
 
     public void AddScore(int value)
     {
         score += value;
+        if(value>0) Debug.Log("Add Score");
+        else Debug.Log("Subtract Score");
         Debug.Log("Score: " + score);
-    }
-
-    void CheckPhaseBonus()
-    {
-        if (spawner.remain == 0 && !isEnemycome)
-        {
-            Debug.Log("All Enemy Broken: +500");
-            AddScore(500);
-        }
-    }
-
-    public void EnemyKilled()
-    {
-        spawner.remain--;
     }
 
     public void Enemycome()

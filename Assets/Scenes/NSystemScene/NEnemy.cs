@@ -3,19 +3,16 @@ using Unity.Netcode;
 public class NEnemy : NetworkBehaviour
 {
     [SerializeField] EnemySO enemySO;
-    public int maxHP = 1;       // ���̓G�������œ|��邩
-    public int scoreValue = 100; // �|�����Ƃ��ɓ���X�R�A
-
     private int currentHP;
 
     public override void OnNetworkSpawn()
     {
-        currentHP = maxHP;
+        currentHP = enemySO.HP;
     }
 
     // �e�����������Ƃ��ɌĂ�
 
-    public void TakeDamage(int damage = 1)
+    public void TakeDamage()
     {
         Debug.Log("Take damage");
         currentHP -= enemySO.Damage;
@@ -28,13 +25,9 @@ public class NEnemy : NetworkBehaviour
     [Rpc(SendTo.Server,InvokePermission = RpcInvokePermission.Server)]
     void DieRpc()
     {
-         Debug.Log("Die");
-        // �X�R�A���Z
-        ManagerLocator.Instance.GameManager.AddScore(scoreValue);
-        // GameManager �ɒʒm���đS���j�{�[�i�X����
-        ManagerLocator.Instance.GameManager.EnemyKilled();
+        Debug.Log("Die");
+        ManagerLocator.Instance.GameManager.EnemyKilled(enemySO.scoreValue);
 
-        // �G���폜
         GetComponent<NetworkObject>().Despawn(true);
     }
 }

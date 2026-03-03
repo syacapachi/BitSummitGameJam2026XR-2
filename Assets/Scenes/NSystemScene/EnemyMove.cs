@@ -3,7 +3,7 @@ using Unity.Netcode;
 
 public class EnemyMove : NetworkBehaviour
 {
-    public float moveSpeed = 3f;
+    public EnemySO enemySO;
     Transform target;
 
     public override void OnNetworkSpawn()
@@ -23,7 +23,7 @@ public class EnemyMove : NetworkBehaviour
     void MoveToTarget()
     {
         Vector3 direction = (target.position - transform.position).normalized;
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        transform.position += direction * enemySO.Speed * Time.deltaTime;
     }
 
     // Åö ProtectAreaÇ…ì¸Ç¡ÇΩÇÁ
@@ -35,9 +35,7 @@ public class EnemyMove : NetworkBehaviour
         {
             Debug.Log("Enemy reached ProtectArea");
 
-            // ÉXÉRÉAå∏è≠
-            ManagerLocator.Instance.GameManager.AddScore(-100);
-            ManagerLocator.Instance.GameManager.EnemyKilled();
+            ManagerLocator.Instance.GameManager.EnemyKilled(-100);
             ManagerLocator.Instance.GameManager.Enemycome();
 
             // ìGçÌèú

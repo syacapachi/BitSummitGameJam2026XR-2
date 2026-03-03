@@ -31,6 +31,7 @@ public class NBullet : NetworkBehaviour
         GetComponent<NetworkObject>().Despawn(true);
     }
 
+    /*
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Hit");
@@ -39,7 +40,22 @@ public class NBullet : NetworkBehaviour
         if (enemy != null)
         {
 
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage();
+        }
+        StopCoroutine(despawnTimer);
+        GetComponent<NetworkObject>().Despawn(true); // �e�͏�����
+    }
+    */
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (!IsServer) return;
+        Debug.Log("Hit");
+        // Enemy �ɓ��������ꍇ
+        NEnemy enemy = other.GetComponent<NEnemy>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage();
         }
         StopCoroutine(despawnTimer);
         GetComponent<NetworkObject>().Despawn(true); // �e�͏�����

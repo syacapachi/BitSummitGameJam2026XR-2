@@ -1,41 +1,59 @@
 using UnityEngine;
-using System.Collections.Generic; // List���g��
 using Unity.Netcode;
 
 public class NEnemySpawner : NetworkBehaviour
 {
-    public GameObject[] enemies;        // �]���r�A�H��Ȃ�
-    public Transform[] spawnPoints;     // �X�|�[���|�C���g
-    public int spawnCount = 3;          // �t�F�[�Y���Ƃɏo���G�̐�
-    public int remain = 0;
+    public Transform[] spawnPoints;
 
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Server)]
-    public void SpawnEnemiesRpc()
+    private int remain;
+    public int Remain => remain;
+
+    public void SpawnFromPhase(PhaseSO phase)
     {
-        remain += spawnCount;
+        if (!IsServer) return;
 
-        List<Transform> availablePoints = new List<Transform>(spawnPoints);
+        remain = 0;
 
-        for (int i = 0; i < spawnCount; i++)
+        foreach (var data in phase.spawnList)
         {
-            if (availablePoints.Count == 0)
+            for (int i = 0; i < data.count; i++)
             {
-                Debug.LogWarning("SpawnPoints������܂���");
-                break;
+                SpawnEnemy(data.enemyType, phase.usableSpawnPointIndex);
+                remain++;
             }
-
-            int enemyIndex = Random.Range(0, enemies.Length);
-            int spawnIndex = Random.Range(0, availablePoints.Count);
-
-            Transform spawnPoint = availablePoints[spawnIndex];
-
-            Instantiate(
-                enemies[enemyIndex],
-                spawnPoint.position,
-                spawnPoint.rotation
-            ).GetComponent<NetworkObject>().Spawn();
-
-            availablePoints.RemoveAt(spawnIndex);
         }
+    }
+
+    void SpawnEnemy(EnemySO enemyData, int[] usableIndex)
+    {
+        if (usableIndex.Length == 0)
+        {
+            Debug.LogWarning("No usable spawn points!");
+            return;
+        }
+
+        int randomArrayIndex = Random.Range(0, usableIndex.Length);
+        int spawnIndex = usableIndex[randomArrayIndex];
+
+        Transform point = spawnPoints[spawnIndex];
+
+        GameObject obj = Instantiate(
+            enemyData.prefab,
+            point.position,
+            point.rotation
+        );
+
+        obj.GetComponent<NetworkObject>().Spawn();
+    }
+
+    public void EnemyKilled()
+    {
+        if (!IsServer) return;
+        remain--;
+    }
+
+    public bool AllDead()
+    {
+        return remain <= 0;
     }
 }
