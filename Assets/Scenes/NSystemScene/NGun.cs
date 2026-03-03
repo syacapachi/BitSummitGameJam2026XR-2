@@ -112,6 +112,7 @@ public class NGun : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
+    /*
     private void ShootRpc()
     {
         // リロード中は撃てない
@@ -132,6 +133,37 @@ public class NGun : NetworkBehaviour
         currentAmmo--;
 
         GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        obj.GetComponent<NetworkObject>().Spawn();
+    }
+    */
+    private void ShootRpc()
+    {
+        if (isReloading) return;
+        if (currentAmmo <= 0)
+        {
+            StartCoroutine(Reload());
+            return;
+        }
+        if (Time.time < nextFire) return;
+
+        nextFire = Time.time + weaponSettings.fireRate;
+        currentAmmo--;
+
+        // ① 弾を生成
+        GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+        // ② 弾のLayerをプレイヤーのJobに合わせる
+        var job = GetComponent<PlayerPropaty>().Job;
+        string layerName = job switch
+        {
+            PlayerPropaty.PlayerJob.Human => "Human",
+            PlayerPropaty.PlayerJob.Ghost => "Ghost",
+            PlayerPropaty.PlayerJob.Both => "Both",
+            _ => "Default"
+        };
+        obj.layer = LayerMask.NameToLayer(layerName);
+
+        // ③ ネットワークでSpawn
         obj.GetComponent<NetworkObject>().Spawn();
     }
 
