@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
-  m_Name: BaseEnemy
+  m_Script: {fileID: 11500000, guid: f5d4ed68d17b39c42980fe611297e6dd, type: 3}
+  m_Name: GunSettings
   m_EditorClassIdentifier: 
-  HP: 100
-  Damage: 100
-  Speed: 1
-  scoreValue: 100
-  prefab: {fileID: 0}
+  fireRate: 0.2
+  maxAmmo: 30
+  reloadTime: 2
+  laserDistance: 50

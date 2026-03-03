@@ -9,9 +9,10 @@ public class NGun : NetworkBehaviour
     public GameObject bulletPrefab;
     public Transform firePoint;
     public LineRenderer laserLine;
-    public float laserDistance = 50f;
 
-    public float fireRate = 0.2f;
+
+    public WeaponSettingsSO weaponSettings;
+
     [SerializeField] PlayerItemControll itemControll;
     /// <summary>
     /// サーバーのみ参照を持つフィールド。プレイヤーのマーカーオブジェクトを参照するために使用される。クライアントはこのフィールドを直接参照せず、RPCを介してマーカーの位置を更新する。
@@ -20,6 +21,8 @@ public class NGun : NetworkBehaviour
     AttachableNode node;
     PlayerControls controls;
     float nextFire;
+    int currentAmmo;
+    bool isReloading;
 
     bool isMarkAttached = true;
     Coroutine markerCoroutine;
@@ -42,7 +45,7 @@ public class NGun : NetworkBehaviour
         RaycastHit hit;
         Vector3 forward = firePoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out hit, laserDistance))
+        if (Physics.Raycast(firePoint.position, forward, out hit, weaponSettings.laserDistance))
         {
             // ���������ꍇ
             laserLine.SetPosition(1, hit.point);
@@ -50,14 +53,15 @@ public class NGun : NetworkBehaviour
         else
         {
             // ������Ȃ������ꍇ
-            laserLine.SetPosition(1, firePoint.position + forward * laserDistance);
+            laserLine.SetPosition(1, firePoint.position + forward * weaponSettings.laserDistance);
         }
     }
     protected override void OnNetworkPostSpawn()
     {
-        
+           
         if (IsServer) 
         {
+            currentAmmo = weaponSettings.maxAmmo;
             TryGetPlayerMarker();
         }
         
@@ -110,12 +114,35 @@ public class NGun : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void ShootRpc()
     {
+        // リロード中は撃てない
+        if (isReloading) return;
+
+        // 弾がないならリロード開始
+        if (currentAmmo <= 0)
+        {
+            StartCoroutine(Reload());
+            return;
+        }
+
+        // 連射クールダウン
         if (Time.time < nextFire) return;
 
-        nextFire = Time.time + fireRate;
+        nextFire = Time.time + weaponSettings.fireRate;
+
+        currentAmmo--;
 
         GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         obj.GetComponent<NetworkObject>().Spawn();
+    }
+
+    private IEnumerator Reload()
+    {
+        isReloading = true;
+
+        yield return new WaitForSeconds(weaponSettings.reloadTime);
+
+        currentAmmo = weaponSettings.maxAmmo;
+        isReloading = false;
     }
 
     [Rpc(SendTo.Server)]
@@ -136,7 +163,7 @@ public class NGun : NetworkBehaviour
         RaycastHit hit;
         Vector3 forward = firePoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out hit, laserDistance))
+        if (Physics.Raycast(firePoint.position, forward, out hit, weaponSettings.laserDistance))
         {
             MoveMarkerClientRpc(hit.point);
         }

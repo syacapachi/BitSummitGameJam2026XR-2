@@ -5,6 +5,7 @@ public class EnemySO : ScriptableObject
 {
     public int HP;
     public int Damage;
-    public int Speed;
-
+    public float Speed;
+    public int scoreValue;
+    public GameObject prefab;
 }

@@ -209,7 +209,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -243,9 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  enemySO: {fileID: 0}
-  maxHP: 3
-  scoreValue: 300
+  enemySO: {fileID: 11400000, guid: 5e9c18f2879d298419f62e4bc87e6ce2, type: 2}
 --- !u!114 &3140736013045747397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,4 +272,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  moveSpeed: 1
+  enemySO: {fileID: 11400000, guid: 5e9c18f2879d298419f62e4bc87e6ce2, type: 2}
