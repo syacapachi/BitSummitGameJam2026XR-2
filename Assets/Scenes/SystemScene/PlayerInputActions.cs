@@ -209,8 +209,30 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""d4dc32ee-b5b8-4afc-b12c-7648d7da69de"",
+                    ""path"": ""<XRController>/{TriggerButton}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""b0d8004f-02d1-4c78-95fc-f8006d5133bc"",
                     ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Marker"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""267652e7-1f34-476f-bfea-81d032295f62"",
+                    ""path"": ""<XRController>/{GripButton}"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
