@@ -56,32 +56,36 @@ public class CharactorControll : NetworkBehaviour
     private void ResistAction()
     {
         moveAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Move"];
-            jumpAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Jump"];
-            setObjectAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Interact"];
+        jumpAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Jump"];
+        setObjectAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Interact"];
 
-            moveAction.performed += MoveActionCallback;
-            moveAction.canceled += MoveActionCallback; // 入力がキャンセルされたときもコールバックを呼び出す(ゼロの検出)
+        moveAction.performed += MoveActionCallback;
+        moveAction.canceled += MoveActionCallback; // 入力がキャンセルされたときもコールバックを呼び出す(ゼロの検出)
 
-            jumpAction.performed += JumpActionCallback;
+        jumpAction.performed += JumpActionCallback;
 
-            setObjectAction.performed += OnSetObjectCallback;
+        setObjectAction.performed += OnSetObjectCallback;
 
-            jumpCount.OnValueChanged += OnJumoCountChanged;
+        jumpCount.OnValueChanged += OnJumoCountChanged;
     }
     //ネット上でオブジェクトがデスポーンしたときに呼ばれる
     public override void OnNetworkDespawn()
     {
-        if(moveAction != null)
-            moveAction.performed -= MoveActionCallback;
-        if(jumpAction != null)
+        if (IsOwner)
         {
-            jumpAction.canceled -= JumpActionCallback;
-            jumpAction.performed -= JumpActionCallback;
+            if (moveAction != null)
+                moveAction.performed -= MoveActionCallback;
+            if (jumpAction != null)
+            {
+                jumpAction.canceled -= JumpActionCallback;
+                jumpAction.performed -= JumpActionCallback;
+            }
+            if (setObjectAction != null)
+                setObjectAction.performed -= OnSetObjectCallback;
+            if (jumpCount != null)
+                jumpCount.OnValueChanged -= OnJumoCountChanged;
         }
-        if(setObjectAction != null)
-            setObjectAction.performed -= OnSetObjectCallback;
-        if(jumpCount != null)
-            jumpCount.OnValueChanged -= OnJumoCountChanged;
+        
     }
     private void OnJumoCountChanged(int oldValue, int newValue)
     {
@@ -141,7 +145,7 @@ public class CharactorControll : NetworkBehaviour
             animator.SetFloat("Direction", moveInput.Value.x);
 
             //カメラの向きに応じた移動をするかどうかは、PlayerManagerのCameraSettingで管理する、サーバーに送るときに一緒に送る
-            MoveCharactorServerRpc(moveInput.Value,ManagerLocator.Instance.PlayerManager.OwnerPlayer.cameraSetting.IsMainCameraActive);
+            MoveCharactor(moveInput.Value,ManagerLocator.Instance.PlayerManager.OwnerPlayer.cameraSetting.IsMainCameraActive);
         }
 
     }
@@ -149,8 +153,7 @@ public class CharactorControll : NetworkBehaviour
     //サーバーで実行される関数(名前にServerRpcを付ける) 呼び出せるのはオーナー のみ
     //プレイヤーの移動をサーバーで処理する
     //NetworkTransform(Server Authority Mode)は、Serverの位置をクライアントに同期するので、サーバーに送る必要がある
-    [ServerRpc]
-    private void MoveCharactorServerRpc(Vector2 inputVector,bool isWorldSpace)
+    private void MoveCharactor(Vector2 inputVector,bool isWorldSpace)
     {
         //Debug.Log($"Catch {inputVector}");
         //クライアントから送られた入力をもとに、サーバー側でキャラクターを移動させる

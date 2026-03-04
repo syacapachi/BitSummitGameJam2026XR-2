@@ -27,7 +27,9 @@ public class NEnemy : NetworkBehaviour
     {
         Debug.Log("Die");
         ManagerLocator.Instance.GameManager.EnemyKilled(enemySO.scoreValue);
-
-        GetComponent<NetworkObject>().Despawn(true);
+        if (NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn(true);
+        }
     }
 }

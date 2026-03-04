@@ -94,11 +94,4 @@ public class PlayerPropaty : NetworkBehaviour
             _ => throw new System.NotImplementedException(),
         };
     }
-    private void OnGUI()
-    {
-        if (IsOwner)
-        {
-            GUI.Label(new Rect(10, 10, 200, 20), $"Job: {Job}");
-        }
-    }
 }
