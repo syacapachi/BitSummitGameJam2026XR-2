@@ -4,6 +4,7 @@ using UnityEngine.Timeline;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using System.Collections;
+using Unity.XR.CoreUtils;
 public class NGun : NetworkBehaviour
 {
     public GameObject bulletPrefab;
@@ -81,7 +82,14 @@ public class NGun : NetworkBehaviour
         {
             controls.Disable();
         }
-            
+        if(IsServer)
+        {
+            if (markerCoroutine != null)
+            {
+                StopCoroutine(markerCoroutine);
+            }
+        }
+
     }
     private bool TryGetPlayerMarker()
     {
@@ -158,10 +166,10 @@ public class NGun : NetworkBehaviour
         {
             PlayerPropaty.PlayerJob.Human => "Human",
             PlayerPropaty.PlayerJob.Ghost => "Ghost",
-            PlayerPropaty.PlayerJob.Both => "Both",
+            PlayerPropaty.PlayerJob.Both => "Default",
             _ => "Default"
         };
-        obj.layer = LayerMask.NameToLayer(layerName);
+        obj.SetLayerRecursively(LayerMask.NameToLayer(layerName));
 
         // ③ ネットワークでSpawn
         obj.GetComponent<NetworkObject>().Spawn();

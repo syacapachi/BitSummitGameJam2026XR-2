@@ -973,9 +973,11 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   playerPrefab: {fileID: 4463208289577428301}
   playerRoot: {fileID: 2977821444102550308}
+  playerCanvas: {fileID: 0}
   playerInput: {fileID: 2927620275465168496}
   characterControll: {fileID: 7046346039521220327}
   playerHealth: {fileID: 1253958484371836754}
+  propaty: {fileID: 0}
   cameraSetting: {fileID: 7836387624157748051}
 --- !u!114 &1253958484371836754
 MonoBehaviour:
@@ -3667,7 +3669,7 @@ MonoBehaviour:
   RotationMaxInterpolationTime: 0.1
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
+  AuthorityMode: 1
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1

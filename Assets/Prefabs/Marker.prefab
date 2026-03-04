@@ -15,8 +15,6 @@ GameObject:
   - component: {fileID: 8763190035426447647}
   - component: {fileID: 6232679789972296265}
   - component: {fileID: 3336580506596078715}
-  - component: {fileID: 7776901794853506480}
-  - component: {fileID: 2206824301321997850}
   m_Layer: 0
   m_Name: Marker-Child
   m_TagString: Untagged
@@ -174,15 +172,10 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   AutoDetach: -1
   ComponentControllers:
-  - name: Marker-Child (Component Controller)
-    AutoTrigger: 255
-    EnableOnAttach: 1
-    ComponentController: {fileID: 2206824301321997850}
-    HasInitialized: 1
-  - name: Marker-Child (Component Controller)
+  - name: Marker (Component Controller)
     AutoTrigger: 255
     EnableOnAttach: 0
-    ComponentController: {fileID: 7776901794853506480}
+    ComponentController: {fileID: 8060930132235393792}
     HasInitialized: 1
 --- !u!114 &3336580506596078715
 MonoBehaviour:
@@ -198,46 +191,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeTime: 5
   color: {r: 1, g: 0, b: 0, a: 1}
---- !u!114 &7776901794853506480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2818825565032162250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0b25b3f95e5324abc80c09cb29f271, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  StartEnabled: 1
-  Components:
-  - name: Marker-Child (Sphere Collider)
-    InvertEnabled: 1
-    EnableDelay: 0
-    DisableDelay: 0
-    Component: {fileID: 8763190035426447647}
---- !u!114 &2206824301321997850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2818825565032162250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0b25b3f95e5324abc80c09cb29f271, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  StartEnabled: 0
-  Components:
-  - name: Marker-Child (Mesh Renderer)
-    InvertEnabled: 1
-    EnableDelay: 0
-    DisableDelay: 0
-    Component: {fileID: 1103239692597537299}
 --- !u!1 &8123762091118261607
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,6 +201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7185371350088474685}
   - component: {fileID: 1088945811907194941}
+  - component: {fileID: 8060930132235393792}
   m_Layer: 0
   m_Name: Marker
   m_TagString: Untagged
@@ -296,3 +250,28 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &8060930132235393792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8123762091118261607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d0b25b3f95e5324abc80c09cb29f271, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  StartEnabled: 1
+  Components:
+  - name: Marker-Child (Sphere Collider)
+    InvertEnabled: 0
+    EnableDelay: 0
+    DisableDelay: 0
+    Component: {fileID: 8763190035426447647}
+  - name: Marker-Child (Mesh Renderer)
+    InvertEnabled: 0
+    EnableDelay: 0
+    DisableDelay: 0
+    Component: {fileID: 1103239692597537299}

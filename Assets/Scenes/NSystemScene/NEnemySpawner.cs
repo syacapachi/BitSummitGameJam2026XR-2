@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 
 public class NEnemySpawner : NetworkBehaviour
@@ -31,8 +31,8 @@ public class NEnemySpawner : NetworkBehaviour
             Debug.LogWarning("No usable spawn points!");
             return;
         }
-
-        int randomArrayIndex = Random.Range(0, usableIndex.Length);
+        int maxLength = Mathf.Min(usableIndex.Length,spawnPoints.Length);
+        int randomArrayIndex = Random.Range(0, maxLength);
         int spawnIndex = usableIndex[randomArrayIndex];
 
         Transform point = spawnPoints[spawnIndex];

@@ -2,6 +2,8 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.Rendering.Universal;
 
 public class CameraSetting : NetworkBehaviour
 {
@@ -16,6 +18,7 @@ public class CameraSetting : NetworkBehaviour
     [SerializeField] Camera mainCamera;
     [SerializeField] CharactorControll characterControll;
     [SerializeField] PlayerHealth playerHealth;
+    [SerializeField] PlayerPropaty propaty;
     [SerializeField] float mouseSensitivity = 1f;
     [SerializeField] float yMinLimit = -89f;
     [SerializeField] float yMaxLimit = 89f;
@@ -68,11 +71,9 @@ public class CameraSetting : NetworkBehaviour
         {
             //他の奴は無効にし、破壊する。これにより、他のプレイヤーのカメラが有効にならないようにし、リソースを節約する。
             localCamera.enabled = false;
-            foreach(Component component in localCamera.gameObject.GetComponents<Component>())
-            {
-                if (component is Transform) continue;
-                Destroy(component);
-            }
+            Destroy(localCamera.gameObject.GetComponent<AudioListener>());
+            Destroy(localCamera.gameObject.GetComponent<UniversalAdditionalCameraData>());
+            Destroy(localCamera.gameObject.GetComponent<TrackedPoseDriver>());
             //Destroy(localCamera);
         }
     }
@@ -115,7 +116,7 @@ public class CameraSetting : NetworkBehaviour
 
                 if (cameraAngle != lastSendRotation)
                 {
-                    RotationChangeServerRpc(cameraAngle.x, cameraAngle.y);
+                    RotationChange(cameraAngle.x, cameraAngle.y);
                     lastSendRotation = cameraAngle;
                 }
             }
@@ -128,9 +129,7 @@ public class CameraSetting : NetworkBehaviour
         return Mathf.Clamp(angle, min, max);
     }
 
-    //サーバーに回転の変更を通知するためのServerRpc。これにより、プレイヤーの回転がサーバーに伝えられ、他のクライアントにも反映されるようになる。
-    [ServerRpc]
-    private void RotationChangeServerRpc(float x, float y)
+    private void RotationChange(float x, float y)
     {
         playerRootTransform.rotation = Quaternion.Euler(y, x, 0);
     }
@@ -159,12 +158,12 @@ public class CameraSetting : NetworkBehaviour
         {
             //オーナーでないプレイヤーの情報を表示するためのコード。オーナーでないプレイヤーのカメラが有効な場合は、そのカメラの位置にプレイヤーのIDとジャンプ回数を表示する。
             Vector3 positon = ManagerLocator.Instance.PlayerManager.OwnerPlayer.cameraSetting.CurrentActiveCamera.WorldToScreenPoint(playerRootTransform.position);
-             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 120, 100, 20), $"{OwnerClientId}");
-             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 100, 100, 20), $"jump: {characterControll.JumpCount}");
-                            
+            GUI.Label(new Rect(positon.x, Screen.height - positon.y - 120, 100, 20), $"{OwnerClientId}");
+            GUI.Label(new Rect(positon.x, Screen.height - positon.y - 100, 100, 20), $"jump: {characterControll.JumpCount}");
+            return;         
         }
 
-        else if (mainCamera != null && CurrentActiveCamera == mainCamera)
+        if (mainCamera != null && CurrentActiveCamera == mainCamera)
         {
             Vector3 positon = mainCamera.WorldToScreenPoint(playerRootTransform.position);
             if (positon.z < 0) return; // カメラの前にいる場合のみ表示
@@ -172,6 +171,7 @@ public class CameraSetting : NetworkBehaviour
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 30, 100, 20), $"jump: {characterControll.JumpCount}");
             GUI.Label(new Rect(positon.x, Screen.height - positon.y, 100, 20), $"HP: {playerHealth.Health.Value}/{playerHealth.MaxHealth}");
         }
-            
+        GUI.Label(new Rect(10, 10, 200, 20), $"Job: {propaty.Job}");
+
     }
 }
