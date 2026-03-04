@@ -50,7 +50,6 @@ public class CharactorControll : NetworkBehaviour
                 return;
             }
             ResistAction();
-            
         }
     }
     private void ResistAction()

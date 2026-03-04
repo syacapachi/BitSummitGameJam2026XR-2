@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
+using System.Collections.Generic;
 public class NGameManager : NetworkBehaviour
 {
     public PhaseSO[] phases;
-
     private int currentPhaseIndex = -1;
     private float timer;
 
@@ -18,7 +18,7 @@ public class NGameManager : NetworkBehaviour
         if (!IsServer) return;
 
         spawner = GetComponentInChildren<NEnemySpawner>();
-        StartNextPhase();
+        ResetAndStartGame();
     }
 
     void Update()
@@ -32,6 +32,12 @@ public class NGameManager : NetworkBehaviour
         {
             EndPhase();
         }
+    }
+    [OnInspectorButton("Reset And Start Game")]
+    public void ResetAndStartGame()
+    {
+        currentPhaseIndex = -1;
+        StartNextPhase();
     }
 
     void StartNextPhase()
