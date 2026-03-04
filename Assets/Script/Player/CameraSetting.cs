@@ -2,6 +2,8 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.Rendering.Universal;
 
 public class CameraSetting : NetworkBehaviour
 {
@@ -69,11 +71,9 @@ public class CameraSetting : NetworkBehaviour
         {
             //他の奴は無効にし、破壊する。これにより、他のプレイヤーのカメラが有効にならないようにし、リソースを節約する。
             localCamera.enabled = false;
-            foreach(Component component in localCamera.gameObject.GetComponents<Component>())
-            {
-                if (component is Transform) continue;
-                Destroy(component);
-            }
+            Destroy(localCamera.gameObject.GetComponent<AudioListener>());
+            Destroy(localCamera.gameObject.GetComponent<UniversalAdditionalCameraData>());
+            Destroy(localCamera.gameObject.GetComponent<TrackedPoseDriver>());
             //Destroy(localCamera);
         }
     }
