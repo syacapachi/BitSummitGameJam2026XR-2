@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class GameManager : MonoBehaviour
         Phase3,
         Clear
     }
+    public GameObject phaseBoard;
+    public TextMeshProUGUI phaseText;
 
     public Phase phase;
 
@@ -79,6 +82,7 @@ public class GameManager : MonoBehaviour
         {
             phase = Phase.Clear;
         }
+        ShowPhaseText();
     }
 
     void Awake()
@@ -105,5 +109,19 @@ public class GameManager : MonoBehaviour
     public void EnemyKilled()
     {
         spawner.remain--;
+    }
+
+    void ShowPhaseText()
+    {
+        phaseText.text = phase.ToString();
+        phaseBoard.SetActive(true);
+
+        CancelInvoke(nameof(HidePhaseText));
+        Invoke(nameof(HidePhaseText), 3f);
+    }
+
+    void HidePhaseText()
+    {
+        phaseBoard.SetActive(false);
     }
 }
