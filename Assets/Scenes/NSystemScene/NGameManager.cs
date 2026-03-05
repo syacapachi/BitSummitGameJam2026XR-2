@@ -3,6 +3,7 @@ using Unity.Netcode;
 using System.Collections.Generic;
 public class NGameManager : NetworkBehaviour
 {
+    public static NGameManager Instance;
     public PhaseSO[] phases;
     private int currentPhaseIndex = -1;
     private float timer;
@@ -13,8 +14,17 @@ public class NGameManager : NetworkBehaviour
     public GameObject protectArea;
     private bool isEnemycome = false;
 
+    public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
     public override void OnNetworkSpawn()
     {
+        syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
+
         if (!IsServer) return;
 
         spawner = GetComponentInChildren<NEnemySpawner>();
@@ -49,6 +59,8 @@ public class NGameManager : NetworkBehaviour
             Debug.Log("GAME CLEAR");
             return;
         }
+
+        syncedPhaseIndex.Value = currentPhaseIndex;
 
         PhaseSO phase = phases[currentPhaseIndex];
 
@@ -89,5 +101,13 @@ public class NGameManager : NetworkBehaviour
     public void Enemycome()
     {
         isEnemycome = true;
+    }
+
+    void OnPhaseChanged(int oldValue, int newValue)
+    {
+        if (newValue < 0 || newValue >= phases.Length) return;
+
+        PhaseSO phase = phases[newValue];
+
     }
 }
