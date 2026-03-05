@@ -14,27 +14,36 @@ using UnityEngine;
 [CustomEditor(typeof(NetworkBehaviour), true)]
 public class NetCodeButtonEditor : NetcodeEditorBase<NetworkBehaviour>
 {
-    private readonly Dictionary<string, object[]> methodParameters = new();
+    private readonly Dictionary<Type, MethodInfo[]> methodCache = new();
+    // メソッド名と引数のキャッシュ (パフォーマンス向上のため)
+    private readonly Dictionary<MethodInfo, object[]> methodParameters = new();
+    // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
+    private readonly Dictionary<object, bool> foldouts = new();
     // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
     private readonly Dictionary<UnityEngine.Object, bool> foldoutStates = new();
-    // ネストしたScriptableObjectのEditorキャッシュ (パフォーマンス向上のため)
-    private readonly Dictionary<UnityEngine.Object, Editor> _editorCache = new();
+    // ネストしたEditorキャッシュ (パフォーマンス向上のため)
+    private readonly Dictionary<UnityEngine.Object, Editor> editorCache = new();
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+        //base.OnInspectorGUI(); //これを呼ぶと、全てのフィールドが描画される。DrawDefaultInspector()と同様。
+        //通常のインスペクター描画を行う。これを呼ばないと、通常のフィールドが表示されない。
         DrawDefaultInspector();
-        DrawInspectorButtons();
-    }
-    private void DrawInspectorButtons()
-    {
+
         //各インスペクターで呼ばれる。
         var targetType = target.GetType();
 
         //自分自身は描画しない(エラー回避)
         if (targetType == typeof(OnInspectorButtonEditor)) return;
 
-        // メソッドを列挙
-        var methods = targetType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+        // キャッシュからメソッドを取得、なければリフレクションで取得してキャッシュに保存
+        if (!methodCache.TryGetValue(targetType, out var methods))
+        {
+            // メソッドを列挙
+            methods = targetType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            methodCache[targetType] = methods;
+        }
+
         foreach (var method in methods)
         {
             var attr = method.GetCustomAttribute<OnInspectorButtonAttribute>();
@@ -49,76 +58,45 @@ public class NetCodeButtonEditor : NetcodeEditorBase<NetworkBehaviour>
 
         // ネストしたScriptableObjectを再帰的に描画
         DrawNestedScriptableObjects(target);
-    }
+        //変更を保存
+        serializedObject.ApplyModifiedProperties();
+    }    
+
     private void DrawButtonForMethod(MethodInfo method, OnInspectorButtonAttribute attr)
     {
-        var nb = target as NetworkBehaviour;
-        if (nb == null)
-        {
-            return;
-        }
-        if (!CanInvokeRpc(nb, method))
-        {
-            EditorGUILayout.LabelField($"{method.Name} (RPC - insufficient permissions)");
-            return;
-        }
-        //Rpc属性がない場合は通常のアクセス制御
         //ラベルがない場合は関数名で上書き
         string buttonLabel = string.IsNullOrEmpty(attr.label) ? method.Name : attr.label;
         //引数を取得
         var parameters = method.GetParameters();
 
-        EditorGUILayout.Space(4);
+        EditorGUILayout.Space(5);
 
         if (parameters.Length == 0)
         {
             if (GUILayout.Button(buttonLabel))
                 InvokeMethod(method, null);
+
+            return;
         }
-        else
+        //初回は辞書に登録することで次回以降の検索の手間を省く
+        if (!methodParameters.ContainsKey(method))
+            methodParameters[method] = new object[parameters.Length];
+
+        var values = methodParameters[method];
+
+        EditorGUILayout.BeginVertical("box");
+        EditorGUILayout.LabelField($"{method.Name} Parameters", EditorStyles.boldLabel);
+
+        for (int i = 0; i < parameters.Length; i++)
         {
-            //初回は辞書に登録することで次回以降の検索の手間を省く
-            if (!methodParameters.ContainsKey(method.Name))
-                methodParameters[method.Name] = new object[parameters.Length];
-
-            var values = methodParameters[method.Name];
-
-            EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField($"{method.Name} Parameters", EditorStyles.boldLabel);
-
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                var param = parameters[i];
-                values[i] = DrawFieldForType(param, values[i]);
-            }
-
-            if (GUILayout.Button(buttonLabel))
-                InvokeMethod(method, values);
-
-            EditorGUILayout.EndVertical();
-        }
-    }
-    private bool CanInvokeRpc(NetworkBehaviour nb, MethodInfo method)
-    {
-        if (!nb.IsSpawned)
-            return false;
-
-        // 新RPC属性
-        var rpcAttr = method.GetCustomAttribute<RpcAttribute>();
-        if (rpcAttr != null)
-        {
-            switch (rpcAttr.InvokePermission)
-            {
-                case RpcInvokePermission.Owner:
-                    return nb.IsOwner; // SendTo.Serverは所有者のみ送信可能
-                case RpcInvokePermission.Server:
-                    return nb.IsServer; // SendTo.Clientはサーバーのみ送信可能
-                case RpcInvokePermission.Everyone:
-                    return true; // SendTo.Allは誰でも送信可能
-            }
+            var param = parameters[i];
+            values[i] = DrawField(param.ParameterType, param.Name, values[i]);
         }
 
-        return true;
+        if (GUILayout.Button(buttonLabel))
+            InvokeMethod(method, values);
+
+        EditorGUILayout.EndVertical();
     }
 
     private void InvokeMethod(MethodInfo method, object[] values)
@@ -133,47 +111,250 @@ public class NetCodeButtonEditor : NetcodeEditorBase<NetworkBehaviour>
         }
     }
 
-    private object DrawFieldForType(ParameterInfo param, object currentValue)
+    private object DrawField(Type t, string name, object value)
     {
-        Type t = param.ParameterType;
-        string name = ObjectNames.NicifyVariableName(param.Name);
-
+        name = ObjectNames.NicifyVariableName(name);
         if (t == typeof(int))
-            return EditorGUILayout.IntField(name, currentValue != null ? (int)currentValue : 0);
+            return EditorGUILayout.IntField(name, value != null ? (int)value : 0);
         if (t == typeof(float))
-            return EditorGUILayout.FloatField(name, currentValue != null ? (float)currentValue : 0f);
+            return EditorGUILayout.FloatField(name, value != null ? (float)value : 0f);
+        if (t == typeof(double))
+            return EditorGUILayout.DoubleField(name, value != null ? (double)value : 0);
+        if (t == typeof(long))
+            return EditorGUILayout.LongField(name, value != null ? (long)value : 0);
         if (t == typeof(string))
-            return EditorGUILayout.TextField(name, currentValue as string ?? "");
+            return EditorGUILayout.TextField(name, value as string ?? "");
         if (t == typeof(bool))
-            return EditorGUILayout.Toggle(name, currentValue != null && (bool)currentValue);
+            return EditorGUILayout.Toggle(name, value != null && (bool)value);
         if (t == typeof(Vector2))
-            return EditorGUILayout.Vector2Field(name, currentValue != null ? (Vector2)currentValue : Vector2.zero);
+            return EditorGUILayout.Vector2Field(name, value != null ? (Vector2)value : Vector2.zero);
         if (t == typeof(Vector3))
-            return EditorGUILayout.Vector3Field(name, currentValue != null ? (Vector3)currentValue : Vector3.zero);
+            return EditorGUILayout.Vector3Field(name, value != null ? (Vector3)value : Vector3.zero);
+        if (t == typeof(Vector4))
+            return EditorGUILayout.Vector4Field(name, value != null ? (Vector4)value : Vector4.zero);
+        if (t == typeof(Vector2Int))
+            return EditorGUILayout.Vector2IntField(name, value != null ? (Vector2Int)value : Vector2Int.zero);
+        if (t == typeof(Vector3Int))
+            return EditorGUILayout.Vector3IntField(name, value != null ? (Vector3Int)value : Vector3Int.zero);
         if (t == typeof(Color))
-            return EditorGUILayout.ColorField(name, currentValue != null ? (Color)currentValue : Color.white);
-
+            return EditorGUILayout.ColorField(name, value != null ? (Color)value : Color.white);
+        if (t == typeof(Rect))
+            return EditorGUILayout.RectField(name, value != null ? (Rect)value : new Rect());
+        if (t == typeof(Bounds))
+            return EditorGUILayout.BoundsField(name, value != null ? (Bounds)value : new Bounds());
+        if (t == typeof(AnimationCurve))
+            return EditorGUILayout.CurveField(name, value as AnimationCurve ?? new AnimationCurve());
+        if (t == typeof(Gradient))
+            return EditorGUILayout.GradientField(name, value as Gradient ?? new Gradient());
         // Enum
         if (t.IsEnum)
         {
-            if (currentValue == null)
-                currentValue = Enum.GetValues(t).GetValue(0);
-            return EditorGUILayout.EnumPopup(name, (Enum)currentValue);
+            value ??= Enum.GetValues(t).GetValue(0);
+            return EditorGUILayout.EnumPopup(name, (Enum)value);
         }
 
         // UnityEngine.Object
         if (typeof(UnityEngine.Object).IsAssignableFrom(t))
-            return EditorGUILayout.ObjectField(name, currentValue as UnityEngine.Object, t, true);
-
-        // 配列またはList
-        if (typeof(IList).IsAssignableFrom(t))
         {
-            EditorGUILayout.LabelField($"{name} ({t.Name}) : List/Array not supported in editor parameters");
-            return currentValue;
+            var obj = value as UnityEngine.Object;
+
+            obj = EditorGUILayout.ObjectField(name, obj, t, true);
+
+            if (obj is ScriptableObject so)
+                DrawScriptableObjectInline(so);
+
+            return obj;
+        }
+        // 配列
+        if (t.IsArray)
+        {
+            Type elementType = t.GetElementType();
+            IList list = value as IList;
+            return DrawList(name, elementType, list);
+        }
+        // List
+        if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(List<>))
+        {
+            Type elementType = t.GetGenericArguments()[0];
+            IList list = value as IList;
+            return DrawList(name, elementType, list);
+        }
+        // 辞書
+        if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+        {
+            return DrawDictionary(name, t, value);
+        }
+        // ScriptableObjectをインラインで描画
+        return DrawObject(name, t, value);
+    }
+    IList DrawList(string name, Type elementType, IList list)
+    {
+        list ??= (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+
+        bool fold = GetFoldout(list);
+
+        fold = EditorGUILayout.Foldout(fold, $"{name} [{list.Count}]");
+        SetFoldout(list, fold);
+
+        if (!fold)
+            return list;
+
+        EditorGUI.indentLevel++;
+
+        int size = EditorGUILayout.IntField("Size", list.Count);
+
+        while (list.Count < size)
+            list.Add(GetDefault(elementType));
+
+        while (list.Count > size)
+            list.RemoveAt(list.Count - 1);
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            list[i] = DrawField(elementType, $"Element {i}", list[i]);
         }
 
-        EditorGUILayout.LabelField($"{name} ({t.Name}) : not supported");
-        return currentValue;
+        EditorGUI.indentLevel--;
+
+        return list;
+    }
+
+    object DrawDictionary(string name, Type dictType, object dictObj)
+    {
+        var args = dictType.GetGenericArguments();
+
+        Type keyType = args[0];
+        Type valueType = args[1];
+
+        IDictionary dict = dictObj as IDictionary;
+
+        dict ??= (IDictionary)Activator.CreateInstance(dictType);
+
+        bool fold = GetFoldout(dict);
+
+        fold = EditorGUILayout.Foldout(fold, $"{name} [{dict.Count}]");
+        SetFoldout(dict, fold);
+
+        if (!fold)
+            return dict;
+
+        EditorGUI.indentLevel++;
+
+        List<object> keys = new();
+
+        foreach (var k in dict.Keys)
+            keys.Add(k);
+
+        foreach (var key in keys)
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            object newKey = DrawField(keyType, "Key", key);
+            object newValue = DrawField(valueType, "Value", dict[key]);
+
+            if (!Equals(newKey, key))
+            {
+                dict.Remove(key);
+                dict[newKey] = newValue;
+            }
+            else
+            {
+                dict[key] = newValue;
+            }
+
+            if (GUILayout.Button("-", GUILayout.Width(20)))
+            {
+                dict.Remove(key);
+                break;
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        if (GUILayout.Button("Add"))
+        {
+            dict[GetDefault(keyType)] = GetDefault(valueType);
+        }
+
+        EditorGUI.indentLevel--;
+
+        return dict;
+    }
+    object DrawObject(string name, Type type, object value)
+    {
+        if (value == null)
+            value = Activator.CreateInstance(type);
+
+        bool fold = GetFoldout(value);
+
+        fold = EditorGUILayout.Foldout(fold, name);
+
+        SetFoldout(value, fold);
+
+        if (!fold)
+            return value;
+
+        EditorGUI.indentLevel++;
+
+        var fields = type.GetFields(
+            BindingFlags.Public |
+            BindingFlags.NonPublic |
+            BindingFlags.Instance);
+
+        foreach (var f in fields)
+        {
+            var fieldValue = f.GetValue(value);
+
+            var newValue = DrawField(f.FieldType, f.Name, fieldValue);
+
+            if (!Equals(fieldValue, newValue))
+                f.SetValue(value, newValue);
+        }
+
+        EditorGUI.indentLevel--;
+
+        return value;
+    }
+    void DrawScriptableObjectInline(ScriptableObject so)
+    {
+        if (so == null)
+            return;
+
+        if (!editorCache.TryGetValue(so, out var editor))
+        {
+            editor = CreateEditor(so);
+            editorCache[so] = editor;
+        }
+
+        EditorGUILayout.BeginVertical("box");
+
+        editor.OnInspectorGUI();
+
+        EditorGUILayout.EndVertical();
+    }
+
+    object GetDefault(Type t)
+    {
+        if (t.IsValueType)
+            return Activator.CreateInstance(t);
+
+        return null;
+    }
+
+    bool GetFoldout(object key)
+    {
+        if (!foldouts.TryGetValue(key, out bool value))
+        {
+            value = false;
+            foldouts[key] = value;
+        }
+
+        return value;
+    }
+
+    void SetFoldout(object key, bool value)
+    {
+        foldouts[key] = value;
     }
 
     /// <summary>
@@ -247,10 +428,10 @@ public class NetCodeButtonEditor : NetcodeEditorBase<NetworkBehaviour>
         // -------------------------
         // Editorキャッシュ使用
         // -------------------------
-        if (!_editorCache.TryGetValue(nestedSO, out var cachedEditor) || cachedEditor == null)
+        if (!editorCache.TryGetValue(nestedSO, out var cachedEditor) || cachedEditor == null)
         {
             Editor.CreateCachedEditor(nestedSO, null, ref cachedEditor);
-            _editorCache[nestedSO] = cachedEditor;
+            editorCache[nestedSO] = cachedEditor;
         }
 
         if (cachedEditor != null)

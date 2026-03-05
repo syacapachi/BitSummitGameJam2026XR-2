@@ -1,10 +1,12 @@
 ﻿#if UNITY_EDITOR
-using UnityEngine;
-using UnityEditor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
 /// [OnInspectorButton]属性を持つメソッドを、Inspectorにボタンとして表示。
@@ -14,12 +16,15 @@ using System.Reflection;
 [CustomEditor(typeof(UnityEngine.Object), true)]
 public class OnInspectorButtonEditor : Editor
 {
-    // メソッド名と引数のキャッシュ (パフォーマンス向上のため)
-    private readonly Dictionary<string, object[]> methodParameters = new();
+    private readonly Dictionary<Type, MethodInfo[]> methodCache = new();
+    // メソッドと引数のキャッシュ (パフォーマンス向上のため)
+    private readonly Dictionary<MethodInfo, object[]> methodParameters = new();
+    // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
+    private readonly Dictionary<object, bool> foldouts = new();
     // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
     private readonly Dictionary<UnityEngine.Object, bool> foldoutStates = new();
-    // ネストしたScriptableObjectのEditorキャッシュ (パフォーマンス向上のため)
-    private readonly Dictionary<UnityEngine.Object, Editor> _editorCache = new();
+    // ネストしたEditorキャッシュ (パフォーマンス向上のため)
+    private readonly Dictionary<UnityEngine.Object, Editor> editorCache = new();
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
@@ -27,14 +32,30 @@ public class OnInspectorButtonEditor : Editor
         //通常のインスペクター描画を行う。これを呼ばないと、通常のフィールドが表示されない。
         DrawDefaultInspector();
 
+        //インスペクター上に関数を呼び出すためのボタンを描画する。対象のオブジェクトの型をリフレクションで調べて、[OnInspectorButton]属性が付いているメソッドを探し、ボタンを表示する。
+        DrawInspectorButtons(target);
+
+        // ネストしたScriptableObjectを再帰的に描画
+        DrawNestedScriptableObjects(target);
+        //変更を保存
+        serializedObject.ApplyModifiedProperties();
+    }
+    private void DrawInspectorButtons(object obj)
+    {
         //各インスペクターで呼ばれる。
-        var targetType = target.GetType();
+        var targetType = obj.GetType();
 
         //自分自身は描画しない(エラー回避)
         if (targetType == typeof(OnInspectorButtonEditor)) return;
 
-        // メソッドを列挙
-        var methods = targetType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+        // キャッシュからメソッドを取得、なければリフレクションで取得してキャッシュに保存
+        if (!methodCache.TryGetValue(targetType, out var methods))
+        {
+            // メソッドを列挙
+            methods = targetType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            methodCache[targetType] = methods;
+        }
+
         foreach (var method in methods)
         {
             var attr = method.GetCustomAttribute<OnInspectorButtonAttribute>();
@@ -46,11 +67,7 @@ public class OnInspectorButtonEditor : Editor
 
             DrawButtonForMethod(method, attr);
         }
-
-        // ネストしたScriptableObjectを再帰的に描画
-        DrawNestedScriptableObjects(target);
     }
-
     private void DrawButtonForMethod(MethodInfo method, OnInspectorButtonAttribute attr)
     {
         //ラベルがない場合は関数名で上書き
@@ -58,35 +75,32 @@ public class OnInspectorButtonEditor : Editor
         //引数を取得
         var parameters = method.GetParameters();
 
-        EditorGUILayout.Space(4);
-
         if (parameters.Length == 0)
         {
             if (GUILayout.Button(buttonLabel))
                 InvokeMethod(method, null);
+
+            return;
         }
-        else
+        //初回は辞書に登録することで次回以降の検索の手間を省く
+        if (!methodParameters.ContainsKey(method))
+            methodParameters[method] = new object[parameters.Length];
+
+        var values = methodParameters[method];
+
+        EditorGUILayout.BeginVertical("box");
+        EditorGUILayout.LabelField($"{method.Name} Parameters", EditorStyles.boldLabel);
+
+        for (int i = 0; i < parameters.Length; i++)
         {
-            //初回は辞書に登録することで次回以降の検索の手間を省く
-            if (!methodParameters.ContainsKey(method.Name))
-                methodParameters[method.Name] = new object[parameters.Length];
-
-            var values = methodParameters[method.Name];
-
-            EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField($"{method.Name} Parameters", EditorStyles.boldLabel);
-
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                var param = parameters[i];
-                values[i] = DrawFieldForType(param, values[i]);
-            }
-
-            if (GUILayout.Button(buttonLabel))
-                InvokeMethod(method, values);
-
-            EditorGUILayout.EndVertical();
+            var param = parameters[i];
+            values[i] = DrawField(param.ParameterType, param.Name, values[i]);
         }
+
+        if (GUILayout.Button(buttonLabel))
+            InvokeMethod(method, values);
+
+        EditorGUILayout.EndVertical();
     }
 
     private void InvokeMethod(MethodInfo method, object[] values)
@@ -101,15 +115,17 @@ public class OnInspectorButtonEditor : Editor
         }
     }
 
-    private object DrawFieldForType(ParameterInfo param, object currentValue)
+    private object DrawField(Type t,string name, object currentValue)
     {
-        Type t = param.ParameterType;
-        string name = ObjectNames.NicifyVariableName(param.Name);
-
+        name = ObjectNames.NicifyVariableName(name);
         if (t == typeof(int))
             return EditorGUILayout.IntField(name, currentValue != null ? (int)currentValue : 0);
         if (t == typeof(float))
             return EditorGUILayout.FloatField(name, currentValue != null ? (float)currentValue : 0f);
+        if(t == typeof(double))
+            return EditorGUILayout.DoubleField(name, currentValue != null ? (double)currentValue : 0);
+        if (t == typeof(long))
+            return EditorGUILayout.LongField(name, currentValue != null ? (long)currentValue : 0);
         if (t == typeof(string))
             return EditorGUILayout.TextField(name, currentValue as string ?? "");
         if (t == typeof(bool))
@@ -118,30 +134,236 @@ public class OnInspectorButtonEditor : Editor
             return EditorGUILayout.Vector2Field(name, currentValue != null ? (Vector2)currentValue : Vector2.zero);
         if (t == typeof(Vector3))
             return EditorGUILayout.Vector3Field(name, currentValue != null ? (Vector3)currentValue : Vector3.zero);
+        if (t == typeof(Vector4))
+            return EditorGUILayout.Vector4Field(name, currentValue != null ? (Vector4)currentValue : Vector4.zero);
+        if (t == typeof(Vector2Int))
+            return EditorGUILayout.Vector2IntField(name, currentValue != null ? (Vector2Int)currentValue : Vector2Int.zero);
+        if (t == typeof(Vector3Int))
+            return EditorGUILayout.Vector3IntField(name, currentValue != null ? (Vector3Int)currentValue : Vector3Int.zero);
         if (t == typeof(Color))
             return EditorGUILayout.ColorField(name, currentValue != null ? (Color)currentValue : Color.white);
-
+        if (t == typeof(Rect))
+            return EditorGUILayout.RectField(name, currentValue != null ? (Rect)currentValue : new Rect());
+        if (t == typeof(Bounds))
+            return EditorGUILayout.BoundsField(name, currentValue != null ? (Bounds)currentValue : new Bounds());
+        if (t == typeof(AnimationCurve))
+            return EditorGUILayout.CurveField(name, currentValue as AnimationCurve ?? new AnimationCurve());
+        if (t == typeof(Gradient))
+            return EditorGUILayout.GradientField(name, currentValue as Gradient ?? new Gradient());
         // Enum
         if (t.IsEnum)
         {
-            if (currentValue == null)
-                currentValue = Enum.GetValues(t).GetValue(0);
+            currentValue ??= Enum.GetValues(t).GetValue(0);
             return EditorGUILayout.EnumPopup(name, (Enum)currentValue);
         }
 
         // UnityEngine.Object
         if (typeof(UnityEngine.Object).IsAssignableFrom(t))
-            return EditorGUILayout.ObjectField(name, currentValue as UnityEngine.Object, t, true);
-
-        // 配列またはList
-        if (typeof(IList).IsAssignableFrom(t))
         {
-            EditorGUILayout.LabelField($"{name} ({t.Name}) : List/Array not supported in editor parameters");
-            return currentValue;
+            var obj = currentValue as UnityEngine.Object;
+
+            obj = EditorGUILayout.ObjectField(name, obj, t, true);
+
+            if (obj is ScriptableObject so)
+                DrawScriptableObjectInline(so);
+
+            return obj;
+        }
+        // 配列
+        if (t.IsArray)
+        {
+            Type elementType = t.GetElementType();
+            IList list = currentValue as IList;
+            return DrawList(name, elementType, list);
+        }
+        // List
+        if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(List<>))
+        {
+            Type elementType = t.GetGenericArguments()[0];
+            IList list = currentValue as IList;
+            return DrawList(name, elementType, list);
+        }
+        // 辞書
+        if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+        {
+            return DrawDictionary(name, t, currentValue);
+        }
+        // ScriptableObjectをインラインで描画
+        return DrawObject(name, t, currentValue);
+    }
+    IList DrawList(string name, Type elementType, IList list)
+    {
+        // nullの場合は新しいリストを作成
+        list ??= (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+
+        // Foldoutの状態をリスト自体で管理することで、同じリストを複数のインスペクターで描画している場合でも、展開状態を共有できる。
+        bool fold = GetFoldout(list);
+
+        // Foldoutを描画して状態を更新
+        fold = EditorGUILayout.Foldout(fold, $"{name} [{list.Count}]");
+        SetFoldout(list, fold);
+
+        if (!fold)
+            return list;
+
+        //展開されている場合は要素を描画
+        EditorGUI.indentLevel++;
+
+        int size = EditorGUILayout.IntField("Size", list.Count);
+
+        while (list.Count < size)
+            list.Add(GetDefault(elementType));
+
+        while (list.Count > size)
+            list.RemoveAt(list.Count - 1);
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            //要素を描画して更新
+            list[i] = DrawField(elementType, $"Element {i}", list[i]);
         }
 
-        EditorGUILayout.LabelField($"{name} ({t.Name}) : not supported");
-        return currentValue;
+        EditorGUI.indentLevel--;
+
+        return list;
+    }
+
+    object DrawDictionary(string name, Type dictType, object dictObj)
+    {
+        var args = dictType.GetGenericArguments();
+
+        Type keyType = args[0];
+        Type valueType = args[1];
+
+        IDictionary dict = dictObj as IDictionary;
+
+        dict ??= (IDictionary)Activator.CreateInstance(dictType);
+
+        bool fold = GetFoldout(dict);
+
+        fold = EditorGUILayout.Foldout(fold, $"{name} [{dict.Count}]");
+        SetFoldout(dict, fold);
+
+        if (!fold)
+            return dict;
+
+        EditorGUI.indentLevel++;
+
+        List<object> keys = new();
+
+        foreach (var k in dict.Keys)
+            keys.Add(k);
+
+        foreach (var key in keys)
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            object newKey = DrawField(keyType, "Key", key);
+            object newValue = DrawField(valueType, "Value", dict[key]);
+
+            //キーが変更された場合は、古いキーを削除して新しいキーで追加。そうでない場合は値だけ更新。
+            if (!Equals(newKey, key))
+            {
+                dict.Remove(key);
+                dict[newKey] = newValue;
+            }
+            else
+            {
+                dict[key] = newValue;
+            }
+
+            if (GUILayout.Button("-", GUILayout.Width(20)))
+            {
+                dict.Remove(key);
+                break;
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        if (GUILayout.Button("Add"))
+        {
+            dict[GetDefault(keyType)] = GetDefault(valueType);
+        }
+
+        EditorGUI.indentLevel--;
+
+        return dict;
+    }
+    object DrawObject(string name, Type type, object value)
+    {
+        value ??= Activator.CreateInstance(type);
+
+        bool fold = GetFoldout(value);
+
+        fold = EditorGUILayout.Foldout(fold, name);
+
+        SetFoldout(value, fold);
+
+        if (!fold)
+            return value;
+
+        EditorGUI.indentLevel++;
+
+        //フィールドを列挙して描画
+        var fields = type.GetFields(
+            BindingFlags.Public |
+            BindingFlags.NonPublic |
+            BindingFlags.Instance);
+
+        foreach (var f in fields)
+        {
+            var fieldValue = f.GetValue(value);
+
+            var newValue = DrawField(f.FieldType, f.Name, fieldValue);
+
+            if (!Equals(fieldValue, newValue))
+                f.SetValue(value, newValue);
+        }
+
+        EditorGUI.indentLevel--;
+
+        return value;
+    }
+    void DrawScriptableObjectInline(ScriptableObject so)
+    {
+        if (so == null)
+            return;
+
+        if (!editorCache.TryGetValue(so, out var editor))
+        {
+            editor = CreateEditor(so);
+            editorCache[so] = editor;
+        }
+
+        EditorGUILayout.BeginVertical("box");
+
+        editor.OnInspectorGUI();
+
+        EditorGUILayout.EndVertical();
+    }
+    object GetDefault(Type t)
+    {
+        if (t.IsValueType)
+            return Activator.CreateInstance(t);
+
+        return null;
+    }
+
+    bool GetFoldout(object key)
+    {
+        if (!foldouts.TryGetValue(key, out bool value))
+        {
+            value = false;
+            foldouts[key] = value;
+        }
+
+        return value;
+    }
+
+    void SetFoldout(object key, bool value)
+    {
+        foldouts[key] = value;
     }
 
     /// <summary>
@@ -214,10 +436,10 @@ public class OnInspectorButtonEditor : Editor
         // -------------------------
         // Editorキャッシュ使用
         // -------------------------
-        if (!_editorCache.TryGetValue(nestedSO, out var cachedEditor) || cachedEditor == null)
+        if (!editorCache.TryGetValue(nestedSO, out var cachedEditor) || cachedEditor == null)
         {
             Editor.CreateCachedEditor(nestedSO, null, ref cachedEditor);
-            _editorCache[nestedSO] = cachedEditor;
+            editorCache[nestedSO] = cachedEditor;
         }
 
         if (cachedEditor != null)
