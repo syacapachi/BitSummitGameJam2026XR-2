@@ -22,11 +22,12 @@ public class NGun : NetworkBehaviour
     AttachableNode node;
     PlayerControls controls;
     float nextFire;
-    int currentAmmo;
-    bool isReloading;
+    public NetworkVariable<int> syncedAmmo = new NetworkVariable<int>(0);
+    public NetworkVariable<bool> isReloading = new NetworkVariable<bool>();
 
     bool isMarkAttached = true;
     Coroutine markerCoroutine;
+    public float reloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
 
     void Update()
     {
@@ -62,7 +63,7 @@ public class NGun : NetworkBehaviour
            
         if (IsServer) 
         {
-            currentAmmo = weaponSettings.maxAmmo;
+            syncedAmmo.Value = weaponSettings.maxAmmo;
             TryGetPlayerMarker();
         }
         
@@ -146,16 +147,11 @@ public class NGun : NetworkBehaviour
     */
     private void ShootRpc()
     {
-        if (isReloading) return;
-        if (currentAmmo <= 0)
-        {
-            StartCoroutine(Reload());
-            return;
-        }
+        if (isReloading.Value) return;
         if (Time.time < nextFire) return;
 
         nextFire = Time.time + weaponSettings.fireRate;
-        currentAmmo--;
+        syncedAmmo.Value--;
 
         // ① 弾を生成
         GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
@@ -173,16 +169,22 @@ public class NGun : NetworkBehaviour
 
         // ③ ネットワークでSpawn
         obj.GetComponent<NetworkObject>().Spawn();
+        if (syncedAmmo.Value <= 0)
+        {
+            StartCoroutine(Reload());
+            return;
+        }
     }
 
     private IEnumerator Reload()
     {
-        isReloading = true;
+        isReloading.Value = true;
+        Debug.Log("Reloading...");
 
         yield return new WaitForSeconds(weaponSettings.reloadTime);
 
-        currentAmmo = weaponSettings.maxAmmo;
-        isReloading = false;
+        syncedAmmo.Value = weaponSettings.maxAmmo;
+        isReloading.Value = false;
     }
 
     [Rpc(SendTo.Server)]

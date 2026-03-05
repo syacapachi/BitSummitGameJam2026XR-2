@@ -15,6 +15,7 @@ public class NGameManager : NetworkBehaviour
     private bool isEnemycome = false;
 
     public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
+    public NetworkVariable<bool> IsGameFinished = new NetworkVariable<bool>(false);
 
     void Awake()
     {
@@ -38,7 +39,7 @@ public class NGameManager : NetworkBehaviour
 
         timer -= Time.deltaTime;
 
-        if (timer <= 0) //spawerAllDead()
+        if (timer <= 0 || spawner.AllDead())
         {
             EndPhase();
         }
@@ -57,13 +58,18 @@ public class NGameManager : NetworkBehaviour
         if (currentPhaseIndex >= phases.Length)
         {
             Debug.Log("GAME CLEAR");
+            if (IsServer)
+            {
+                Debug.Log("Game Finished");
+                IsGameFinished.Value = true;
+            }
+
             return;
         }
 
         syncedPhaseIndex.Value = currentPhaseIndex;
 
         PhaseSO phase = phases[currentPhaseIndex];
-
         timer = phase.phaseTime;
 
         spawner.SpawnFromPhase(phase);
@@ -109,5 +115,10 @@ public class NGameManager : NetworkBehaviour
 
         PhaseSO phase = phases[newValue];
 
+    }
+
+    public int GetScore()
+    {
+        return score;
     }
 }
