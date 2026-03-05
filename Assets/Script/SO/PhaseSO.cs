@@ -3,6 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObjects/Phase")]
 public class PhaseSO : ScriptableObject
 {
+    [Header("Phase Name")]
+    public string phaseDisplayName;
+
     [Header("Phase Settings")]
     public float phaseTime = 30f;
     public int clearBonus = 500;
