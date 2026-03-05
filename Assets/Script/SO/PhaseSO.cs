@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObjects/Phase")]
 public class PhaseSO : ScriptableObject
 {
-    [Header("Phase Name")]
+    [Header("Phase Display Setting")]
     public string phaseDisplayName;
 
     [Header("Phase Settings")]
