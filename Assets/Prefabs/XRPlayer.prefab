@@ -13334,18 +13334,18 @@ PrefabInstance:
       propertyPath: m_InteractorSource
       value: 
       objectReference: {fileID: 3334333173239894052}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 196909957261332044, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
+    - {fileID: 2812080162531844880, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
+    - {fileID: 2605394267117782397, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
     m_RemovedGameObjects:
     - {fileID: 1139509643922615341, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
     - {fileID: 7565144130350447155, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1768957577311777180, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 1206024853266529887}
-    - targetCorrespondingSourceObject: {fileID: 1768957577311777180, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1141807081154605369}
+      addedObject: {fileID: 1206024853266529887}
   m_SourcePrefab: {fileID: 100100000, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
 --- !u!1 &5997208398088505718 stripped
 GameObject:
@@ -13398,22 +13398,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &1141807081154605369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5997208398088505718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e1f6ec8e1334364b4bbcae77749ff85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PokeInteractorObject: {fileID: 3334333173239894052}
-  m_PokeStrengthSnapThreshold: 0.01
-  m_SmoothingAmount: 24
-  m_FixedOffset: 0.005
 --- !u!4 &6373031009348113356 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1425188242308148006, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
@@ -13830,7 +13814,10 @@ PrefabInstance:
       propertyPath: m_JointsUpdated.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8207877637699278635, guid: ffd656bf2a3ba3d41b1e4a94b81b7c85, type: 3}
+    - {fileID: 2599780285154657760, guid: ffd656bf2a3ba3d41b1e4a94b81b7c85, type: 3}
+    - {fileID: 3113203136159532523, guid: ffd656bf2a3ba3d41b1e4a94b81b7c85, type: 3}
     m_RemovedGameObjects:
     - {fileID: 1493371769922722510, guid: ffd656bf2a3ba3d41b1e4a94b81b7c85, type: 3}
     - {fileID: 4117179676178661335, guid: ffd656bf2a3ba3d41b1e4a94b81b7c85, type: 3}
@@ -13838,11 +13825,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 757950445636073681, guid: ffd656bf2a3ba3d41b1e4a94b81b7c85, type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 7019429743381340365}
-    - targetCorrespondingSourceObject: {fileID: 757950445636073681, guid: ffd656bf2a3ba3d41b1e4a94b81b7c85, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5649523416744267799}
+      addedObject: {fileID: 7019429743381340365}
   m_SourcePrefab: {fileID: 100100000, guid: ffd656bf2a3ba3d41b1e4a94b81b7c85, type: 3}
 --- !u!1 &5913850396131207042 stripped
 GameObject:
@@ -13895,22 +13879,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &5649523416744267799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5913850396131207042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e1f6ec8e1334364b4bbcae77749ff85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PokeInteractorObject: {fileID: 5283346557038517120}
-  m_PokeStrengthSnapThreshold: 0.01
-  m_SmoothingAmount: 24
-  m_FixedOffset: 0.005
 --- !u!4 &6438431364345003320 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 130348505910534763, guid: ffd656bf2a3ba3d41b1e4a94b81b7c85, type: 3}
