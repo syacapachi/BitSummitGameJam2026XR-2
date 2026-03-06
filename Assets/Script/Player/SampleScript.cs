@@ -28,7 +28,8 @@ public class SampleScript : MonoBehaviour
     [OnInspectorButton]
     public void SampleMethodWithParameter(List<float> value)
     {
-        Debug.Log("Value: " + value);
+        string valueString = string.Join(", ", value);
+        Debug.Log("Value: " + valueString);
     }
     [OnInspectorButton]
     public void SampleMethodWithParameter(InlineClass inlineClass)
@@ -38,6 +39,12 @@ public class SampleScript : MonoBehaviour
     [OnInspectorButton]
     public void SampleMethodWithParameter(Dictionary<int,bool> dic, string message)
     {
-        Debug.Log("Message: " + message);
+        string dicString = string.Join(", ", dic);
+        Debug.Log("Message: " + dicString + message);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(GameObject obj, PhaseSO so)
+    {
+        Debug.Log("Message: " + obj.name + so.name);
     }
 }
