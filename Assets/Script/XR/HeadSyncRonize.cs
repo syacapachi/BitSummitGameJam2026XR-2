@@ -16,7 +16,7 @@ public class HeadSyncRonize : NetworkBehaviour
     {
         if (IsOwner)
         {
-            HeadTransfrom.rotation = playerCamera.transform.rotation;
+            HeadTransfrom.rotation = playerCamera.gameObject.transform.rotation;
         }
     }
 }
