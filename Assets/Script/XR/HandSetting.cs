@@ -63,7 +63,7 @@ public class HandSetting : NetworkBehaviour
         }
         root.SetActive(false);
     }   
-    private void Update()
+    private void LateUpdate()
     {
         if (IsOwner)
         {
