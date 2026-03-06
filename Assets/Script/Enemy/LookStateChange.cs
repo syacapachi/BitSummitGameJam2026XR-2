@@ -3,7 +3,7 @@ using Unity.Netcode;
 
 public class LookStateChange : NetworkBehaviour
 {
-    [SerializeField] MeshRenderer meshRenderer;
+    [SerializeField] Renderer meshRenderer;
     [SerializeField] PlayerPropaty.PlayerJob lookableJob;
     [SerializeField] Canvas hpCanvas; // ←HPバーのCanvasをここにアサイン
 
