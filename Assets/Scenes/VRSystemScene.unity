@@ -899,7 +899,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -1435,7 +1436,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -2574,9 +2576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   phases:
-  - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
-  - {fileID: 11400000, guid: 9130db537808a9a4bbf5f8c246970b30, type: 2}
-  - {fileID: 11400000, guid: 09e28c63f7a683f46919a5d21940185b, type: 2}
+  - {fileID: 11400000, guid: 2738560c240085f45af0665b85cb321f, type: 2}
   spawner: {fileID: 269016448}
   protectArea: {fileID: 1008058028}
   syncedPhaseIndex:
@@ -2685,7 +2685,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -3580,7 +3581,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -3838,6 +3840,10 @@ PrefabInstance:
     - target: {fileID: 4017025280720426764, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
       propertyPath: m_Name
       value: "Collider_\u6697\u8CB4\u8CD3\u5BA43"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4017025280720426764, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4392284628693192118, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
       propertyPath: m_LocalPosition.x
