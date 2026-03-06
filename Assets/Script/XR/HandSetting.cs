@@ -67,7 +67,8 @@ public class HandSetting : NetworkBehaviour
     {
         if (IsOwner)
         {
-            networkHead.transform.localRotation = ownerCamera.transform.localRotation;
+            Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
+            networkHead.transform.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
             networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
             networkRightHand.transform.SetPositionAndRotation(rightHand.transform.position, rightHand.transform.rotation);
             networkLeftController.transform.SetPositionAndRotation(leftController.transform.position, leftController.transform.rotation);

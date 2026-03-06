@@ -2886,7 +2886,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2132450191693431227}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
+  m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8d5a0e0d58f4e4176a844a1a03976c19, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
@@ -10226,8 +10226,7 @@ MonoBehaviour:
   networkRightHand: {fileID: 5997208398088505718}
   networkLeftController: {fileID: 1787933714760247814}
   networkRightController: {fileID: 77919594750492110}
-  trackingList:
-  - {fileID: 0}
+  trackingList: []
 --- !u!1 &7690719375263743642
 GameObject:
   m_ObjectHideFlags: 0
