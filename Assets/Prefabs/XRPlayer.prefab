@@ -2757,6 +2757,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3651505721358349586}
+  - {fileID: 8054105263742344811}
+  - {fileID: 519398220654862222}
   - {fileID: 745002453215952238}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4284,8 +4286,6 @@ Transform:
   m_Children:
   - {fileID: 7488867202258026344}
   - {fileID: 473723419102516275}
-  - {fileID: 8054105263742344811}
-  - {fileID: 519398220654862222}
   - {fileID: 1000388027331864473}
   - {fileID: 4402219005170655454}
   - {fileID: 588277013601394670}
@@ -7182,7 +7182,7 @@ Transform:
   m_GameObject: {fileID: 5551402054750884224}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7201,7 +7201,7 @@ Transform:
   - {fileID: 3459036841850889873}
   - {fileID: 8116466120145254450}
   - {fileID: 4637943112727994954}
-  m_Father: {fileID: 745002453215952238}
+  m_Father: {fileID: 5505954998685896650}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5731421220852319680
 GameObject:
@@ -8186,7 +8186,6 @@ GameObject:
   - component: {fileID: 1515423351434187017}
   - component: {fileID: 6384117594203295961}
   - component: {fileID: 8272159946461135350}
-  - component: {fileID: 8198269091013979427}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -8415,21 +8414,6 @@ MonoBehaviour:
       m_Action: Rotation
       m_Flags: 0
     m_Flags: 0
---- !u!114 &8198269091013979427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6158105961639316715}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 366a019b73dfff94595d881eeca55556, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  playerCamera: {fileID: 7872297607472145245}
-  HeadTransfrom: {fileID: 395047245074201325}
 --- !u!1 &6194796465180486335
 GameObject:
   m_ObjectHideFlags: 0
@@ -10232,6 +10216,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  ownerCamera: {fileID: 7872297607472145245}
+  networkHead: {fileID: 112990281107076086}
   leftHand: {fileID: 5833514972168696111}
   rightHand: {fileID: 3862831657312698932}
   leftController: {fileID: 3140694114009701234}
@@ -10267,12 +10253,12 @@ Transform:
   m_GameObject: {fileID: 7690719375263743642}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6465161266325515456}
-  m_Father: {fileID: 745002453215952238}
+  m_Father: {fileID: 5505954998685896650}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7741885728398624536
 GameObject:

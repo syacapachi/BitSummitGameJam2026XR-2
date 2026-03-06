@@ -4,6 +4,10 @@ using NUnit.Framework;
 using System.Collections.Generic;
 public class HandSetting : NetworkBehaviour
 {
+    [Header("Owner Camera")]
+    [SerializeField] private Camera ownerCamera;
+    [Header("Network Head")]
+    [SerializeField] private GameObject networkHead;
     [Header("Owner Hand")]
     [SerializeField] private GameObject leftHand;
     [SerializeField] private GameObject rightHand;
@@ -51,6 +55,10 @@ public class HandSetting : NetworkBehaviour
         MonoBehaviour[] components = root.GetComponentsInChildren<MonoBehaviour>();
         foreach (MonoBehaviour component in components)
         {
+            if(component is NetworkBehaviour)
+            {
+                continue; // NetworkBehaviourは無効化しない
+            }
             component.enabled = false;
         }
         root.SetActive(false);
@@ -59,6 +67,7 @@ public class HandSetting : NetworkBehaviour
     {
         if (IsOwner)
         {
+            networkHead.transform.localRotation = ownerCamera.transform.localRotation;
             networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
             networkRightHand.transform.SetPositionAndRotation(rightHand.transform.position, rightHand.transform.rotation);
             networkLeftController.transform.SetPositionAndRotation(leftController.transform.position, leftController.transform.rotation);

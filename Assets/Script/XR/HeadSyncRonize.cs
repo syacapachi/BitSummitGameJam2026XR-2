@@ -1,5 +1,6 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class HeadSyncRonize : NetworkBehaviour
 {
@@ -16,7 +17,9 @@ public class HeadSyncRonize : NetworkBehaviour
     {
         if (IsOwner)
         {
-            HeadTransfrom.rotation = playerCamera.gameObject.transform.rotation;
+
+            //InputTracking.GetLocalRotation(XRNode.Head);
+            HeadTransfrom.localRotation = playerCamera.transform.localRotation;
         }
     }
 }
