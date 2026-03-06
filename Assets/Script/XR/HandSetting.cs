@@ -1,7 +1,13 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
+using NUnit.Framework;
+using System.Collections.Generic;
 public class HandSetting : NetworkBehaviour
 {
+    [Header("Owner Camera")]
+    [SerializeField] private Camera ownerCamera;
+    [Header("Network Head")]
+    [SerializeField] private GameObject networkHead;
     [Header("Owner Hand")]
     [SerializeField] private GameObject leftHand;
     [SerializeField] private GameObject rightHand;
@@ -12,6 +18,9 @@ public class HandSetting : NetworkBehaviour
     [SerializeField] private GameObject networkRightHand;
     [SerializeField] private GameObject networkLeftController;
     [SerializeField] private GameObject networkRightController;
+
+    [Header("Tracking Object")]
+    [SerializeField] List<GameObject> trackingList;
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -27,10 +36,10 @@ public class HandSetting : NetworkBehaviour
         }
         else
         {
-            leftHand.SetActive(false);
-            rightHand.SetActive(false);
-            leftController.SetActive(false);
-            rightController.SetActive(false);
+            DisableComponentAndObject(leftHand);
+            DisableComponentAndObject(rightHand);
+            DisableComponentAndObject(leftController);
+            DisableComponentAndObject(rightController);
         }
     }
     private void DisableMeshRenderer(GameObject root)
@@ -41,10 +50,25 @@ public class HandSetting : NetworkBehaviour
             renderer.enabled = false;
         }
     }
-    private void Update()
+    private void DisableComponentAndObject(GameObject root)
+    {
+        MonoBehaviour[] components = root.GetComponentsInChildren<MonoBehaviour>();
+        foreach (MonoBehaviour component in components)
+        {
+            if(component is NetworkBehaviour)
+            {
+                continue; // NetworkBehaviourは無効化しない
+            }
+            component.enabled = false;
+        }
+        root.SetActive(false);
+    }   
+    private void LateUpdate()
     {
         if (IsOwner)
         {
+            Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
+            networkHead.transform.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
             networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
             networkRightHand.transform.SetPositionAndRotation(rightHand.transform.position, rightHand.transform.rotation);
             networkLeftController.transform.SetPositionAndRotation(leftController.transform.position, leftController.transform.rotation);

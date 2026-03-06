@@ -414,7 +414,9 @@ public class OnInspectorButtonEditor : Editor
     private void DrawSOReference(SerializedProperty prop,int depth,HashSet<UnityEngine.Object> visited,string overrideLabel = null)
     {
         UnityEngine.Object refObj = prop.objectReferenceValue;
-        if (refObj is not ScriptableObject nestedSO) return;
+        if (refObj is not ScriptableObject nestedSO) {
+            return;
+        }
 
         if (!foldoutStates.ContainsKey(nestedSO))
         {
