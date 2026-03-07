@@ -3,7 +3,6 @@ using Unity.Netcode;
 using System.Collections.Generic;
 public class NGameManager : NetworkBehaviour
 {
-    public static NGameManager Instance;
     public PhaseSO[] phases;
     private int currentPhaseIndex = -1;
     private float timer;
@@ -16,11 +15,6 @@ public class NGameManager : NetworkBehaviour
 
     public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
     public NetworkVariable<bool> IsGameFinished = new NetworkVariable<bool>(false);
-
-    void Awake()
-    {
-        Instance = this;
-    }
 
     public override void OnNetworkSpawn()
     {

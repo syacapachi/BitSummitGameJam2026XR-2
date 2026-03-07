@@ -11,7 +11,7 @@ public class PlayerHealth : NetworkBehaviour,IDamageReciever
     );
     public GameObject GameObject => this.gameObject;
 
-    public NetworkVariable<int> Health => currentHP;
+    public int CurrentHealth => currentHP.Value;
 
     public int MaxHealth => maxHP;
     public override void OnNetworkSpawn()

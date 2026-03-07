@@ -17,7 +17,8 @@ public class PlayerRoot : NetworkBehaviour
     public PlayerHealth playerHealth;
     public PlayerPropaty propaty;
     public CameraSetting cameraSetting;
-
+    private bool isXREnabled = false;
+    public bool IsXREnabled => isXREnabled;
     public override void OnNetworkSpawn()
     {
         PlayerManager player = ManagerLocator.Instance.PlayerManager;
@@ -28,6 +29,13 @@ public class PlayerRoot : NetworkBehaviour
             player.ResistOwner(this);
             //オーナーのクライアントでPlayerInputを有効にする。これにより、プレイヤーが入力を受け取れるようになる。
             playerInput.enabled = true;
+            playerInput.currentActionMap = playerInput.actions.FindActionMap("Player", throwIfNotFound: true);
+            isXREnabled = playerInput.currentControlScheme.Equals("XR");
+            if(isXREnabled)
+            {
+                cameraSetting.enabled = false;
+                characterControll.enabled = false;
+            }
             playerInput.ActivateInput();
         }
         else

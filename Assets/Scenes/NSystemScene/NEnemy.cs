@@ -5,23 +5,29 @@ using TMPro; // ← 追加
 using UnityEngine.InputSystem;
 using System.Collections;
 
-public class NEnemy : NetworkBehaviour
+public class NEnemy : NetworkBehaviour,IDamageReciever
 {
     [SerializeField] EnemySO enemySO;
-    private int currentHP;
+    private readonly NetworkVariable<int> currentHP = new(
+        0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
 
     [SerializeField] private Canvas hpCanvas;
     [SerializeField] private Image hpImage; // Filled Image
     [SerializeField] private TextMeshProUGUI hpText;
 
     private Transform targetPlayer;
-
+    public GameObject GameObject => this.gameObject;
+    public int CurrentHealth => currentHP.Value;
+    public int MaxHealth => enemySO.HP;
     public override void OnNetworkSpawn()
     {
-        currentHP = enemySO.HP;
+        currentHP.Value = enemySO.HP;
         if (hpImage != null) hpImage.fillAmount = 1f;
 
-        if (hpText != null) hpText.text = $"{currentHP} / {enemySO.HP}";
+        if (hpText != null) hpText.text = $"{currentHP.Value} / {enemySO.HP}";
 
         if (!IsClient) return; // クライアントでのみ実行
         StartCoroutine(SetupPlayerCoroutine());
@@ -51,15 +57,15 @@ public class NEnemy : NetworkBehaviour
         }
     }
 
-    public void TakeDamage()
+    public void TakeDamage(int damage)
     {
         Debug.Log("Take damage");
-        currentHP -= enemySO.Damage;
-        if (hpImage != null) hpImage.fillAmount = Mathf.Clamp01((float)currentHP / enemySO.HP);
-        if (hpText != null) hpText.text = $"{currentHP} / {enemySO.HP}";
+        currentHP.Value -= enemySO.Damage;
+        if (hpImage != null) hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.HP);
+        if (hpText != null) hpText.text = $"{currentHP.Value} / {enemySO.HP}";
         
 
-        if (currentHP <= 0)
+        if (currentHP.Value <= 0)
         {
             DieRpc();
         }
@@ -68,7 +74,7 @@ public class NEnemy : NetworkBehaviour
     void DieRpc()
     {
         Debug.Log("Die");
-        ManagerLocator.Instance.GameManager.EnemyKilled(enemySO.scoreValue);
+        ManagerLocator.Instance.NGameManager.EnemyKilled(enemySO.scoreValue);
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

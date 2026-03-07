@@ -7,7 +7,7 @@ using UnityEngine.Rendering.Universal;
 
 public class CameraSetting : NetworkBehaviour
 {
-    [SerializeField] Transform playerRootTransform;
+    [SerializeField] Transform cameraTransform;
     /// <summary>
     /// 個々のオブジェクトにローカルカメラを割り当てるためのフィールド。ローカルプレイヤーのカメラを指定するために使用される。
     /// </summary>
@@ -28,6 +28,7 @@ public class CameraSetting : NetworkBehaviour
     InputAction lookAction;
     public bool IsMainCameraActive => CurrentActiveCamera == mainCamera;
     public event Action<Camera> OnCameraChanged;
+    private bool isXREnabled;
     // シーン内のアクティブなカメラを追跡するためのフィールド。これにより、どのカメラが現在アクティブであるかを簡単に確認できるようになる。
     private Camera activeCamera;
     public Camera CurrentActiveCamera { 
@@ -59,12 +60,16 @@ public class CameraSetting : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         //メインカメラをシーン内のカメラから自動的に割り当てる。もしmainCameraがnullの場合、Camera.mainを使用してメインカメラを取得する。
-        if (mainCamera == null)
-        {
-            mainCamera = Camera.main;
-        }
+        mainCamera =
+        mainCamera != null ?
+        mainCamera : Camera.main;
+        
         if (IsOwner)
         {
+            if (ManagerLocator.Instance.PlayerManager.OwnerPlayer.IsXREnabled)
+            {
+                return;
+            }
             ResistAction();
         }
         else
@@ -131,7 +136,7 @@ public class CameraSetting : NetworkBehaviour
 
     private void RotationChange(float x, float y)
     {
-        playerRootTransform.rotation = Quaternion.Euler(y, x, 0);
+        cameraTransform.rotation = Quaternion.Euler(y, x, 0);
     }
     private void SwitchCamera(InputAction.CallbackContext context)
     {
@@ -157,7 +162,7 @@ public class CameraSetting : NetworkBehaviour
         if(!IsOwner)
         {
             //オーナーでないプレイヤーの情報を表示するためのコード。オーナーでないプレイヤーのカメラが有効な場合は、そのカメラの位置にプレイヤーのIDとジャンプ回数を表示する。
-            Vector3 positon = ManagerLocator.Instance.PlayerManager.OwnerPlayer.cameraSetting.CurrentActiveCamera.WorldToScreenPoint(playerRootTransform.position);
+            Vector3 positon = ManagerLocator.Instance.PlayerManager.OwnerPlayer.cameraSetting.CurrentActiveCamera.WorldToScreenPoint(cameraTransform.position);
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 120, 100, 20), $"{OwnerClientId}");
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 100, 100, 20), $"jump: {characterControll.JumpCount}");
             return;         
@@ -165,11 +170,11 @@ public class CameraSetting : NetworkBehaviour
 
         if (mainCamera != null && CurrentActiveCamera == mainCamera)
         {
-            Vector3 positon = mainCamera.WorldToScreenPoint(playerRootTransform.position);
+            Vector3 positon = mainCamera.WorldToScreenPoint(cameraTransform.position);
             if (positon.z < 0) return; // カメラの前にいる場合のみ表示
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 60, 100, 20), IsOwner ? "You" : "");
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 30, 100, 20), $"jump: {characterControll.JumpCount}");
-            GUI.Label(new Rect(positon.x, Screen.height - positon.y, 100, 20), $"HP: {playerHealth.Health.Value}/{playerHealth.MaxHealth}");
+            GUI.Label(new Rect(positon.x, Screen.height - positon.y, 100, 20), $"HP: {playerHealth.CurrentHealth}/{playerHealth.MaxHealth}");
         }
         GUI.Label(new Rect(10, 10, 200, 20), $"Job: {propaty.Job}");
 

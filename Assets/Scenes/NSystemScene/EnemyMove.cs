@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using Unity.Netcode;
 
 public class EnemyMove : NetworkBehaviour
@@ -10,7 +10,7 @@ public class EnemyMove : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        target = ManagerLocator.Instance.GameManager.protectArea.transform;
+        target = ManagerLocator.Instance.NGameManager.protectArea.transform;
     }
 
     void Update()
@@ -26,19 +26,19 @@ public class EnemyMove : NetworkBehaviour
         transform.position += direction * enemySO.Speed * Time.deltaTime;
     }
 
-    // š ProtectArea‚É“ü‚Á‚½‚ç
+    // â˜… ProtectAreaã«å…¥ã£ãŸã‚‰
     private void OnTriggerEnter(Collider other)
     {
         if (!IsServer) return;
 
-        if (other.gameObject == ManagerLocator.Instance.GameManager.protectArea)
+        if (other.gameObject == ManagerLocator.Instance.NGameManager.protectArea)
         {
             Debug.Log("Enemy reached ProtectArea");
 
-            ManagerLocator.Instance.GameManager.EnemyKilled(-100);
-            ManagerLocator.Instance.GameManager.Enemycome();
+            ManagerLocator.Instance.NGameManager.EnemyKilled(-100);
+            ManagerLocator.Instance.NGameManager.Enemycome();
 
-            // “Gíœ
+            // æ•µå‰Šé™¤
             GetComponent<NetworkObject>().Despawn(true);
         }
     }

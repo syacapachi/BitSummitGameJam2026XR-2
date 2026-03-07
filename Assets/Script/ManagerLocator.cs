@@ -5,7 +5,7 @@ public class ManagerLocator : MonoBehaviour
     public static ManagerLocator Instance;
 
     [field:SerializeField] public PlayerManager PlayerManager;
-    [field:SerializeField] public NGameManager GameManager;
+    [field:SerializeField] public NGameManager NGameManager;
     void Awake()
     {
         if(Instance == null)

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class NPhaseAudioObserver : MonoBehaviour
 {
@@ -12,7 +12,7 @@ public class NPhaseAudioObserver : MonoBehaviour
 
     private void Start()
     {
-        manager = NGameManager.Instance;
+        manager = ManagerLocator.Instance.NGameManager;
         if (manager == null) return;
 
         manager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;

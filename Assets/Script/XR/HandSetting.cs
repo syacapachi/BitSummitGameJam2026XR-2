@@ -7,6 +7,7 @@ public class HandSetting : NetworkBehaviour
     [Header("Owner Camera")]
     [SerializeField] private Camera ownerCamera;
     [Header("Network Head")]
+    [SerializeField] private GameObject avatorRoot;
     [SerializeField] private GameObject networkHead;
     [Header("Owner Hand")]
     [SerializeField] private GameObject leftHand;
@@ -67,6 +68,7 @@ public class HandSetting : NetworkBehaviour
     {
         if (IsOwner)
         {
+            avatorRoot.transform.position = ownerCamera.transform.position;
             Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
             networkHead.transform.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
             networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);

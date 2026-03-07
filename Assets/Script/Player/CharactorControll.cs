@@ -44,9 +44,8 @@ public class CharactorControll : NetworkBehaviour
         if (IsOwner)
         {
             Debug.Log("CharactorControll spawned on owner client.");
-            if (ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput == null)
+            if (ManagerLocator.Instance.PlayerManager.OwnerPlayer.IsXREnabled)
             {
-                Debug.LogError("PlayerInput component is not assigned.");
                 return;
             }
             ResistAction();
