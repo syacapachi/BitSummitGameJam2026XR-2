@@ -17,6 +17,11 @@ public class NGameManager : NetworkBehaviour
     public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
     public NetworkVariable<bool> IsGameFinished = new NetworkVariable<bool>(false);
     bool gameStarted = false;
+    public NetworkVariable<bool> isBulletCome = new NetworkVariable<bool>(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
 
     void Awake()
     {
@@ -131,5 +136,16 @@ public class NGameManager : NetworkBehaviour
     public int GetScore()
     {
         return score;
+    }
+
+    public void BulletHitProtectArea()
+    {
+        AddScore(-100);
+        isBulletCome.Value = true;
+    }
+
+    public void ResetBulletFlag()
+    {
+        isBulletCome.Value = false;
     }
 }

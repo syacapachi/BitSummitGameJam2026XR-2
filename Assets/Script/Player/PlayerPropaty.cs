@@ -22,7 +22,7 @@ public class PlayerPropaty : NetworkBehaviour
         NetworkVariableWritePermission.Owner
         );
     [SerializeField] PlayerJob playerjob = PlayerJob.Both;
-    /*
+    
     public PlayerJob Job {
         get => playerjob; 
         set 
@@ -43,8 +43,9 @@ public class PlayerPropaty : NetworkBehaviour
             }
         }
     }
-    */
+    
 
+    /*
     NetworkVariable<PlayerJob> job =
     new NetworkVariable<PlayerJob>(
         PlayerJob.Nothing,
@@ -57,6 +58,7 @@ public class PlayerPropaty : NetworkBehaviour
         get => job.Value;
         set => job.Value = value;
     }
+    */
     public bool CanSeeEnemy
     {
         get => playerjob != PlayerJob.Human;
@@ -100,6 +102,7 @@ public class PlayerPropaty : NetworkBehaviour
     }
     private void OnJobChangeHandle(InputAction.CallbackContext context)
     {
+        Debug.Log("SwitchJob action performed! Current job: " + Job);
         Job = Job switch
         {
             PlayerJob.Nothing => PlayerJob.Human,
@@ -108,5 +111,7 @@ public class PlayerPropaty : NetworkBehaviour
             PlayerJob.Both => PlayerJob.Human,
             _ => throw new System.NotImplementedException(),
         };
+        Debug.Log("Job changed to: " + Job);
     }
+
 }
