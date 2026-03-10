@@ -2,13 +2,12 @@
 using Unity.Netcode;
 using UnityEngine.UI;
 using TMPro; // ← 追加
-using UnityEngine.InputSystem;
 using System.Collections;
 
 public class NEnemy : NetworkBehaviour
 {
     [SerializeField] EnemySO enemySO;
-    private int currentHP;
+    NetworkVariable<int> currentHP = new NetworkVariable<int>();
 
     [SerializeField] private Canvas hpCanvas;
     [SerializeField] private Image hpImage; // Filled Image
@@ -18,12 +17,16 @@ public class NEnemy : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        currentHP = enemySO.HP;
-        if (hpImage != null) hpImage.fillAmount = 1f;
+        if (IsServer)
+        {
+            currentHP.Value = enemySO.HP;
+        }
 
-        if (hpText != null) hpText.text = $"{currentHP} / {enemySO.HP}";
+        currentHP.OnValueChanged += OnHPChanged;
 
-        if (!IsClient) return; // クライアントでのみ実行
+        UpdateHPUI(currentHP.Value);
+
+        if (!IsClient) return;
         StartCoroutine(SetupPlayerCoroutine());
     }
 
@@ -53,17 +56,16 @@ public class NEnemy : NetworkBehaviour
 
     public void TakeDamage()
     {
-        Debug.Log("Take damage");
-        currentHP -= enemySO.Damage;
-        if (hpImage != null) hpImage.fillAmount = Mathf.Clamp01((float)currentHP / enemySO.HP);
-        if (hpText != null) hpText.text = $"{currentHP} / {enemySO.HP}";
-        
+        if (!IsServer) return;
 
-        if (currentHP <= 0)
+        currentHP.Value -= enemySO.Damage;
+
+        if (currentHP.Value <= 0)
         {
             DieRpc();
         }
     }
+
     [Rpc(SendTo.Server,InvokePermission = RpcInvokePermission.Server)]
     void DieRpc()
     {
@@ -73,5 +75,19 @@ public class NEnemy : NetworkBehaviour
         {
             NetworkObject.Despawn(true);
         }
+    }
+
+    void OnHPChanged(int oldValue, int newValue)
+    {
+        UpdateHPUI(newValue);
+    }
+
+    void UpdateHPUI(int hp)
+    {
+        if (hpImage != null)
+            hpImage.fillAmount = Mathf.Clamp01((float)hp / enemySO.HP);
+
+        if (hpText != null)
+            hpText.text = $"{hp} / {enemySO.HP}";
     }
 }
