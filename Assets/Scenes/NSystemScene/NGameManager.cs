@@ -16,6 +16,7 @@ public class NGameManager : NetworkBehaviour
 
     public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
     public NetworkVariable<bool> IsGameFinished = new NetworkVariable<bool>(false);
+    bool gameStarted = false;
 
     void Awake()
     {
@@ -29,6 +30,15 @@ public class NGameManager : NetworkBehaviour
         if (!IsServer) return;
 
         spawner = GetComponentInChildren<NEnemySpawner>();
+    }
+
+    public void StartGame()
+    {
+        if (!IsServer) return;
+
+        Debug.Log("Game Start");
+        gameStarted = true;
+
         ResetAndStartGame();
     }
 
@@ -36,6 +46,7 @@ public class NGameManager : NetworkBehaviour
     {
         if (!IsServer) return;
         if (currentPhaseIndex >= phases.Length) return;
+        if (!gameStarted) return;
 
         timer -= Time.deltaTime;
 
