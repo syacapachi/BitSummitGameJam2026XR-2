@@ -510,6 +510,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 1401139532381281685, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2811498829517616246, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -552,13 +556,13 @@ PrefabInstance:
       addedObject: {fileID: 1194369278827022531}
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8960691535602225677}
-    - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7449354282299013003}
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2144525077374001555}
+    - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1222087266907519768}
   m_SourcePrefab: {fileID: 100100000, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
 --- !u!4 &1124331973230440938 stripped
 Transform:
@@ -658,20 +662,6 @@ MonoBehaviour:
   hpCanvas: {fileID: 1696206507279681442}
   hpImage: {fileID: 7028729913468153075}
   hpText: {fileID: 108117791681994854}
---- !u!114 &8960691535602225677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1124331973230472586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2291fafe88de16c4ea6f7314393346d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  enemySO: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
 --- !u!114 &7449354282299013003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -705,6 +695,21 @@ MonoBehaviour:
   meshRenderer: {fileID: 6916242476052379585}
   lookableJob: 1
   hpCanvas: {fileID: 1696206507279681442}
+--- !u!114 &-1222087266907519768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124331973230472586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c7bd313b26be2e4d93b35fc87b4eb88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  enemySO: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
+  bulletPrefab: {fileID: 4022916156752048900, guid: 18254f0b07ec8924d89429cf843b0c78, type: 3}
 --- !u!137 &6916242476052379585 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6190876443068651048, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
