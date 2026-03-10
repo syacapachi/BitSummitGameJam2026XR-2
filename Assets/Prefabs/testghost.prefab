@@ -215,8 +215,8 @@ GameObject:
   - component: {fileID: 4842514609335542819}
   - component: {fileID: 8626847694839352521}
   - component: {fileID: 2094355762983484997}
-  - component: {fileID: 7468338368981548116}
   - component: {fileID: 7040231756483127582}
+  - component: {fileID: -7834844113276369265}
   m_Layer: 7
   m_Name: testghost
   m_TagString: Untagged
@@ -420,20 +420,6 @@ MonoBehaviour:
   hpCanvas: {fileID: 8115059269520921985}
   hpImage: {fileID: 6392055257079718664}
   hpText: {fileID: 7872890923030782825}
---- !u!114 &7468338368981548116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2515483553086041883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2291fafe88de16c4ea6f7314393346d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
 --- !u!114 &7040231756483127582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,6 +436,21 @@ MonoBehaviour:
   meshRenderer: {fileID: 7055824040725011868}
   lookableJob: 2
   hpCanvas: {fileID: 8115059269520921985}
+--- !u!114 &-7834844113276369265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2515483553086041883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c7bd313b26be2e4d93b35fc87b4eb88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
+  bulletPrefab: {fileID: 4022916156752048900, guid: bab683d334cc24943aa54f5fcfbc3e4b, type: 3}
 --- !u!1 &2789469182908074600
 GameObject:
   m_ObjectHideFlags: 0
