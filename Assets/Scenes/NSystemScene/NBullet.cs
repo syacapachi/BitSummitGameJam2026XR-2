@@ -5,9 +5,8 @@ using System.Collections.Generic;
 
 public class NBullet : NetworkBehaviour
 {
-    public float speed = 20f;
+    public WeaponSettingsSO gunSO;
     public float lifeTime = 5f;
-    public int damage = 1;
 
     Rigidbody rb;
     Coroutine despawnTimer;
@@ -24,7 +23,7 @@ public class NBullet : NetworkBehaviour
         if (IsServer)
         {
             rb = GetComponent<Rigidbody>();
-            rb.linearVelocity = transform.forward * speed;
+            rb.linearVelocity = transform.forward * gunSO.speed;
             despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
         }
     }
