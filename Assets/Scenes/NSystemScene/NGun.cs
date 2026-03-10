@@ -167,6 +167,9 @@ public class NGun : NetworkBehaviour
         };
         obj.SetLayerRecursively(LayerMask.NameToLayer(layerName));
 
+        var bullet = obj.GetComponent<NBullet>();
+
+        bullet.shooterId = OwnerClientId;
         // ③ ネットワークでSpawn
         obj.GetComponent<NetworkObject>().Spawn();
         if (syncedAmmo.Value <= 0)

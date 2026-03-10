@@ -21,7 +21,8 @@ public class PlayerPropaty : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
         );
-    [SerializeField] PlayerJob playerjob = PlayerJob.Human;
+    [SerializeField] PlayerJob playerjob = PlayerJob.Both;
+    /*
     public PlayerJob Job {
         get => playerjob; 
         set 
@@ -42,6 +43,20 @@ public class PlayerPropaty : NetworkBehaviour
             }
         }
     }
+    */
+
+    NetworkVariable<PlayerJob> job =
+    new NetworkVariable<PlayerJob>(
+        PlayerJob.Nothing,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    public PlayerJob Job
+    {
+        get => job.Value;
+        set => job.Value = value;
+    }
     public bool CanSeeEnemy
     {
         get => playerjob != PlayerJob.Human;
@@ -50,7 +65,7 @@ public class PlayerPropaty : NetworkBehaviour
     private InputAction changeJobAction;
     public override void OnNetworkSpawn()
     {
-        if(IsOwner)
+        if (IsOwner)
         {
             changeJobAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["SwitchJob"];
             changeJobAction.performed += OnJobChangeHandle;

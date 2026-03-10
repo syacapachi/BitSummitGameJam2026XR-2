@@ -12,6 +12,13 @@ public class NBullet : NetworkBehaviour
     Rigidbody rb;
     Coroutine despawnTimer;
 
+    public ulong shooterId;
+
+    public void SetShooter(ulong id)
+    {
+        shooterId = id;
+    }
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
