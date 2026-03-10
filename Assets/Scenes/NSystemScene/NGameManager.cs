@@ -1,6 +1,7 @@
-﻿using UnityEngine;
-using Unity.Netcode;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using UnityEngine;
 public class NGameManager : NetworkBehaviour
 {
     public static NGameManager Instance;
@@ -18,6 +19,17 @@ public class NGameManager : NetworkBehaviour
     public NetworkVariable<bool> IsGameFinished = new NetworkVariable<bool>(false);
     bool gameStarted = false;
     public NetworkVariable<bool> isBulletCome = new NetworkVariable<bool>(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+    public NetworkVariable<int> countdownValue = new NetworkVariable<int>(
+        0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+    private bool isCountingDown = false;
+    public NetworkVariable<bool> phaseFinishing = new NetworkVariable<bool>(
         false,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
@@ -51,18 +63,21 @@ public class NGameManager : NetworkBehaviour
     {
         if (!IsServer) return;
         if (currentPhaseIndex >= phases.Length) return;
+        if (isCountingDown) return;
         if (!gameStarted) return;
 
         timer -= Time.deltaTime;
 
-        if (timer <= 0 || spawner.AllDead())
+        if (timer <= 0 )
         {
             EndPhase();
         }
     }
+
     [OnInspectorButton("Reset And Start Game")]
     public void ResetAndStartGame()
     {
+        gameStarted = true;
         currentPhaseIndex = -1;
         StartNextPhase();
     }
@@ -83,26 +98,74 @@ public class NGameManager : NetworkBehaviour
             return;
         }
 
-        syncedPhaseIndex.Value = currentPhaseIndex;
-
-        PhaseSO phase = phases[currentPhaseIndex];
-        timer = phase.phaseTime;
-
-        spawner.SpawnFromPhase(phase);
-
-        Debug.Log("Start Phase: " + currentPhaseIndex);
+        StartCoroutine(StartPhaseWithCountdown(currentPhaseIndex));
     }
+
+        private IEnumerator StartPhaseWithCountdown(int phaseIndex)
+        {
+            isCountingDown = true;
+            int count = 3;
+            while (count > 0)
+            {
+                countdownValue.Value = count;
+                Debug.Log("Countdown: " + count);
+                yield return new WaitForSeconds(1f);
+                count--;
+            }
+
+            countdownValue.Value = 0; // 0でカウントダウン終了
+            isCountingDown = false;
+
+            // Phase開始
+            syncedPhaseIndex.Value = phaseIndex;
+
+            PhaseSO phase = phases[phaseIndex];
+            timer = phase.phaseTime;
+
+            spawner.SpawnFromPhase(phase);
+
+            Debug.Log("Start Phase: " + phaseIndex);
+        }
 
     void EndPhase()
     {
+        StartCoroutine(EndPhaseWithCountdown());
+    }
+
+    private IEnumerator EndPhaseWithCountdown()
+    {
+        isCountingDown = true;   // タイマーやUpdateの進行を止める
+
         PhaseSO phase = phases[currentPhaseIndex];
 
+        // FINISH表示用にUI側で使える変数を更新する
+        // （PhaseUIでは countdownValue と syncedPhaseIndex を監視して表示）
+        int count = 3;
+        while (count > 0)
+        {
+            countdownValue.Value = count;
+            Debug.Log("End Phase Countdown: " + count);
+            yield return new WaitForSeconds(1f);
+            count--;
+        }
+
+        countdownValue.Value = 0; // カウントダウン終了
+
+        // 得点ボーナスやFINISHメッセージ表示
         if (spawner.AllDead() && !isEnemycome)
         {
-            Debug.Log("Clear Bonus");
             AddScore(phase.clearBonus);
         }
 
+        Debug.Log($"Phase {currentPhaseIndex + 1} FINISH! Score: {score}");
+        phaseFinishing.Value = true;
+
+        yield return new WaitForSeconds(3f); // FINISH表示を3秒維持
+        phaseFinishing.Value = false;
+
+        isCountingDown = false;
+
+        // 次フェーズを開始
         StartNextPhase();
     }
 
