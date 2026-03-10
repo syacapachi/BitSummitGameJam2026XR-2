@@ -7,6 +7,7 @@ public class WeaponSettingsSO : ScriptableObject
     public float fireRate = 0.2f;
     public int maxAmmo = 30;
     public float reloadTime = 2f;
+    public float speed = 20f;
 
     [Header("Laser")]
     public float laserDistance = 50f;
