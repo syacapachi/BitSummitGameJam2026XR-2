@@ -233,10 +233,11 @@ public class NGun : NetworkBehaviour
         }
         else
         {
-            StopCoroutine(markerCoroutine);
+            if(markerCoroutine != null)  
+                StopCoroutine(markerCoroutine);
         }
             playerMarker.position = pos;
-        markerCoroutine =  StartCoroutine(MarkerBackCorutine());
+        markerCoroutine = StartCoroutine(MarkerBackCorutine());
 
         //var renderer = playerMarker.GetComponent<MeshRenderer>();
         //renderer.enabled = true;

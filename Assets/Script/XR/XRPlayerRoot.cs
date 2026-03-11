@@ -1,24 +1,22 @@
 ﻿using Unity.XR.CoreUtils;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 public class XRPlayerRoot : PlayerRoot
 {
     [SerializeField] XROrigin xrOrigin;
-    [SerializeField] InputActionManager inputActionManager;
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
         if (IsOwner)
         {
-            xrOrigin.enabled = true;
-            inputActionManager.enabled = true;
+            xrOrigin.gameObject.SetActive(true);
         }
         else
         {
-            xrOrigin.enabled = false;
-            inputActionManager.enabled = false;
+            xrOrigin.gameObject.SetActive(false);
         }
+        base.OnNetworkSpawn();
     }
 }

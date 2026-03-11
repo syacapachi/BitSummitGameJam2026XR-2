@@ -2,19 +2,23 @@
 using Unity.Netcode;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Unity.XR.CoreUtils;
 public class HandSetting : NetworkBehaviour
 {
+    [Header("Owner Root")]
+    [SerializeField] private XROrigin xrOrigin;
+    [Header("Avator Root")]
+    [SerializeField] private GameObject avatorRoot;
     [Header("Owner Camera")]
     [SerializeField] private Camera ownerCamera;
-    [Header("Network Head")]
-    [SerializeField] private GameObject avatorRoot;
+    [Header("Avator Head")]
     [SerializeField] private GameObject networkHead;
-    [Header("Owner Hand")]
+    [Header("Owner Hands")]
     [SerializeField] private GameObject leftHand;
     [SerializeField] private GameObject rightHand;
     [SerializeField] private GameObject leftController;
     [SerializeField] private GameObject rightController;
-    [Header("Network Hand")]
+    [Header("Avator Hands")]
     [SerializeField] private GameObject networkLeftHand;
     [SerializeField] private GameObject networkRightHand;
     [SerializeField] private GameObject networkLeftController;
@@ -63,12 +67,24 @@ public class HandSetting : NetworkBehaviour
             component.enabled = false;
         }
         root.SetActive(false);
-    }   
+    }
+    /// <summary>
+    /// 位置情報は、固定長フレームで更新
+    /// </summary>
+    private void FixedUpdate()
+    {
+        if (IsOwner)
+        {
+            avatorRoot.transform.position = xrOrigin.gameObject.transform.position;
+        }
+    }
+    /// <summary>
+    /// アニメーションがある場合は、全ての適応後に更新
+    /// </summary>
     private void LateUpdate()
     {
         if (IsOwner)
         {
-            avatorRoot.transform.position = ownerCamera.transform.position;
             Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
             networkHead.transform.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
             networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);

@@ -66,10 +66,11 @@ public class CameraSetting : NetworkBehaviour
         
         if (IsOwner)
         {
-            if (ManagerLocator.Instance.PlayerManager.OwnerPlayer.IsXREnabled)
-            {
-                return;
-            }
+            //Cursor.lockState = CursorLockMode.Locked;
+
+            mainCamera.enabled = false;
+            if (mainCamera.gameObject.TryGetComponent<AudioListener>(out AudioListener listener)) listener.enabled = false;
+            CurrentActiveCamera = localCamera;
             ResistAction();
         }
         else
@@ -84,13 +85,6 @@ public class CameraSetting : NetworkBehaviour
     }
     private void ResistAction()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-
-        mainCamera.enabled = false;
-        if(mainCamera.gameObject.TryGetComponent<AudioListener>(out AudioListener listener)) listener.enabled = false;
-        CurrentActiveCamera = localCamera;
-
-
         Vector3 angle = localCamera.transform.eulerAngles;
         //xとyを入れ替える。これにより、カメラの回転がプレイヤーの入力に対して正しく反応するようになる。
         cameraAngle.x = angle.y;
@@ -136,6 +130,7 @@ public class CameraSetting : NetworkBehaviour
 
     private void RotationChange(float x, float y)
     {
+        Debug.Log("Rotation Change");
         cameraTransform.rotation = Quaternion.Euler(y, x, 0);
     }
     private void SwitchCamera(InputAction.CallbackContext context)

@@ -2,6 +2,7 @@
 using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 public class CharactorControll : NetworkBehaviour
 {
@@ -44,16 +45,17 @@ public class CharactorControll : NetworkBehaviour
         if (IsOwner)
         {
             Debug.Log("CharactorControll spawned on owner client.");
-            if (ManagerLocator.Instance.PlayerManager.OwnerPlayer.IsXREnabled)
-            {
-                return;
-            }
+            //if (ManagerLocator.Instance.PlayerManager.OwnerPlayer.IsXREnabled)
+            //{
+            //    return;
+            //}
             ResistAction();
         }
     }
     private void ResistAction()
     {
-        moveAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Move"];
+        //InputSystem.actions["Move"];
+        moveAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Move"];//actions["Move"]->全体, currentActionMap["Move"]->今のだけ
         jumpAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Jump"];
         setObjectAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Interact"];
 
