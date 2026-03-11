@@ -24,11 +24,14 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     public int MaxHealth => enemySO.HP;
     public override void OnNetworkSpawn()
     {
-        currentHP.Value = enemySO.HP;
+        if (IsServer)
+        {
+            currentHP.Value = enemySO.HP;
+        }
+        
         if (hpImage != null) hpImage.fillAmount = 1f;
 
         if (hpText != null) hpText.text = $"{currentHP.Value} / {enemySO.HP}";
-
         if (!IsClient) return; // クライアントでのみ実行
         StartCoroutine(SetupPlayerCoroutine());
     }
