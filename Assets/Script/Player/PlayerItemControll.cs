@@ -12,12 +12,12 @@ public class PlayerItemControll : NetworkBehaviour
     [SerializeField] AttachableNode node;
     [SerializeField] GameObject markerPrefab;
 
-    private readonly NetworkList<NetworkEntry> typeObjectList = new();
+    private readonly NetworkList<NetworkEntry> serverTypeObjectList = new();
     public event Action<string, NetworkBehaviourReference> OnItemAdded;
     public AttachableNode Node => node;
     public bool TryGetItem(string name,out NetworkBehaviourReference instance)
     {
-        foreach(NetworkEntry entry in typeObjectList)
+        foreach(NetworkEntry entry in serverTypeObjectList)
         {
             if (entry.Key.Equals(name))
             {
@@ -31,7 +31,7 @@ public class PlayerItemControll : NetworkBehaviour
     }
     public override void OnNetworkSpawn()
     {
-        typeObjectList.OnListChanged += OnListChangedHandle;
+        serverTypeObjectList.OnListChanged += OnListChangedHandle;
         if (!IsOwner) return;
             SpawnMarkerRpc();
     }
@@ -68,6 +68,6 @@ public class PlayerItemControll : NetworkBehaviour
         attach.Attach(node);
 
         NetworkEntry entry = new NetworkEntry("Marker", attach);
-        typeObjectList.Add(entry);
+        serverTypeObjectList.Add(entry);
     }
 }

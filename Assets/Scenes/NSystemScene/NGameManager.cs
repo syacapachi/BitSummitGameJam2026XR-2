@@ -9,7 +9,7 @@ public class NGameManager : NetworkBehaviour
     private float timer;
 
     public NEnemySpawner spawner;
-    public NetworkVariable<int> score = new NetworkVariable<int>();
+    public NetworkVariable<int> score = new NetworkVariable<int>(0);
 
     public GameObject protectArea;
     private bool isEnemycome = false;

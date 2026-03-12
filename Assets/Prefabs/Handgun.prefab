@@ -52,124 +52,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
-      propertyPath: m_Activated.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+    - target: {fileID: 5029919918675200467, guid: a78a725941312494b930d664f3b315d0, type: 3}
+      propertyPath: Components.Array.data[0].name
+      value: Handgun (X R Grab Interactable)
       objectReference: {fileID: 0}
-    - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
-      propertyPath: m_Activated.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
-      propertyPath: m_Activated.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1244117766955033844}
-    - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
-      propertyPath: m_Activated.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
-      propertyPath: m_Activated.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Activate
-      objectReference: {fileID: 0}
-    - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
-      propertyPath: m_Activated.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: GunController, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
-      propertyPath: m_Activated.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+    - target: {fileID: 5029919918675200467, guid: a78a725941312494b930d664f3b315d0, type: 3}
+      propertyPath: Components.Array.data[1].name
+      value: Handgun (Line Renderer)
       objectReference: {fileID: 0}
     - target: {fileID: 9215887592849576065, guid: a78a725941312494b930d664f3b315d0, type: 3}
       propertyPath: ComponentControllers.Array.data[0].name
       value: Handgun (Component Controller)
       objectReference: {fileID: 0}
-    - target: {fileID: 9215887592849576065, guid: a78a725941312494b930d664f3b315d0, type: 3}
-      propertyPath: ComponentControllers.Array.data[0].ComponentController
-      value: 
-      objectReference: {fileID: 3173378201184537850}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1690370004738036, guid: a78a725941312494b930d664f3b315d0, type: 3}
-      insertIndex: 3
-      addedObject: {fileID: 3173378201184537850}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a78a725941312494b930d664f3b315d0, type: 3}
---- !u!114 &1244117766955033844 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3338558875831587400, guid: a78a725941312494b930d664f3b315d0, type: 3}
-  m_PrefabInstance: {fileID: 4546118977250670268}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4544429435303749960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d73d9f29010a0854abeafd9637a3c6de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!95 &2879811585882480860 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1792479375520978528, guid: a78a725941312494b930d664f3b315d0, type: 3}
-  m_PrefabInstance: {fileID: 4546118977250670268}
-  m_PrefabAsset: {fileID: 0}
---- !u!120 &3738722726640255595 stripped
-LineRenderer:
-  m_CorrespondingSourceObject: {fileID: 933814802325877975, guid: a78a725941312494b930d664f3b315d0, type: 3}
-  m_PrefabInstance: {fileID: 4546118977250670268}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4544429435303749960 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1690370004738036, guid: a78a725941312494b930d664f3b315d0, type: 3}
-  m_PrefabInstance: {fileID: 4546118977250670268}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3173378201184537850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4544429435303749960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0b25b3f95e5324abc80c09cb29f271, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  StartEnabled: 1
-  Components:
-  - name: Handgun (X R Grab Interactable)
-    InvertEnabled: 0
-    EnableDelay: 0
-    DisableDelay: 0
-    Component: {fileID: 5726951877018106367}
-  - name: Handgun (Line Renderer)
-    InvertEnabled: 0
-    EnableDelay: 0
-    DisableDelay: 0
-    Component: {fileID: 3738722726640255595}
-  - name: M1911 Handgun_Model (Animator)
-    InvertEnabled: 1
-    EnableDelay: 0
-    DisableDelay: 0
-    Component: {fileID: 2879811585882480860}
-  - name: Collider (Sphere Collider)
-    InvertEnabled: 0
-    EnableDelay: 0
-    DisableDelay: 0
-    Component: {fileID: 8713492124837520766}
---- !u!114 &5726951877018106367 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
-  m_PrefabInstance: {fileID: 4546118977250670268}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4544429435303749960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!135 &8713492124837520766 stripped
-SphereCollider:
-  m_CorrespondingSourceObject: {fileID: 5186886681007657922, guid: a78a725941312494b930d664f3b315d0, type: 3}
-  m_PrefabInstance: {fileID: 4546118977250670268}
-  m_PrefabAsset: {fileID: 0}
