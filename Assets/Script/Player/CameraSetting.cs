@@ -16,6 +16,7 @@ public class CameraSetting : NetworkBehaviour
     /// 観戦用のカメラを割り当てるためのフィールド。観戦モードで使用されるカメラを指定するために使用される。
     /// </summary>
     [SerializeField] Camera mainCamera;
+    [Header("GUISetting")]
     [SerializeField] CharactorControll characterControll;
     [SerializeField] PlayerHealth playerHealth;
     [SerializeField] PlayerPropaty propaty;

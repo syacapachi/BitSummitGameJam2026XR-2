@@ -2788,7 +2788,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1639413411}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 93fd3ce14e8045645a179db0bfce7ea9, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -3900,6 +3900,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1110855740629212305, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.x
+      value: -0.02089289
+      objectReference: {fileID: 0}
+    - target: {fileID: 1110855740629212305, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.y
+      value: -0.02285155
+      objectReference: {fileID: 0}
+    - target: {fileID: 1110855740629212305, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.z
+      value: -0.02563843
+      objectReference: {fileID: 0}
+    - target: {fileID: 2477232662183977130, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.x
+      value: -0.05962634
+      objectReference: {fileID: 0}
+    - target: {fileID: 2477232662183977130, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.y
+      value: -0.023409
+      objectReference: {fileID: 0}
+    - target: {fileID: 2477232662183977130, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.z
+      value: -0.022901
+      objectReference: {fileID: 0}
     - target: {fileID: 4017025280720426764, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
       propertyPath: m_Name
       value: "Collider_\u6697\u8CB4\u8CD3\u5BA43"
@@ -3947,6 +3971,30 @@ PrefabInstance:
     - target: {fileID: 4392284628693192118, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8265742783486154064, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.x
+      value: -0.05962635
+      objectReference: {fileID: 0}
+    - target: {fileID: 8265742783486154064, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.y
+      value: -0.023409
+      objectReference: {fileID: 0}
+    - target: {fileID: 8265742783486154064, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.z
+      value: -0.022901
+      objectReference: {fileID: 0}
+    - target: {fileID: 8486864019464881335, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.x
+      value: -0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 8486864019464881335, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.y
+      value: -0.023409
+      objectReference: {fileID: 0}
+    - target: {fileID: 8486864019464881335, guid: 572e71c3d06d4684c9977105c007ea82, type: 3}
+      propertyPath: m_Size.z
+      value: -0.02290101
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

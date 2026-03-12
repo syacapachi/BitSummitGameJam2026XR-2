@@ -3,16 +3,17 @@ using Unity.Netcode;
 using NUnit.Framework;
 using System.Collections.Generic;
 using Unity.XR.CoreUtils;
-public class HandSetting : NetworkBehaviour
+public class SyncronizeSetting : NetworkBehaviour
 {
-    [Header("Owner Root")]
+    [Header("Root")]
+    [SerializeField] Transform localXRRootTransfrom;
+    [SerializeField] Transform avatorRootTransfrom;
+    [Header("XROrigin")]
     [SerializeField] private XROrigin xrOrigin;
-    [Header("Avator Root")]
-    [SerializeField] private GameObject avatorRoot;
     [Header("Owner Camera")]
     [SerializeField] private Camera ownerCamera;
     [Header("Avator Head")]
-    [SerializeField] private GameObject networkHead;
+    [SerializeField] private Transform networkHead;
     [Header("Owner Hands")]
     [SerializeField] private GameObject leftHand;
     [SerializeField] private GameObject rightHand;
@@ -24,8 +25,6 @@ public class HandSetting : NetworkBehaviour
     [SerializeField] private GameObject networkLeftController;
     [SerializeField] private GameObject networkRightController;
 
-    [Header("Tracking Object")]
-    [SerializeField] List<GameObject> trackingList;
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -38,9 +37,11 @@ public class HandSetting : NetworkBehaviour
             DisableMeshRenderer(networkRightHand);
             DisableMeshRenderer(networkLeftController);
             DisableMeshRenderer(networkRightController);
+            DisableMeshRenderer(avatorRootTransfrom.gameObject);
         }
         else
         {
+            xrOrigin.gameObject.SetActive(false);
             DisableComponentAndObject(leftHand);
             DisableComponentAndObject(rightHand);
             DisableComponentAndObject(leftController);
@@ -69,24 +70,30 @@ public class HandSetting : NetworkBehaviour
         root.SetActive(false);
     }
     /// <summary>
-    /// 位置情報は、固定長フレームで更新
-    /// </summary>
-    private void FixedUpdate()
-    {
-        if (IsOwner)
-        {
-            avatorRoot.transform.position = xrOrigin.gameObject.transform.position;
-        }
-    }
-    /// <summary>
     /// アニメーションがある場合は、全ての適応後に更新
     /// </summary>
     private void LateUpdate()
     {
         if (IsOwner)
         {
+            //ルートの移動（重要）
+
+            Vector3 offset = xrOrigin.Camera.transform.position - localXRRootTransfrom.position;
+            offset.y = 0;//高さの影響を消す(埋まり防止)
+
+            localXRRootTransfrom.position += offset;
+            xrOrigin.transform.position -= offset;
+
+            if(xrOrigin.transform.localRotation.eulerAngles.y != 0f)
+            {
+                localXRRootTransfrom.rotation = xrOrigin.transform.rotation;
+                xrOrigin.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            }
+            //頭の角度
             Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
-            networkHead.transform.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
+            networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
+
+            //手・コントローラー
             networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
             networkRightHand.transform.SetPositionAndRotation(rightHand.transform.position, rightHand.transform.rotation);
             networkLeftController.transform.SetPositionAndRotation(leftController.transform.position, leftController.transform.rotation);

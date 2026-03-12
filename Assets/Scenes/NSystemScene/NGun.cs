@@ -20,7 +20,7 @@ public class NGun : NetworkBehaviour
     /// サーバーのみ参照を持つフィールド。プレイヤーのマーカーオブジェクトを参照するために使用される。クライアントはこのフィールドを直接参照せず、RPCを介してマーカーの位置を更新する。
     /// </summary>
     public Transform playerMarker;
-    AttachableNode node;
+    [SerializeField] AttachableNode node;
     PlayerControls controls;
     InputAction fireAction;
     InputAction markerAction;
@@ -110,7 +110,6 @@ public class NGun : NetworkBehaviour
             if (item.TryGet(out NetworkBehaviour obj))
             {
                 playerMarker = obj.gameObject.transform;
-                node = obj.GetComponentInParent<AttachableNode>();
                 return true;
             }
             else

@@ -3657,6 +3657,7 @@ MonoBehaviour:
   weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
   itemControll: {fileID: 6089842242769989286}
   playerMarker: {fileID: 0}
+  node: {fileID: 8715227092802700861}
   syncedAmmo:
     m_InternalValue: 0
   isReloading:
@@ -5880,7 +5881,7 @@ MonoBehaviour:
   SyncPositionY: 1
   SyncPositionZ: 1
   SyncRotAngleX: 0
-  SyncRotAngleY: 0
+  SyncRotAngleY: 1
   SyncRotAngleZ: 0
   SyncScaleX: 0
   SyncScaleY: 0
@@ -6637,7 +6638,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2997919579142271587}
-  - component: {fileID: 4255813560928319964}
   - component: {fileID: 8663550106134351049}
   - component: {fileID: 7339222948460591748}
   - component: {fileID: 3212240998896153436}
@@ -6671,52 +6671,6 @@ Transform:
   - {fileID: 1551078686726150533}
   m_Father: {fileID: 113149987623306627}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4255813560928319964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7945066643554683044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 0
-  AutoOwnerAuthorityTickOffset: 1
-  PositionInterpolationType: 0
-  RotationInterpolationType: 0
-  ScaleInterpolationType: 0
-  PositionLerpSmoothing: 1
-  PositionMaxInterpolationTime: 0.1
-  RotationLerpSmoothing: 1
-  RotationMaxInterpolationTime: 0.1
-  ScaleLerpSmoothing: 1
-  ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
-  TickSyncChildren: 0
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 0
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 0
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!136 &8663550106134351049
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7029,7 +6983,7 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   UseQuaternionSynchronization: 1
   UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
+  UseHalfFloatPrecision: 1
   InLocalSpace: 1
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
@@ -7587,7 +7541,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4520498069701977938}
-  - component: {fileID: 3896328600619049327}
+  - component: {fileID: 3296244280716208108}
   - component: {fileID: 2601924754206789514}
   m_Layer: 0
   m_Name: SyncronizeScript
@@ -7611,7 +7565,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 113149987623306627}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3896328600619049327
+--- !u!114 &3296244280716208108
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7620,7 +7574,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8796051876536301069}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4def968431788104d8383eaed3987189, type: 3}
+  m_Script: {fileID: 11500000, guid: 0835fe71733853a448fc369c1d0fb102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
@@ -7632,7 +7586,6 @@ MonoBehaviour:
   playerHealth: {fileID: 721904957764987582}
   propaty: {fileID: 4021316936165528260}
   cameraSetting: {fileID: 4211932313199541759}
-  xrOrigin: {fileID: 2851388346238174679}
 --- !u!114 &2601924754206789514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7646,10 +7599,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  localXRRootTransfrom: {fileID: 2314468204341838933}
+  avatorRootTransfrom: {fileID: 2997919579142271587}
   xrOrigin: {fileID: 2851388346238174679}
-  avatorRoot: {fileID: 7945066643554683044}
   ownerCamera: {fileID: 4019957463714831628}
-  networkHead: {fileID: 8010986219845135089}
+  networkHead: {fileID: 8550341410659679645}
   leftHand: {fileID: 7414134076739607851}
   rightHand: {fileID: 2750149489694668262}
   leftController: {fileID: 4019957464198675828}
@@ -7658,7 +7612,6 @@ MonoBehaviour:
   networkRightHand: {fileID: 3830526795640174952}
   networkLeftController: {fileID: 1300418964676926642}
   networkRightController: {fileID: 2219528547830956863}
-  trackingList: []
 --- !u!1 &8842100943990743025
 GameObject:
   m_ObjectHideFlags: 0
@@ -8223,6 +8176,26 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3371877018204353594, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3371877018204353594, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3371877018204353594, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3371877018204353594, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4583810496511554748, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4750419573833148750, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -8335,6 +8308,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -23
       objectReference: {fileID: 0}
+    - target: {fileID: 5518899284880179291, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6943199471777770044, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: propaty
       value: 
@@ -8351,6 +8328,10 @@ PrefabInstance:
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 4019957463714831625}
+    - target: {fileID: 7008768837939180378, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 4019957463714831628}
     - target: {fileID: 7463141723133795999, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: PlayerRoot
       value: 
@@ -8360,6 +8341,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7339222948460591748}
     - target: {fileID: 7477044817063070211, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7477044817063070211, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: networkAnimator
       value: 
       objectReference: {fileID: 3212240998896153436}
@@ -8367,6 +8352,10 @@ PrefabInstance:
       propertyPath: charactorRigidbody
       value: 
       objectReference: {fileID: 3607982259159180941}
+    - target: {fileID: 7477044817063070211, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: playerRootTransform
+      value: 
+      objectReference: {fileID: 113149987623306627}
     - target: {fileID: 8806329115733545877, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_Name
       value: XR Origin Hands (XR Rig) (LocalPlayer)
