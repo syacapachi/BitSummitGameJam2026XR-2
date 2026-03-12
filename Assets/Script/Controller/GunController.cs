@@ -12,9 +12,10 @@ public class GunController : NetworkBehaviour
     public LineRenderer laserLine;
     public WeaponSettingsSO weaponSettings;
     private float nextFire;
+    [SerializeField] AudioSource allShootSoundSource;
     public NetworkVariable<int> syncedAmmo = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> isReloading = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
+    
     public float reloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
 
     void Update()
@@ -59,6 +60,7 @@ public class GunController : NetworkBehaviour
     public void Activate()
     {
         ShootRpc();
+        allShootSoundSource?.Play();
     }
     [Rpc(SendTo.Server)]
     private void ShootRpc()
