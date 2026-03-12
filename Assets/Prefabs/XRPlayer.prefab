@@ -2914,14 +2914,7 @@ MonoBehaviour:
   NetworkAnimatorExpanded: 0
   AuthorityMode: 0
   m_Animator: {fileID: 8695151679100846780}
-  TransitionStateInfoList:
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -2089788878
-    DestinationState: 125937960
-    TransitionDuration: 0.23076922
-    TriggerNameHash: 125937960
-    TransitionIndex: 1
+  TransitionStateInfoList: []
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Speed
@@ -2935,7 +2928,7 @@ MonoBehaviour:
     - name: Jump
       NameHash: 125937960
       Synchronize: 1
-      ParameterType: 9
+      ParameterType: 4
     - name: Rest
       NameHash: 1562808046
       Synchronize: 1
@@ -10569,7 +10562,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3651505721358349586}
-  - component: {fileID: 1056908645015107765}
+  - component: {fileID: 7382194059990003433}
   - component: {fileID: 1862221289608414100}
   - component: {fileID: 5141754549211977977}
   - component: {fileID: 8500240822050291272}
@@ -10601,7 +10594,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5505954998685896650}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1056908645015107765
+--- !u!114 &7382194059990003433
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10610,19 +10603,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 7419309984385966222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4def968431788104d8383eaed3987189, type: 3}
+  m_Script: {fileID: 11500000, guid: 0835fe71733853a448fc369c1d0fb102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   playerPrefab: {fileID: 2132450191693431227}
   playerRoot: {fileID: 5505954998685896650}
-  playerCanvas: {fileID: 2393289347567038077}
+  playerCanvas: {fileID: 2042353444360525562}
   playerInput: {fileID: 4577266430221473715}
   characterControll: {fileID: 5141754549211977977}
   playerHealth: {fileID: 1862221289608414100}
   propaty: {fileID: 8392041462461411779}
   cameraSetting: {fileID: 8500240822050291272}
-  xrOrigin: {fileID: 4903798693570973673}
+  itemControll: {fileID: 3776205676469635159}
 --- !u!114 &1862221289608414100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10676,7 +10669,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   cameraTransform: {fileID: 745002453215952238}
   localCamera: {fileID: 7872297607472145245}
-  mainCamera: {fileID: 0}
   characterControll: {fileID: 5141754549211977977}
   playerHealth: {fileID: 1862221289608414100}
   propaty: {fileID: 8392041462461411779}
@@ -10698,10 +10690,12 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   bulletPrefab: {fileID: 4022916156752048900, guid: 87e947bf715886f4d984cdaecf68c937, type: 3}
   firePoint: {fileID: 773460686967472527}
+  markerPoint: {fileID: 0}
   laserLine: {fileID: 1554896852908944550}
   weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
   itemControll: {fileID: 3776205676469635159}
   playerMarker: {fileID: 0}
+  node: {fileID: 0}
   syncedAmmo:
     m_InternalValue: 0
   isReloading:
@@ -10749,8 +10743,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  playerRootTransfrom: {fileID: 0}
+  avatorRootTransfrom: {fileID: 0}
+  xrOrigin: {fileID: 0}
   ownerCamera: {fileID: 7872297607472145245}
-  avatorRoot: {fileID: 7690719375263743642}
   networkHead: {fileID: 112990281107076086}
   leftHand: {fileID: 5833514972168696111}
   rightHand: {fileID: 3862831657312698932}
@@ -10760,7 +10756,6 @@ MonoBehaviour:
   networkRightHand: {fileID: 5997208398088505718}
   networkLeftController: {fileID: 1787933714760247814}
   networkRightController: {fileID: 77919594750492110}
-  trackingList: []
 --- !u!82 &2455431010937829706
 AudioSource:
   m_ObjectHideFlags: 0
