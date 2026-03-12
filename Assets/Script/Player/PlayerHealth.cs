@@ -4,16 +4,16 @@ using UnityEngine;
 public class PlayerHealth : NetworkBehaviour,IDamageReciever
 {
     [SerializeField] int maxHP = 100;
-    [SerializeField] NetworkVariable<int> currentHP = new NetworkVariable<int>(
+    [SerializeField] NetworkVariable<float> currentHP = new NetworkVariable<float>(
         100,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
     public GameObject GameObject => this.gameObject;
 
-    public int CurrentHealth => currentHP.Value;
+    public float CurrentHealth => currentHP.Value;
 
-    public int MaxHealth => maxHP;
+    public float MaxHealth => maxHP;
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -28,7 +28,7 @@ public class PlayerHealth : NetworkBehaviour,IDamageReciever
         currentHP.OnValueChanged -= OnServerHPChanged;
         Debug.Log($"PlayerHealth despawned on network. owner:{OwnerClientId},NetworkId = {NetworkObjectId}");
     }
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if (IsServer)
         {
@@ -37,7 +37,7 @@ public class PlayerHealth : NetworkBehaviour,IDamageReciever
         }   
     }
     //クライアントの場合は、サーバーからのHPの変更を監視して、UIの更新や死亡処理などを行う
-    private void OnServerHPChanged(int oldHP, int newHP)
+    private void OnServerHPChanged(float oldHP, float newHP)
     {
         Debug.Log($"Player {OwnerClientId} HP changed from {oldHP} to {newHP}");
         if (newHP <= 0)

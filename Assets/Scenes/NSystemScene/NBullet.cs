@@ -61,7 +61,7 @@ public class NBullet : NetworkBehaviour
         if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
         {
             Debug.Log("Hit DamageReciever" + other.name);
-            damageReciver.TakeDamage(damage);
+            damageReciver.TakeDamage(gunSO.damage);
             StopCoroutine(despawnTimer);
             if (NetworkObject.IsSpawned)
             {

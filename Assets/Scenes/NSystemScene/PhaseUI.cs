@@ -8,7 +8,7 @@ public class PhaseUI : MonoBehaviour
     private NGameManager nGameManager;
     void Start()
     {
-        nGameManager = ManagerLocator.Instance.NGameManager;
+        nGameManager = ManagerLocator.Instance.GameManager;
         if (nGameManager != null)
         {
 

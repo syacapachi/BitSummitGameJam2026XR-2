@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObjects/WeaponSettings")]
 public class WeaponSettingsSO : ScriptableObject
@@ -11,4 +11,7 @@ public class WeaponSettingsSO : ScriptableObject
 
     [Header("Laser")]
     public float laserDistance = 50f;
+
+    [Header("Damage")]
+    public float damage = 1;
 }

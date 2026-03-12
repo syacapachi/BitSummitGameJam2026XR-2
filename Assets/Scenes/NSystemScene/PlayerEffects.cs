@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
 
@@ -57,7 +57,7 @@ public class PlayerEffects : NetworkBehaviour
         for (int i = 0; i < damageBorders.Length; i++)
             damageBorders[i].SetActive(false);
 
-        // Server‘¤‚Åƒtƒ‰ƒO‚ðƒŠƒZƒbƒg
+        // Serverå´ã§ãƒ•ãƒ©ã‚°ã‚’ãƒªã‚»ãƒƒãƒˆ
         if (IsServer)
             ManagerLocator.Instance.GameManager.ResetBulletFlag();
     }

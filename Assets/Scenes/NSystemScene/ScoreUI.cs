@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class ScoreUI : MonoBehaviour
@@ -7,9 +7,10 @@ public class ScoreUI : MonoBehaviour
 
     void Update()
     {
-        if (NGameManager.Instance == null) return;
+        var nGameManager = ManagerLocator.Instance.GameManager;
+        if (nGameManager) return;
 
-        int score = NGameManager.Instance.GetScore();
+        int score = nGameManager.GetScore();
         scoreText.text = "Score : " + score;
     }
 }

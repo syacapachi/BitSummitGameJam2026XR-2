@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using Unity.Netcode;
 
 public class StartButton : NetworkBehaviour
@@ -27,7 +27,7 @@ public class StartButton : NetworkBehaviour
 
         if (!(humanSelected && ghostSelected))
         {
-            Debug.Log("–ğE‚ª‚Ü‚¾Œˆ‚Ü‚Á‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.Log("å½¹è·ãŒã¾ã æ±ºã¾ã£ã¦ã„ã¾ã›ã‚“");
             return;
         }
 
@@ -37,7 +37,7 @@ public class StartButton : NetworkBehaviour
     [ServerRpc]
     void StartGameServerRpc()
     {
-        NGameManager.Instance.StartGame();
+        ManagerLocator.Instance.GameManager.StartGame();
         HideUIClientRpc();
     }
 

@@ -7,7 +7,7 @@ using System.Collections;
 public class NEnemy : NetworkBehaviour,IDamageReciever
 {
     [SerializeField] EnemySO enemySO;
-    private readonly NetworkVariable<int> currentHP = new(
+    private readonly NetworkVariable<float> currentHP = new(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
@@ -19,8 +19,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
 
     private Transform targetPlayer;
     public GameObject GameObject => this.gameObject;
-    public int CurrentHealth => currentHP.Value;
-    public int MaxHealth => enemySO.HP;
+    public float CurrentHealth => currentHP.Value;
+    public float MaxHealth => enemySO.HP;
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -33,10 +33,15 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
         UpdateHPUI(currentHP.Value);
 
         if (!IsClient) return;// クライアントでのみ実行
-        
-        hpImage?.fillAmount = 1f;
 
-        hpText?.text = $"{currentHP.Value} / {enemySO.HP}";
+        if (hpImage != null)
+        {
+            hpImage.fillAmount = 1f;
+        }
+        if (hpText != null)
+        {
+            hpText.text = $"{currentHP.Value} / {enemySO.HP}";
+        }
 
         StartCoroutine(SetupPlayerCoroutine());
     }
@@ -65,7 +70,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if (!IsServer) return;
 
@@ -73,8 +78,14 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
 
         Debug.Log("Take damage");
         currentHP.Value -= enemySO.Damage;
-        hpImage?.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.HP);
-        hpText?.text = $"{currentHP.Value} / {enemySO.HP}";
+        if (hpImage != null)
+        {
+            hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.HP);
+        }
+        if (hpText != null)
+        {
+            hpText.text = $"{currentHP.Value} / {enemySO.HP}";
+        }
         
 
         if (currentHP.Value <= 0)
@@ -87,19 +98,19 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     void DieRpc()
     {
         Debug.Log("Die");
-        ManagerLocator.Instance.NGameManager.EnemyKilled(enemySO.scoreValue);
+        ManagerLocator.Instance.GameManager.EnemyKilled(enemySO.scoreValue);
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);
         }
     }
 
-    void OnHPChanged(int oldValue, int newValue)
+    void OnHPChanged(float oldValue, float newValue)
     {
         UpdateHPUI(newValue);
     }
 
-    void UpdateHPUI(int hp)
+    void UpdateHPUI(float hp)
     {
         if (hpImage != null)
             hpImage.fillAmount = Mathf.Clamp01((float)hp / enemySO.HP);
