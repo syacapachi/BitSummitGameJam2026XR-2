@@ -20,7 +20,7 @@ public class NGun : NetworkBehaviour
     /// <summary>
     /// サーバーのみ参照を持つフィールド。プレイヤーのマーカーオブジェクトを参照するために使用される。クライアントはこのフィールドを直接参照せず、RPCを介してマーカーの位置を更新する。
     /// </summary>
-    public Transform playerMarker;
+    public AttachableBehaviour playerMarker;
     [SerializeField] AttachableNode node;
     PlayerControls controls;
     InputAction fireAction;
@@ -102,10 +102,10 @@ public class NGun : NetworkBehaviour
         if (!IsServer) return false;
         if (itemControll.TryGetItem("Marker", out NetworkBehaviourReference item))
         {
-            if (item.TryGet(out NetworkBehaviour obj))
+            if (item.TryGet(out NetworkBehaviour behaviour))
             {
-                playerMarker = obj.gameObject.transform;
-                return true;
+                playerMarker = behaviour as AttachableBehaviour;
+                return playerMarker != null;
             }
             else
             {
@@ -236,7 +236,7 @@ public class NGun : NetworkBehaviour
             if(markerCoroutine != null)  
                 StopCoroutine(markerCoroutine);
         }
-        playerMarker.position = pos;
+        playerMarker.gameObject.transform.position = pos;
         markerCoroutine = StartCoroutine(MarkerBackCorutine());
 
         //var renderer = playerMarker.GetComponent<MeshRenderer>();
@@ -248,7 +248,7 @@ public class NGun : NetworkBehaviour
         if(playerMarker != null)
         {
             playerMarker.GetComponentInChildren<AttachableBehaviour>().Attach(node);
-            playerMarker.localPosition = Vector3.zero;
+            playerMarker.gameObject.transform.localPosition = Vector3.zero;
             isMarkAttached = true;
         }
     }

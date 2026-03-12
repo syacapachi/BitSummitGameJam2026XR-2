@@ -14,9 +14,18 @@ public class GunController : NetworkBehaviour
     private float nextFire;
     [SerializeField] AudioSource allShootSoundSource;
     public NetworkVariable<int> syncedAmmo = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public NetworkVariable<bool> isReloading = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private bool isReloading = false;
     
     public float reloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
+
+    private void OnEnable()
+    {
+        syncedAmmo.OnValueChanged += OnAmmoChanged;
+    }
+    private void OnDisable()
+    {
+        syncedAmmo.OnValueChanged -= OnAmmoChanged;
+    }
 
     void Update()
     {
@@ -60,13 +69,12 @@ public class GunController : NetworkBehaviour
     public void Activate()
     {
         ShootRpc();
-        allShootSoundSource?.Play();
     }
     [Rpc(SendTo.Server)]
     private void ShootRpc()
     {
         Debug.Log("ShootRpc called");
-        if (isReloading.Value) return;
+        if (isReloading) return;
         if (Time.time < nextFire) return;
 
         nextFire = Time.time + weaponSettings.fireRate;
@@ -85,22 +93,27 @@ public class GunController : NetworkBehaviour
         bullet.shooterId = OwnerClientId;
         // ③ ネットワークでSpawn
         obj.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
-        if (syncedAmmo.Value <= 0 && !isReloading.Value)
-        {
-            StartCoroutine(Reload());
-            return;
-        }
     }
 
     private IEnumerator Reload()
     {
-        isReloading.Value = true;
+        isReloading = true;
         Debug.Log("Reloading...");
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         var wait = new WaitForSeconds(weaponSettings.reloadTime);
         yield return wait;
 
         syncedAmmo.Value = weaponSettings.maxAmmo;
-        isReloading.Value = false;
+        isReloading = false;
+    }
+    private void OnAmmoChanged(int oldestAmmo, int newestAmmo)
+    {
+        if(isReloading) return;
+        allShootSoundSource?.Play();
+        if (newestAmmo <= 0)
+        {
+            StartCoroutine(Reload());
+            return;
+        }
     }
 }
