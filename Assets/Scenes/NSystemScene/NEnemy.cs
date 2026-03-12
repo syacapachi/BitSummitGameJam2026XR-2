@@ -77,7 +77,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
         currentHP.Value -= enemySO.Damage;
 
         Debug.Log("Take damage");
-        currentHP.Value -= enemySO.Damage;
+        
         if (hpImage != null)
         {
             hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.HP);

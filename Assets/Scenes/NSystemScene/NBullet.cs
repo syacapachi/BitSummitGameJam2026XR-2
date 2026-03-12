@@ -55,8 +55,43 @@ public class NBullet : NetworkBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        //水野が追加した。ダメージ判定の無効化スクリプト
         if (!IsServer) return;
-        Debug.Log("Hit"+other.name);
+        Debug.Log("Hit" + other.name);
+
+        NEnemy enemy = other.GetComponent<NEnemy>() ?? other.GetComponentInParent<NEnemy>();
+        if (enemy != null)
+        {
+            EnemyFxRule rule = enemy.GetComponent<EnemyFxRule>() ?? enemy.GetComponentInParent<EnemyFxRule>();
+
+            if (rule != null)
+            {
+                PlayerPropaty.PlayerJob shooterJob = PlayerPropaty.PlayerJob.Nothing;
+
+                if (NetworkManager.Singleton.ConnectedClients.TryGetValue(shooterId, out var client))
+                {
+                    var propaty = client.PlayerObject.GetComponentInChildren<PlayerPropaty>();
+                    if (propaty != null)
+                    {
+                        shooterJob = propaty.Job;
+                    }
+                }
+
+                if (!rule.IsEffectiveFor(shooterJob))
+                {
+                    StopCoroutine(despawnTimer);
+                    if (NetworkObject.IsSpawned)
+                    {
+                        NetworkObject.Despawn(true);
+                    }
+                    return;
+                }
+            }
+        }
+        //水野が追加した。ダメージ判定の無効化スクリプト
+        //下の2行消しました。
+        // if (!IsServer) return;
+        // Debug.Log("Hit"+other.name);
         // Enemy �ɓ��������ꍇ
         if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
         {
