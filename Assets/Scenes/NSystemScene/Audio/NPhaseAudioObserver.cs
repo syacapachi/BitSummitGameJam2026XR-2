@@ -12,7 +12,7 @@ public class NPhaseAudioObserver : MonoBehaviour
 
     private void Start()
     {
-        managerAll = ManagerLocator.Instance.GameManager;
+        managerAll = ManagerLocator.Instance.AllGameManager;
         if (managerAll == null) return;
 
         managerAll.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
