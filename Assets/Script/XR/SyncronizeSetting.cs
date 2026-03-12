@@ -6,7 +6,7 @@ using Unity.XR.CoreUtils;
 public class SyncronizeSetting : NetworkBehaviour
 {
     [Header("Root")]
-    [SerializeField] Transform localXRRootTransfrom;
+    [SerializeField] Transform playerRootTransfrom;
     [SerializeField] Transform avatorRootTransfrom;
     [Header("XROrigin")]
     [SerializeField] private XROrigin xrOrigin;
@@ -78,15 +78,15 @@ public class SyncronizeSetting : NetworkBehaviour
         {
             //ルートの移動（重要）
 
-            Vector3 offset = xrOrigin.Camera.transform.position - localXRRootTransfrom.position;
+            Vector3 offset = xrOrigin.Camera.transform.position - playerRootTransfrom.position;
             offset.y = 0;//高さの影響を消す(埋まり防止)
 
-            localXRRootTransfrom.position += offset;
+            playerRootTransfrom.position += offset;
             xrOrigin.transform.position -= offset;
 
             if(xrOrigin.transform.localRotation.eulerAngles.y != 0f)
             {
-                localXRRootTransfrom.rotation = xrOrigin.transform.rotation;
+                playerRootTransfrom.rotation = xrOrigin.transform.rotation;
                 xrOrigin.transform.localRotation = Quaternion.Euler(Vector3.zero);
             }
             //頭の角度
