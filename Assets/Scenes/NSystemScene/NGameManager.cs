@@ -37,7 +37,7 @@ public class NGameManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         Debug.Log("GameManager OnNetworkSpawn : " + IsServer + " / " + IsClient);
-        ManagerLocator.Instance.GameManager = this;
+        ManagerLocator.Instance.AllGameManager = this;
         syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
 
         if (!IsServer) return;

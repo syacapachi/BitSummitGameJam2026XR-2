@@ -19,12 +19,13 @@ public class PlayerRoot : NetworkBehaviour
     public PlayerHealth playerHealth;
     public PlayerPropaty propaty;
     public CameraSetting cameraSetting;
+    public PlayerItemControll itemControll;
     private bool isXREnabled = false;
     private PlayerManager playerManager;
     public bool IsXREnabled => isXREnabled;
     public override void OnNetworkSpawn()
     {
-        playerManager = ManagerLocator.Instance.PlayerManager;
+        playerManager = ManagerLocator.Instance.AllPlayerManager;
         playerManager.ResistPlayer(this);
         if (IsOwner)
         {

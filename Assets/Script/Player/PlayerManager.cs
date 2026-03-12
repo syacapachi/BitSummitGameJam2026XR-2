@@ -7,9 +7,18 @@ using System;
 public class PlayerManager : MonoBehaviour
 {
     private readonly List<PlayerRoot> playerList = new();
-    public PlayerRoot OwnerPlayer {  get; private set; }
+    /// <summary>
+    /// このデバイスでのオーナーへの参照
+    /// </summary>
+    public PlayerRoot LocalOwnerPlayer {  get; private set; }
 
     public event Action<PlayerPropaty.PlayerJob> OnOwnerJobChanged;
+    [Header("Owner Setting")]
+    [Tooltip("ホスト、クライアント設定前のカメラ")]
+    [SerializeField] Camera mainCamera;
+    [SerializeField] Canvas worldCanvas;
+    public Camera PlayerCamera => mainCamera;
+    public Canvas WorldCanvas => worldCanvas;
     public void ResistPlayer(PlayerRoot playerRoot)
     {
         playerList.Add(playerRoot);
@@ -20,14 +29,18 @@ public class PlayerManager : MonoBehaviour
     }
     public void ResistOwner(PlayerRoot playerRoot)
     {
-        OwnerPlayer = playerRoot;
+        LocalOwnerPlayer = playerRoot;
         Debug.Log("Resist owner");
-        OwnerPlayer.propaty.OnJobChanged += OnJobChanged;
+        LocalOwnerPlayer.propaty.OnJobChanged += OnJobChanged;
+        mainCamera.enabled = false;
+        worldCanvas.worldCamera = LocalOwnerPlayer.cameraSetting.localCamera;
     }
     public void UnResistOwner(PlayerRoot playerRoot)
     {
-        OwnerPlayer.propaty.OnJobChanged -= OnJobChanged;
-        OwnerPlayer = null;
+        LocalOwnerPlayer.propaty.OnJobChanged -= OnJobChanged;
+        LocalOwnerPlayer = null;
+        worldCanvas.worldCamera = null;
+        mainCamera.enabled = true;
     }
     private void OnJobChanged(PlayerPropaty.PlayerJob job)
     {

@@ -70,8 +70,8 @@ public class NGun : NetworkBehaviour
             //controls.Player.Marker.performed += ctx => PlaceMarkerRpc();
 
             //controls.Enable();
-            fireAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Fire"];
-            markerAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Marker"];
+            fireAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Fire"];
+            markerAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Marker"];
             Debug.Log("NGun: Subscribing to input actions.");
             fireAction.performed += _ => ShootRpc();
             markerAction.performed += _ => PlaceMarkerRpc();

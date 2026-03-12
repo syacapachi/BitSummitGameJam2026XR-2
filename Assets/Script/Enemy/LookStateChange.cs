@@ -9,18 +9,18 @@ public class LookStateChange : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        PlayerManager playerManager = ManagerLocator.Instance.PlayerManager;
+        PlayerManager playerManager = ManagerLocator.Instance.AllPlayerManager;
         playerManager.OnOwnerJobChanged += OnJobChangedHandle;
 
-        if (playerManager.OwnerPlayer != null)
+        if (playerManager.LocalOwnerPlayer != null)
         {
-            OnJobChangedHandle(playerManager.OwnerPlayer.propaty.Job);
+            OnJobChangedHandle(playerManager.LocalOwnerPlayer.propaty.Job);
         }
     }
 
     public override void OnNetworkDespawn()
     {
-        ManagerLocator.Instance.PlayerManager.OnOwnerJobChanged -= OnJobChangedHandle;
+        ManagerLocator.Instance.AllPlayerManager.OnOwnerJobChanged -= OnJobChangedHandle;
     }
 
     private void OnJobChangedHandle(PlayerPropaty.PlayerJob job)

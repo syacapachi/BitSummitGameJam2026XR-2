@@ -49,9 +49,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     private IEnumerator SetupPlayerCoroutine()
     {
         // OwnerPlayer が null でなくなるまで待機
-        yield return new WaitUntil(() => ManagerLocator.Instance.PlayerManager.OwnerPlayer != null);
+        yield return new WaitUntil(() => ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer != null);
 
-        var localPlayer = ManagerLocator.Instance.PlayerManager.OwnerPlayer;
+        var localPlayer = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer;
 
         // Transform が存在するかチェック（通常は必ずある）
         if (localPlayer != null)
@@ -96,7 +96,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     void DieRpc()
     {
         Debug.Log("Die");
-        ManagerLocator.Instance.GameManager.EnemyKilled(enemySO.scoreValue);
+        ManagerLocator.Instance.AllGameManager.EnemyKilled(enemySO.scoreValue);
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

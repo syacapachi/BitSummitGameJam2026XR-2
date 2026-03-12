@@ -4,9 +4,19 @@ using Unity.Netcode;
 using System;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerPropaty : NetworkBehaviour
 {
+    public readonly static Dictionary<PlayerJob, string> jobToLayerDic = new()
+    {
+        { PlayerJob.Nothing,"Default" },
+        { PlayerJob.Human, "Human" },
+        { PlayerJob.Ghost, "Ghost" },
+        { PlayerJob.Both, "Both" }
+    };
+    public readonly static Dictionary<string, PlayerJob> layerToJobDic = jobToLayerDic.ToDictionary(pair=>pair.Value,pair=>pair.Key);
+ 
     [SerializeField] GameObject PlayerRoot;
     [Flags]
     public enum PlayerJob { 
@@ -30,14 +40,7 @@ public class PlayerPropaty : NetworkBehaviour
             if (playerjob != value)
             {
                 playerjob = value;
-                string layerName = playerjob switch
-                {
-                    PlayerJob.Nothing => "Default",
-                    PlayerJob.Human => "Human",
-                    PlayerJob.Ghost => "Ghost",
-                    PlayerJob.Both => "Default",
-                    _ => throw new System.NotImplementedException(),
-                };
+                string layerName = jobToLayerDic[playerjob];
                 PlayerLayer.Value = LayerMask.NameToLayer(layerName);         
                 OnJobChanged?.Invoke(playerjob);
             }
@@ -69,7 +72,7 @@ public class PlayerPropaty : NetworkBehaviour
     {
         if (IsOwner)
         {
-            changeJobAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["SwitchJob"];
+            changeJobAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["SwitchJob"];
             changeJobAction.performed += OnJobChangeHandle;
             OnJobChanged?.Invoke(Job);
         }
@@ -98,7 +101,11 @@ public class PlayerPropaty : NetworkBehaviour
     /// <param name="newValue"></param>
     private void OnValueChanged(int previousValue, int newValue)
     {
-        PlayerRoot.SetLayerRecursively(newValue);
+        if (previousValue != newValue)
+        {
+            PlayerRoot.SetLayerRecursively(newValue);
+            playerjob = layerToJobDic[LayerMask.LayerToName(newValue)];
+        }
     }
     private void OnJobChangeHandle(InputAction.CallbackContext context)
     {

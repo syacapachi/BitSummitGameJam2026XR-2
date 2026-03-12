@@ -14,7 +14,7 @@ public class ScoreUI : MonoBehaviour
 
     void TryRegister()
     {
-        gameManager = ManagerLocator.Instance?.GameManager;
+        gameManager = ManagerLocator.Instance?.AllGameManager;
 
         if (gameManager == null)
         {

@@ -9,13 +9,13 @@ public class PhaseUI : MonoBehaviour
     private NGameManager nGameManager;
     IEnumerator Start()
     {
-        while (ManagerLocator.Instance.GameManager == null)
+        while (ManagerLocator.Instance.AllGameManager == null)
         {
             Debug.Log("GameManager待機中...");
             yield return null;
         }
 
-        nGameManager = ManagerLocator.Instance.GameManager;
+        nGameManager = ManagerLocator.Instance.AllGameManager;
 
         Debug.Log("GameManager取得成功");
 

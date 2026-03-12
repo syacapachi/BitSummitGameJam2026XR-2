@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 
 public class EnemyBullet : NetworkBehaviour
@@ -22,11 +22,11 @@ public class EnemyBullet : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (other.gameObject == ManagerLocator.Instance.GameManager.protectArea)
+        if (other.gameObject == ManagerLocator.Instance.AllGameManager.protectArea)
         {
             Debug.Log("Bullet hit ProtectArea");
 
-            ManagerLocator.Instance.GameManager.BulletHitProtectArea(-enemySO.Damage);
+            ManagerLocator.Instance.AllGameManager.BulletHitProtectArea(-enemySO.Damage);
 
             GetComponent<NetworkObject>().Despawn(true);
         }

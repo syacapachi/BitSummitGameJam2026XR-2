@@ -4,20 +4,29 @@ using Unity.Netcode;
 public class StartButton : NetworkBehaviour
 {
     [SerializeField] GameObject startUI;
+    [SerializeField] GameObject humanUI;
+    [SerializeField] GameObject ghostUI;
 
-    private bool humanSelected = false;
-    private bool ghostSelected = false;
 
     public void SelectHuman()
     {
-        if (!IsServer) return;
-        humanSelected = true;
+        if(IsServer) return;
+        ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.propaty.Job = PlayerPropaty.PlayerJob.Human;
+        humanUI.SetActive(false);
+        Debug.Log("Human");
     }
 
     public void SelectGhost()
     {
-        if (!IsServer) return;
-        ghostSelected = true;
+        if (IsServer) return;
+        ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.propaty.Job = PlayerPropaty.PlayerJob.Ghost;
+        ghostUI.SetActive(false);
+        Debug.Log("Ghost");
+    }
+
+    public void SelectStartGame()
+    {
+        StartGameRpc();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -25,25 +34,13 @@ public class StartButton : NetworkBehaviour
         if (!IsServer) return;
         if (!other.CompareTag("Bullet")) return;
 
-        if (!(humanSelected && ghostSelected))
-        {
-            Debug.Log("役職がまだ決まっていません");
-            return;
-        }
-
-        StartGameServerRpc();
+        StartGameRpc();
     }
 
-    [ServerRpc]
-    void StartGameServerRpc()
+    [Rpc(SendTo.Server)]
+    void StartGameRpc()
     {
-        ManagerLocator.Instance.GameManager.StartGame();
-        HideUIClientRpc();
-    }
-
-    [ClientRpc]
-    void HideUIClientRpc()
-    {
-        startUI.SetActive(false);
+        Debug.Log("[Start Game Rpc]");
+        ManagerLocator.Instance.AllGameManager.StartGame();
     }
 }

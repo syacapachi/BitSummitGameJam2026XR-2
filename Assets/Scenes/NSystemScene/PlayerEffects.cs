@@ -24,9 +24,9 @@ public class PlayerEffects : NetworkBehaviour
 
     private void Start()
     {
-        if (ManagerLocator.Instance.GameManager != null)
+        if (ManagerLocator.Instance.AllGameManager != null)
         {
-            ManagerLocator.Instance.GameManager.isBulletCome.OnValueChanged += OnBulletComeChanged;
+            ManagerLocator.Instance.AllGameManager.isBulletCome.OnValueChanged += OnBulletComeChanged;
         }
     }
 
@@ -59,6 +59,6 @@ public class PlayerEffects : NetworkBehaviour
 
         // Server側でフラグをリセット
         if (IsServer)
-            ManagerLocator.Instance.GameManager.ResetBulletFlag();
+            ManagerLocator.Instance.AllGameManager.ResetBulletFlag();
     }
 }

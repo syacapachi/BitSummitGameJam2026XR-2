@@ -8,7 +8,7 @@ public class CanvasCamera : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if(IsOwner)
-            ManagerLocator.Instance.PlayerManager.OwnerPlayer.cameraSetting.OnCameraChanged += OnCameraChangedCallback;
+            ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.cameraSetting.OnCameraChanged += OnCameraChangedCallback;
     }
     /// <summary>
     /// イベント解除は一足早く行う
@@ -16,7 +16,7 @@ public class CanvasCamera : NetworkBehaviour
     public override void OnNetworkPreDespawn()
     {
         if (!IsOwner) return;
-        CameraSetting setting = ManagerLocator.Instance.PlayerManager.OwnerPlayer?.cameraSetting;
+        CameraSetting setting = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer?.cameraSetting;
         if (setting != null)
         {
             setting.OnCameraChanged -= OnCameraChangedCallback;

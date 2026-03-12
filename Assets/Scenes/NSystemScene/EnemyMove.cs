@@ -10,7 +10,7 @@ public class EnemyMove : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        target = ManagerLocator.Instance.GameManager.protectArea.transform;
+        target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
     }
 
     void Update()
@@ -31,12 +31,12 @@ public class EnemyMove : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (other.gameObject == ManagerLocator.Instance.GameManager.protectArea)
+        if (other.gameObject == ManagerLocator.Instance.AllGameManager.protectArea)
         {
             Debug.Log("Enemy reached ProtectArea");
 
-            ManagerLocator.Instance.GameManager.EnemyKilled(-100);
-            ManagerLocator.Instance.GameManager.Enemycome();
+            ManagerLocator.Instance.AllGameManager.EnemyKilled(-100);
+            ManagerLocator.Instance.AllGameManager.Enemycome();
 
             // 敵削除
             GetComponent<NetworkObject>().Despawn(true);
