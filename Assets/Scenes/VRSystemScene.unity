@@ -3402,6 +3402,11 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!135 &1897880976 stripped
+SphereCollider:
+  m_CorrespondingSourceObject: {fileID: 8713492124837520766, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+  m_PrefabInstance: {fileID: 1916486855}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1900339565
 GameObject:
   m_ObjectHideFlags: 0
@@ -3529,6 +3534,42 @@ PrefabInstance:
     - target: {fileID: 5726951877018106367, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
       propertyPath: m_ParentInteractableObject
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[0].name
+      value: Handgun (Line Renderer)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[1].name
+      value: M1911 Handgun_Model (Animator)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[2].name
+      value: Collider (Sphere Collider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[0].Component
+      value: 
+      objectReference: {fileID: 1916486858}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[1].Component
+      value: 
+      objectReference: {fileID: 30535633}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[2].Component
+      value: 
+      objectReference: {fileID: 1897880976}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[1].InvertEnabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[2].InvertEnabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
