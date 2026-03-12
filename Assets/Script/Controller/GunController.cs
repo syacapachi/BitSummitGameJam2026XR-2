@@ -108,8 +108,9 @@ public class GunController : NetworkBehaviour
     }
     private void OnAmmoChanged(int oldestAmmo, int newestAmmo)
     {
+        if(isReloading) return;
         allShootSoundSource?.Play();
-        if (newestAmmo <= 0 && !isReloading)
+        if (newestAmmo <= 0)
         {
             StartCoroutine(Reload());
             return;
