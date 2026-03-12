@@ -11,7 +11,6 @@ public class AmmoUI : MonoBehaviour
 
     private Color normalColor = Color.black;
     private Color reloadingColor = new Color(0.6f, 0.6f, 0.6f);
-
     void Start()
     {
         if (gun == null)
@@ -20,15 +19,16 @@ public class AmmoUI : MonoBehaviour
             return;
         }
 
-        gun.syncedAmmo.OnValueChanged += (_, __) => UpdateAmmoDisplay();
-        gun.isReloading.OnValueChanged += (_, __) => UpdateAmmoDisplay();
-        gun.isReloading.OnValueChanged += (_, isReloading) =>
-        {
+        gun.syncedAmmo.OnValueChanged += (_, value) => UpdateAmmoDisplay(value == 0);
+        gun.OnReloadingChanged += (_, isReloading) => 
+        { 
+            UpdateAmmoDisplay(isReloading);
             if (isReloading) StartCoroutine(ReloadCorutune()); // リロード開始時に記録
         };
 
 
-        UpdateAmmoDisplay();
+
+        UpdateAmmoDisplay(false);
     }
 
     IEnumerator ReloadCorutune()
@@ -43,9 +43,9 @@ public class AmmoUI : MonoBehaviour
         reloadBar.fillAmount = 0;
         reloadBar.gameObject.SetActive(false);
     }
-    void UpdateAmmoDisplay()
+    void UpdateAmmoDisplay(bool isReloading)
     {
-        if (gun.isReloading.Value)
+        if (isReloading)
         {
             ammoText.text = $"0 / {gun.weaponSettings.maxAmmo}";
             ammoText.color = reloadingColor;

@@ -82,8 +82,10 @@ public class GunController : NetworkBehaviour
 
         // ① 弾を生成
         GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        //NetworkObject obj = ManagerLocator.Instance.AllObjectPool.GetNetworkObject(bulletPrefab);
 
         // ② 弾のLayerをプレイヤーのJobに合わせる
+        //GameObject go = obj.gameObject;
         var job = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.propaty.Job;
         string layerName = PlayerPropaty.jobToLayerDic[job];
         obj.SetLayerRecursively(LayerMask.NameToLayer(layerName));
@@ -109,6 +111,7 @@ public class GunController : NetworkBehaviour
     private void OnAmmoChanged(int oldestAmmo, int newestAmmo)
     {
         if(isReloading) return;
+        if(oldestAmmo < newestAmmo) return;
         allShootSoundSource?.Play();
         if (newestAmmo <= 0)
         {

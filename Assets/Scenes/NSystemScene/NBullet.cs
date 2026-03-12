@@ -30,11 +30,12 @@ public class NBullet : NetworkBehaviour
 
     private IEnumerator DespawnCorutine(float time)
     {
-        for(float timer = 0f; timer < time; timer += Time.deltaTime)
+        WaitForSeconds wait01 = new WaitForSeconds(0.1f);
+        for(float timer = 0f; timer < time; timer += 0.1f)
         {
-            yield return null;
+            yield return wait01;
         }
-        NetworkObject.Despawn(true);
+        NetworkObject.Despawn(false);
     }
 
     /*
@@ -82,7 +83,7 @@ public class NBullet : NetworkBehaviour
                     StopCoroutine(despawnTimer);
                     if (NetworkObject.IsSpawned)
                     {
-                        NetworkObject.Despawn(true);
+                        NetworkObject.Despawn(false);
                     }
                     return;
                 }
@@ -100,7 +101,7 @@ public class NBullet : NetworkBehaviour
             StopCoroutine(despawnTimer);
             if (NetworkObject.IsSpawned)
             {
-                NetworkObject.Despawn(true); // �e�͏�����
+                NetworkObject.Despawn(false); // �e�͏�����
             }
         }
     }

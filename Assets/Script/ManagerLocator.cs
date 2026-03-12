@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using Netcode.Extensions;
+using UnityEngine;
 
 public class ManagerLocator : MonoBehaviour
 {
     public static ManagerLocator Instance;
 
-    [field:SerializeField] public PlayerManager AllPlayerManager;
-    [field:SerializeField] public NGameManager AllGameManager;
+    [field:SerializeField] public PlayerManager AllPlayerManager { get; private set; }
+    [field:SerializeField] public NGameManager AllGameManager { get; private set; }
+    [field:SerializeField] public NetworkObjectPool AllObjectPool { get; private set; }
     void Awake()
     {
         if(Instance == null)

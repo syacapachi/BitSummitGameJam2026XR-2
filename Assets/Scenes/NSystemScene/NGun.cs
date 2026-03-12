@@ -27,19 +27,28 @@ public class NGun : NetworkBehaviour
     InputAction markerAction;
     float nextFire;
     public NetworkVariable<int> syncedAmmo = new(0,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);
-    public NetworkVariable<bool> isReloading = new(false,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);
+    private bool isReloading = false;
+    public event Action<bool,bool> OnReloadingChanged;
 
-    bool isMarkAttached = true;
-    Coroutine markerCoroutine;
+    private bool isMarkAttached = true;
+    private Coroutine markerCoroutine;
     public float reloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
 
+    private void OnEnable()
+    {
+        syncedAmmo.OnValueChanged += OnAmmoChanged;
+    }
+    private void OnDisable()
+    {
+        syncedAmmo.OnValueChanged -= OnAmmoChanged;
+    }
     void Update()
     {
         if (!IsOwner) return;
 
         UpdateLaser();
     }
-
+    
     void UpdateLaser()
     {
         if (laserLine == null || firePoint == null) return;
@@ -151,7 +160,7 @@ public class NGun : NetworkBehaviour
     private void ShootRpc()
     {
         Debug.Log("ShootRpc called");
-        if (isReloading.Value) return;
+        if (isReloading) return;
         if (Time.time < nextFire) return;
 
         nextFire = Time.time + weaponSettings.fireRate;
@@ -159,40 +168,42 @@ public class NGun : NetworkBehaviour
 
         // ① 弾を生成
         GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        //NetworkObject obj = ManagerLocator.Instance.AllObjectPool.GetNetworkObject(bulletPrefab);
 
         // ② 弾のLayerをプレイヤーのJobに合わせる
-        var job = GetComponent<PlayerPropaty>().Job;
-        string layerName = job switch
-        {
-            PlayerPropaty.PlayerJob.Human => "Human",
-            PlayerPropaty.PlayerJob.Ghost => "Ghost",
-            PlayerPropaty.PlayerJob.Both => "Default",
-            _ => "Default"
-        };
+        //GameObject go = obj.gameObject;
+        var job = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.propaty.Job;
+        string layerName = PlayerPropaty.jobToLayerDic[job];
         obj.SetLayerRecursively(LayerMask.NameToLayer(layerName));
 
         var bullet = obj.GetComponent<NBullet>();
 
         bullet.shooterId = OwnerClientId;
         // ③ ネットワークでSpawn
-        obj.GetComponent<NetworkObject>().Spawn();
-        if (syncedAmmo.Value <= 0 && !isReloading.Value)
-        {
-            StartCoroutine(Reload());
-            return;
-        }
+        obj.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
     }
 
     private IEnumerator Reload()
     {
-        isReloading.Value = true;
+        isReloading = true;
+        OnReloadingChanged.Invoke(false, true);
         Debug.Log("Reloading...");
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         var wait = new WaitForSeconds(weaponSettings.reloadTime);
         yield return wait;
 
         syncedAmmo.Value = weaponSettings.maxAmmo;
-        isReloading.Value = false;
+        isReloading = false;
+        OnReloadingChanged.Invoke(true, false);
+    }
+    private void OnAmmoChanged(int oldVal, int newVal)
+    {
+        if (isReloading) return;
+        if (oldVal < newVal) return;
+        if (newVal <= 0)
+        {
+            StartCoroutine(Reload());
+        }
     }
 
     [Rpc(SendTo.Server)]

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 
 [RequireComponent(typeof(NGun))]
@@ -27,13 +27,13 @@ public class NGunAudioObserver : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         gunAll.syncedAmmo.OnValueChanged += OnAmmoChanged;
-        gunAll.isReloading.OnValueChanged += OnReloadChanged;
+        gunAll.OnReloadingChanged += OnReloadChanged;
     }
 
     public override void OnNetworkDespawn()
     {
         gunAll.syncedAmmo.OnValueChanged -= OnAmmoChanged;
-        gunAll.isReloading.OnValueChanged -= OnReloadChanged;
+        gunAll.OnReloadingChanged -= OnReloadChanged;
     }
 
     private void OnAmmoChanged(int oldValue, int newValue)
