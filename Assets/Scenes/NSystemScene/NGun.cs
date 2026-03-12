@@ -10,6 +10,7 @@ public class NGun : NetworkBehaviour
 {
     public GameObject bulletPrefab;
     public Transform firePoint;
+    public Transform markerPoint;
     public LineRenderer laserLine;
 
 
@@ -205,6 +206,7 @@ public class NGun : NetworkBehaviour
     {
         Debug.Log("PlaceMarkerRpc called");
         if (firePoint == null) return;
+        if (markerPoint == null) return;
 
         if (playerMarker == null)
         {
@@ -217,9 +219,9 @@ public class NGun : NetworkBehaviour
         
 
         RaycastHit hit;
-        Vector3 forward = firePoint.forward;
+        Vector3 forward = markerPoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out hit, weaponSettings.laserDistance))
+        if (Physics.Raycast(markerPoint.position, forward, out hit, weaponSettings.laserDistance))
         {
             MoveMarkerClientRpc(hit.point);
         }
