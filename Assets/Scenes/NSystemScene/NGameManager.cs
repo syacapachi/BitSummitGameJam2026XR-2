@@ -4,7 +4,6 @@ using Unity.Netcode;
 using UnityEngine;
 public class NGameManager : NetworkBehaviour
 {
-    public static NGameManager Instance;
     public PhaseSO[] phases;
     private int currentPhaseIndex = -1;
     private float timer;
@@ -34,11 +33,6 @@ public class NGameManager : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-
-    void Awake()
-    {
-        Instance = this;
-    }
 
     public override void OnNetworkSpawn()
     {

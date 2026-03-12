@@ -4,12 +4,13 @@ public class ZombieFree : MonoBehaviour
 {
 
     private readonly string[] m_animations = { "Attack", "Dead", "Reset" };
-    private Animator[] m_animators;
+    [SerializeField] private Animator[] m_animators = new Animator[] { } ;
     [SerializeField] private ZombieCameraLogic m_cameraLogic;
+    
 
     private void Start()
     {
-        m_animators = FindObjectsOfType<Animator>();
+        m_animators ??= GetComponents<Animator>();
     }
 
     private void OnGUI()

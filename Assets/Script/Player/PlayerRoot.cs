@@ -1,6 +1,8 @@
 ﻿using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR;
 /// <summary>
 /// プレイヤークラスのルートコンポーネント。プレイヤーに関連するすべてのコンポーネントを管理するためのクラス。プレイヤーの入力、キャラクターコントロール、ヘルス、プロパティ、カメラ設定などを統括する役割を持つ。
 /// </summary>
@@ -17,18 +19,26 @@ public class PlayerRoot : NetworkBehaviour
     public PlayerHealth playerHealth;
     public PlayerPropaty propaty;
     public CameraSetting cameraSetting;
-
+    private bool isXREnabled = false;
+    private PlayerManager playerManager;
+    public bool IsXREnabled => isXREnabled;
     public override void OnNetworkSpawn()
     {
-        PlayerManager player = ManagerLocator.Instance.PlayerManager;
-        player.ResistPlayer(this);
+        playerManager = ManagerLocator.Instance.PlayerManager;
+        playerManager.ResistPlayer(this);
         if (IsOwner)
         {
             playerPrefab.name = $"You Player_{OwnerClientId}";
-            player.ResistOwner(this);
-            //オーナーのクライアントでPlayerInputを有効にする。これにより、プレイヤーが入力を受け取れるようになる。
-            playerInput.enabled = true;
-            playerInput.ActivateInput();
+            playerManager.ResistOwner(this);
+            isXREnabled = XRSettings.isDeviceActive;
+            if (isXREnabled)
+            {
+                characterControll.enabled = false;
+                cameraSetting.enabled = false;
+            }
+            SetActionEnable();
+
+
         }
         else
         {
@@ -40,13 +50,20 @@ public class PlayerRoot : NetworkBehaviour
     }
     public override void OnNetworkDespawn()
     {
-        PlayerManager player = ManagerLocator.Instance.PlayerManager;
-        player.UnResistPlayer(this);
+        playerManager.UnResistPlayer(this);
         if (IsOwner)
         {
-            player.UnResistOwner(this);
-            playerInput.DeactivateInput();
+            playerManager.UnResistOwner(this);
+            SetActionDisable();
             playerInput.enabled = false;
         }
+    }
+    private void SetActionEnable()
+    {
+        playerInput.actions.Enable();
+    }
+    private void SetActionDisable() 
+    {
+        playerInput.actions.Disable();
     }
 }

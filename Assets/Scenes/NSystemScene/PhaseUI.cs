@@ -1,29 +1,31 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using TMPro;
 
 public class PhaseUI : MonoBehaviour
 {
     public GameObject phaseBoard;
     public TextMeshProUGUI phaseText;
-
+    private NGameManager nGameManager;
     void Start()
     {
-        if (NGameManager.Instance != null)
+        nGameManager = ManagerLocator.Instance.NGameManager;
+        if (nGameManager != null)
         {
-            var manager = NGameManager.Instance;
 
-            manager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
-            manager.IsGameFinished.OnValueChanged += OnGameFinishedChanged;
-            manager.countdownValue.OnValueChanged += OnCountdownChanged;
-            manager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
+            // ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½`ï¿½Fï¿½bï¿½N
+            OnPhaseFinishingChanged(false, nGameManager.phaseFinishing.Value);
 
-            // ‰Šú’lƒ`ƒFƒbƒN
-            OnPhaseFinishingChanged(false, manager.phaseFinishing.Value);
+            OnPhaseChanged(-1, nGameManager.syncedPhaseIndex.Value);
+            OnCountdownChanged(0, nGameManager.countdownValue.Value);
 
-            OnPhaseChanged(-1, manager.syncedPhaseIndex.Value);
-            OnCountdownChanged(0, manager.countdownValue.Value);
+            nGameManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
+            nGameManager.IsGameFinished.OnValueChanged += OnGameFinishedChanged;
+            nGameManager.countdownValue.OnValueChanged += OnCountdownChanged;
+            nGameManager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
 
-            if (manager.IsGameFinished.Value)
+            OnPhaseChanged(-1, nGameManager.syncedPhaseIndex.Value);
+
+            if (nGameManager.IsGameFinished.Value)
             {
                 ShowScore();
             }
@@ -32,7 +34,7 @@ public class PhaseUI : MonoBehaviour
 
     void OnPhaseChanged(int oldValue, int newValue)
     {
-        var manager = NGameManager.Instance;
+        var manager = nGameManager;
         if (manager == null) return;
 
         if (newValue >= 0 && newValue < manager.phases.Length)
@@ -58,7 +60,7 @@ public class PhaseUI : MonoBehaviour
 
     void ShowScore()
     {
-        int score = NGameManager.Instance.GetScore();
+        int score = nGameManager.GetScore();
 
         phaseText.text = $"Score : {score} point";
         phaseBoard.SetActive(true);
@@ -82,27 +84,26 @@ public class PhaseUI : MonoBehaviour
             phaseBoard.SetActive(true);
 
             CancelInvoke(nameof(Hide));
-            Invoke(nameof(Hide), 1f); // 1•b‚ÅÁ‚·
+            Invoke(nameof(Hide), 1f); // 1ï¿½bï¿½Åï¿½ï¿½ï¿½
         }
     }
 
     public void ShowPhaseFinish()
     {
-        int score = NGameManager.Instance.GetScore();
-        var manager = NGameManager.Instance;
-        int phase = manager.syncedPhaseIndex.Value;
+        int score = nGameManager.GetScore();
+        int phase = nGameManager.syncedPhaseIndex.Value;
 
         phaseText.text = $"Phase {phase + 1} FINISH!\nScore: {score} point";
         phaseBoard.SetActive(true);
 
         CancelInvoke(nameof(Hide));
-        Invoke(nameof(Hide), 3f); // 3•bŒã‚ÉÁ‚·
+        Invoke(nameof(Hide), 3f); // 3ï¿½bï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½
     }
     void OnPhaseFinishingChanged(bool oldValue, bool newValue)
     {
         if (newValue)
         {
-            ShowPhaseFinish(); // ƒtƒ‰ƒO‚ªtrue‚É‚È‚Á‚½‚çŒÄ‚Ô
+            ShowPhaseFinish(); // ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½trueï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½
         }
     }
 }

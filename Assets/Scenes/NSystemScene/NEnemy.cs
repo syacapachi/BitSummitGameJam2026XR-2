@@ -4,17 +4,23 @@ using UnityEngine.UI;
 using TMPro; // ← 追加
 using System.Collections;
 
-public class NEnemy : NetworkBehaviour
+public class NEnemy : NetworkBehaviour,IDamageReciever
 {
     [SerializeField] EnemySO enemySO;
-    NetworkVariable<int> currentHP = new NetworkVariable<int>();
+    private readonly NetworkVariable<int> currentHP = new(
+        0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
 
     [SerializeField] private Canvas hpCanvas;
     [SerializeField] private Image hpImage; // Filled Image
     [SerializeField] private TextMeshProUGUI hpText;
 
     private Transform targetPlayer;
-
+    public GameObject GameObject => this.gameObject;
+    public int CurrentHealth => currentHP.Value;
+    public int MaxHealth => enemySO.HP;
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -26,7 +32,12 @@ public class NEnemy : NetworkBehaviour
 
         UpdateHPUI(currentHP.Value);
 
-        if (!IsClient) return;
+        if (!IsClient) return;// クライアントでのみ実行
+        
+        hpImage?.fillAmount = 1f;
+
+        hpText?.text = $"{currentHP.Value} / {enemySO.HP}";
+
         StartCoroutine(SetupPlayerCoroutine());
     }
 
@@ -54,11 +65,17 @@ public class NEnemy : NetworkBehaviour
         }
     }
 
-    public void TakeDamage()
+    public void TakeDamage(int damage)
     {
         if (!IsServer) return;
 
         currentHP.Value -= enemySO.Damage;
+
+        Debug.Log("Take damage");
+        currentHP.Value -= enemySO.Damage;
+        hpImage?.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.HP);
+        hpText?.text = $"{currentHP.Value} / {enemySO.HP}";
+        
 
         if (currentHP.Value <= 0)
         {
@@ -70,7 +87,7 @@ public class NEnemy : NetworkBehaviour
     void DieRpc()
     {
         Debug.Log("Die");
-        ManagerLocator.Instance.GameManager.EnemyKilled(enemySO.scoreValue);
+        ManagerLocator.Instance.NGameManager.EnemyKilled(enemySO.scoreValue);
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

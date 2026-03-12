@@ -2,25 +2,29 @@
 using Unity.Netcode;
 using NUnit.Framework;
 using System.Collections.Generic;
-public class HandSetting : NetworkBehaviour
+using Unity.XR.CoreUtils;
+public class SyncronizeSetting : NetworkBehaviour
 {
+    [Header("Root")]
+    [SerializeField] Transform playerRootTransfrom;
+    [SerializeField] Transform avatorRootTransfrom;
+    [Header("XROrigin")]
+    [SerializeField] private XROrigin xrOrigin;
     [Header("Owner Camera")]
     [SerializeField] private Camera ownerCamera;
-    [Header("Network Head")]
-    [SerializeField] private GameObject networkHead;
-    [Header("Owner Hand")]
+    [Header("Avator Head")]
+    [SerializeField] private Transform networkHead;
+    [Header("Owner Hands")]
     [SerializeField] private GameObject leftHand;
     [SerializeField] private GameObject rightHand;
     [SerializeField] private GameObject leftController;
     [SerializeField] private GameObject rightController;
-    [Header("Network Hand")]
+    [Header("Avator Hands")]
     [SerializeField] private GameObject networkLeftHand;
     [SerializeField] private GameObject networkRightHand;
     [SerializeField] private GameObject networkLeftController;
     [SerializeField] private GameObject networkRightController;
 
-    [Header("Tracking Object")]
-    [SerializeField] List<GameObject> trackingList;
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -33,9 +37,11 @@ public class HandSetting : NetworkBehaviour
             DisableMeshRenderer(networkRightHand);
             DisableMeshRenderer(networkLeftController);
             DisableMeshRenderer(networkRightController);
+            DisableMeshRenderer(avatorRootTransfrom.gameObject);
         }
         else
         {
+            xrOrigin.gameObject.SetActive(false);
             DisableComponentAndObject(leftHand);
             DisableComponentAndObject(rightHand);
             DisableComponentAndObject(leftController);
@@ -62,13 +68,32 @@ public class HandSetting : NetworkBehaviour
             component.enabled = false;
         }
         root.SetActive(false);
-    }   
+    }
+    /// <summary>
+    /// アニメーションがある場合は、全ての適応後に更新
+    /// </summary>
     private void LateUpdate()
     {
         if (IsOwner)
         {
+            //ルートの移動（重要）
+
+            Vector3 offset = xrOrigin.Camera.transform.position - playerRootTransfrom.position;
+            offset.y = 0;//高さの影響を消す(埋まり防止)
+
+            playerRootTransfrom.position += offset;
+            xrOrigin.transform.position -= offset;
+
+            if(xrOrigin.transform.localRotation.eulerAngles.y != 0f)
+            {
+                playerRootTransfrom.rotation = xrOrigin.transform.rotation;
+                xrOrigin.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            }
+            //頭の角度
             Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
-            networkHead.transform.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
+            networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
+
+            //手・コントローラー
             networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
             networkRightHand.transform.SetPositionAndRotation(rightHand.transform.position, rightHand.transform.rotation);
             networkLeftController.transform.SetPositionAndRotation(leftController.transform.position, leftController.transform.rotation);

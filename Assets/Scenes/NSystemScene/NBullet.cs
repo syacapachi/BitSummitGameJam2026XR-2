@@ -56,17 +56,17 @@ public class NBullet : NetworkBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (!IsServer) return;
-        Debug.Log("Hit");
+        Debug.Log("Hit"+other.name);
         // Enemy �ɓ��������ꍇ
-        NEnemy enemy = other.GetComponent<NEnemy>();
-        if (enemy != null)
+        if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
         {
-            enemy.TakeDamage();
-        }
-        StopCoroutine(despawnTimer);
-        if (NetworkObject.IsSpawned)
-        {
-            NetworkObject.Despawn(true); // �e�͏�����
+            Debug.Log("Hit DamageReciever" + other.name);
+            damageReciver.TakeDamage(damage);
+            StopCoroutine(despawnTimer);
+            if (NetworkObject.IsSpawned)
+            {
+                NetworkObject.Despawn(true); // �e�͏�����
+            }
         }
     }
 }

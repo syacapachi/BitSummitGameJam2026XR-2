@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class ZombieCharacterControl : MonoBehaviour
+public class ZombieCharacterControl : NetworkBehaviour
 {
     private enum ControlMode
     {
@@ -29,14 +31,18 @@ public class ZombieCharacterControl : MonoBehaviour
 
     private Vector3 m_currentDirection = Vector3.zero;
 
+    [SerializeField] InputAction moveAction;
+
     private void Awake()
     {
         if (!m_animator) { gameObject.GetComponent<Animator>(); }
         if (!m_rigidBody) { gameObject.GetComponent<Animator>(); }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
+        if (!IsServer) return;
+
         switch (m_controlMode)
         {
             case ControlMode.Direct:
@@ -55,8 +61,9 @@ public class ZombieCharacterControl : MonoBehaviour
 
     private void TankUpdate()
     {
-        float v = Input.GetAxis("Vertical");
-        float h = Input.GetAxis("Horizontal");
+        Vector2 vector2 = moveAction.ReadValue<Vector2>();
+        float v = vector2.y;
+        float h = vector2.x;
 
         m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
         m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
@@ -69,8 +76,9 @@ public class ZombieCharacterControl : MonoBehaviour
 
     private void DirectUpdate()
     {
-        float v = Input.GetAxis("Vertical");
-        float h = Input.GetAxis("Horizontal");
+        Vector2 vector2 = moveAction.ReadValue<Vector2>();
+        float v = vector2.y;
+        float h = vector2.x;
 
         Transform camera = Camera.main.transform;
 

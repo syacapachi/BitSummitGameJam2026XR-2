@@ -1,16 +1,16 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class AmmoUI : MonoBehaviour
 {
     public TextMeshProUGUI ammoText;
-    public Image reloadBar; // Image‚ÌType‚ğ Filled ‚É‚·‚é
+    public Image reloadBar; // Imageã®Typeã‚’ Filled ã«ã™ã‚‹
     public NGun gun;
 
     private Color normalColor = Color.black;
     private Color reloadingColor = new Color(0.6f, 0.6f, 0.6f);
-    private float reloadStartTime;
 
     void Start()
     {
@@ -24,28 +24,25 @@ public class AmmoUI : MonoBehaviour
         gun.isReloading.OnValueChanged += (_, __) => UpdateAmmoDisplay();
         gun.isReloading.OnValueChanged += (_, isReloading) =>
         {
-            if (isReloading) reloadStartTime = Time.time; // ƒŠƒ[ƒhŠJn‚É‹L˜^
+            if (isReloading) StartCoroutine(ReloadCorutune()); // ãƒªãƒ­ãƒ¼ãƒ‰é–‹å§‹æ™‚ã«è¨˜éŒ²
         };
 
 
         UpdateAmmoDisplay();
     }
 
-    void Update()
+    IEnumerator ReloadCorutune()
     {
-        if (gun.isReloading.Value)
+        WaitForSeconds wait01 = new WaitForSeconds(0.1f);
+        reloadBar.gameObject.SetActive(true); // ç¢ºå®Ÿã«è¡¨ç¤º
+        for (float t = 0; t < gun.weaponSettings.reloadTime; t += 0.1f)
         {
-            float elapsed = Time.time - reloadStartTime;
-            reloadBar.fillAmount = Mathf.Clamp01(elapsed / gun.weaponSettings.reloadTime);
-            reloadBar.gameObject.SetActive(true); // ŠmÀ‚É•\¦
+            reloadBar.fillAmount = t / gun.weaponSettings.reloadTime;
+            yield return wait01;
         }
-        else
-        {
-            reloadBar.fillAmount = 0;
-            reloadBar.gameObject.SetActive(false);
-        }
+        reloadBar.fillAmount = 0;
+        reloadBar.gameObject.SetActive(false);
     }
-
     void UpdateAmmoDisplay()
     {
         if (gun.isReloading.Value)
