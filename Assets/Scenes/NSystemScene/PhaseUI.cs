@@ -1,34 +1,41 @@
 ﻿using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class PhaseUI : MonoBehaviour
 {
     public GameObject phaseBoard;
     public TextMeshProUGUI phaseText;
     private NGameManager nGameManager;
-    void Start()
+    IEnumerator Start()
     {
-        nGameManager = ManagerLocator.Instance.GameManager;
-        if (nGameManager != null)
+        while (ManagerLocator.Instance.GameManager == null)
         {
+            Debug.Log("GameManager待機中...");
+            yield return null;
+        }
 
-            // �����l�`�F�b�N
-            OnPhaseFinishingChanged(false, nGameManager.phaseFinishing.Value);
+        nGameManager = ManagerLocator.Instance.GameManager;
 
-            OnPhaseChanged(-1, nGameManager.syncedPhaseIndex.Value);
-            OnCountdownChanged(0, nGameManager.countdownValue.Value);
+        Debug.Log("GameManager取得成功");
 
-            nGameManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
-            nGameManager.IsGameFinished.OnValueChanged += OnGameFinishedChanged;
-            nGameManager.countdownValue.OnValueChanged += OnCountdownChanged;
-            nGameManager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
+        InitializeUI();
+    }
 
-            OnPhaseChanged(-1, nGameManager.syncedPhaseIndex.Value);
+    void InitializeUI()
+    {
+        OnPhaseFinishingChanged(false, nGameManager.phaseFinishing.Value);
+        OnPhaseChanged(-1, nGameManager.syncedPhaseIndex.Value);
+        OnCountdownChanged(0, nGameManager.countdownValue.Value);
 
-            if (nGameManager.IsGameFinished.Value)
-            {
-                ShowScore();
-            }
+        nGameManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
+        nGameManager.IsGameFinished.OnValueChanged += OnGameFinishedChanged;
+        nGameManager.countdownValue.OnValueChanged += OnCountdownChanged;
+        nGameManager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
+
+        if (nGameManager.IsGameFinished.Value)
+        {
+            ShowScore();
         }
     }
 
