@@ -3175,7 +3175,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 4019957463714831628}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -7379,14 +7379,7 @@ MonoBehaviour:
   NetworkAnimatorExpanded: 0
   AuthorityMode: 0
   m_Animator: {fileID: 7339222948460591748}
-  TransitionStateInfoList:
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -2089788878
-    DestinationState: 125937960
-    TransitionDuration: 0.23076922
-    TriggerNameHash: 125937960
-    TransitionIndex: 1
+  TransitionStateInfoList: []
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Speed
@@ -7412,7 +7405,7 @@ MonoBehaviour:
     - name: Jump
       NameHash: 125937960
       Synchronize: 1
-      ParameterType: 9
+      ParameterType: 4
   AnimatorParametersExpanded: 0
 --- !u!114 &6374570125276753247
 MonoBehaviour:
@@ -8727,10 +8720,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1511416726702297420, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2243020122175513880, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
-      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1808601201609793989, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
