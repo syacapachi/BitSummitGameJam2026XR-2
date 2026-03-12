@@ -3,12 +3,12 @@ using Unity.Netcode;
 
 public class NEnemyDespawnAudio : NetworkBehaviour
 {
-    [SerializeField] private AudioClip deathClip;
-    [SerializeField, Range(0f, 1f)] private float deathVolume = 1f;
+    [SerializeField] private AudioClip deathClipAll;
+    [SerializeField, Range(0f, 1f)] private float deathVolumeAll = 1f;
 
     private bool reachedGoal = false;
 
-    public void MarkReachedGoal()
+    public void MarkReachedGoalServer()
     {
         reachedGoal = true;
     }
@@ -22,6 +22,6 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     {
         if (reachedGoal) return;
 
-        GameAudioManager.Instance?.PlayWorld(deathClip, transform.position, deathVolume);
+        GameAudioManager.Instance?.PlayWorld(deathClipAll, transform.position, deathVolumeAll);
     }
 }

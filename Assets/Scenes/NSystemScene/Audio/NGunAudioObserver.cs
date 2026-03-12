@@ -5,52 +5,50 @@ using Unity.Netcode;
 [RequireComponent(typeof(AudioSource))]
 public class NGunAudioObserver : NetworkBehaviour
 {
-    [SerializeField] private AudioClip shotClip;
-    [SerializeField] private AudioClip reloadClip;
+    [SerializeField] private AudioClip shotClipAll;
+    [SerializeField] private AudioClip reloadClipAll;
 
-    [SerializeField, Range(0f, 1f)] private float shotVolume = 1f;
-    [SerializeField, Range(0f, 1f)] private float reloadVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float shotVolumeAll = 1f;
+    [SerializeField, Range(0f, 1f)] private float reloadVolumeAll = 1f;
 
-    private NGun gun;
-    private AudioSource audioSource;
+    private NGun gunAll;
+    private AudioSource audioSourceAll;
 
     private void Awake()
     {
-        gun = GetComponent<NGun>();
-        audioSource = GetComponent<AudioSource>();
+        gunAll = GetComponent<NGun>();
+        audioSourceAll = GetComponent<AudioSource>();
 
-        audioSource.playOnAwake = false;
-        audioSource.loop = false;
-        audioSource.spatialBlend = 1f; // 3D音
+        audioSourceAll.playOnAwake = false;
+        audioSourceAll.loop = false;
+        audioSourceAll.spatialBlend = 1f;
     }
 
     public override void OnNetworkSpawn()
     {
-        gun.syncedAmmo.OnValueChanged += OnAmmoChanged;
-        gun.isReloading.OnValueChanged += OnReloadChanged;
+        gunAll.syncedAmmo.OnValueChanged += OnAmmoChanged;
+        gunAll.isReloading.OnValueChanged += OnReloadChanged;
     }
 
     public override void OnNetworkDespawn()
     {
-        gun.syncedAmmo.OnValueChanged -= OnAmmoChanged;
-        gun.isReloading.OnValueChanged -= OnReloadChanged;
+        gunAll.syncedAmmo.OnValueChanged -= OnAmmoChanged;
+        gunAll.isReloading.OnValueChanged -= OnReloadChanged;
     }
 
     private void OnAmmoChanged(int oldValue, int newValue)
     {
-        // 初期化時の増加は無視、減ったときだけ銃声
-        if (oldValue > newValue && shotClip != null)
+        if (oldValue > newValue && shotClipAll != null)
         {
-            audioSource.PlayOneShot(shotClip, shotVolume);
+            audioSourceAll.PlayOneShot(shotClipAll, shotVolumeAll);
         }
     }
 
     private void OnReloadChanged(bool oldValue, bool newValue)
     {
-        // false -> true のときだけリロード開始音
-        if (!oldValue && newValue && reloadClip != null)
+        if (!oldValue && newValue && reloadClipAll != null)
         {
-            audioSource.PlayOneShot(reloadClip, reloadVolume);
+            audioSourceAll.PlayOneShot(reloadClipAll, reloadVolumeAll);
         }
     }
 }

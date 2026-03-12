@@ -4,33 +4,33 @@ using Unity.Netcode;
 [RequireComponent(typeof(AudioSource))]
 public class NEnemyLoopAudio : NetworkBehaviour
 {
-    [SerializeField] private AudioClip loopClip;
-    [SerializeField, Range(0f, 1f)] private float loopVolume = 0.35f;
+    [SerializeField] private AudioClip loopClipAll;
+    [SerializeField, Range(0f, 1f)] private float loopVolumeAll = 0.35f;
 
-    private AudioSource audioSource;
+    private AudioSource audioSourceAll;
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
-        audioSource.playOnAwake = false;
-        audioSource.loop = true;
-        audioSource.spatialBlend = 1f; // 3D音
+        audioSourceAll = GetComponent<AudioSource>();
+        audioSourceAll.playOnAwake = false;
+        audioSourceAll.loop = true;
+        audioSourceAll.spatialBlend = 1f;
     }
 
     public override void OnNetworkSpawn()
     {
-        if (loopClip == null) return;
+        if (loopClipAll == null) return;
 
-        audioSource.clip = loopClip;
-        audioSource.volume = loopVolume;
-        audioSource.Play();
+        audioSourceAll.clip = loopClipAll;
+        audioSourceAll.volume = loopVolumeAll;
+        audioSourceAll.Play();
     }
 
     public override void OnNetworkDespawn()
     {
-        if (audioSource.isPlaying)
+        if (audioSourceAll.isPlaying)
         {
-            audioSource.Stop();
+            audioSourceAll.Stop();
         }
     }
 }

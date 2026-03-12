@@ -2,24 +2,24 @@ using UnityEngine;
 
 public class ProtectAreaAudioTrigger : MonoBehaviour
 {
-    [SerializeField] private AudioClip reachClip;
-    [SerializeField, Range(0f, 1f)] private float reachVolume = 1f;
+    [SerializeField] private AudioClip reachClipAll;
+    [SerializeField, Range(0f, 1f)] private float reachVolumeAll = 1f;
 
     private void OnTriggerEnter(Collider other)
     {
-        var enemy = other.GetComponent<NEnemy>() ?? other.GetComponentInParent<NEnemy>();
-        if (enemy == null) return;
+        var enemyAll = other.GetComponent<NEnemy>() ?? other.GetComponentInParent<NEnemy>();
+        if (enemyAll == null) return;
 
-        Vector3 point = other.ClosestPoint(transform.position);
+        Vector3 pointAll = other.ClosestPoint(transform.position);
 
-        var despawnAudio = other.GetComponent<NEnemyDespawnAudio>() ??
-                           other.GetComponentInParent<NEnemyDespawnAudio>();
+        var despawnAudioAll = other.GetComponent<NEnemyDespawnAudio>() ??
+                              other.GetComponentInParent<NEnemyDespawnAudio>();
 
-        if (despawnAudio != null)
+        if (despawnAudioAll != null)
         {
-            despawnAudio.MarkReachedGoal();
+            despawnAudioAll.MarkReachedGoalServer();
         }
 
-        GameAudioManager.Instance?.PlayWorld(reachClip, point, reachVolume);
+        GameAudioManager.Instance?.PlayWorld(reachClipAll, pointAll, reachVolumeAll);
     }
 }
