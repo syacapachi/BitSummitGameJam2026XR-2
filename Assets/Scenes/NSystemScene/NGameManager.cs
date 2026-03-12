@@ -8,8 +8,8 @@ public class NGameManager : NetworkBehaviour
     private int currentPhaseIndex = -1;
     private float timer;
 
-    public NEnemySpawner spawner; 
-    private int score = 0;
+    public NEnemySpawner spawner;
+    public NetworkVariable<int> score = new NetworkVariable<int>();
 
     public GameObject protectArea;
     private bool isEnemycome = false;
@@ -36,6 +36,8 @@ public class NGameManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log("GameManager OnNetworkSpawn : " + IsServer + " / " + IsClient);
+        ManagerLocator.Instance.GameManager = this;
         syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
 
         if (!IsServer) return;
@@ -171,7 +173,7 @@ public class NGameManager : NetworkBehaviour
 
     public void AddScore(int value)
     {
-        score += value;
+        score.Value += value;
         if(value>0) Debug.Log("Add Score");
         else Debug.Log("Subtract Score");
         Debug.Log("Score: " + score);
@@ -192,12 +194,12 @@ public class NGameManager : NetworkBehaviour
 
     public int GetScore()
     {
-        return score;
+        return score.Value;
     }
 
-    public void BulletHitProtectArea()
+    public void BulletHitProtectArea(int damage)
     {
-        AddScore(-100);
+        AddScore(damage);
         isBulletCome.Value = true;
     }
 

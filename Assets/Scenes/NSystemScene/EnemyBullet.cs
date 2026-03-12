@@ -26,7 +26,7 @@ public class EnemyBullet : NetworkBehaviour
         {
             Debug.Log("Bullet hit ProtectArea");
 
-            ManagerLocator.Instance.GameManager.BulletHitProtectArea();
+            ManagerLocator.Instance.GameManager.BulletHitProtectArea(-enemySO.Damage);
 
             GetComponent<NetworkObject>().Despawn(true);
         }
