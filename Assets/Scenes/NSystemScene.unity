@@ -2503,7 +2503,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1574143870}
-    PlayerPrefab: {fileID: 971797369539823923, guid: ee1b23c81daf84c4faa5e385ccb7a8cd, type: 3}
+    PlayerPrefab: {fileID: 6807088508019889038, guid: 7fc0284a3d6a4e74baf03ffa3e074bec, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 9e30410611228d94780d79e328c501ed, type: 2}
@@ -2584,6 +2584,12 @@ MonoBehaviour:
   syncedPhaseIndex:
     m_InternalValue: -1
   IsGameFinished:
+    m_InternalValue: 0
+  isBulletCome:
+    m_InternalValue: 0
+  countdownValue:
+    m_InternalValue: 0
+  phaseFinishing:
     m_InternalValue: 0
 --- !u!4 &1601539024
 Transform:

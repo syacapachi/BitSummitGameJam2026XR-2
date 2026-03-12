@@ -55,9 +55,9 @@ public class CharactorControll : NetworkBehaviour
     private void ResistAction()
     {
         //InputSystem.actions["Move"];
-        moveAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Move"];//actions["Move"]->全体, currentActionMap["Move"]->今のだけ
-        jumpAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Jump"];
-        setObjectAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Interact"];
+        moveAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Move"];//actions["Move"]->全体, currentActionMap["Move"]->今のだけ
+        jumpAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Jump"];
+        setObjectAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Interact"];
 
         moveAction.performed += MoveActionCallback;
         moveAction.canceled += MoveActionCallback; // 入力がキャンセルされたときもコールバックを呼び出す(ゼロの検出)
@@ -145,7 +145,7 @@ public class CharactorControll : NetworkBehaviour
             animator.SetFloat("Direction", moveInput.Value.x);
 
             //カメラの向きに応じた移動をするかどうかは、PlayerManagerのCameraSettingで管理する、サーバーに送るときに一緒に送る
-            MoveCharactor(moveInput.Value,ManagerLocator.Instance.PlayerManager.OwnerPlayer.cameraSetting.IsMainCameraActive);
+            MoveCharactor(moveInput.Value,ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.cameraSetting.IsMainCameraActive);
         }
 
     }
@@ -153,7 +153,7 @@ public class CharactorControll : NetworkBehaviour
     //サーバーで実行される関数(名前にServerRpcを付ける) 呼び出せるのはオーナー のみ
     //プレイヤーの移動をサーバーで処理する
     //NetworkTransform(Server Authority Mode)は、Serverの位置をクライアントに同期するので、サーバーに送る必要がある
-    private void MoveCharactor(Vector2 inputVector,bool isWorldSpace)
+    private void MoveCharactor(Vector2 inputVector,bool isWorldSpace = false)
     {
         //Debug.Log($"Catch {inputVector}");
         //クライアントから送られた入力をもとに、サーバー側でキャラクターを移動させる

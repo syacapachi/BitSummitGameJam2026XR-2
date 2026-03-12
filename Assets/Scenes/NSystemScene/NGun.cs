@@ -10,6 +10,7 @@ public class NGun : NetworkBehaviour
 {
     public GameObject bulletPrefab;
     public Transform firePoint;
+    public Transform markerPoint;
     public LineRenderer laserLine;
 
 
@@ -65,14 +66,9 @@ public class NGun : NetworkBehaviour
     {
         if (IsOwner)
         {
-            //controls = new PlayerControls();
-            //controls.Player.Fire.performed += ctx => ShootRpc();
-            //controls.Player.Marker.performed += ctx => PlaceMarkerRpc();
+            fireAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Fire"];
+            markerAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Marker"];
 
-            //controls.Enable();
-            fireAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Fire"];
-            markerAction = ManagerLocator.Instance.PlayerManager.OwnerPlayer.playerInput.actions["Marker"];
-            Debug.Log("NGun: Subscribing to input actions.");
             fireAction.performed += _ => ShootRpc();
             markerAction.performed += _ => PlaceMarkerRpc();
         }
@@ -89,7 +85,6 @@ public class NGun : NetworkBehaviour
     {
         if (IsOwner) 
         {
-            //controls.Disable();
             fireAction.performed -= _ => ShootRpc();
             markerAction.performed -= _ => PlaceMarkerRpc();
         }
@@ -205,21 +200,18 @@ public class NGun : NetworkBehaviour
     {
         Debug.Log("PlaceMarkerRpc called");
         if (firePoint == null) return;
+        if (markerPoint == null) return;
 
-        if (playerMarker == null)
+        if (playerMarker == null && !TryGetPlayerMarker())
         {
-            if(!TryGetPlayerMarker())
-             {
-                 Debug.LogWarning("Player marker not found. Cannot place marker.");
-                 return;
-            }
+             Debug.LogWarning("Player marker not found. Cannot place marker.");
+             return;
         }
         
-
         RaycastHit hit;
-        Vector3 forward = firePoint.forward;
+        Vector3 forward = markerPoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out hit, weaponSettings.laserDistance))
+        if (Physics.Raycast(markerPoint.position, forward, out hit, weaponSettings.laserDistance))
         {
             MoveMarkerClientRpc(hit.point);
         }
@@ -229,6 +221,12 @@ public class NGun : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void MoveMarkerClientRpc(Vector3 pos)
     {
+        if (playerMarker == null && !TryGetPlayerMarker())
+        {
+            Debug.LogWarning("Player marker not found. Cannot place marker.");
+            return;
+        }
+
         if (isMarkAttached) 
         { 
             playerMarker.GetComponentInChildren<AttachableBehaviour>().Detach(); 
@@ -238,7 +236,7 @@ public class NGun : NetworkBehaviour
             if(markerCoroutine != null)  
                 StopCoroutine(markerCoroutine);
         }
-            playerMarker.position = pos;
+        playerMarker.position = pos;
         markerCoroutine = StartCoroutine(MarkerBackCorutine());
 
         //var renderer = playerMarker.GetComponent<MeshRenderer>();
