@@ -56,6 +56,14 @@ PrefabInstance:
       propertyPath: Components.Array.data[0].name
       value: Handgun (Line Renderer)
       objectReference: {fileID: 0}
+    - target: {fileID: 5029919918675200467, guid: a78a725941312494b930d664f3b315d0, type: 3}
+      propertyPath: Components.Array.data[0].InvertEnabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
+      propertyPath: m_AttachTransform
+      value: 
+      objectReference: {fileID: 4985052421731058817}
     - target: {fileID: 9215887592849576065, guid: a78a725941312494b930d664f3b315d0, type: 3}
       propertyPath: ComponentControllers.Array.data[0].name
       value: Handgun (Component Controller)
@@ -65,3 +73,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a78a725941312494b930d664f3b315d0, type: 3}
+--- !u!4 &4985052421731058817 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8807204533815685693, guid: a78a725941312494b930d664f3b315d0, type: 3}
+  m_PrefabInstance: {fileID: 4546118977250670268}
+  m_PrefabAsset: {fileID: 0}

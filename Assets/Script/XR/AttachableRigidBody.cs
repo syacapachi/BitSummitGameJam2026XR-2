@@ -39,7 +39,9 @@ public class AttachableRigidBody : AttachableBehaviour
     [Rpc(SendTo.Server)]
     private void DetachRpc()
     {
+        Vector3 pos = transform.position;
         Detach();
+        transform.position = pos;
     }
     protected override void OnAttachStateChanged(AttachState attachState, AttachableNode attachableNode)
     {
