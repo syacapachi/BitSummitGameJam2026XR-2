@@ -131,7 +131,6 @@ public class CameraSetting : NetworkBehaviour
 
     private void RotationChange(float x, float y)
     {
-        Debug.Log("Rotation Change");
         cameraTransform.rotation = Quaternion.Euler(y, x, 0);
     }
     //private void SwitchCamera(InputAction.CallbackContext context)

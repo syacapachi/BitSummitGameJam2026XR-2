@@ -424,13 +424,23 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   StartEnabled: 1
   Components:
-  - name: Marker-Child (Sphere Collider)
-    InvertEnabled: 0
-    EnableDelay: 0
-    DisableDelay: 0
-    Component: {fileID: 0}
   - name: Marker-Child (Mesh Renderer)
     InvertEnabled: 0
     EnableDelay: 0
     DisableDelay: 0
     Component: {fileID: 1103239692597537299}
+  - name: Marker-Child (Sphere Collider)
+    InvertEnabled: 0
+    EnableDelay: 0
+    DisableDelay: 0
+    Component: {fileID: 4769882442164892275}
+  - name: Corn1 (1) (Mesh Renderer)
+    InvertEnabled: 0
+    EnableDelay: 0
+    DisableDelay: 0
+    Component: {fileID: 7412702607922249090}
+  - name: Corn1 (Mesh Renderer)
+    InvertEnabled: 0
+    EnableDelay: 0
+    DisableDelay: 0
+    Component: {fileID: 2072110858647038560}

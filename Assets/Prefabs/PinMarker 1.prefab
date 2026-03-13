@@ -76,17 +76,16 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   StartEnabled: 1
   Components:
-  - name: Placeholder for referenced MeshRenderer in Prefab instance (1) (Mesh Renderer)
+  - name: Corn1 (1) (Mesh Renderer)
     InvertEnabled: 0
     EnableDelay: 0
     DisableDelay: 0
-    Component: {fileID: 0}
-  - name: 'Pinmarker-Child (Missing Prefab with guid: 07cea7de426c79142a154815c3b3874f)
-      (N Marker)'
+    Component: {fileID: 4224983993378436095}
+  - name: Corn1 (Mesh Renderer)
     InvertEnabled: 0
     EnableDelay: 0
     DisableDelay: 0
-    Component: {fileID: 0}
+    Component: {fileID: 2420760469365222543}
 --- !u!1 &1093672670999858277
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,8 +131,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  AutoDetach: 3
-  ComponentControllers: []
+  AutoDetach: -1
+  ComponentControllers:
+  - name: PinMarker 1 (Component Controller)
+    AutoTrigger: 3
+    EnableOnAttach: 0
+    ComponentController: {fileID: 1043273693595317961}
+    HasInitialized: 1
 --- !u!1001 &3270665765198163835
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -305,6 +309,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5977d4a9b79b4b24f974f06cc21006b7, type: 3}
   m_PrefabInstance: {fileID: 3270665765198163835}
   m_PrefabAsset: {fileID: 0}
+--- !u!23 &4224983993378436095 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 5977d4a9b79b4b24f974f06cc21006b7, type: 3}
+  m_PrefabInstance: {fileID: 3270665765198163835}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3916391646659407883
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -391,6 +400,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 8921784269862904943}
   m_SourcePrefab: {fileID: 100100000, guid: 5977d4a9b79b4b24f974f06cc21006b7, type: 3}
+--- !u!23 &2420760469365222543 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 5977d4a9b79b4b24f974f06cc21006b7, type: 3}
+  m_PrefabInstance: {fileID: 3916391646659407883}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3590327739880413152 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5977d4a9b79b4b24f974f06cc21006b7, type: 3}
