@@ -20,7 +20,7 @@ public class NGun : NetworkBehaviour
     /// <summary>
     /// サーバーのみ参照を持つフィールド。プレイヤーのマーカーオブジェクトを参照するために使用される。クライアントはこのフィールドを直接参照せず、RPCを介してマーカーの位置を更新する。
     /// </summary>
-    public AttachableBehaviour playerMarker;
+    [HideInInspector]public AttachableBehaviour playerMarker;
     [SerializeField] AttachableNode node;
     PlayerControls controls;
     InputAction fireAction;
