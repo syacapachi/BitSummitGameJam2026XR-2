@@ -67,6 +67,7 @@ public class PlayerItemControll : NetworkBehaviour
         var attach = markerInstance.GetComponentInChildren<AttachableBehaviour>();
         attach.Attach(node);
 
+
         NetworkEntry entry = new NetworkEntry("Marker", attach);
         serverTypeObjectList.Add(entry);
     }

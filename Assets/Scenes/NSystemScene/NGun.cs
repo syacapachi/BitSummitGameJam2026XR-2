@@ -78,7 +78,10 @@ public class NGun : NetworkBehaviour
         if (IsServer)
         {
             syncedAmmo.Value = weaponSettings.maxAmmo;
-            TryGetPlayerMarker();
+            if (TryGetPlayerMarker())
+            {
+                playerMarker.gameObject.SetActive(false);
+            }
         }
     }
     public override void OnNetworkDespawn()
@@ -227,6 +230,8 @@ public class NGun : NetworkBehaviour
             return;
         }
 
+        playerMarker.gameObject.SetActive(true);
+
         if (isMarkAttached) 
         { 
             playerMarker.GetComponentInChildren<AttachableBehaviour>().Detach(); 
@@ -250,6 +255,7 @@ public class NGun : NetworkBehaviour
             playerMarker.GetComponentInChildren<AttachableBehaviour>().Attach(node);
             playerMarker.gameObject.transform.localPosition = Vector3.zero;
             isMarkAttached = true;
+            playerMarker.gameObject.SetActive(false);
         }
     }
 }
