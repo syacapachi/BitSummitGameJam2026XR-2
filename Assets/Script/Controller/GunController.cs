@@ -13,7 +13,9 @@ public class GunController : NetworkBehaviour
     public WeaponSettingsSO weaponSettings;
     private float nextFire;
     [SerializeField] AudioSource allShootSoundSource;
+    [SerializeField] AudioSource allReloadSoundSource;
     public NetworkVariable<int> syncedAmmo = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    //こいつは、残段数のみを同期してればわかる
     private bool isReloading = false;
     
     public float reloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
@@ -100,19 +102,35 @@ public class GunController : NetworkBehaviour
     private IEnumerator Reload()
     {
         isReloading = true;
+        if (IsClient) 
+        {
+            allReloadSoundSource.Play();
+        }
         Debug.Log("Reloading...");
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         var wait = new WaitForSeconds(weaponSettings.reloadTime);
         yield return wait;
 
-        syncedAmmo.Value = weaponSettings.maxAmmo;
+        if (IsServer)
+        {
+            syncedAmmo.Value = weaponSettings.maxAmmo;
+        }
         isReloading = false;
     }
+    /// <summary>
+    /// 残段数の変更を購読するため、サーバー・クライアントで呼ばれる
+    /// </summary>
+    /// <param name="oldestAmmo"></param>
+    /// <param name="newestAmmo"></param>
     private void OnAmmoChanged(int oldestAmmo, int newestAmmo)
     {
         if(isReloading) return;
         if(oldestAmmo < newestAmmo) return;
-        allShootSoundSource?.Play();
+        if (IsClient)
+        {
+            allShootSoundSource?.Play();
+        }
+        
         if (newestAmmo <= 0)
         {
             StartCoroutine(Reload());
