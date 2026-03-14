@@ -3591,29 +3591,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Handgun
       objectReference: {fileID: 0}
-    - target: {fileID: 4544429435303749960, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5726951877018106367, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
-      propertyPath: m_AttachTransform
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5726951877018106367, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
-      propertyPath: m_UseDynamicAttach
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5726951877018106367, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
-      propertyPath: m_ParentInteractableObject
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
       propertyPath: Components.Array.size
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
       propertyPath: Components.Array.data[0].name
-      value: Handgun (Line Renderer)
+      value: Handgun (Audio Source)
       objectReference: {fileID: 0}
     - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
       propertyPath: Components.Array.data[1].name
@@ -3624,17 +3608,101 @@ PrefabInstance:
       value: Collider (Sphere Collider)
       objectReference: {fileID: 0}
     - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[3].name
+      value: Collider (Sphere Collider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[4].name
+      value: Collider (Sphere Collider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[5].name
+      value: Collider (Sphere Collider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[6].name
+      value: Collider (Sphere Collider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[7].name
+      value: Collider (Sphere Collider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[8].name
+      value: Collider (Sphere Collider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[9].name
+      value: Collider (Sphere Collider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[10].name
+      value: Collider (Sphere Collider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[11].name
+      value: M1911 Magazine (Mesh Renderer)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[12].name
+      value: Collider (Sphere Collider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
       propertyPath: Components.Array.data[0].Component
       value: 
-      objectReference: {fileID: 1916486858}
+      objectReference: {fileID: 1916486860}
     - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
       propertyPath: Components.Array.data[1].Component
       value: 
-      objectReference: {fileID: 30535633}
+      objectReference: {fileID: 1916486859}
     - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
       propertyPath: Components.Array.data[2].Component
       value: 
-      objectReference: {fileID: 1897880976}
+      objectReference: {fileID: 1916486857}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[3].Component
+      value: 
+      objectReference: {fileID: 1916486857}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[4].Component
+      value: 
+      objectReference: {fileID: 1916486857}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[5].Component
+      value: 
+      objectReference: {fileID: 1916486857}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[6].Component
+      value: 
+      objectReference: {fileID: 1916486857}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[7].Component
+      value: 
+      objectReference: {fileID: 1916486857}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[8].Component
+      value: 
+      objectReference: {fileID: 1916486857}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[9].Component
+      value: 
+      objectReference: {fileID: 1916486857}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[10].Component
+      value: 
+      objectReference: {fileID: 1916486857}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[11].Component
+      value: 
+      objectReference: {fileID: 1916486858}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[12].Component
+      value: 
+      objectReference: {fileID: 1916486857}
+    - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+      propertyPath: Components.Array.data[0].InvertEnabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8852619583546998639, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
       propertyPath: Components.Array.data[1].InvertEnabled
       value: 1
@@ -3647,6 +3715,26 @@ PrefabInstance:
 --- !u!4 &1916486856 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4541416600848174910, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+  m_PrefabInstance: {fileID: 1916486855}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1916486857 stripped
+SphereCollider:
+  m_CorrespondingSourceObject: {fileID: 8713492124837520766, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+  m_PrefabInstance: {fileID: 1916486855}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1916486858 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2044329077891185861, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+  m_PrefabInstance: {fileID: 1916486855}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1916486859 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2879811585882480860, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
+  m_PrefabInstance: {fileID: 1916486855}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &1916486860 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 4863945610173966957, guid: 0587dcb868c08d540a3b06f853fd5b9c, type: 3}
   m_PrefabInstance: {fileID: 1916486855}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1918599559
@@ -3881,9 +3969,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4503770392076622797, guid: 51223c2bb15dbe24b96db6a53b3afe63, type: 3}
       insertIndex: 43
       addedObject: {fileID: 1561107943}
-    - targetCorrespondingSourceObject: {fileID: 2982267258493543567, guid: 51223c2bb15dbe24b96db6a53b3afe63, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1429062395}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51223c2bb15dbe24b96db6a53b3afe63, type: 3}
 --- !u!1 &2048666825
