@@ -124,7 +124,15 @@ public class NGameManager : NetworkBehaviour
 
     void EndPhase()
     {
-        StartCoroutine(EndPhaseWithCountdown());
+        // 最終フェーズか？
+        if (currentPhaseIndex == phases.Length - 1)
+        {
+            StartCoroutine(EndPhaseWithCountdown());
+        }
+        else
+        {
+            StartNextPhase();
+        }
     }
 
     private IEnumerator EndPhaseWithCountdown()
@@ -146,11 +154,13 @@ public class NGameManager : NetworkBehaviour
 
         countdownValue.Value = 0; // カウントダウン終了
 
+        /*
         // 得点ボーナスやFINISHメッセージ表示
         if (spawner.AllDead() && !isEnemycome)
         {
             AddScore(phase.clearBonus);
         }
+        */
 
         Debug.Log($"Phase {currentPhaseIndex + 1} FINISH! Score: {score}");
         phaseFinishing.Value = true;
