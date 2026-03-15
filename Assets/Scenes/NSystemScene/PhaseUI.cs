@@ -7,6 +7,7 @@ public class PhaseUI : MonoBehaviour
     public GameObject phaseBoard;
     public TextMeshProUGUI phaseText;
     private NGameManager nGameManager;
+
     IEnumerator Start()
     {
         while (ManagerLocator.Instance.AllGameManager == null)
@@ -24,6 +25,7 @@ public class PhaseUI : MonoBehaviour
 
     void InitializeUI()
     {
+        phaseText.gameObject.SetActive(false);
         OnPhaseFinishingChanged(false, nGameManager.phaseFinishing.Value);
         OnPhaseChanged(-1, nGameManager.syncedPhaseIndex.Value);
         OnCountdownChanged(0, nGameManager.countdownValue.Value);
@@ -31,12 +33,8 @@ public class PhaseUI : MonoBehaviour
         nGameManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
         nGameManager.IsGameFinished.OnValueChanged += OnGameFinishedChanged;
         nGameManager.countdownValue.OnValueChanged += OnCountdownChanged;
-        nGameManager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
+        //nGameManager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
 
-        if (nGameManager.IsGameFinished.Value)
-        {
-            ShowScore();
-        }
     }
 
     void OnPhaseChanged(int oldValue, int newValue)
@@ -53,34 +51,42 @@ public class PhaseUI : MonoBehaviour
 
     void Show(string text)
     {
-        phaseText.text = text;
-        phaseBoard.SetActive(true);
-
-        CancelInvoke(nameof(Hide));
-        Invoke(nameof(Hide), 3f);
+        StartCoroutine(ShowSequence(text));
     }
 
     void Hide()
     {
-        phaseBoard.SetActive(false);
+        phaseText.gameObject.SetActive(false);
     }
-
+    /*
     void ShowScore()
     {
         int score = nGameManager.GetScore();
 
         phaseText.text = $"Score : {score} point";
-        phaseBoard.SetActive(true);
+        phaseText.gameObject.SetActive(true);
 
         CancelInvoke(nameof(Hide));
     }
+    */
 
-    void OnGameFinishedChanged(bool oldValue, bool newValue)
+    public void OnGameFinishedChanged(bool oldValue, bool newValue)
     {
-        if (newValue)
-        {
-            ShowScore();
-        }
+        if (!newValue) return;
+
+        StopAllCoroutines(); // 他の表示を止める
+
+        phaseText.fontMaterial.SetFloat("_UnderlayOffsetX", 0f);
+        phaseText.fontMaterial.SetFloat("_UnderlayOffsetY", 0f);
+
+        phaseText.fontSize = 150;
+        phaseText.text = "FINISH!";
+        phaseText.gameObject.SetActive(true);
+
+        StartCoroutine(PopAnimation());
+
+        CancelInvoke(nameof(Hide));
+        Invoke(nameof(Hide), 2f);
     }
 
     void OnCountdownChanged(int oldValue, int newValue)
@@ -88,10 +94,21 @@ public class PhaseUI : MonoBehaviour
         if (newValue > 0)
         {
             phaseText.text = newValue.ToString();
-            phaseBoard.SetActive(true);
+            phaseText.gameObject.SetActive(true);
+
+            StartCoroutine(PopAnimation());
 
             CancelInvoke(nameof(Hide));
-            Invoke(nameof(Hide), 1f); // 1�b�ŏ���
+
+            float hideTime = 1f;
+
+            // 最終フェーズ終了カウントダウンなら長くする
+            if (nGameManager.syncedPhaseIndex.Value == nGameManager.phases.Length - 1)
+            {
+                hideTime = 2.3f;
+            }
+
+            Invoke(nameof(Hide), hideTime);
         }
     }
 
@@ -101,7 +118,7 @@ public class PhaseUI : MonoBehaviour
         int phase = nGameManager.syncedPhaseIndex.Value;
 
         phaseText.text = $"Phase {phase + 1} FINISH!\nScore: {score} point";
-        phaseBoard.SetActive(true);
+        phaseText.gameObject.SetActive(true);
 
         CancelInvoke(nameof(Hide));
         Invoke(nameof(Hide), 3f); // 3�b���ɏ���
@@ -112,5 +129,78 @@ public class PhaseUI : MonoBehaviour
         {
             ShowPhaseFinish(); // �t���O��true�ɂȂ������Ă�
         }
+    }
+
+    IEnumerator PopAnimation()
+    {
+        phaseText.fontMaterial.SetFloat("_UnderlayOffsetX", 1f);
+        phaseText.fontMaterial.SetFloat("_UnderlayOffsetY", -1f);
+        Vector3 normal = Vector3.one;
+        Vector3 big = Vector3.one * 1.6f;
+
+        phaseText.transform.localScale = big;
+
+        float t = 0f;
+        float duration = 0.05f;
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            phaseText.transform.localScale =
+                Vector3.Lerp(big, normal, t / duration);
+            yield return null;
+        }
+
+        phaseText.transform.localScale = normal;
+    }
+
+    IEnumerator ShowSequence(string text)
+    {
+        phaseText.fontMaterial.SetFloat("_UnderlayOffsetX", 0f);
+        phaseText.fontMaterial.SetFloat("_UnderlayOffsetY", 0f);
+        // text表示
+        phaseText.fontSize = 120;   // 大きくする
+        phaseText.text = text;
+        phaseText.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(1f);
+
+        // START表示
+        phaseText.fontSize = 150;   // さらに大きく
+        phaseText.text = "START!!";
+        StartCoroutine(PopAnimation());
+
+        yield return new WaitForSeconds(2f);
+
+        Hide();
+    }
+
+    IEnumerator FinishSequence()
+    {
+        phaseText.fontMaterial.SetFloat("_UnderlayOffsetX", 1f);
+        phaseText.fontMaterial.SetFloat("_UnderlayOffsetY", -1f);
+
+        for (int i = 3; i >= 1; i--)
+        {
+            phaseText.fontSize = 140;
+            phaseText.text = i.ToString();
+            phaseText.gameObject.SetActive(true);
+
+            StartCoroutine(PopAnimation());
+
+            yield return new WaitForSeconds(1f);
+        }
+
+        phaseText.fontMaterial.SetFloat("_UnderlayOffsetX", 0f);
+        phaseText.fontMaterial.SetFloat("_UnderlayOffsetY", 0f);
+
+        phaseText.fontSize = 160;
+        phaseText.text = "FINISH!";
+
+        StartCoroutine(PopAnimation());
+
+        yield return new WaitForSeconds(2f);
+
+        Hide();
     }
 }
