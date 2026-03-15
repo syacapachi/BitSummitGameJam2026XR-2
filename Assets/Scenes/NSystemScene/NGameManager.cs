@@ -137,40 +137,27 @@ public class NGameManager : NetworkBehaviour
 
     private IEnumerator EndPhaseWithCountdown()
     {
-        isCountingDown = true;   // タイマーやUpdateの進行を止める
+        isCountingDown = true;
 
-        PhaseSO phase = phases[currentPhaseIndex];
-
-        // FINISH表示用にUI側で使える変数を更新する
-        // （PhaseUIでは countdownValue と syncedPhaseIndex を監視して表示）
         int count = 3;
+        float interval = 7f / 3f; // 約2.33秒
+
         while (count > 0)
         {
             countdownValue.Value = count;
             Debug.Log("End Phase Countdown: " + count);
-            yield return new WaitForSeconds(1f);
+
+            yield return new WaitForSeconds(interval);
             count--;
         }
 
-        countdownValue.Value = 0; // カウントダウン終了
+        countdownValue.Value = 0;
 
-        /*
-        // 得点ボーナスやFINISHメッセージ表示
-        if (spawner.AllDead() && !isEnemycome)
-        {
-            AddScore(phase.clearBonus);
-        }
-        */
+        Debug.Log("FINISH!");
 
-        Debug.Log($"Phase {currentPhaseIndex + 1} FINISH! Score: {score}");
-        phaseFinishing.Value = true;
-
-        yield return new WaitForSeconds(3f); // FINISH表示を3秒維持
-        phaseFinishing.Value = false;
+        IsGameFinished.Value = true; // ここでFINISH表示
 
         isCountingDown = false;
-
-        // 次フェーズを開始
         StartNextPhase();
     }
 
