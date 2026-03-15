@@ -75,7 +75,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
         if (!IsServer) return;
 
         Debug.Log("Take damage");
-        currentHP.Value -= Mathf.RoundToInt(damage);
+        currentHP.Value -= 100;
         if (hpImage != null)
         {
             hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.HP);
