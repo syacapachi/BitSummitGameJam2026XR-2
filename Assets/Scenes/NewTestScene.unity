@@ -266,8 +266,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f3a920fc619b8b4daa239736f59ace6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerManager: {fileID: 821111548}
-  GameManager: {fileID: 1601539023}
+  <AllPlayerManager>k__BackingField: {fileID: 0}
+  <AllGameManager>k__BackingField: {fileID: 0}
+  <AllObjectPool>k__BackingField: {fileID: 0}
 --- !u!4 &139674650
 Transform:
   m_ObjectHideFlags: 0
@@ -444,6 +445,7 @@ MonoBehaviour:
   - {fileID: 1137725901}
   - {fileID: 1395990037}
   - {fileID: 30932656}
+  protectArea: {fileID: 0}
 --- !u!4 &269016450
 Transform:
   m_ObjectHideFlags: 0
@@ -1327,6 +1329,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce7a9a87d797fb14c84592474db11d13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  worldCanvas: {fileID: 0}
 --- !u!4 &821111549
 Transform:
   m_ObjectHideFlags: 0
@@ -2637,10 +2641,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9130db537808a9a4bbf5f8c246970b30, type: 2}
   - {fileID: 11400000, guid: 09e28c63f7a683f46919a5d21940185b, type: 2}
   spawner: {fileID: 269016448}
+  score:
+    m_InternalValue: 0
   protectArea: {fileID: 1008058028}
   syncedPhaseIndex:
     m_InternalValue: -1
   IsGameFinished:
+    m_InternalValue: 0
+  isBulletCome:
+    m_InternalValue: 0
+  countdownValue:
+    m_InternalValue: 0
+  phaseFinishing:
     m_InternalValue: 0
 --- !u!4 &1601539024
 Transform:

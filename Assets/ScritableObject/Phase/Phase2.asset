@@ -13,13 +13,19 @@ MonoBehaviour:
   m_Name: Phase2
   m_EditorClassIdentifier: 
   phaseDisplayName: Phase2
-  phaseTime: 30
-  clearBonus: 500
+  phaseTime: 60
+  clearBonus: 1000
   spawnList:
-  - enemyType: {fileID: 11400000, guid: 2335ef5d4db11584bba93a9f600a36a7, type: 2}
-    count: 1
-  - enemyType: {fileID: 11400000, guid: bf2116e0c653c364ca980e0dbb16401d, type: 2}
-    count: 1
-  - enemyType: {fileID: 11400000, guid: 5e9c18f2879d298419f62e4bc87e6ce2, type: 2}
+  - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
+    count: 2
+  - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
+    count: 2
+  - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
+    count: 2
+  - enemyType: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
+    count: 2
+  - enemyType: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
+    count: 2
+  - enemyType: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
     count: 2
   usableSpawnPointIndex: 0000000001000000020000000300000004000000050000000600000007000000

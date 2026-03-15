@@ -1910,6 +1910,8 @@ GameObject:
   - component: {fileID: 1008058031}
   - component: {fileID: 1008058030}
   - component: {fileID: 1008058029}
+  - component: {fileID: 1008058034}
+  - component: {fileID: 1008058035}
   m_Layer: 0
   m_Name: ProtectArea
   m_TagString: Untagged
@@ -2033,6 +2035,32 @@ Transform:
   - {fileID: 1639413415}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1008058034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008058028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fedc25b6112b14a45a77d6164b03b39b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1008058035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008058028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da876ea0978b264479e3abd7123e5208, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reachClipAll: {fileID: 8300000, guid: 50b01190c1d315d40947b882bd06d093, type: 3}
+  reachVolumeAll: 1
 --- !u!1 &1012584117
 GameObject:
   m_ObjectHideFlags: 0
@@ -2521,15 +2549,15 @@ PrefabInstance:
     - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: 'phases.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: 2738560c240085f45af0665b85cb321f, type: 2}
+      objectReference: {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
     - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: 'phases.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 2738560c240085f45af0665b85cb321f, type: 2}
+      objectReference: {fileID: 11400000, guid: 9130db537808a9a4bbf5f8c246970b30, type: 2}
     - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: 'phases.Array.data[2]'
       value: 
-      objectReference: {fileID: 11400000, guid: 2738560c240085f45af0665b85cb321f, type: 2}
+      objectReference: {fileID: 11400000, guid: 09e28c63f7a683f46919a5d21940185b, type: 2}
     - target: {fileID: 5206686671507870451, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 4019473503
