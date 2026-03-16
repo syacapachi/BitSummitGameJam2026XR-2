@@ -2,7 +2,9 @@
 using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
+[RequireComponent(typeof(XRGrabInteractable))]
 public class AttachableRigidBody : AttachableBehaviour
 {
     [SerializeField] Rigidbody body;
@@ -58,6 +60,14 @@ public class AttachableRigidBody : AttachableBehaviour
             case AttachState.Detaching:
                 break;
         }
-
+    }
+    private void Reset()
+    {
+        var interacter = GetComponent<XRGrabInteractable>();
+        if (interacter != null)
+        {
+            interacter.focusEntered.AddListener(args => Focus());
+            interacter.focusExited.AddListener(args => UnFocus());
+        }
     }
 }
