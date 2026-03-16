@@ -21,6 +21,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     public GameObject GameObject => this.gameObject;
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => enemySO.HP;
+    public BulletState enemyType;
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -75,7 +77,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
         if (!IsServer) return;
 
         Debug.Log("Take damage");
-        currentHP.Value -= 100;
+        currentHP.Value -= damage;
         if (hpImage != null)
         {
             hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.HP);

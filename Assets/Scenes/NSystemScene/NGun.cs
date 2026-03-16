@@ -160,6 +160,7 @@ public class NGun : NetworkBehaviour
     }
     */
     [Rpc(SendTo.Server)]
+    /*
     private void ShootRpc()
     {
         Debug.Log("ShootRpc called");
@@ -185,6 +186,45 @@ public class NGun : NetworkBehaviour
         // ③ ネットワークでSpawn
         obj.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
     }
+    */
+
+    private void ShootRpc()
+    {
+        Debug.Log("ShootRpc called");
+        if (isReloading) return;
+        if (Time.time < nextFire) return;
+
+        nextFire = Time.time + weaponSettings.fireRate;
+        syncedAmmo.Value--;
+
+        GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+        var job = GetComponent<PlayerPropaty>().Job;
+
+
+        var bullet = obj.GetComponent<NBullet>();
+
+        bullet.shooterId = OwnerClientId;
+
+        // ★ここでstateを設定
+        switch (job)
+        {
+            case PlayerPropaty.PlayerJob.Human:
+                bullet.state = BulletState.Human;
+                break;
+
+            case PlayerPropaty.PlayerJob.Ghost:
+                bullet.state = BulletState.Ghost;
+                break;
+
+            default:
+                bullet.state = BulletState.Both;
+                break;
+        }
+
+        obj.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
+    }
+
 
     private IEnumerator Reload()
     {

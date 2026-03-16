@@ -7,11 +7,15 @@ public class NBullet : NetworkBehaviour
 {
     public WeaponSettingsSO gunSO;
     public float lifeTime = 5f;
+    [SerializeField] GameObject hitFxPrefab;
+    [SerializeField] GameObject shieldFxPrefab;
+    [SerializeField] float hitFxLife = 2f;
 
     Rigidbody rb;
     Coroutine despawnTimer;
 
     public ulong shooterId;
+    public BulletState state;
 
     public void SetShooter(ulong id)
     {
@@ -100,19 +104,85 @@ public class NBullet : NetworkBehaviour
         // }
         //水野が追加した。ダメージ判定の無効化スクリプト
         //下の2行消しました。//元に戻しました。
+        
+        //動いてたやつ
+        /*
         if (!IsServer) return;
         Debug.Log("Hit"+other.name);
         // Enemy �ɓ��������ꍇ
         if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
         {
             Debug.Log("Hit DamageReciever" + other.name);
+
             damageReciver.TakeDamage(gunSO.damage);
-            StopCoroutine(despawnTimer);
+            SpawnHitFxClientRpc(transform.position);
             if (NetworkObject.IsSpawned)
             {
-                NetworkObject.Despawn(false); // �e�͏�����
+                NetworkObject.Despawn(true); // �e�͏�����
+            }
+        }
+        */
+
+        if (!IsServer) return;
+
+        Debug.Log("Hit " + other.name);
+
+        if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
+        {
+            var enemy = other.GetComponent<NEnemy>();
+
+            if (enemy != null)
+            {
+                // ★弾のstateと敵のtypeを比較
+                if (state == BulletState.Both || state == enemy.enemyType)
+                {
+                    // ダメージが通る
+                    Debug.Log("Damage");
+
+                    damageReciver.TakeDamage(gunSO.damage);
+                    SpawnHitFxClientRpc(transform.position);
+                }
+                else
+                {
+                    // シールド
+                    Debug.Log("Shield");
+                    ClientRpcParams rpcParams = new ClientRpcParams
+                    {
+                        Send = new ClientRpcSendParams
+                        {
+                            TargetClientIds = new ulong[] { shooterId }
+                        }
+                    };
+
+                    SpawnShieldFxClientRpc(transform.position);
+                }
+            }
+
+            if (NetworkObject.IsSpawned)
+            {
+                NetworkObject.Despawn(true);
             }
         }
     }
-    
+
+    [ClientRpc]
+    void SpawnHitFxClientRpc(Vector3 pos)
+    {
+        GameObject fx = Instantiate(hitFxPrefab, pos, Quaternion.identity);
+        Destroy(fx, hitFxLife);
+    }
+
+    [ClientRpc]
+    void SpawnShieldFxClientRpc(Vector3 pos, ClientRpcParams rpcParams = default)
+    {
+        GameObject fx = Instantiate(shieldFxPrefab, pos, Quaternion.identity);
+        Destroy(fx, 2f);
+    }
+}
+
+public enum BulletState
+{
+    Human,
+    Ghost,
+    Both
 }
