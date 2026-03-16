@@ -9,6 +9,19 @@ public class EnemyBullet : NetworkBehaviour
     private void Start()
     {
         speed = enemySO.BulletSpeed;
+
+        if (IsServer)
+        {
+            Invoke(nameof(DespawnBullet), 5f); // 5秒後に消える
+        }
+    }
+
+    void DespawnBullet()
+    {
+        if (NetworkObject.IsSpawned)
+        {
+            GetComponent<NetworkObject>().Despawn(true);
+        }
     }
 
     void Update()
@@ -28,7 +41,7 @@ public class EnemyBullet : NetworkBehaviour
 
             ManagerLocator.Instance.AllGameManager.BulletHitProtectArea(-enemySO.Damage);
 
-            GetComponent<NetworkObject>().Despawn(true);
+            DespawnBullet();
         }
     }
 }

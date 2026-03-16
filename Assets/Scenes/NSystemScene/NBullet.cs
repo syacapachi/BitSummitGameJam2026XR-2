@@ -24,7 +24,7 @@ public class NBullet : NetworkBehaviour
         {
             rb = GetComponent<Rigidbody>();
             rb.linearVelocity = transform.forward * gunSO.speed;
-            despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
+            Invoke(nameof(DespawnBullet), lifeTime);
         }
     }
 
@@ -36,6 +36,14 @@ public class NBullet : NetworkBehaviour
             yield return wait01;
         }
         NetworkObject.Despawn(false);
+    }
+
+    void DespawnBullet()
+    {
+        if (NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn(true);
+        }
     }
 
     /*
@@ -53,6 +61,7 @@ public class NBullet : NetworkBehaviour
         GetComponent<NetworkObject>().Despawn(true); // �e�͏�����
     }
     */
+
 
     void OnTriggerEnter(Collider other)
     {
@@ -105,4 +114,5 @@ public class NBullet : NetworkBehaviour
             }
         }
     }
+    
 }
