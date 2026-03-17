@@ -130,6 +130,17 @@ public class NBullet : NetworkBehaviour
         if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
         {
             var enemy = other.GetComponent<NEnemy>();
+            var nm = NetworkManager.Singleton;
+
+            if (!nm.ConnectedClients.TryGetValue(shooterId, out var client))
+            {
+                Debug.LogWarning($"Shooter not found: {shooterId}");
+                return;
+            }
+
+            var root = client.PlayerObject.GetComponent<PlayerRoot>();
+            if (root == null) return;
+
 
             if (enemy != null)
             {
@@ -138,7 +149,9 @@ public class NBullet : NetworkBehaviour
                 {
                     // ダメージが通る
                     Debug.Log("Damage");
-
+                    root.stats.AddHit();
+                    root.stats.AddDamage(gunSO.damage);
+                    enemy.SetAttacker(shooterId);
                     damageReciver.TakeDamage(gunSO.damage);
                     SpawnHitFxClientRpc(transform.position);
                 }
@@ -146,6 +159,7 @@ public class NBullet : NetworkBehaviour
                 {
                     // シールド
                     Debug.Log("Shield");
+                    root.stats.AddShield();
                     ClientRpcParams rpcParams = new ClientRpcParams
                     {
                         Send = new ClientRpcSendParams

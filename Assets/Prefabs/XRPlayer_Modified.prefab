@@ -4071,6 +4071,7 @@ GameObject:
   - component: {fileID: 721904957764987582}
   - component: {fileID: 2859907203708093746}
   - component: {fileID: 1840299474899798204}
+  - component: {fileID: 8884494692843386286}
   m_Layer: 0
   m_Name: NetworkScript
   m_TagString: Untagged
@@ -4276,6 +4277,30 @@ MonoBehaviour:
   reloadClipAll: {fileID: 8300000, guid: 340af5487fd48654a9df6a5eeeb0e4f0, type: 3}
   shotVolumeAll: 1
   reloadVolumeAll: 1
+--- !u!114 &8884494692843386286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461847731376564659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d88728d0a21e5d4599c1181b986406a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  score:
+    m_InternalValue: 0
+  shotsFired:
+    m_InternalValue: 0
+  hits:
+    m_InternalValue: 0
+  shiled:
+    m_InternalValue: 0
+  damageDealt:
+    m_InternalValue: 0
+  killCounts: []
 --- !u!1 &4474157034096068673
 GameObject:
   m_ObjectHideFlags: 0
@@ -6681,6 +6706,7 @@ MonoBehaviour:
   propaty: {fileID: 4021316936165528260}
   cameraSetting: {fileID: 4211932313199541759}
   itemControll: {fileID: 6089842242769989286}
+  stats: {fileID: 8884494692843386286}
 --- !u!1 &6820766522580512760
 GameObject:
   m_ObjectHideFlags: 0
