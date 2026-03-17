@@ -22,6 +22,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => enemySO.HP;
     public BulletState enemyType;
+    private ulong lastAttackerId;
 
     public override void OnNetworkSpawn()
     {
@@ -98,6 +99,17 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     void DieRpc()
     {
         Debug.Log("Die");
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(lastAttackerId, out var client))
+        {
+            var root = client.PlayerObject.GetComponent<PlayerRoot>();
+            Debug.Log("Attacker found: " + lastAttackerId);
+            if (root != null)
+            {
+                Debug.Log("Add kill");
+                root.stats.AddKill(enemySO.Name, enemySO.scoreValue);
+            }
+        }
+
         ManagerLocator.Instance.AllGameManager.EnemyKilled(enemySO.scoreValue);
         if (NetworkObject.IsSpawned)
         {
@@ -117,5 +129,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
 
         if (hpText != null)
             hpText.text = $"{hp} / {enemySO.HP}";
+    }
+
+    public void SetAttacker(ulong attackerId)
+    {
+        lastAttackerId = attackerId;
     }
 }

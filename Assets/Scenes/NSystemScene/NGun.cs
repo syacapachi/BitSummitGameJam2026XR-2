@@ -221,7 +221,8 @@ public class NGun : NetworkBehaviour
                 bullet.state = BulletState.Both;
                 break;
         }
-
+        var stats = GetComponent<PlayerStats>();
+        stats.AddShot();
         obj.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
     }
 

@@ -20,6 +20,7 @@ public class PlayerRoot : NetworkBehaviour
     public PlayerPropaty propaty;
     public CameraSetting cameraSetting;
     public PlayerItemControll itemControll;
+    public PlayerStats stats; // プレイヤーの統計情報を管理するコンポーネント
     private bool isXREnabled = false;
     private PlayerManager playerManager;
     public bool IsXREnabled => isXREnabled;
