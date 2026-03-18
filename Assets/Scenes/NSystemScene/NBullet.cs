@@ -168,7 +168,7 @@ public class NBullet : NetworkBehaviour
                         }
                     };
 
-                    SpawnShieldFxClientRpc(transform.position);
+                    SpawnShieldFxClientRpc(transform.position, rpcParams);
                 }
             }
 
