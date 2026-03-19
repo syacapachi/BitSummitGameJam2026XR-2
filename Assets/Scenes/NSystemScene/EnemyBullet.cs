@@ -5,6 +5,7 @@ public class EnemyBullet : NetworkBehaviour
 {
     public EnemySO enemySO;
     float speed;
+    public BulletState bulletState;
 
     private void Start()
     {
@@ -31,17 +32,49 @@ public class EnemyBullet : NetworkBehaviour
         transform.position += transform.forward * speed * Time.deltaTime;
     }
 
-    private void OnTriggerEnter(Collider other)
+private void OnTriggerEnter(Collider other)
+{
+    if (!IsServer) return;
+
+    // PlayerRootを取得
+    var root = other.GetComponentInParent<PlayerRoot>();
+    if (root == null) return;
+
+    var player = root.propaty;
+    if (player == null) return;
+
+    var job = player.Job;
+
+    bool hit = false;
+
+    switch (bulletState)
     {
-        if (!IsServer) return;
+        case BulletState.Human:
+            hit = (job & PlayerPropaty.PlayerJob.Human) != 0;
+            break;
 
-        if (other.gameObject == ManagerLocator.Instance.AllGameManager.protectArea)
-        {
-            Debug.Log("Bullet hit ProtectArea");
+        case BulletState.Ghost:
+            hit = (job & PlayerPropaty.PlayerJob.Ghost) != 0;
+            break;
 
-            ManagerLocator.Instance.AllGameManager.BulletHitProtectArea(-enemySO.Damage);
-
-            DespawnBullet();
-        }
+        case BulletState.Both:
+            hit = true;
+            break;
     }
+
+    if (hit)
+    {
+        Debug.Log("Player Hit!");
+        GameManager.Instance.AddScore(-enemySO.Damage);
+
+        // ダメージ処理
+        // root.playerHealth.TakeDamage(enemySO.Damage);
+    }
+    else
+    {
+        Debug.Log("Hit but no damage (state mismatch)");
+    }
+
+    DespawnBullet();
+}
 }

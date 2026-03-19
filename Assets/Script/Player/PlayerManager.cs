@@ -12,6 +12,8 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     public PlayerRoot LocalOwnerPlayer {  get; private set; }
 
+    public IReadOnlyList<PlayerRoot> AllPlayers => playerList;
+
     public event Action<PlayerPropaty.PlayerJob> OnOwnerJobChanged;
     [Header("Owner Setting")]
     [Tooltip("ホスト、クライアント設定前のカメラ")]
