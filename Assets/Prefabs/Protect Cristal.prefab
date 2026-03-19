@@ -1338,6 +1338,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3877455954479088210}
+  - component: {fileID: 3946420541746103419}
   m_Layer: 0
   m_Name: Protect Cristal
   m_TagString: Untagged
@@ -1369,6 +1370,27 @@ Transform:
   - {fileID: 4424834028898397012}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3946420541746103419
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6091868631840953771}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.8173728, y: 2.139103, z: 1.8173718}
+  m_Center: {x: -0.89563084, y: -0.117388725, z: 0.53042245}
 --- !u!1 &6392500908155295136
 GameObject:
   m_ObjectHideFlags: 0

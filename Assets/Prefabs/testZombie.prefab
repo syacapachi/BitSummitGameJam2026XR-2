@@ -511,6 +511,10 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1401139532381281685, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
+      propertyPath: m_rigidBody
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1401139532381281685, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       propertyPath: moveAction.m_Name
       value: Move
       objectReference: {fileID: 0}
@@ -662,7 +666,8 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: a67006042548d954e9e630c46922dc39, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6594717042902695566, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 399528755730747395, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
@@ -670,7 +675,7 @@ PrefabInstance:
       addedObject: {fileID: 5355151724182024019}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-      insertIndex: 4
+      insertIndex: 3
       addedObject: {fileID: 845709423057202467}
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
@@ -680,13 +685,7 @@ PrefabInstance:
       addedObject: {fileID: 1194369278827022531}
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7449354282299013003}
-    - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2144525077374001555}
-    - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -1222087266907519768}
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7556053039345494618}
@@ -708,15 +707,13 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7408496459583059300}
+    - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3351809664319698288}
   m_SourcePrefab: {fileID: 100100000, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
 --- !u!4 &1124331973230440938 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 399528755730747395, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-  m_PrefabInstance: {fileID: 725366170435265001}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1124331973230440958 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 399528755730747415, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
   m_PrefabInstance: {fileID: 725366170435265001}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1124331973230472586 stripped
@@ -813,23 +810,6 @@ MonoBehaviour:
   hpImage: {fileID: 7028729913468153075}
   hpText: {fileID: 108117791681994854}
   enemyType: 1
---- !u!114 &7449354282299013003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1124331973230472586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 0
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
 --- !u!114 &2144525077374001555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -846,29 +826,6 @@ MonoBehaviour:
   meshRenderer: {fileID: 6916242476052379585}
   lookableJob: 1
   hpCanvas: {fileID: 1696206507279681442}
---- !u!114 &-1222087266907519768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1124331973230472586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c7bd313b26be2e4d93b35fc87b4eb88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  bulletPrefab: {fileID: 4022916156752048900, guid: 18254f0b07ec8924d89429cf843b0c78, type: 3}
-  firePoint: {fileID: 1124331973230440958}
-  laserLine: {fileID: 7556053039345494618}
-  weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
-  allShootSoundSource: {fileID: 0}
-  allReloadSoundSource: {fileID: 0}
-  syncedAmmo:
-    m_InternalValue: 0
-  enemySO: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
-  enemyType: 0
 --- !u!120 &7556053039345494618
 LineRenderer:
   serializedVersion: 2
@@ -1236,6 +1193,28 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3351809664319698288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124331973230472586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30664a8f0db04b349ae60bc4a046931c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  bulletPrefab: {fileID: 4022916156752048900, guid: 18254f0b07ec8924d89429cf843b0c78, type: 3}
+  firePoint: {fileID: 1124331973230440938}
+  laserLine: {fileID: 0}
+  weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
+  allShootSoundSource: {fileID: 0}
+  allReloadSoundSource: {fileID: 0}
+  syncedAmmo:
+    m_InternalValue: 0
+  enemySO: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
 --- !u!137 &6916242476052379585 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6190876443068651048, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
