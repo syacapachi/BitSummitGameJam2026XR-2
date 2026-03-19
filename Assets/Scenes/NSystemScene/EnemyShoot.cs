@@ -15,7 +15,7 @@ public class EnemyShoot : GunController
         base.OnNetworkSpawn();
         if (!IsServer) return;
 
-        target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
+        //target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
 
