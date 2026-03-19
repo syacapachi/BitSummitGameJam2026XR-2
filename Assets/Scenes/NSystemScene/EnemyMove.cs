@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿/*
+using UnityEngine;
 using Unity.Netcode;
 
 public class EnemyMove : NetworkBehaviour
@@ -10,7 +11,8 @@ public class EnemyMove : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
+        //target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
+        target = null;
     }
 
     void Update()
@@ -43,3 +45,4 @@ public class EnemyMove : NetworkBehaviour
         }
     }
 }
+*/

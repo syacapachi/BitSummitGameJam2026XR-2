@@ -4,7 +4,7 @@ using Unity.Netcode;
 public class NEnemySpawner : NetworkBehaviour
 {
     public Transform[] spawnPoints;
-    public Transform protectArea;
+    public Transform dirArea;
 
     private int remain;
     public int Remain => remain;
@@ -38,7 +38,7 @@ public class NEnemySpawner : NetworkBehaviour
 
         Transform point = spawnPoints[spawnIndex];
 
-        Vector3 dir = protectArea.position - point.position;
+        Vector3 dir = dirArea.position - point.position;
         Quaternion rot = Quaternion.LookRotation(dir);
 
         GameObject obj = Instantiate(

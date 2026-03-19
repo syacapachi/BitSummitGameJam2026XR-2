@@ -65,7 +65,7 @@ private void OnTriggerEnter(Collider other)
     if (hit)
     {
         Debug.Log("Player Hit!");
-        ManagerLocator.Instance.AllGameManager.AddScore(-enemySO.Damage);
+        ManagerLocator.Instance.AllGameManager.BulletHitProtectArea(-enemySO.Damage);
 
         // ダメージ処理
         // root.playerHealth.TakeDamage(enemySO.Damage);

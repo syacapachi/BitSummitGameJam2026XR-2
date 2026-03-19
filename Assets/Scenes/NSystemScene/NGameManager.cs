@@ -11,7 +11,7 @@ public class NGameManager : NetworkBehaviour
     public NEnemySpawner spawner;
     public NetworkVariable<int> score = new NetworkVariable<int>(0);
 
-    public GameObject protectArea;
+    //public GameObject protectArea;
     private bool isEnemycome = false;
 
     public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
