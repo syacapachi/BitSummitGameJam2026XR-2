@@ -92,7 +92,7 @@ public class NGunMarkerAudioObserver : NetworkBehaviour
             }
             else
             {
-                GameAudioManager.Instance.PlayWorld(markerPlacedClipAll, hitAll.point, markerPlacedVolumeAll);
+                GameAudioManager.Instance.PlayWorld(markerPlacedClipAll, transform.position, markerPlacedVolumeAll);
             }
         }
         else
