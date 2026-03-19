@@ -426,7 +426,7 @@ MonoBehaviour:
   hpCanvas: {fileID: 8115059269520921985}
   hpImage: {fileID: 6392055257079718664}
   hpText: {fileID: 7872890923030782825}
-  enemyType: 0
+  enemyType: 1
 --- !u!114 &7040231756483127582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -465,6 +465,7 @@ MonoBehaviour:
   syncedAmmo:
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
+  enemyType: 1
 --- !u!120 &984271367505881240
 LineRenderer:
   serializedVersion: 2
