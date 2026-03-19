@@ -1951,7 +1951,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2525896720909075310}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.316}
+  m_LocalPosition: {x: 0, y: 0, z: 0.051}
   m_LocalScale: {x: 0.0019999999, y: 0.0019999999, z: 0.0019999999}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1960,7 +1960,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.297, y: -0.225}
+  m_AnchoredPosition: {x: 0.462, y: -0.225}
   m_SizeDelta: {x: 693, y: 703}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &2534032227585015962
@@ -4073,6 +4073,7 @@ GameObject:
   - component: {fileID: 1840299474899798204}
   - component: {fileID: 8884494692843386286}
   - component: {fileID: 5403155924109906980}
+  - component: {fileID: 8147270009200705217}
   m_Layer: 0
   m_Name: NetworkScript
   m_TagString: Untagged
@@ -4318,6 +4319,22 @@ MonoBehaviour:
   markerPlacedClipAll: {fileID: 8300000, guid: 84de006a9c69e05469e8e7402c58543f, type: 3}
   markerPlacedVolumeAll: 1
   playAsUiAll: 0
+--- !u!114 &8147270009200705217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461847731376564659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1717d797148bd48abf925381f561d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phaseChangeClipAll: {fileID: 8300000, guid: fe3de2f1b36a2c44ab6bc1dc901d97a4, type: 3}
+  gameClearClipAll: {fileID: 8300000, guid: a7616ad726ace2d40b832352b81d80f3, type: 3}
+  phaseVolumeAll: 1
+  clearVolumeAll: 1
 --- !u!1 &4474157034096068673
 GameObject:
   m_ObjectHideFlags: 0
@@ -9641,9 +9658,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8806329115733545877, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8676335720234587274}
-    - targetCorrespondingSourceObject: {fileID: 3109645734885711778, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3590349751236001732}
   m_SourcePrefab: {fileID: 100100000, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
 --- !u!4 &2314468204341838933 stripped
 Transform:
@@ -9762,27 +9776,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &8146826374333253729 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3109645734885711778, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
-  m_PrefabInstance: {fileID: 6496716505114286019}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3590349751236001732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8146826374333253729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f1717d797148bd48abf925381f561d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  phaseChangeClipAll: {fileID: 8300000, guid: fe3de2f1b36a2c44ab6bc1dc901d97a4, type: 3}
-  gameClearClipAll: {fileID: 8300000, guid: a1762ede81c1dd843856850bd746c8ea, type: 3}
-  phaseVolumeAll: 1
-  clearVolumeAll: 1
 --- !u!114 &8715227092802700861 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2511405367194063358, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
