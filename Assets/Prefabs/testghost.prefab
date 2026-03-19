@@ -209,20 +209,18 @@ GameObject:
   m_Component:
   - component: {fileID: 1540549378645820342}
   - component: {fileID: 1007059325538894477}
-  - component: {fileID: 7641253851534573216}
   - component: {fileID: 5777897235427409806}
   - component: {fileID: 1261139749226198956}
   - component: {fileID: 4842514609335542819}
-  - component: {fileID: 8626847694839352521}
   - component: {fileID: 2094355762983484997}
   - component: {fileID: 7040231756483127582}
-  - component: {fileID: -7834844113276369265}
   - component: {fileID: 984271367505881240}
   - component: {fileID: 2665810015714780327}
   - component: {fileID: 2672978695853929537}
   - component: {fileID: -1831760746074150659}
   - component: {fileID: -4752889112109069225}
   - component: {fileID: -7986057631169363681}
+  - component: {fileID: 4970832313522535071}
   m_Layer: 7
   m_Name: testghost
   m_TagString: Untagged
@@ -271,33 +269,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!54 &7641253851534573216
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2515483553086041883}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!136 &5777897235427409806
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -392,23 +363,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &8626847694839352521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2515483553086041883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 0
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
 --- !u!114 &2094355762983484997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,7 +380,7 @@ MonoBehaviour:
   hpCanvas: {fileID: 8115059269520921985}
   hpImage: {fileID: 6392055257079718664}
   hpText: {fileID: 7872890923030782825}
-  enemyType: 1
+  enemyType: 0
 --- !u!114 &7040231756483127582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,29 +397,6 @@ MonoBehaviour:
   meshRenderer: {fileID: 7055824040725011868}
   lookableJob: 2
   hpCanvas: {fileID: 8115059269520921985}
---- !u!114 &-7834844113276369265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2515483553086041883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c7bd313b26be2e4d93b35fc87b4eb88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  bulletPrefab: {fileID: 4022916156752048900, guid: bab683d334cc24943aa54f5fcfbc3e4b, type: 3}
-  firePoint: {fileID: 1351349512919116466}
-  laserLine: {fileID: 984271367505881240}
-  weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
-  allShootSoundSource: {fileID: 0}
-  allReloadSoundSource: {fileID: 0}
-  syncedAmmo:
-    m_InternalValue: 0
-  enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
-  enemyType: 1
 --- !u!120 &984271367505881240
 LineRenderer:
   serializedVersion: 2
@@ -736,6 +667,28 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   loopClipAll: {fileID: 8300000, guid: ed620494acb721c4f9b62ad6241c4889, type: 3}
   loopVolumeAll: 0.35
+--- !u!114 &4970832313522535071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2515483553086041883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30664a8f0db04b349ae60bc4a046931c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  bulletPrefab: {fileID: 4022916156752048900, guid: bab683d334cc24943aa54f5fcfbc3e4b, type: 3}
+  firePoint: {fileID: 1540549378645820342}
+  laserLine: {fileID: 0}
+  weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
+  allShootSoundSource: {fileID: 0}
+  allReloadSoundSource: {fileID: 0}
+  syncedAmmo:
+    m_InternalValue: 0
+  enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
 --- !u!1 &2789469182908074600
 GameObject:
   m_ObjectHideFlags: 0

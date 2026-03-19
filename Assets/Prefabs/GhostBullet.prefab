@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8319452175578770882}
   - component: {fileID: 7022267967684444929}
   - component: {fileID: 378338659817839446}
+  - component: {fileID: 4313075900225794992}
   m_Layer: 0
   m_Name: AuraGlow
   m_TagString: Untagged
@@ -4842,6 +4843,22 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &4313075900225794992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3018948052611345664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b308c020f10cb748885d3ca367dfda3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  meshRenderer: {fileID: 378338659817839446}
+  lookableJob: 2
+  hpCanvas: {fileID: 0}
 --- !u!1 &4022916156752048900
 GameObject:
   m_ObjectHideFlags: 0
@@ -4858,8 +4875,8 @@ GameObject:
   - component: {fileID: -2837489296520038675}
   - component: {fileID: 5158083865324121612}
   - component: {fileID: 2438645337064451966}
-  - component: {fileID: 1439435465523489378}
   - component: {fileID: -1590563834213236978}
+  - component: {fileID: -2531364817717187980}
   m_Layer: 0
   m_Name: GhostBullet
   m_TagString: Untagged
@@ -4996,7 +5013,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2956408983
+  GlobalObjectIdHash: 1897316380
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -5072,20 +5089,6 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
---- !u!114 &1439435465523489378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4022916156752048900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cce2d50149ecb348b7b84e1dfc9aded, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
 --- !u!114 &-1590563834213236978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5102,3 +5105,17 @@ MonoBehaviour:
   meshRenderer: {fileID: 1889808807597214699}
   lookableJob: 2
   hpCanvas: {fileID: 0}
+--- !u!114 &-2531364817717187980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4022916156752048900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afbf8e26e78953744a8323be737279eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
