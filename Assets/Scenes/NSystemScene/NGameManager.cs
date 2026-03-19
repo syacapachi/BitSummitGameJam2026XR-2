@@ -6,12 +6,12 @@ public class NGameManager : NetworkBehaviour
 {
     public PhaseSO[] phases;
     private int currentPhaseIndex = -1;
-    private float timer;
+    public float timer;
 
     public NEnemySpawner spawner;
     public NetworkVariable<int> score = new NetworkVariable<int>(0);
 
-    //public GameObject protectArea;
+    public GameObject protectArea;
     private bool isEnemycome = false;
 
     public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
