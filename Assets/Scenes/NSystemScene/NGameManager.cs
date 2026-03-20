@@ -212,9 +212,13 @@ public class NGameManager : NetworkBehaviour
 
     public void AddScore(int value)
     {
+        if (value > 0) Debug.Log("Add Score");
+        else
+        {
+            if(score.Value <= 0) return;
+            Debug.Log("Subtract Score");
+        }
         score.Value += value;
-        if(value>0) Debug.Log("Add Score");
-        else Debug.Log("Subtract Score");
         Debug.Log("Score: " + score);
     }
 
