@@ -33,6 +33,7 @@ public class PhaseUI : MonoBehaviour
         nGameManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
         nGameManager.IsGameFinished.OnValueChanged += OnGameFinishedChanged;
         nGameManager.countdownValue.OnValueChanged += OnCountdownChanged;
+        nGameManager.allEnemyDeadEvent.OnValueChanged += OnAllEnemyDead;
         //nGameManager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
 
     }
@@ -170,7 +171,7 @@ public class PhaseUI : MonoBehaviour
         phaseText.text = "START!!";
         StartCoroutine(PopAnimation());
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
 
         Hide();
     }
@@ -200,6 +201,46 @@ public class PhaseUI : MonoBehaviour
         StartCoroutine(PopAnimation());
 
         yield return new WaitForSeconds(2f);
+
+        Hide();
+    }
+
+    void OnAllEnemyDead(bool oldValue, bool newValue)
+    {
+        if (!newValue) return;
+
+        StopAllCoroutines();
+        CancelInvoke(nameof(Hide));
+
+        StartCoroutine(AllEnemyDeadSequence());
+    }
+
+    IEnumerator AllEnemyDeadSequence()
+    {
+        int bonus = nGameManager.lastClearBonus.Value;
+
+        // ① ALL ENEMY DEAD!（1秒）
+        phaseText.fontSize = 100;
+        phaseText.text = "ALL ENEMY DEAD!";
+        phaseText.gameObject.SetActive(true);
+
+        StartCoroutine(PopAnimation());
+
+        yield return new WaitForSeconds(1f);
+
+        phaseText.text = "CLEAR BONUS";
+
+        StartCoroutine(PopAnimation());
+
+        yield return new WaitForSeconds(1f);
+
+
+        // ② SCORE表示（1秒）
+        phaseText.text = $"SCORE: +{bonus}";
+
+        StartCoroutine(PopAnimation());
+
+        yield return new WaitForSeconds(1f);
 
         Hide();
     }

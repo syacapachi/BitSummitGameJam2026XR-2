@@ -34,6 +34,18 @@ public class NGameManager : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
 
+    public NetworkVariable<bool> allEnemyDeadEvent = new NetworkVariable<bool>(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    public NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(
+        0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
     public override void OnNetworkSpawn()
     {
         Debug.Log("GameManager OnNetworkSpawn : " + IsServer + " / " + IsClient);
@@ -124,7 +136,17 @@ public class NGameManager : NetworkBehaviour
 
     void EndPhase()
     {
-        // 最終フェーズか？
+        if (spawner.AllDead())
+        {
+            int bonus = phases[currentPhaseIndex].clearBonus;
+            AddScore(bonus);
+
+            lastClearBonus.Value = bonus;
+            StartCoroutine(AllDeadSequence());
+            return; // ←ここ重要（すぐ次に行かない）
+        }
+
+        // 通常進行
         if (currentPhaseIndex == phases.Length - 1)
         {
             StartCoroutine(EndPhaseWithCountdown());
@@ -135,6 +157,27 @@ public class NGameManager : NetworkBehaviour
         }
     }
 
+    private IEnumerator AllDeadSequence()
+    {
+        isCountingDown = true;
+
+        allEnemyDeadEvent.Value = true;
+
+        yield return new WaitForSeconds(3.1f);
+
+        allEnemyDeadEvent.Value = false;
+        isCountingDown = false;
+
+        // 次フェーズへ
+        if (currentPhaseIndex == phases.Length - 1)
+        {
+            StartCoroutine(EndPhaseWithCountdown());
+        }
+        else
+        {
+            StartNextPhase();
+        }
+    }
     private IEnumerator EndPhaseWithCountdown()
     {
         isCountingDown = true;
