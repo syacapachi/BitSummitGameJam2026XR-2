@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class NBulletImpactAudio : MonoBehaviour
 {
@@ -36,11 +36,11 @@ public class NBulletImpactAudio : MonoBehaviour
 
         if (hitEnemy)
         {
-            GameAudioManager.Instance?.PlayWorld(hitEnemyClipAll, pointAll, hitEnemyVolumeAll);
+            ManagerLocator.Instance.GameAudioManager?.PlayWorld(hitEnemyClipAll, pointAll, hitEnemyVolumeAll);
         }
         else
         {
-            GameAudioManager.Instance?.PlayWorld(hitWallClipAll, pointAll, hitWallVolumeAll);
+            ManagerLocator.Instance.GameAudioManager?.PlayWorld(hitWallClipAll, pointAll, hitWallVolumeAll);
         }
     }
 }

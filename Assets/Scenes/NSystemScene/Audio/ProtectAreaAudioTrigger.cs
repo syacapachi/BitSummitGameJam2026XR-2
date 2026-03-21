@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ProtectAreaAudioTrigger : MonoBehaviour
 {
@@ -20,6 +20,6 @@ public class ProtectAreaAudioTrigger : MonoBehaviour
             despawnAudioAll.MarkReachedGoalServer();
         }
 
-        GameAudioManager.Instance?.PlayWorld(reachClipAll, pointAll, reachVolumeAll);
+        ManagerLocator.Instance.GameAudioManager.PlayWorld(reachClipAll, pointAll, reachVolumeAll);
     }
 }

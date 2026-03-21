@@ -18,26 +18,21 @@ public class AmmoUI : MonoBehaviour
             Debug.LogError("Gun not assigned in AmmoUI!");
             return;
         }
-
-        gun.syncedAmmo.OnValueChanged += (_, value) => UpdateAmmoDisplay(value == 0);
-        gun.OnReloadingChanged += (_, isReloading) => 
-        { 
-            UpdateAmmoDisplay(isReloading);
-            if (isReloading) StartCoroutine(ReloadCorutune()); // リロード開始時に記録
-        };
-
-
-
         UpdateAmmoDisplay(false);
+    }
+    public void OnReloadChanged(bool isReloading)
+    {
+        UpdateAmmoDisplay(isReloading);
+        if (isReloading) StartCoroutine(ReloadCorutune()); // リロード開始時に記録
     }
 
     IEnumerator ReloadCorutune()
     {
         WaitForSeconds wait01 = new WaitForSeconds(0.1f);
         reloadBar.gameObject.SetActive(true); // 確実に表示
-        for (float t = 0; t < gun.weaponSettings.reloadTime; t += 0.1f)
+        for (float t = 0; t < gun.WeaponSettings.reloadTime; t += 0.1f)
         {
-            reloadBar.fillAmount = t / gun.weaponSettings.reloadTime;
+            reloadBar.fillAmount = t / gun.WeaponSettings.reloadTime;
             yield return wait01;
         }
         reloadBar.fillAmount = 0;
@@ -47,13 +42,13 @@ public class AmmoUI : MonoBehaviour
     {
         if (isReloading)
         {
-            ammoText.text = $"0 / {gun.weaponSettings.maxAmmo}";
+            ammoText.text = $"0 / {gun.WeaponSettings.maxAmmo}";
             ammoText.color = reloadingColor;
             reloadBar.gameObject.SetActive(true);
         }
         else
         {
-            ammoText.text = $"{gun.syncedAmmo.Value} / {gun.weaponSettings.maxAmmo}";
+            ammoText.text = $"{gun.AmmoVal} / {gun.WeaponSettings.maxAmmo}";
             ammoText.color = normalColor;
             reloadBar.gameObject.SetActive(false);
         }

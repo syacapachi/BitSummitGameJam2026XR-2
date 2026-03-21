@@ -13,5 +13,6 @@ public class WeaponSettingsSO : ScriptableObject
     public float laserDistance = 50f;
 
     [Header("Damage")]
-    public float damage = 1;
+    [SerializeField] float damage = 1;
+    public float Damage => damage;
 }

@@ -150,9 +150,9 @@ public class NBullet : NetworkBehaviour
                     // ダメージが通る
                     Debug.Log("Damage");
                     root.stats.AddHit();
-                    root.stats.AddDamage(gunSO.damage);
+                    root.stats.AddDamage(gunSO.Damage);
                     enemy.SetAttacker(shooterId);
-                    damageReciver.TakeDamage(gunSO.damage);
+                    damageReciver.TakeDamage(gunSO.Damage);
                     SpawnHitFxClientRpc(transform.position);
                 }
                 else

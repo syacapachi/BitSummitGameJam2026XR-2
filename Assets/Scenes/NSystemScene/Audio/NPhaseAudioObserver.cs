@@ -31,7 +31,7 @@ public class NPhaseAudioObserver : MonoBehaviour
     {
         if (newValue >= 0 && oldValue != newValue)
         {
-            GameAudioManager.Instance?.PlayUI(phaseChangeClipAll, phaseVolumeAll);
+            ManagerLocator.Instance.GameAudioManager?.PlayUI(phaseChangeClipAll, phaseVolumeAll);
         }
     }
 
@@ -39,7 +39,7 @@ public class NPhaseAudioObserver : MonoBehaviour
     {
         if (!oldValue && newValue)
         {
-            GameAudioManager.Instance?.PlayUI(gameClearClipAll, clearVolumeAll);
+            ManagerLocator.Instance.GameAudioManager?.PlayUI(gameClearClipAll, clearVolumeAll);
         }
     }
 }
