@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
 
-[RequireComponent(typeof(NGun))]
 [RequireComponent(typeof(AudioSource))]
 public class NGunAudioObserver : NetworkBehaviour
 {
@@ -11,12 +10,10 @@ public class NGunAudioObserver : NetworkBehaviour
     [SerializeField, Range(0f, 1f)] private float shotVolumeAll = 1f;
     [SerializeField, Range(0f, 1f)] private float reloadVolumeAll = 1f;
 
-    private NGun gunAll;
     private AudioSource audioSourceAll;
 
     private void Awake()
     {
-        gunAll = GetComponent<NGun>();
         audioSourceAll = GetComponent<AudioSource>();
 
         audioSourceAll.playOnAwake = false;
@@ -24,31 +21,12 @@ public class NGunAudioObserver : NetworkBehaviour
         audioSourceAll.spatialBlend = 1f;
     }
 
-    public override void OnNetworkSpawn()
+    public void PlayShotSound()
     {
-        gunAll.syncedAmmo.OnValueChanged += OnAmmoChanged;
-        gunAll.OnReloadingChanged += OnReloadChanged;
+        audioSourceAll.PlayOneShot(shotClipAll, shotVolumeAll);
     }
-
-    public override void OnNetworkDespawn()
+    public void PlayReloadSound()
     {
-        gunAll.syncedAmmo.OnValueChanged -= OnAmmoChanged;
-        gunAll.OnReloadingChanged -= OnReloadChanged;
-    }
-
-    private void OnAmmoChanged(int oldValue, int newValue)
-    {
-        if (oldValue > newValue && shotClipAll != null)
-        {
-            audioSourceAll.PlayOneShot(shotClipAll, shotVolumeAll);
-        }
-    }
-
-    private void OnReloadChanged(bool oldValue, bool newValue)
-    {
-        if (!oldValue && newValue && reloadClipAll != null)
-        {
-            audioSourceAll.PlayOneShot(reloadClipAll, reloadVolumeAll);
-        }
+        audioSourceAll.PlayOneShot(reloadClipAll, reloadVolumeAll);
     }
 }

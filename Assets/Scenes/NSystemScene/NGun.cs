@@ -8,30 +8,25 @@ using UnityEngine.InputSystem;
 using UnityEngine.Timeline;
 public class NGun : NetworkBehaviour
 {
-    public GameObject bulletPrefab;
-    public Transform firePoint;
-    public Transform markerPoint;
-    public LineRenderer laserLine;
+    [SerializeField] GameObject bulletPrefab;
+    [SerializeField] Transform firePoint;
+    [SerializeField] LineRenderer laserLine;
+    [SerializeField] NGunAudioObserver audioObserver;
+    [SerializeField] AmmoUI ammoUI;
 
+    [SerializeField] WeaponSettingsSO weaponSettings;
 
-    public WeaponSettingsSO weaponSettings;
-
-    [SerializeField] PlayerItemControll itemControll;
-    /// <summary>
-    /// サーバーのみ参照を持つフィールド。プレイヤーのマーカーオブジェクトを参照するために使用される。クライアントはこのフィールドを直接参照せず、RPCを介してマーカーの位置を更新する。
-    /// </summary>
-    [HideInInspector]public AttachableBehaviour playerMarker;
     [SerializeField] AttachableNode node;
     PlayerControls controls;
     InputAction fireAction;
-    InputAction markerAction;
+    
     float nextFire;
-    public NetworkVariable<int> syncedAmmo = new(0,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);
+    [SerializeField] NetworkVariable<int> syncedAmmo = new(0,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);
     private bool isReloading = false;
-    public event Action<bool,bool> OnReloadingChanged;
+    public WeaponSettingsSO WeaponSettings => weaponSettings;
 
-    private bool isMarkAttached = true;
-    private Coroutine markerCoroutine;
+    public int AmmoVal => syncedAmmo.Value;
+
     public float reloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
 
     private void OnEnable()
@@ -76,10 +71,10 @@ public class NGun : NetworkBehaviour
         if (IsOwner)
         {
             fireAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Fire"];
-            markerAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Marker"];
+            
 
             fireAction.performed += _ => ShootRpc();
-            markerAction.performed += _ => PlaceMarkerRpc();
+            
         }
     }
     protected override void OnNetworkPostSpawn()
@@ -87,10 +82,6 @@ public class NGun : NetworkBehaviour
         if (IsServer)
         {
             syncedAmmo.Value = weaponSettings.maxAmmo;
-            if (TryGetPlayerMarker())
-            {
-                playerMarker.gameObject.SetActive(false);
-            }
         }
     }
     public override void OnNetworkDespawn()
@@ -98,39 +89,9 @@ public class NGun : NetworkBehaviour
         if (IsOwner) 
         {
             fireAction.performed -= _ => ShootRpc();
-            markerAction.performed -= _ => PlaceMarkerRpc();
-        }
-        if(IsServer)
-        {
-            if (markerCoroutine != null)
-            {
-                StopCoroutine(markerCoroutine);
-            }
         }
     }
     
-    private bool TryGetPlayerMarker()
-    {
-        if (!IsServer) return false;
-        if (itemControll.TryGetItem("Marker", out NetworkBehaviourReference item))
-        {
-            if (item.TryGet(out NetworkBehaviour behaviour))
-            {
-                playerMarker = behaviour as AttachableBehaviour;
-                return playerMarker != null;
-            }
-            else
-            {
-                Debug.LogWarning("NetworkBehaviour item not found in PlayerItemControll.");
-                return false;
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Marker item not found in PlayerItemControll.");
-            return false;
-        }
-    }
     public override void OnLostOwnership()
     {
        controls?.Disable();
@@ -230,7 +191,8 @@ public class NGun : NetworkBehaviour
     private IEnumerator Reload()
     {
         isReloading = true;
-        OnReloadingChanged.Invoke(false, true);
+        audioObserver.PlayReloadSound();
+        ammoUI.OnReloadChanged(isReloading);
         Debug.Log("Reloading...");
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         var wait = new WaitForSeconds(weaponSettings.reloadTime);
@@ -238,76 +200,17 @@ public class NGun : NetworkBehaviour
 
         syncedAmmo.Value = weaponSettings.maxAmmo;
         isReloading = false;
-        OnReloadingChanged.Invoke(true, false);
+        ammoUI.OnReloadChanged(isReloading);
     }
     private void OnAmmoChanged(int oldVal, int newVal)
     {
+        ammoUI.OnReloadChanged(newVal == 0);
         if (isReloading) return;
         if (oldVal < newVal) return;
+        audioObserver.PlayShotSound();
         if (newVal <= 0)
         {
             StartCoroutine(Reload());
-        }
-    }
-
-    [Rpc(SendTo.Server)]
-    private void PlaceMarkerRpc()
-    {
-        Debug.Log("PlaceMarkerRpc called");
-        if (firePoint == null) return;
-        if (markerPoint == null) return;
-
-        if (playerMarker == null && !TryGetPlayerMarker())
-        {
-             Debug.LogWarning("Player marker not found. Cannot place marker.");
-             return;
-        }
-        
-        RaycastHit hit;
-        Vector3 forward = markerPoint.forward;
-
-        if (Physics.Raycast(markerPoint.position, forward, out hit, weaponSettings.laserDistance))
-        {
-            MoveMarkerClientRpc(hit.point);
-        }
-        isMarkAttached = false;
-    }
-
-    [Rpc(SendTo.Server)]
-    private void MoveMarkerClientRpc(Vector3 pos)
-    {
-        if (playerMarker == null && !TryGetPlayerMarker())
-        {
-            Debug.LogWarning("Player marker not found. Cannot place marker.");
-            return;
-        }
-
-        playerMarker.gameObject.SetActive(true);
-
-        if (isMarkAttached) 
-        { 
-            playerMarker.GetComponentInChildren<AttachableBehaviour>().Detach(); 
-        }
-        else
-        {
-            if(markerCoroutine != null)  
-                StopCoroutine(markerCoroutine);
-        }
-        playerMarker.gameObject.transform.position = pos;
-        markerCoroutine = StartCoroutine(MarkerBackCorutine());
-
-        //var renderer = playerMarker.GetComponent<MeshRenderer>();
-        //renderer.enabled = true;
-    }
-    private IEnumerator MarkerBackCorutine()
-    {
-        yield return new WaitForSeconds(5f);
-        if(playerMarker != null)
-        {
-            playerMarker.GetComponentInChildren<AttachableBehaviour>().Attach(node);
-            playerMarker.gameObject.transform.localPosition = Vector3.zero;
-            isMarkAttached = true;
-            playerMarker.gameObject.SetActive(false);
         }
     }
 }

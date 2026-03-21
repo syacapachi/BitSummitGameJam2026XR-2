@@ -8,6 +8,7 @@ public class ManagerLocator : MonoBehaviour
     [field:SerializeField] public PlayerManager AllPlayerManager { get; private set; }
     [field:SerializeField] public NGameManager AllGameManager { get; private set; }
     [field:SerializeField] public NetworkObjectPool AllObjectPool { get; private set; }
+    [field:SerializeField] public GameAudioManager GameAudioManager { get; private set; }
     void Awake()
     {
         if(Instance == null)

@@ -145,7 +145,7 @@ public class CharactorControll : NetworkBehaviour
             animator.SetFloat("Direction", moveInput.Value.x);
 
             //カメラの向きに応じた移動をするかどうかは、PlayerManagerのCameraSettingで管理する、サーバーに送るときに一緒に送る
-            MoveCharactor(moveInput.Value,ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.cameraSetting.IsMainCameraActive);
+            MoveCharactor(moveInput.Value);
         }
 
     }

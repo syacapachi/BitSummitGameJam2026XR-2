@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 
 public class NEnemyDespawnAudio : NetworkBehaviour
@@ -22,6 +22,6 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     {
         if (reachedGoal) return;
 
-        GameAudioManager.Instance?.PlayWorld(deathClipAll, transform.position, deathVolumeAll);
+        ManagerLocator.Instance.GameAudioManager?.PlayWorld(deathClipAll, transform.position, deathVolumeAll);
     }
 }

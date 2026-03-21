@@ -2,6 +2,7 @@
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MarkerController : NetworkBehaviour
 {
@@ -10,16 +11,24 @@ public class MarkerController : NetworkBehaviour
     [SerializeField] GameObject playerMarker;
     [SerializeField] AttachableNode node;
     [SerializeField] int laserDistance = 10;
+    [SerializeField] MarkerAudioController markerAudioController;
+    GameObject marker;
+    InputAction markerAction;
     bool isMarkAttached = true;
     Coroutine markerCoroutine;
     
-    
+    public override void OnNetworkSpawn()
+    {
+        if(!IsOwner) return;
+        markerAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Marker"];
+        markerAction.performed += _ => PlaceMarkerRpc();
+    }
     protected override void OnNetworkPostSpawn()
     {
         if (IsServer)
         {
-            playerMarker = GameObject.Instantiate(playerMarker);
-            var networkObject = playerMarker.GetComponent<NetworkObject>();
+            marker = GameObject.Instantiate(playerMarker);
+            var networkObject = marker.GetComponent<NetworkObject>();
             networkObject.SpawnWithOwnership(OwnerClientId);
         }
     }
@@ -31,6 +40,10 @@ public class MarkerController : NetworkBehaviour
             {
                 StopCoroutine(markerCoroutine);
             }
+        }
+        if (IsOwner)
+        {
+            markerAction.performed -= _ => PlaceMarkerRpc();
         }
     }
     [Rpc(SendTo.Server)]
@@ -45,6 +58,7 @@ public class MarkerController : NetworkBehaviour
         if (Physics.Raycast(firePoint.position, forward, out hit, laserDistance))
         {
             MoveMarkerClientRpc(hit.point);
+            markerAudioController.OnMarkerSondPlayRpc(hit.point);
         }
         isMarkAttached = false;
     }
@@ -52,16 +66,21 @@ public class MarkerController : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void MoveMarkerClientRpc(Vector3 pos)
     {
+        if (marker == null)
+        {
+            Debug.LogWarning("Player marker not found. Cannot place marker.");
+            return;
+        }
         if (isMarkAttached)
         {
-            playerMarker.GetComponentInChildren<AttachableBehaviour>().Detach();
+            marker.GetComponentInChildren<AttachableBehaviour>().Detach();
         }
         else
         {
             if (markerCoroutine != null)
                 StopCoroutine(markerCoroutine);
         }
-        playerMarker.transform.position = pos;
+        marker.transform.position = pos;
         markerCoroutine = StartCoroutine(MarkerBackCorutine());
 
         //var renderer = playerMarker.GetComponent<MeshRenderer>();
@@ -70,10 +89,10 @@ public class MarkerController : NetworkBehaviour
     private IEnumerator MarkerBackCorutine()
     {
         yield return new WaitForSeconds(5f);
-        if (playerMarker != null)
+        if (marker != null)
         {
-            playerMarker.GetComponentInChildren<AttachableBehaviour>().Attach(node);
-            playerMarker.transform.localPosition = Vector3.zero;
+            marker.GetComponentInChildren<AttachableBehaviour>().Attach(node);
+            marker.transform.localPosition = Vector3.zero;
             isMarkAttached = true;
         }
     }
