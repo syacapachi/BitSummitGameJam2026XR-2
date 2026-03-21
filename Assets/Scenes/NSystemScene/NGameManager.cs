@@ -9,7 +9,7 @@ public class NGameManager : NetworkBehaviour
     public float timer;
 
     public NEnemySpawner spawner;
-    public NetworkVariable<int> score = new NetworkVariable<int>(0);
+    public NetworkVariable<int> score = new NetworkVariable<int>(10000);
 
     public GameObject protectArea;
     private bool isEnemycome = false;
@@ -46,6 +46,12 @@ public class NGameManager : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
 
+    public NetworkVariable<bool> isGameOver = new NetworkVariable<bool>(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
     public override void OnNetworkSpawn()
     {
         Debug.Log("GameManager OnNetworkSpawn : " + IsServer + " / " + IsClient);
@@ -72,6 +78,7 @@ public class NGameManager : NetworkBehaviour
         if (currentPhaseIndex >= phases.Length) return;
         if (isCountingDown) return;
         if (!gameStarted) return;
+        if (IsGameFinished.Value) return; 
 
         timer -= Time.deltaTime;
 
@@ -99,7 +106,6 @@ public class NGameManager : NetworkBehaviour
             if (IsServer)
             {
                 Debug.Log("Game Finished");
-                IsGameFinished.Value = true;
             }
 
             return;
@@ -136,6 +142,13 @@ public class NGameManager : NetworkBehaviour
 
     void EndPhase()
     {
+        // 通常進行
+        if (currentPhaseIndex == phases.Length - 1)
+        {
+            StartCoroutine(EndPhaseWithCountdown());
+        }
+        else
+        {
         if (spawner.AllDead())
         {
             int bonus = phases[currentPhaseIndex].clearBonus;
@@ -145,14 +158,6 @@ public class NGameManager : NetworkBehaviour
             StartCoroutine(AllDeadSequence());
             return; // ←ここ重要（すぐ次に行かない）
         }
-
-        // 通常進行
-        if (currentPhaseIndex == phases.Length - 1)
-        {
-            StartCoroutine(EndPhaseWithCountdown());
-        }
-        else
-        {
             StartNextPhase();
         }
     }
@@ -201,12 +206,13 @@ public class NGameManager : NetworkBehaviour
         IsGameFinished.Value = true; // ここでFINISH表示
 
         isCountingDown = false;
+
         StartNextPhase();
     }
 
     public void EnemyKilled(int scoreValue)
     {
-        AddScore(scoreValue);
+        //AddScore(scoreValue);
         spawner.EnemyKilled();
     }
 
@@ -215,11 +221,24 @@ public class NGameManager : NetworkBehaviour
         if (value > 0) Debug.Log("Add Score");
         else
         {
-            if(score.Value <= 0) return;
             Debug.Log("Subtract Score");
         }
+
         score.Value += value;
-        Debug.Log("Score: " + score);
+
+        // 👇 下限を0に固定（おすすめ）
+        if (score.Value < 0)
+        {
+            score.Value = 0;
+        }
+
+        Debug.Log("Score: " + score.Value);
+
+        // 🔥 ゲームオーバー判定
+        if (score.Value <= 0 && !isGameOver.Value)
+        {
+            StartGameOver();
+        }
     }
 
     public void Enemycome()
@@ -250,4 +269,22 @@ public class NGameManager : NetworkBehaviour
     {
         isBulletCome.Value = false;
     }
-}
+
+    void StartGameOver()
+    {
+        if (!IsServer) return;
+
+        Debug.Log("GAME OVER");
+        isGameOver.Value = true;
+        IsGameFinished.Value = true;
+
+        StopAllCoroutines(); // ← これ重要（カウントダウン等止める）
+
+        isCountingDown = false;
+
+        // 必要なら敵停止
+        // spawner.StopAllEnemies();
+
+        // 必要ならここでUIイベント用フラグも出せる
+    }
+    }
