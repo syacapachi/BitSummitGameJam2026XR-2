@@ -15,17 +15,22 @@ MonoBehaviour:
   phaseDisplayName: Phase3
   phaseTime: 120
   clearBonus: 2000
-  spawnList:
+  spawnEvents:
   - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
-    count: 2
+    spawnPointIndex: 3
+    spawnTime: 0
+  - enemyType: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
+    spawnPointIndex: 4
+    spawnTime: 5
   - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
-    count: 3
+    spawnPointIndex: 6
+    spawnTime: 8
+  - enemyType: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
+    spawnPointIndex: 8
+    spawnTime: 10
   - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
-    count: 4
+    spawnPointIndex: 7
+    spawnTime: 12
   - enemyType: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
-    count: 2
-  - enemyType: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
-    count: 3
-  - enemyType: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
-    count: 4
-  usableSpawnPointIndex: 000000000100000002000000030000000400000005000000060000000700000008000000
+    spawnPointIndex: 1
+    spawnTime: 15
