@@ -36,7 +36,7 @@ public class ScoreUI : MonoBehaviour
 
     void UpdateScore(int value)
     {
-        scoreText.text = "Score : " + value;
+        scoreText.text = "HP : " + value;
     }
 
     void OnDestroy()
