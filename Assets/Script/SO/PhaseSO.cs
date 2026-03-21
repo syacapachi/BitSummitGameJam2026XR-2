@@ -10,16 +10,14 @@ public class PhaseSO : ScriptableObject
     public float phaseTime = 30f;
     public int clearBonus = 500;
 
-    [Header("Spawn Settings")]
-    public SpawnData[] spawnList;
-
-    [Header("Spawn Point Index")]
-    public int[] usableSpawnPointIndex;
+    [Header("Spawn Events")]
+    public SpawnEvent[] spawnEvents;  // ←ここを変更
 }
 
 [System.Serializable]
-public class SpawnData
+public class SpawnEvent
 {
-    public EnemySO enemyType;
-    public int count;
+    public EnemySO enemyType;   // 敵の種類
+    public int spawnPointIndex; // 出現位置
+    public float spawnTime;     // 何秒後に出るか（phase開始から）
 }
