@@ -1708,6 +1708,7 @@ MonoBehaviour:
   <AllGameManager>k__BackingField: {fileID: 1984684209}
   <AllObjectPool>k__BackingField: {fileID: 816126072}
   <GameAudioManager>k__BackingField: {fileID: 1643497426}
+  <RankingManager>k__BackingField: {fileID: 0}
 --- !u!4 &139674650
 Transform:
   m_ObjectHideFlags: 0
@@ -8982,6 +8983,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Start
       objectReference: {fileID: 0}
+    - target: {fileID: 4471442318175890035, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4987593252431869254, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 4151903342
@@ -11965,6 +11970,10 @@ PrefabInstance:
     - target: {fileID: 4381784527097591291, guid: cf69d66c55f6ffa4aae97d7a75fa6b10, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4569996199382590487, guid: cf69d66c55f6ffa4aae97d7a75fa6b10, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4598128995458334785, guid: cf69d66c55f6ffa4aae97d7a75fa6b10, type: 3}
       propertyPath: m_Layer
@@ -18812,6 +18821,15 @@ MonoBehaviour:
   HostButton: {fileID: 570183183}
   ClientButton: {fileID: 1673578765}
   ExitButton: {fileID: 291595870}
+  DiscoveryButton: {fileID: 0}
+  StopDiscoveryButton: {fileID: 0}
+  connectionButtonPrefab: {fileID: 0}
+  canvasTransfrom: {fileID: 0}
+  m_Discovery: {fileID: 0}
+  OnClientStart:
+    m_PersistentCalls:
+      m_Calls: []
+  DrawOffset: {x: 10, y: 210}
 --- !u!4 &1832796217
 Transform:
   m_ObjectHideFlags: 0
@@ -20889,7 +20907,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6811614544963947594, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7695892081647557190, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       propertyPath: m_Layer
@@ -20929,18 +20947,27 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2746559381913861947, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2078580357}
+    - targetCorrespondingSourceObject: {fileID: 2746559381913861947, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
     - targetCorrespondingSourceObject: {fileID: 4928714325516746004, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2078580355}
     - targetCorrespondingSourceObject: {fileID: 4928714325516746004, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2078580354}
+    - targetCorrespondingSourceObject: {fileID: 4928714325516746004, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
     - targetCorrespondingSourceObject: {fileID: 3884855689869046039, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       insertIndex: -1
       addedObject: {fileID: 375226139}
     - targetCorrespondingSourceObject: {fileID: 3884855689869046039, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       insertIndex: -1
       addedObject: {fileID: 375226138}
+    - targetCorrespondingSourceObject: {fileID: 3884855689869046039, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
 --- !u!224 &2078580347 stripped
 RectTransform:

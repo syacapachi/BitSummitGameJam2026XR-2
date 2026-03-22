@@ -42,11 +42,11 @@ public class StartButton : NetworkBehaviour
     {
         Debug.Log("[Start Game Rpc]");
         ManagerLocator.Instance.AllGameManager.StartGame();
-        HideUIClientRpc();
+        HideUIRpc();
     }
 
-    [ClientRpc]
-    void HideUIClientRpc()
+    [Rpc(SendTo.NotServer)]
+    void HideUIRpc()
     {
         startUI.SetActive(false);
         humanUI.SetActive(false);
