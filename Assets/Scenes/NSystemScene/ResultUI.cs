@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using Unity.Netcode;
 using System.Collections;
@@ -16,7 +16,6 @@ public class ResultUI : MonoBehaviour
         // GameManager待機
         while (ManagerLocator.Instance.AllGameManager == null)
         {
-            Debug.Log("GameManager待機中...");
             yield return null;
         }
 
@@ -32,13 +31,11 @@ public class ResultUI : MonoBehaviour
         panel.SetActive(false);
 
         // イベント登録
-        nGameManager.IsGameFinished.OnValueChanged += OnGameFinished;
+        nGameManager.OnGameEnd += OnGameFinished;
     }
 
-    void OnGameFinished(bool oldValue, bool newValue)
+    void OnGameFinished()
     {
-        if (!newValue) return;
-
         ShowResult();
     }
 
@@ -64,13 +61,13 @@ void ShowResult()
     resultText.text =
         $"SCORE : {score}\n" +
         $"BONUS : {bonus}";
-}
+    }
 
     void OnDestroy()
     {
         if (nGameManager != null)
         {
-            nGameManager.IsGameFinished.OnValueChanged -= OnGameFinished;
+            nGameManager.OnGameEnd -= OnGameFinished;
         }
     }
 }

@@ -17,7 +17,6 @@ public class NGameManager : NetworkBehaviour
     private bool isEnemycome = false;
 
     public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
-    public NetworkVariable<bool> IsGameFinished = new NetworkVariable<bool>(false);
     bool gameStarted = false;
     public bool IsGameStart => gameStarted;
     public NetworkVariable<bool> isBulletCome = new NetworkVariable<bool>(
@@ -56,6 +55,7 @@ public class NGameManager : NetworkBehaviour
     );
 
     public event Action OnGameEnd;
+    public event Action<int> OnPhaseChange;
 
     public override void OnNetworkSpawn()
     {
@@ -83,7 +83,6 @@ public class NGameManager : NetworkBehaviour
         if (currentPhaseIndex >= phases.Length) return;
         if (isCountingDown) return;
         if (!gameStarted) return;
-        if (IsGameFinished.Value) return; 
 
         timer -= Time.deltaTime;
 
@@ -205,7 +204,7 @@ public class NGameManager : NetworkBehaviour
 
         Debug.Log("FINISH!");
 
-        IsGameFinished.Value = true; // ここでFINISH表示
+        OnGameEnd.Invoke();
 
         isCountingDown = false;
 
@@ -278,7 +277,7 @@ public class NGameManager : NetworkBehaviour
 
         Debug.Log("GAME OVER");
         isGameOver.Value = true;
-        IsGameFinished.Value = true;
+        OnGameEnd.Invoke();
 
         StopAllCoroutines(); // ← これ重要（カウントダウン等止める）
 
@@ -288,6 +287,6 @@ public class NGameManager : NetworkBehaviour
         // spawner.StopAllEnemies();
 
         // 必要ならここでUIイベント用フラグも出せる
-        OnGameEnd.Invoke();
+        
     }
 }

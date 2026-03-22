@@ -40,6 +40,11 @@ namespace Syacapachi.Editor
                     // フォント等がメインスレッド依存で失敗するケースを安全に握りつぶす
                     Debug.LogWarning($"[EnableIfDrawer] PropertyField skipped due to UnityException: {e.Message}");
                 }
+                catch (ExitGUIException)
+                {
+                    // これはUnityの正常動作なのでそのまま投げ直す
+                    throw;
+                }
                 catch (Exception ex)
                 {
                     Debug.LogError($"[EnableIfDrawer] Unexpected error drawing property: {ex}");

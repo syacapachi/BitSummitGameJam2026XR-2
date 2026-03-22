@@ -12,7 +12,6 @@ public class PhaseUI : MonoBehaviour
     {
         while (ManagerLocator.Instance.AllGameManager == null)
         {
-            Debug.Log("GameManager待機中...");
             yield return null;
         }
 
@@ -31,7 +30,7 @@ public class PhaseUI : MonoBehaviour
         OnCountdownChanged(0, nGameManager.countdownValue.Value);
 
         nGameManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
-        nGameManager.IsGameFinished.OnValueChanged += OnGameFinishedChanged;
+        nGameManager.OnGameEnd += OnGameFinishedChanged;
         nGameManager.countdownValue.OnValueChanged += OnCountdownChanged;
         nGameManager.allEnemyDeadEvent.OnValueChanged += OnAllEnemyDead;
         //nGameManager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
@@ -71,10 +70,8 @@ public class PhaseUI : MonoBehaviour
     }
     */
 
-    public void OnGameFinishedChanged(bool oldValue, bool newValue)
+    public void OnGameFinishedChanged()
     {
-        if (!newValue) return;
-
         StopAllCoroutines(); // 他の表示を止める
 
         phaseText.fontMaterial.SetFloat("_UnderlayOffsetX", 0f);

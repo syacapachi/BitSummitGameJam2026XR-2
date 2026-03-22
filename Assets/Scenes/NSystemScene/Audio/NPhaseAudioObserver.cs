@@ -16,7 +16,7 @@ public class NPhaseAudioObserver : MonoBehaviour
         if (managerAll == null) return;
 
         managerAll.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
-        managerAll.IsGameFinished.OnValueChanged += OnGameFinishedChanged;
+        managerAll.OnGameEnd += OnGameFinished;
     }
 
     private void OnDestroy()
@@ -24,7 +24,7 @@ public class NPhaseAudioObserver : MonoBehaviour
         if (managerAll == null) return;
 
         managerAll.syncedPhaseIndex.OnValueChanged -= OnPhaseChanged;
-        managerAll.IsGameFinished.OnValueChanged -= OnGameFinishedChanged;
+        managerAll.OnGameEnd -= OnGameFinished;
     }
 
     private void OnPhaseChanged(int oldValue, int newValue)
@@ -35,11 +35,8 @@ public class NPhaseAudioObserver : MonoBehaviour
         }
     }
 
-    private void OnGameFinishedChanged(bool oldValue, bool newValue)
+    private void OnGameFinished()
     {
-        if (!oldValue && newValue)
-        {
-            ManagerLocator.Instance.GameAudioManager?.PlayUI(gameClearClipAll, clearVolumeAll);
-        }
+        ManagerLocator.Instance.GameAudioManager?.PlayUI(gameClearClipAll, clearVolumeAll);
     }
 }
