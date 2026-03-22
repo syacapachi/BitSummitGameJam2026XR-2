@@ -37,20 +37,21 @@ public class SyncronizeSetting : NetworkBehaviour
             rightHand.SetActive(true);
             leftController.SetActive(true);
             rightController.SetActive(true);
-            // DisableMeshRenderer(networkLeftHand);
-            // DisableMeshRenderer(networkRightHand);
-            // DisableMeshRenderer(networkLeftController);
-            // DisableMeshRenderer(networkRightController);
+            DisableMeshRenderer(networkLeftHand);
+            DisableMeshRenderer(networkRightHand);
+            DisableMeshRenderer(networkLeftController);
+            DisableMeshRenderer(networkRightController);
             DisableMeshRenderer(avatorRootTransfrom.gameObject);
             StartCoroutine(WaitForStable());
         }
         else
+        
         {
-            xrOrigin.gameObject.SetActive(false);
-            DisableComponentAndObject(leftHand);
-            DisableComponentAndObject(rightHand);
-            DisableComponentAndObject(leftController);
-            DisableComponentAndObject(rightController);
+            // xrOrigin.gameObject.SetActive(false);
+            // DisableComponentAndObject(leftHand);
+            // DisableComponentAndObject(rightHand);
+            // DisableComponentAndObject(leftController);
+            // DisableComponentAndObject(rightController);
         }
     }
     public override void OnNetworkDespawn()
