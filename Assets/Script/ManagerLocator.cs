@@ -1,4 +1,5 @@
 ﻿using Netcode.Extensions;
+using Unity.Netcode;
 using UnityEngine;
 using Yokoyama.Manager;
 
@@ -6,6 +7,7 @@ public class ManagerLocator : MonoBehaviour
 {
     public static ManagerLocator Instance;
 
+    [field:SerializeField] public NetworkManager NetworkManager { get; private set; }
     [field:SerializeField] public PlayerManager AllPlayerManager { get; private set; }
     [field:SerializeField] public NGameManager AllGameManager { get; private set; }
     [field:SerializeField] public NetworkObjectPool AllObjectPool { get; private set; }

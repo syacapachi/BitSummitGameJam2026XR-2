@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net;
 using TMPro;
 using Unity.Netcode;
@@ -21,12 +22,26 @@ public class Scripts : MonoBehaviour
     [SerializeField] Button StopDiscoveryButton;
     [SerializeField] GameObject connectionButtonPrefab;
     [SerializeField] Transform canvasTransfrom;
-    Queue<Button> connectionButtonUnActiveQueue = new();
-    Queue<Button> connectionButtonActiveQueue = new();
-    private bool isSearching = false;
-    [SerializeField]
-    MyNetworkDiscovery m_Discovery;
+    readonly Queue<Button> connectionButtonUnActiveQueue = new();
+    readonly Queue<Button> connectionButtonActiveQueue = new();
+    [SerializeField] MyNetworkDiscovery m_Discovery;
+    [SerializeField] UnityTransport transport;
     private bool isNetworkStarted = false;
+    [SerializeField]NetworkManager m_NetworkManager;
+
+    readonly Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
+    public UnityEvent OnClientStart = new UnityEvent();
+
+    public Vector2 DrawOffset = new Vector2(10, 210);
+
+    void Awake()
+    {
+        m_NetworkManager ??= ManagerLocator.Instance.NetworkManager;
+        m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
+        m_Discovery.OnServerFound.AddListener(OnServerFound);
+
+    }
+
     private void Start()
     {
         ServerButton.onClick.AddListener(OnStartServer);
@@ -47,21 +62,6 @@ public class Scripts : MonoBehaviour
         StopDiscoveryButton.gameObject.SetActive(false);
     }
     
-
-    NetworkManager m_NetworkManager;
-
-    Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
-    public UnityEvent OnClientStart = new UnityEvent();
-
-    public Vector2 DrawOffset = new Vector2(10, 210);
-
-    void Awake()
-    {
-        m_NetworkManager = NetworkManager.Singleton;
-        m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
-        m_Discovery.OnServerFound.AddListener(OnServerFound);
-        
-    }
     private void OnStartServer()
     {
         NetworkManager.Singleton.StartServer();
@@ -100,10 +100,9 @@ public class Scripts : MonoBehaviour
                 Debug.Log("Client Stopped");
             }
             isNetworkStarted = false;
-            ServerButton.gameObject.SetActive(true);
-            HostButton.gameObject.SetActive(true);
-            ClientButton.gameObject.SetActive(true);
-            ExitButton.gameObject.SetActive(false);
+            SetActiveButtons(true);
+
+
         }
         else
         {
@@ -113,37 +112,37 @@ public class Scripts : MonoBehaviour
     public void OnNetworkStart()
     {
         isNetworkStarted = true;
-        ServerButton.gameObject.SetActive(false);
-        HostButton.gameObject.SetActive(false);
-        ClientButton.gameObject.SetActive(false);
-        ExitButton.gameObject.SetActive(true);
+        SetActiveButtons(false);   
+    }
+    private void SetActiveButtons(bool active)
+    {
+        ServerButton.gameObject.SetActive(active);
+        HostButton.gameObject.SetActive(active);
+        ClientButton.gameObject.SetActive(active);
+        DiscoveryButton.gameObject.SetActive(active);
+
+        ExitButton.gameObject.SetActive(!active);
     }
     private void StartDiscover()
     {
         if (m_Discovery.IsRunning)
         {
-            if (!isSearching)
-            {
-                discovertext.text = "Refresh List";
-                StopDiscoveryButton.gameObject.SetActive(true);
-                m_Discovery.StartClient();
-                m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
-                isSearching = true;
-            }
-            else
-            {
                 RefreshList();
-                m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
-            }
         }
+        else
+        {
+            discovertext.text = "Refresh List";
+            StopDiscoveryButton.gameObject.SetActive(true);
+            m_Discovery.StartClient();
+        }
+        m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
     }
     private void StopDiscovery()
     {
-        discovertext.text = "Discover Servers";
-        isSearching = false;
+        discovertext.text = "Discover";
         m_Discovery.StopDiscovery();
         RefreshList();
-
+        StopDiscoveryButton.gameObject.SetActive(false);
 
     }
     private void RefreshList()
@@ -171,15 +170,17 @@ public class Scripts : MonoBehaviour
             button = obj.GetComponent<Button>();
             connectionButtonActiveQueue.Enqueue(button);
         }
-        button.GetComponent<TextMeshProUGUI>().text = $"{response.ServerName}[{sender}]";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = $"{response.ServerName}[{sender}]";
         button.onClick.AddListener(() => ConnectedToServer(sender.ToString(), response.Port));
         button.gameObject.SetActive(true);
     }
     private void ConnectedToServer(string address,ushort port)
     {
-        UnityTransport transport = (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
+        transport ??= (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
         transport.SetConnectionData(address, port);
         m_NetworkManager.StartClient();
         OnClientStart.Invoke();
+        OnNetworkStart();
+        StopDiscoveryButton.gameObject.SetActive(false);
     }
 }
