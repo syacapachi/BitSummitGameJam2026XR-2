@@ -27,6 +27,21 @@ public class Scripts : MonoBehaviour
     [SerializeField]
     MyNetworkDiscovery m_Discovery;
     private bool isNetworkStarted = false;
+    NetworkManager m_NetworkManager;
+
+    Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
+    public UnityEvent OnClientStart = new UnityEvent();
+
+    public Vector2 DrawOffset = new Vector2(10, 210);
+
+    void Awake()
+    {
+        m_NetworkManager = NetworkManager.Singleton;
+        m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
+        m_Discovery.OnServerFound.AddListener(OnServerFound);
+
+    }
+
     private void Start()
     {
         ServerButton.onClick.AddListener(OnStartServer);
@@ -47,21 +62,6 @@ public class Scripts : MonoBehaviour
         StopDiscoveryButton.gameObject.SetActive(false);
     }
     
-
-    NetworkManager m_NetworkManager;
-
-    Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
-    public UnityEvent OnClientStart = new UnityEvent();
-
-    public Vector2 DrawOffset = new Vector2(10, 210);
-
-    void Awake()
-    {
-        m_NetworkManager = NetworkManager.Singleton;
-        m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
-        m_Discovery.OnServerFound.AddListener(OnServerFound);
-        
-    }
     private void OnStartServer()
     {
         NetworkManager.Singleton.StartServer();
@@ -127,19 +127,18 @@ public class Scripts : MonoBehaviour
                 discovertext.text = "Refresh List";
                 StopDiscoveryButton.gameObject.SetActive(true);
                 m_Discovery.StartClient();
-                m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
                 isSearching = true;
             }
             else
             {
                 RefreshList();
-                m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
             }
+            m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
         }
     }
     private void StopDiscovery()
     {
-        discovertext.text = "Discover Servers";
+        discovertext.text = "Discover";
         isSearching = false;
         m_Discovery.StopDiscovery();
         RefreshList();
@@ -181,5 +180,6 @@ public class Scripts : MonoBehaviour
         transport.SetConnectionData(address, port);
         m_NetworkManager.StartClient();
         OnClientStart.Invoke();
+        OnNetworkStart();
     }
 }
