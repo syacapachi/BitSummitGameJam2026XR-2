@@ -100,10 +100,9 @@ public class Scripts : MonoBehaviour
                 Debug.Log("Client Stopped");
             }
             isNetworkStarted = false;
-            ServerButton.gameObject.SetActive(true);
-            HostButton.gameObject.SetActive(true);
-            ClientButton.gameObject.SetActive(true);
-            ExitButton.gameObject.SetActive(false);
+            SetActiveButtons(true);
+
+
         }
         else
         {
@@ -113,10 +112,16 @@ public class Scripts : MonoBehaviour
     public void OnNetworkStart()
     {
         isNetworkStarted = true;
-        ServerButton.gameObject.SetActive(false);
-        HostButton.gameObject.SetActive(false);
-        ClientButton.gameObject.SetActive(false);
-        ExitButton.gameObject.SetActive(true);
+        SetActiveButtons(false);   
+    }
+    private void SetActiveButtons(bool active)
+    {
+        ServerButton.gameObject.SetActive(active);
+        HostButton.gameObject.SetActive(active);
+        ClientButton.gameObject.SetActive(active);
+        DiscoveryButton.gameObject.SetActive(active);
+
+        ExitButton.gameObject.SetActive(!active);
     }
     private void StartDiscover()
     {
@@ -142,7 +147,7 @@ public class Scripts : MonoBehaviour
         isSearching = false;
         m_Discovery.StopDiscovery();
         RefreshList();
-
+        StopDiscoveryButton.gameObject.SetActive(false);
 
     }
     private void RefreshList()
@@ -181,5 +186,6 @@ public class Scripts : MonoBehaviour
         m_NetworkManager.StartClient();
         OnClientStart.Invoke();
         OnNetworkStart();
+        StopDiscoveryButton.gameObject.SetActive(false);
     }
 }
