@@ -23,7 +23,6 @@ public class Scripts : MonoBehaviour
     [SerializeField] Transform canvasTransfrom;
     Queue<Button> connectionButtonUnActiveQueue = new();
     Queue<Button> connectionButtonActiveQueue = new();
-    private bool isSearching = false;
     [SerializeField]
     MyNetworkDiscovery m_Discovery;
     private bool isNetworkStarted = false;
@@ -127,24 +126,19 @@ public class Scripts : MonoBehaviour
     {
         if (m_Discovery.IsRunning)
         {
-            if (!isSearching)
-            {
-                discovertext.text = "Refresh List";
-                StopDiscoveryButton.gameObject.SetActive(true);
-                m_Discovery.StartClient();
-                isSearching = true;
-            }
-            else
-            {
                 RefreshList();
-            }
-            m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
         }
+        else
+        {
+            discovertext.text = "Refresh List";
+            StopDiscoveryButton.gameObject.SetActive(true);
+            m_Discovery.StartClient();
+        }
+        m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
     }
     private void StopDiscovery()
     {
         discovertext.text = "Discover";
-        isSearching = false;
         m_Discovery.StopDiscovery();
         RefreshList();
         StopDiscoveryButton.gameObject.SetActive(false);
