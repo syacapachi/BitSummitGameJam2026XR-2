@@ -87,34 +87,34 @@ public class SyncronizeSetting : NetworkBehaviour
     /// <summary>
     /// アニメーションがある場合は、全ての適応後に更新
     /// </summary>
-    private void LateUpdate()
-    {
-        if (IsOwner && canUpdate)
-        {
-            //ルートの移動（重要）
+    // private void LateUpdate()
+    // {
+    //     if (IsOwner && canUpdate)
+    //     {
+    //         //ルートの移動（重要）
 
-            Vector3 offset = xrOrigin.Camera.transform.position - playerRootTransfrom.position;
-            offset.y = 0;//高さの影響を消す(埋まり防止)
-            if (!IsValid(offset)) return;
-            playerRootTransfrom.position += offset;
-            xrOrigin.transform.position -= offset;
+    //         Vector3 offset = xrOrigin.Camera.transform.position - playerRootTransfrom.position;
+    //         offset.y = 0;//高さの影響を消す(埋まり防止)
+    //         if (!IsValid(offset)) return;
+    //         playerRootTransfrom.position += offset;
+    //         xrOrigin.transform.position -= offset;
 
-            // if(Mathf.Abs(xrOrigin.transform.localRotation.eulerAngles.y) > 0.01f)
-            // {
-            //     playerRootTransfrom.rotation = xrOrigin.transform.rotation;
-            //     xrOrigin.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            // }
-            // //頭の角度
-            // Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
-            // networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
+    //         if(Mathf.Abs(xrOrigin.transform.localRotation.eulerAngles.y) > 0.01f)
+    //         {
+    //             playerRootTransfrom.rotation = xrOrigin.transform.rotation;
+    //             xrOrigin.transform.localRotation = Quaternion.Euler(Vector3.zero);
+    //         }
+    //         //頭の角度
+    //         Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
+    //         networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
 
-            // //手・コントローラー
-            // networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
-            // networkRightHand.transform.SetPositionAndRotation(rightHand.transform.position, rightHand.transform.rotation);
-            // networkLeftController.transform.SetPositionAndRotation(leftController.transform.position, leftController.transform.rotation);
-            // networkRightController.transform.SetPositionAndRotation(rightController.transform.position, rightController.transform.rotation);
-        }
-    }
+    //         //手・コントローラー
+    //         networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
+    //         networkRightHand.transform.SetPositionAndRotation(rightHand.transform.position, rightHand.transform.rotation);
+    //         networkLeftController.transform.SetPositionAndRotation(leftController.transform.position, leftController.transform.rotation);
+    //         networkRightController.transform.SetPositionAndRotation(rightController.transform.position, rightController.transform.rotation);
+    //     }
+    // }
     private bool IsValid(Vector3 v)
     {
         return !(float.IsNaN(v.x) || float.IsInfinity(v.x) ||
