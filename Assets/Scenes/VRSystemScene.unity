@@ -335,11 +335,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10527855}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &29640988 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2422005359530234837, guid: 742129f94e3254d4983970650df3d114, type: 3}
-  m_PrefabInstance: {fileID: 1362682977}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &30932655
 GameObject:
   m_ObjectHideFlags: 0
@@ -1717,7 +1712,6 @@ GameObject:
   m_Component:
   - component: {fileID: 139674650}
   - component: {fileID: 139674649}
-  - component: {fileID: 139674651}
   m_Layer: 0
   m_Name: ManagerLocator
   m_TagString: Untagged
@@ -1737,6 +1731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f3a920fc619b8b4daa239736f59ace6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <NetworkManager>k__BackingField: {fileID: 1574143871}
   <AllPlayerManager>k__BackingField: {fileID: 821111548}
   <AllGameManager>k__BackingField: {fileID: 1984684209}
   <AllObjectPool>k__BackingField: {fileID: 816126072}
@@ -1762,20 +1757,6 @@ Transform:
   - {fileID: 252533591}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &139674651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 139674648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21fcd091169742f4d985b39b94d84572, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  gameManagerPrefab: {fileID: 29640988}
 --- !u!1 &147293014
 GameObject:
   m_ObjectHideFlags: 0
@@ -9178,16 +9159,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1034261712267131075, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 7791681627042101996, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 2138670041498482415, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
 --- !u!4 &943240062 stripped
 Transform:
@@ -19070,6 +19042,8 @@ MonoBehaviour:
   connectionButtonPrefab: {fileID: 0}
   canvasTransfrom: {fileID: 0}
   m_Discovery: {fileID: 0}
+  transport: {fileID: 0}
+  m_NetworkManager: {fileID: 0}
   OnClientStart:
     m_PersistentCalls:
       m_Calls: []
@@ -20085,7 +20059,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
   m_PrefabInstance: {fileID: 1362682977}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 29640988}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec26cde7e4af716439d45a2ee7efea5a, type: 3}

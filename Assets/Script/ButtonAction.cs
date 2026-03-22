@@ -27,7 +27,7 @@ public class Scripts : MonoBehaviour
     [SerializeField] MyNetworkDiscovery m_Discovery;
     [SerializeField] UnityTransport transport;
     private bool isNetworkStarted = false;
-    NetworkManager m_NetworkManager;
+    [SerializeField]NetworkManager m_NetworkManager;
 
     readonly Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
     public UnityEvent OnClientStart = new UnityEvent();
@@ -36,7 +36,7 @@ public class Scripts : MonoBehaviour
 
     void Awake()
     {
-        m_NetworkManager = NetworkManager.Singleton;
+        m_NetworkManager ??= ManagerLocator.Instance.NetworkManager;
         m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);
 

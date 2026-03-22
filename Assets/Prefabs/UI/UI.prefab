@@ -588,6 +588,8 @@ MonoBehaviour:
   connectionButtonPrefab: {fileID: 5832469320842144106, guid: 991ced9450cd1bd438d3b5bac9d90b9b, type: 3}
   canvasTransfrom: {fileID: 6672097165613412381}
   m_Discovery: {fileID: 0}
+  transport: {fileID: 0}
+  m_NetworkManager: {fileID: 0}
   OnClientStart:
     m_PersistentCalls:
       m_Calls: []
@@ -1444,7 +1446,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 300, y: 200}
+  m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &2183212114285007308
 Canvas:
