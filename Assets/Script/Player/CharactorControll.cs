@@ -12,6 +12,7 @@ public class CharactorControll : NetworkBehaviour
      * NetworkAnimator Authority Mode ->  Owner
      */
     [SerializeField] Transform playerRootTransform;
+    [SerializeField] Camera playercamera;
     [SerializeField] Rigidbody charactorRigidbody;
     [SerializeField] GameObject bombPrefab;
     [SerializeField] Animator animator;
@@ -153,21 +154,14 @@ public class CharactorControll : NetworkBehaviour
     //サーバーで実行される関数(名前にServerRpcを付ける) 呼び出せるのはオーナー のみ
     //プレイヤーの移動をサーバーで処理する
     //NetworkTransform(Server Authority Mode)は、Serverの位置をクライアントに同期するので、サーバーに送る必要がある
-    private void MoveCharactor(Vector2 inputVector,bool isWorldSpace = false)
+    private void MoveCharactor(Vector2 inputVector)
     {
         //Debug.Log($"Catch {inputVector}");
         //クライアントから送られた入力をもとに、サーバー側でキャラクターを移動させる
         Vector3 move = new Vector3(inputVector.x, 0, inputVector.y);
         
-        if (isWorldSpace)
-        {
-            playerRootTransform.Translate(move * Time.deltaTime * moveSpeed, Space.World);
-        }
-        else
-        {
-            //相対座標で移動させる。これにより、プレイヤーの向きに応じた移動が可能になる。
-            playerRootTransform.Translate(move * Time.deltaTime * moveSpeed);
-        }
+        //相対座標で移動させる。これにより、プレイヤーの向きに応じた移動が可能になる。
+        playerRootTransform.Translate(playercamera.transform.rotation * move * Time.deltaTime * moveSpeed);
             
     }
     //サーバー側で力を加える

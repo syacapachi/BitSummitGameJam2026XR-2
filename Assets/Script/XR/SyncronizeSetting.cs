@@ -26,10 +26,9 @@ public class SyncronizeSetting : NetworkBehaviour
     [SerializeField] private GameObject networkLeftController;
     [SerializeField] private GameObject networkRightController;
 
-    IEnumerator Start()
-    {
-        yield return new WaitUntil(() => IsXRValid());
-    }
+    private bool isWaitingSomeTime = false;
+    private static WaitForSeconds wait1 = new WaitForSeconds(1f);
+
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -43,6 +42,7 @@ public class SyncronizeSetting : NetworkBehaviour
             DisableMeshRenderer(networkLeftController);
             DisableMeshRenderer(networkRightController);
             DisableMeshRenderer(avatorRootTransfrom.gameObject);
+            StartCoroutine(WaitForStable());
         }
         else
         {
@@ -52,6 +52,12 @@ public class SyncronizeSetting : NetworkBehaviour
             DisableComponentAndObject(leftController);
             DisableComponentAndObject(rightController);
         }
+    }
+    private IEnumerator WaitForStable()
+    {
+        if (isWaitingSomeTime) yield break;
+        yield return wait1;
+        isWaitingSomeTime = false;
     }
     private void DisableMeshRenderer(GameObject root)
     {
@@ -63,15 +69,15 @@ public class SyncronizeSetting : NetworkBehaviour
     }
     private void DisableComponentAndObject(GameObject root)
     {
-        MonoBehaviour[] components = root.GetComponentsInChildren<MonoBehaviour>();
-        foreach (MonoBehaviour component in components)
-        {
-            if(component is NetworkBehaviour)
-            {
-                continue; // NetworkBehaviourは無効化しない
-            }
-            component.enabled = false;
-        }
+        //MonoBehaviour[] components = root.GetComponentsInChildren<MonoBehaviour>();
+        //foreach (MonoBehaviour component in components)
+        //{
+        //    if(component is NetworkBehaviour)
+        //    {
+        //        continue; // NetworkBehaviourは無効化しない
+        //    }
+        //    component.enabled = false;
+        //}
         root.SetActive(false);
     }
     /// <summary>
@@ -79,7 +85,7 @@ public class SyncronizeSetting : NetworkBehaviour
     /// </summary>
     private void LateUpdate()
     {
-        if (IsOwner)
+        if (IsOwner && isWaitingSomeTime)
         {
             //ルートの移動（重要）
 
