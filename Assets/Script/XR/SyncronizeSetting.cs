@@ -37,10 +37,10 @@ public class SyncronizeSetting : NetworkBehaviour
             rightHand.SetActive(true);
             leftController.SetActive(true);
             rightController.SetActive(true);
-            DisableMeshRenderer(networkLeftHand);
-            DisableMeshRenderer(networkRightHand);
-            DisableMeshRenderer(networkLeftController);
-            DisableMeshRenderer(networkRightController);
+            // DisableMeshRenderer(networkLeftHand);
+            // DisableMeshRenderer(networkRightHand);
+            // DisableMeshRenderer(networkLeftController);
+            // DisableMeshRenderer(networkRightController);
             DisableMeshRenderer(avatorRootTransfrom.gameObject);
             StartCoroutine(WaitForStable());
         }
