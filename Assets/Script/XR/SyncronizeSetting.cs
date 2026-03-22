@@ -99,20 +99,20 @@ public class SyncronizeSetting : NetworkBehaviour
             playerRootTransfrom.position += offset;
             xrOrigin.transform.position -= offset;
 
-            if(Mathf.Abs(xrOrigin.transform.localRotation.eulerAngles.y) > 0.01f)
-            {
-                playerRootTransfrom.rotation = xrOrigin.transform.rotation;
-                xrOrigin.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            }
-            //頭の角度
-            Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
-            networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
+            // if(Mathf.Abs(xrOrigin.transform.localRotation.eulerAngles.y) > 0.01f)
+            // {
+            //     playerRootTransfrom.rotation = xrOrigin.transform.rotation;
+            //     xrOrigin.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            // }
+            // //頭の角度
+            // Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
+            // networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
 
-            //手・コントローラー
-            networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
-            networkRightHand.transform.SetPositionAndRotation(rightHand.transform.position, rightHand.transform.rotation);
-            networkLeftController.transform.SetPositionAndRotation(leftController.transform.position, leftController.transform.rotation);
-            networkRightController.transform.SetPositionAndRotation(rightController.transform.position, rightController.transform.rotation);
+            // //手・コントローラー
+            // networkLeftHand.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
+            // networkRightHand.transform.SetPositionAndRotation(rightHand.transform.position, rightHand.transform.rotation);
+            // networkLeftController.transform.SetPositionAndRotation(leftController.transform.position, leftController.transform.rotation);
+            // networkRightController.transform.SetPositionAndRotation(rightController.transform.position, rightController.transform.rotation);
         }
     }
     private bool IsValid(Vector3 v)
