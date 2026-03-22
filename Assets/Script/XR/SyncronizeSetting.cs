@@ -45,6 +45,7 @@ public class SyncronizeSetting : NetworkBehaviour
             StartCoroutine(WaitForStable());
         }
         else
+        
         {
             // xrOrigin.gameObject.SetActive(false);
             // DisableComponentAndObject(leftHand);
