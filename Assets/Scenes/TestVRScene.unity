@@ -7640,6 +7640,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2183212114285007308, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 445961547}
     - target: {fileID: 3294520752914383508, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -7694,7 +7698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5878215482712357433, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.07
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5878215482712357433, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7702,7 +7706,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5878215482712357433, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.08
+      value: 1.55
       objectReference: {fileID: 0}
     - target: {fileID: 5878215482712357433, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -18346,10 +18350,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2694d309a47050a4eaf291d02416ed4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ServerButton: {fileID: 2048666829}
-  HostButton: {fileID: 570183183}
-  ClientButton: {fileID: 1673578765}
-  ExitButton: {fileID: 291595870}
+  ServerButton: {fileID: 0}
+  HostButton: {fileID: 0}
+  ClientButton: {fileID: 0}
+  ExitButton: {fileID: 0}
   DiscoveryButton: {fileID: 0}
   StopDiscoveryButton: {fileID: 0}
   connectionButtonPrefab: {fileID: 0}
@@ -18374,7 +18378,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 460892389}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1833831960
 GameObject:
@@ -21094,3 +21098,4 @@ SceneRoots:
   - {fileID: 941982046}
   - {fileID: 1214879754}
   - {fileID: 1056916305}
+  - {fileID: 1832796217}
