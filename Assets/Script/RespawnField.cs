@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Syacapachi.Attribute;
 
 public class RespawnField : MonoBehaviour
 {

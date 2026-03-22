@@ -1,5 +1,13 @@
-﻿using UnityEngine;
+﻿using NUnit.Framework;
+using System.Collections.Generic;
+using System.Net;
+using TMPro;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using UnityEditor;
+using UnityEditor.Events;
+using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Scripts : MonoBehaviour
@@ -8,6 +16,16 @@ public class Scripts : MonoBehaviour
     [SerializeField] Button HostButton;
     [SerializeField] Button ClientButton;
     [SerializeField] Button ExitButton;
+    [SerializeField] Button DiscoveryButton;
+    TextMeshProUGUI discovertext;
+    [SerializeField] Button StopDiscoveryButton;
+    [SerializeField] GameObject connectionButtonPrefab;
+    [SerializeField] Transform canvasTransfrom;
+    Queue<Button> connectionButtonUnActiveQueue = new();
+    Queue<Button> connectionButtonActiveQueue = new();
+    private bool isSearching = false;
+    [SerializeField]
+    MyNetworkDiscovery m_Discovery;
     private bool isNetworkStarted = false;
     private void Start()
     {
@@ -15,11 +33,34 @@ public class Scripts : MonoBehaviour
         HostButton.onClick.AddListener(OnStartHost);
         ClientButton.onClick.AddListener(OnStartClient);
         ExitButton.onClick.AddListener(OnExitNetwork);
+        DiscoveryButton.onClick.AddListener(StartDiscover);
+        discovertext = DiscoveryButton.GetComponentInChildren<TextMeshProUGUI>();
+
+        StopDiscoveryButton.onClick.AddListener(StopDiscovery);
 
         ServerButton.gameObject.SetActive(true);
         HostButton.gameObject.SetActive(true);
         ClientButton.gameObject.SetActive(true);
+        DiscoveryButton.gameObject.SetActive(true);
+
         ExitButton.gameObject.SetActive(false);
+        StopDiscoveryButton.gameObject.SetActive(false);
+    }
+    
+
+    NetworkManager m_NetworkManager;
+
+    Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
+    public UnityEvent OnClientStart = new UnityEvent();
+
+    public Vector2 DrawOffset = new Vector2(10, 210);
+
+    void Awake()
+    {
+        m_NetworkManager = NetworkManager.Singleton;
+        m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
+        m_Discovery.OnServerFound.AddListener(OnServerFound);
+        
     }
     private void OnStartServer()
     {
@@ -76,5 +117,69 @@ public class Scripts : MonoBehaviour
         HostButton.gameObject.SetActive(false);
         ClientButton.gameObject.SetActive(false);
         ExitButton.gameObject.SetActive(true);
+    }
+    private void StartDiscover()
+    {
+        if (m_Discovery.IsRunning)
+        {
+            if (!isSearching)
+            {
+                discovertext.text = "Refresh List";
+                StopDiscoveryButton.gameObject.SetActive(true);
+                m_Discovery.StartClient();
+                m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
+                isSearching = true;
+            }
+            else
+            {
+                RefreshList();
+                m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
+            }
+        }
+    }
+    private void StopDiscovery()
+    {
+        discovertext.text = "Discover Servers";
+        isSearching = false;
+        m_Discovery.StopDiscovery();
+        RefreshList();
+
+
+    }
+    private void RefreshList()
+    {
+        discoveredServers.Clear();
+        while (connectionButtonActiveQueue.Count > 0)
+        {
+            var button = connectionButtonActiveQueue.Dequeue();
+            button.onClick.RemoveAllListeners();
+            button.gameObject.SetActive(false);
+            connectionButtonUnActiveQueue.Enqueue(button);
+        }
+    }
+    private void OnServerFound(IPEndPoint sender, DiscoveryResponseData response)
+    {
+        discoveredServers[sender.Address] = response;
+        Button button;
+        if (connectionButtonUnActiveQueue.Count > 0)
+        {
+            button = connectionButtonUnActiveQueue.Dequeue();
+        }
+        else
+        {
+            var obj = GameObject.Instantiate(connectionButtonPrefab, canvasTransfrom);
+            button = obj.GetComponent<Button>();
+            connectionButtonActiveQueue.Enqueue(button);
+        }
+        button.GetComponent<TextMeshProUGUI>().text = $"{response.ServerName}[{sender}]";
+        button.onClick.AddListener(() => ConnectedToServer(sender.ToString(), response.Port));
+        button.gameObject.SetActive(true);
+    }
+    private void ConnectedToServer(string address,ushort port)
+    {
+        UnityTransport transport = (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
+        transport.SetConnectionData(address, port);
+        m_NetworkManager.StartClient();
+        OnClientStart.Invoke();
     }
 }

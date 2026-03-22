@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using Syacapachi.Attribute;
 public class NGameManager : NetworkBehaviour
 {
     public PhaseSO[] phases;
