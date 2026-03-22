@@ -1,8 +1,9 @@
-﻿using UnityEngine;
-using Unity.Netcode;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.XR.CoreUtils;
+using UnityEngine;
 public class SyncronizeSetting : NetworkBehaviour
 {
     [Header("Root")]
@@ -25,6 +26,10 @@ public class SyncronizeSetting : NetworkBehaviour
     [SerializeField] private GameObject networkLeftController;
     [SerializeField] private GameObject networkRightController;
 
+    IEnumerator Start()
+    {
+        yield return new WaitUntil(() => IsXRValid());
+    }
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -105,5 +110,14 @@ public class SyncronizeSetting : NetworkBehaviour
         return !(float.IsNaN(v.x) || float.IsInfinity(v.x) ||
              float.IsNaN(v.y) || float.IsInfinity(v.y) ||
              float.IsNaN(v.z) || float.IsInfinity(v.z));
+    }
+    bool IsXRValid()
+    {
+        var cam = xrOrigin.Camera;
+        if (cam == null) return false;
+
+        Vector3 pos = cam.transform.position;
+
+        return !(float.IsNaN(pos.x) || float.IsInfinity(pos.x));
     }
 }
