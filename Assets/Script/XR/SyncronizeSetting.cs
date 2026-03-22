@@ -80,11 +80,11 @@ public class SyncronizeSetting : NetworkBehaviour
 
             Vector3 offset = xrOrigin.Camera.transform.position - playerRootTransfrom.position;
             offset.y = 0;//高さの影響を消す(埋まり防止)
-
+            if (!IsValid(offset)) return;
             playerRootTransfrom.position += offset;
             xrOrigin.transform.position -= offset;
 
-            if(xrOrigin.transform.localRotation.eulerAngles.y != 0f)
+            if(Mathf.Abs(xrOrigin.transform.localRotation.eulerAngles.y) > 0.01f)
             {
                 playerRootTransfrom.rotation = xrOrigin.transform.rotation;
                 xrOrigin.transform.localRotation = Quaternion.Euler(Vector3.zero);
@@ -99,5 +99,11 @@ public class SyncronizeSetting : NetworkBehaviour
             networkLeftController.transform.SetPositionAndRotation(leftController.transform.position, leftController.transform.rotation);
             networkRightController.transform.SetPositionAndRotation(rightController.transform.position, rightController.transform.rotation);
         }
+    }
+    private bool IsValid(Vector3 v)
+    {
+        return !(float.IsNaN(v.x) || float.IsInfinity(v.x) ||
+             float.IsNaN(v.y) || float.IsInfinity(v.y) ||
+             float.IsNaN(v.z) || float.IsInfinity(v.z));
     }
 }

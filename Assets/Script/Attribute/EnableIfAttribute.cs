@@ -1,39 +1,42 @@
-﻿using System;
-using UnityEngine;
-
-public enum ConditionLogic
+﻿namespace Syacapachi.Attribute
 {
-    AND,
-    OR,
-    NOT,
-    NAND,
-    NOR,
-    XOR
-}
+    using System;
+    using UnityEngine;
 
-[AttributeUsage(AttributeTargets.Field,Inherited = true,AllowMultiple = false)]
-public class EnableIfAttribute : PropertyAttribute
-{
-    /// <summary>
-    /// 名前の先頭に!をつけた場合否定になる
-    /// </summary>
-    public string[] conditionFieldNames;
-    public bool hideWhenFalse;
-    public ConditionLogic logic;
-
-    //ここに名前を入れる
-    public EnableIfAttribute(string conditionFieldName, bool hideWhenFalse = false)
+    public enum ConditionLogic
     {
-        this.conditionFieldNames = new[] { conditionFieldName };
-        this.hideWhenFalse = hideWhenFalse;
-        this.logic = ConditionLogic.AND;
+        AND,
+        OR,
+        NOT,
+        NAND,
+        NOR,
+        XOR
     }
 
-    // 複数条件用コンストラクタ
-    public EnableIfAttribute(string[] conditionFieldNames, ConditionLogic logic = ConditionLogic.AND, bool hideWhenFalse = false)
+    [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
+    public class EnableIfAttribute : PropertyAttribute
     {
-        this.conditionFieldNames = conditionFieldNames;
-        this.hideWhenFalse = hideWhenFalse;
-        this.logic = logic;
+        /// <summary>
+        /// 名前の先頭に!をつけた場合否定になる
+        /// </summary>
+        public string[] conditionFieldNames;
+        public bool hideWhenFalse;
+        public ConditionLogic logic;
+
+        //ここに名前を入れる
+        public EnableIfAttribute(string conditionFieldName, bool hideWhenFalse = false)
+        {
+            this.conditionFieldNames = new[] { conditionFieldName };
+            this.hideWhenFalse = hideWhenFalse;
+            this.logic = ConditionLogic.AND;
+        }
+
+        // 複数条件用コンストラクタ
+        public EnableIfAttribute(string[] conditionFieldNames, ConditionLogic logic = ConditionLogic.AND, bool hideWhenFalse = false)
+        {
+            this.conditionFieldNames = conditionFieldNames;
+            this.hideWhenFalse = hideWhenFalse;
+            this.logic = logic;
+        }
     }
 }

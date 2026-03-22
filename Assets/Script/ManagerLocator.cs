@@ -1,5 +1,6 @@
 ﻿using Netcode.Extensions;
 using UnityEngine;
+using Yokoyama.Manager;
 
 public class ManagerLocator : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class ManagerLocator : MonoBehaviour
     [field:SerializeField] public NGameManager AllGameManager { get; private set; }
     [field:SerializeField] public NetworkObjectPool AllObjectPool { get; private set; }
     [field:SerializeField] public GameAudioManager GameAudioManager { get; private set; }
+    [field:SerializeField] public RankingManager RankingManager { get; private set; }
     void Awake()
     {
         if(Instance == null)
