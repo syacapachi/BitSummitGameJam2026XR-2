@@ -151,7 +151,7 @@ public class NGun : NetworkBehaviour
 
     private void ShootRpc()
     {
-        if(ManagerLocator.Instance.AllGameManager.IsGameStart) return;
+        if(!ManagerLocator.Instance.AllGameManager.IsGameStart) return;
         if (isReloading) return;
         if (Time.time < nextFire) return;
 
