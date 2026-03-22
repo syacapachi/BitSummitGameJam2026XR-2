@@ -9662,7 +9662,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1511416726702297420, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1808601201609793989, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_IsActive
@@ -10003,7 +10003,7 @@ PrefabInstance:
     - target: {fileID: 8146434125951353786, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: phaseBoard
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5679418172980954767}
     - target: {fileID: 8806329115733545877, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_Name
       value: XR Origin Hands (XR Rig) (LocalPlayer)
@@ -10172,6 +10172,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 473bc3511707ec34cac9db179cb5e275, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5679418172980954767 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1511416726702297420, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+  m_PrefabInstance: {fileID: 6496716505114286019}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7414134076739607851 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4381072889419385576, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
