@@ -578,7 +578,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1720655657996783315}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 245275777368308507}
+        m_TargetAssemblyTypeName: StartButton, Assembly-CSharp
+        m_MethodName: SelectStartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3000589244975805650
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,6 +659,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   startUI: {fileID: 699351584887090616}
+  humanUI: {fileID: 0}
+  ghostUI: {fileID: 0}
 --- !u!1 &3418545253977646498
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,7 +672,6 @@ GameObject:
   - component: {fileID: 8557996361297142857}
   - component: {fileID: 1658294158247187703}
   - component: {fileID: 7862476910358548753}
-  - component: {fileID: 5521472190790212283}
   m_Layer: 7
   m_Name: Quad
   m_TagString: Untagged
@@ -734,20 +747,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &5521472190790212283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3418545253977646498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c64beac8cf630e44ba7983efded407d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  startUI: {fileID: 6895830074728033337}
 --- !u!1 &4317276540409344761
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,7 +867,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 277973427651127998}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 245275777368308507}
+        m_TargetAssemblyTypeName: StartButton, Assembly-CSharp
+        m_MethodName: SelectHuman
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4471442318175890035
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,6 +890,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2228705776034226099}
   - component: {fileID: 4987593252431869254}
+  - component: {fileID: 245275777368308507}
   m_Layer: 0
   m_Name: Start
   m_TagString: Untagged
@@ -916,8 +928,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3023057258
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 748217960
+  InScenePlacedSourceGlobalObjectIdHash: 4136510138
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -929,6 +941,22 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &245275777368308507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4471442318175890035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c64beac8cf630e44ba7983efded407d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  startUI: {fileID: 699351584887090616}
+  humanUI: {fileID: 6895830074728033337}
+  ghostUI: {fileID: 5798914578468130185}
 --- !u!1 &4794820307013459390
 GameObject:
   m_ObjectHideFlags: 0
@@ -1386,7 +1414,6 @@ GameObject:
   - component: {fileID: 4056607755523365786}
   - component: {fileID: 2185390755064673319}
   - component: {fileID: 4943658141198248353}
-  - component: {fileID: 4320824246593012183}
   m_Layer: 8
   m_Name: Quad
   m_TagString: Untagged
@@ -1462,20 +1489,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4320824246593012183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6787107041727343151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c64beac8cf630e44ba7983efded407d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  startUI: {fileID: 5798914578468130185}
 --- !u!1 &6895830074728033337
 GameObject:
   m_ObjectHideFlags: 0
@@ -1877,7 +1890,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1274204700784928458}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 245275777368308507}
+        m_TargetAssemblyTypeName: StartButton, Assembly-CSharp
+        m_MethodName: SelectGhost
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8987314057737120428
 GameObject:
   m_ObjectHideFlags: 0
@@ -1889,7 +1914,6 @@ GameObject:
   - component: {fileID: 6270060273297240449}
   - component: {fileID: 1761087475943175378}
   - component: {fileID: 5181040103970231874}
-  - component: {fileID: 3009194060558197251}
   m_Layer: 0
   m_Name: Quad
   m_TagString: Untagged
@@ -1965,17 +1989,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3009194060558197251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8987314057737120428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c64beac8cf630e44ba7983efded407d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  startUI: {fileID: 699351584887090616}
