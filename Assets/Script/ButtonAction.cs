@@ -34,6 +34,12 @@ public class Scripts : MonoBehaviour
 
     public Vector2 DrawOffset = new Vector2(10, 210);
 
+    private void Reset()
+    {
+        m_NetworkManager ??= NetworkManager.Singleton;
+        m_Discovery ??= m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
+        m_Discovery.OnServerFound.AddListener(OnServerFound);
+    }
     void Awake()
     {
         m_NetworkManager ??= ManagerLocator.Instance.NetworkManager;
