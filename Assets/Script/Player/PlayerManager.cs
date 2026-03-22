@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System;
+using Syacapachi.Attribute;
 public class PlayerManager : MonoBehaviour
 {
     private readonly List<PlayerRoot> playerList = new();
@@ -19,6 +20,9 @@ public class PlayerManager : MonoBehaviour
     [Tooltip("ホスト、クライアント設定前のカメラ")]
     [SerializeField] Camera mainCamera;
     [SerializeField] Canvas worldCanvas;
+    [SerializeField] bool IsJobOverride;
+    [SerializeField,EnableIf(nameof(IsJobOverride))]
+    PlayerPropaty.PlayerJob JobOverride;
     public Camera PlayerCamera => mainCamera;
     public Canvas WorldCanvas => worldCanvas;
     public void ResistPlayer(PlayerRoot playerRoot)
@@ -36,6 +40,10 @@ public class PlayerManager : MonoBehaviour
         LocalOwnerPlayer.propaty.OnJobChanged += OnJobChanged;
         mainCamera.enabled = false;
         worldCanvas.worldCamera = LocalOwnerPlayer.cameraSetting.localCamera;
+        if (IsJobOverride)
+        {
+            playerRoot.propaty.Job = JobOverride;
+        }
     }
     public void UnResistOwner(PlayerRoot playerRoot)
     {

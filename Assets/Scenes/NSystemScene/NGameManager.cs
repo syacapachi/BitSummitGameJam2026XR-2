@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using Syacapachi.Attribute;
+using System;
 public class NGameManager : NetworkBehaviour
 {
     public PhaseSO[] phases;
     private int currentPhaseIndex = -1;
     public float timer;
-
+    
     public NEnemySpawner spawner;
     public NetworkVariable<int> score = new NetworkVariable<int>(10000);
 
@@ -53,6 +54,8 @@ public class NGameManager : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+
+    public event Action OnGameEnd;
 
     public override void OnNetworkSpawn()
     {
@@ -105,10 +108,7 @@ public class NGameManager : NetworkBehaviour
         if (currentPhaseIndex >= phases.Length)
         {
             Debug.Log("GAME CLEAR");
-            if (IsServer)
-            {
-                Debug.Log("Game Finished");
-            }
+            OnGameEnd.Invoke();
 
             return;
         }
@@ -288,5 +288,6 @@ public class NGameManager : NetworkBehaviour
         // spawner.StopAllEnemies();
 
         // 必要ならここでUIイベント用フラグも出せる
+        OnGameEnd.Invoke();
     }
-    }
+}

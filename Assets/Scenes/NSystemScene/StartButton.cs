@@ -7,7 +7,15 @@ public class StartButton : NetworkBehaviour
     [SerializeField] GameObject humanUI;
     [SerializeField] GameObject ghostUI;
 
-
+    private void Start()
+    {
+        ManagerLocator.Instance.AllGameManager.OnGameEnd += GameEndHandle;
+    }
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        ManagerLocator.Instance.AllGameManager.OnGameEnd -= GameEndHandle;
+    }
     public void SelectHuman()
     {
         if(IsServer) return;
@@ -28,6 +36,10 @@ public class StartButton : NetworkBehaviour
     {
         StartGameRpc();
     }
+    private void GameEndHandle()
+    {
+        HideUIRpc(true);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -42,14 +54,14 @@ public class StartButton : NetworkBehaviour
     {
         Debug.Log("[Start Game Rpc]");
         ManagerLocator.Instance.AllGameManager.StartGame();
-        HideUIRpc();
+        HideUIRpc(false);
     }
 
     [Rpc(SendTo.Everyone)]
-    void HideUIRpc()
+    void HideUIRpc(bool enabled)
     {
-        startUI.SetActive(false);
-        humanUI.SetActive(false);
-        ghostUI.SetActive(false);
+        startUI.SetActive(enabled);
+        humanUI.SetActive(enabled);
+        ghostUI.SetActive(enabled);
     }
 }

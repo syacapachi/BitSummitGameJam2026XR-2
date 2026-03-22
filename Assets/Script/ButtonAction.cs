@@ -45,7 +45,6 @@ public class Scripts : MonoBehaviour
         m_NetworkManager ??= ManagerLocator.Instance.NetworkManager;
         m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);
-
     }
 
     private void Start()
