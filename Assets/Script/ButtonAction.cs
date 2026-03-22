@@ -171,7 +171,7 @@ public class Scripts : MonoBehaviour
             button = obj.GetComponent<Button>();
             connectionButtonActiveQueue.Enqueue(button);
         }
-        button.GetComponent<TextMeshProUGUI>().text = $"{response.ServerName}[{sender}]";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = $"{response.ServerName}[{sender}]";
         button.onClick.AddListener(() => ConnectedToServer(sender.ToString(), response.Port));
         button.gameObject.SetActive(true);
     }
