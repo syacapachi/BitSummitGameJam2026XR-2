@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net;
 using TMPro;
 using Unity.Netcode;
@@ -21,14 +22,14 @@ public class Scripts : MonoBehaviour
     [SerializeField] Button StopDiscoveryButton;
     [SerializeField] GameObject connectionButtonPrefab;
     [SerializeField] Transform canvasTransfrom;
-    Queue<Button> connectionButtonUnActiveQueue = new();
-    Queue<Button> connectionButtonActiveQueue = new();
-    [SerializeField]
-    MyNetworkDiscovery m_Discovery;
+    readonly Queue<Button> connectionButtonUnActiveQueue = new();
+    readonly Queue<Button> connectionButtonActiveQueue = new();
+    [SerializeField] MyNetworkDiscovery m_Discovery;
+    [SerializeField] UnityTransport transport;
     private bool isNetworkStarted = false;
     NetworkManager m_NetworkManager;
 
-    Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
+    readonly Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
     public UnityEvent OnClientStart = new UnityEvent();
 
     public Vector2 DrawOffset = new Vector2(10, 210);
@@ -175,7 +176,7 @@ public class Scripts : MonoBehaviour
     }
     private void ConnectedToServer(string address,ushort port)
     {
-        UnityTransport transport = (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
+        transport ??= (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
         transport.SetConnectionData(address, port);
         m_NetworkManager.StartClient();
         OnClientStart.Invoke();
