@@ -18,6 +18,7 @@ public class NGameManager : NetworkBehaviour
     public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
     public NetworkVariable<bool> IsGameFinished = new NetworkVariable<bool>(false);
     bool gameStarted = false;
+    public bool IsGameStart => gameStarted;
     public NetworkVariable<bool> isBulletCome = new NetworkVariable<bool>(
         false,
         NetworkVariableReadPermission.Everyone,

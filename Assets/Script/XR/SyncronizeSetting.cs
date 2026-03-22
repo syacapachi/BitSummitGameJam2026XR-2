@@ -48,10 +48,10 @@ public class SyncronizeSetting : NetworkBehaviour
         
         {
             // xrOrigin.gameObject.SetActive(false);
-            // DisableComponentAndObject(leftHand);
-            // DisableComponentAndObject(rightHand);
-            // DisableComponentAndObject(leftController);
-            // DisableComponentAndObject(rightController);
+            DisableComponentAndObject(leftHand);
+            DisableComponentAndObject(rightHand);
+            DisableComponentAndObject(leftController);
+            DisableComponentAndObject(rightController);
         }
     }
     public override void OnNetworkDespawn()

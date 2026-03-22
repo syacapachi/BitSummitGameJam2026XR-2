@@ -52,7 +52,7 @@ public class MarkerController : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void PlaceMarkerRpc()
     {
-        Debug.Log("PlaceMarkerRpc called");
+        if(ManagerLocator.Instance.AllGameManager.IsGameStart) return;
         if (firePoint == null) return;
 
         RaycastHit hit;

@@ -66,11 +66,11 @@ public class PlayerPropaty : NetworkBehaviour
     {
         get => playerjob != PlayerJob.Human;
     }
-    
+    [SerializeField] bool IsDebugMode = true;
     private InputAction changeJobAction;
     public override void OnNetworkSpawn()
     {
-        if (IsOwner)
+        if (IsOwner && IsDebugMode)
         {
             changeJobAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["SwitchJob"];
             changeJobAction.performed += OnJobChangeHandle;
@@ -80,7 +80,7 @@ public class PlayerPropaty : NetworkBehaviour
     }
     public override void OnNetworkDespawn()
     {
-        if (IsOwner)
+        if (IsOwner && IsDebugMode)
         {
             changeJobAction.performed -= OnJobChangeHandle;
         }
