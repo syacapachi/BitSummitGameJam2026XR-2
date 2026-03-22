@@ -26,7 +26,7 @@ public class SyncronizeSetting : NetworkBehaviour
     [SerializeField] private GameObject networkLeftController;
     [SerializeField] private GameObject networkRightController;
 
-    private bool isWaitingSomeTime = false;
+    private bool canUpdate = false;
     private static WaitForSeconds wait1 = new WaitForSeconds(1f);
 
     public override void OnNetworkSpawn()
@@ -53,11 +53,15 @@ public class SyncronizeSetting : NetworkBehaviour
             DisableComponentAndObject(rightController);
         }
     }
+    public override void OnNetworkDespawn()
+    {
+        canUpdate = false;
+    }
     private IEnumerator WaitForStable()
     {
-        if (isWaitingSomeTime) yield break;
+        if (canUpdate) yield break;
         yield return wait1;
-        isWaitingSomeTime = false;
+        canUpdate = true;
     }
     private void DisableMeshRenderer(GameObject root)
     {
@@ -85,7 +89,7 @@ public class SyncronizeSetting : NetworkBehaviour
     /// </summary>
     private void LateUpdate()
     {
-        if (IsOwner && isWaitingSomeTime)
+        if (IsOwner && canUpdate)
         {
             //ルートの移動（重要）
 
