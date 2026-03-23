@@ -39,6 +39,7 @@ public class PhaseUI : MonoBehaviour
 
     void OnPhaseChanged(int oldValue, int newValue)
     {
+        Debug.Log($"Phase Changed: {oldValue} -> {newValue}");
         var manager = nGameManager;
         if (manager == null) return;
 
@@ -51,6 +52,7 @@ public class PhaseUI : MonoBehaviour
 
     void Show(string text)
     {
+        Debug.Log($"Show Phase: {text}");
         StartCoroutine(ShowSequence(text));
     }
 
