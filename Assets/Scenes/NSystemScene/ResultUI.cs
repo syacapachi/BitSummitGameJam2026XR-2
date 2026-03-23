@@ -3,7 +3,7 @@ using TMPro;
 using Unity.Netcode;
 using System.Collections;
 
-public class ResultUI : MonoBehaviour
+public class ResultUI : NetworkBehaviour
 {
     private NGameManager nGameManager;
 
@@ -31,7 +31,7 @@ public class ResultUI : MonoBehaviour
         panel.SetActive(false);
 
         // イベント登録
-        nGameManager.OnGameEnd += OnGameFinished;
+        //nGameManager.OnGameEnd += OnGameFinished;
     }
 
     void OnGameFinished()
@@ -69,5 +69,28 @@ void ShowResult()
         {
             nGameManager.OnGameEnd -= OnGameFinished;
         }
+    }
+
+    public void Show(PlayerResultData[] results)
+    {
+        // 自分のプレイヤー以外は無視
+        if (!IsOwner) return;
+
+        panel.SetActive(true);
+
+        bool isGameOver = nGameManager.isGameOver.Value;
+
+        titleText.text = isGameOver ? "GAME OVER!" : "GAME CLEAR!";
+
+        string text = "";
+
+        foreach (var r in results)
+        {
+            text += $"Player {r.clientId}\n";
+            text += $"Score: {r.score}\n";
+            text += $"Hits: {r.hits}/{r.shotsFired}\n\n";
+        }
+
+        resultText.text = text;
     }
 }
