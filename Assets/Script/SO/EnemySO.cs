@@ -5,6 +5,7 @@ public class EnemySO : ScriptableObject
 {
     public int ID;
     public string Name = "Enemy";
+    public Sprite icon;
     public int HP = 100;
     public int Damage = 100;
     public float Speed = 0;

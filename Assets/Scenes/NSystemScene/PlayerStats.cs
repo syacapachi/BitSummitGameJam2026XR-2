@@ -78,7 +78,7 @@ public class PlayerStats : MonoBehaviour
     {
         return new PlayerResultData
         {
-            clientId = NetworkManager.Singleton.LocalClientId,
+            clientId = GetComponentInParent<NetworkObject>().OwnerClientId,
             score = score,
             shotsFired = shotsFired,
             hits = hits,
