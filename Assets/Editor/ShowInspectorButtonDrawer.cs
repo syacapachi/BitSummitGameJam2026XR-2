@@ -1,7 +1,6 @@
 ﻿#if UNITY_EDITOR
 namespace Syacapachi.Editor
 {
-    using Meta.XR.ImmersiveDebugger.Utils;
     using Syacapachi.Attribute;
     using System;
     using System.Collections;
