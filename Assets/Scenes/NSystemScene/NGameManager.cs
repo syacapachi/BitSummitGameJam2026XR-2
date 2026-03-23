@@ -107,7 +107,9 @@ public class NGameManager : NetworkBehaviour
         if (currentPhaseIndex >= phases.Length)
         {
             Debug.Log("GAME CLEAR");
-            OnGameEnd.Invoke();
+            //OnGameEnd.Invoke();
+            OnGameEndClientRpc();
+            SendResults();
 
             return;
         }
@@ -204,7 +206,9 @@ public class NGameManager : NetworkBehaviour
 
         Debug.Log("FINISH!");
 
-        OnGameEnd.Invoke();
+        //OnGameEnd.Invoke();
+        OnGameEndClientRpc();
+        SendResults();
 
         isCountingDown = false;
 
@@ -277,7 +281,9 @@ public class NGameManager : NetworkBehaviour
 
         Debug.Log("GAME OVER");
         isGameOver.Value = true;
-        OnGameEnd.Invoke();
+        //OnGameEnd.Invoke();
+        OnGameEndClientRpc();
+        SendResults();
 
         StopAllCoroutines(); // ← これ重要（カウントダウン等止める）
 
@@ -288,5 +294,45 @@ public class NGameManager : NetworkBehaviour
 
         // 必要ならここでUIイベント用フラグも出せる
         
+    }
+
+    [ClientRpc]
+    void OnGameEndClientRpc()
+    {
+        OnGameEnd?.Invoke();
+    }
+
+    [ClientRpc]
+    void ShowResultsClientRpc(PlayerResultData[] results)
+    {
+        var manager = ManagerLocator.Instance.AllPlayerManager;
+
+        foreach (var player in manager.AllPlayers)
+        {
+            var ui = player.GetComponentInChildren<ResultUI>();
+            if (ui != null)
+            {
+                ui.Show(results);
+            }
+        }
+    }
+
+
+    void SendResults()
+    {
+        var list = new List<PlayerResultData>();
+        var manager = ManagerLocator.Instance.AllPlayerManager;
+
+        foreach (var player in manager.AllPlayers)
+        {
+            if (player == null) continue;
+
+            var stats = player.stats;
+            if (stats == null) continue;
+
+            list.Add(stats.CreateResultData());
+        }
+
+        ShowResultsClientRpc(list.ToArray());
     }
 }

@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
   m_Name: GhostEnemy1
   m_EditorClassIdentifier: 
+  ID: 15
+  Name: Enemy
   HP: 100
   Damage: 100
   Speed: 0.1
+  BulletSpeed: 5
+  FirstShootDelay: 10
+  shootInterval: 10
   scoreValue: 100
   prefab: {fileID: 2698170366202094917, guid: 99e7e033032dd6e4ba4b86579a76fa2a, type: 3}

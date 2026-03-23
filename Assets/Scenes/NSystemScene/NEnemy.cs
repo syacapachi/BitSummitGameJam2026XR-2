@@ -106,7 +106,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
             if (root != null)
             {
                 Debug.Log("Add kill");
-                root.stats.AddKill(enemySO.Name, enemySO.scoreValue);
+                root.stats.AddKill(enemySO.ID, enemySO.scoreValue);
             }
         }
 
