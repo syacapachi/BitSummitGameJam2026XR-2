@@ -14292,6 +14292,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: isSkip
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: protectArea
       value: 
       objectReference: {fileID: 1552106020}
@@ -14306,7 +14310,7 @@ PrefabInstance:
     - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: 'phases.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 9130db537808a9a4bbf5f8c246970b30, type: 2}
+      objectReference: {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
     - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: 'phases.Array.data[2]'
       value: 
@@ -15753,8 +15757,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crystal: {fileID: 1552106020}
   breakEffectPrefab: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
+  hitEffectPrefab: {fileID: 8987055145473169864, guid: 61d292a3d4be52d48b3602f211d2c501, type: 3}
   audioSource: {fileID: 1552106025}
   breakSE: {fileID: 8300000, guid: c974731f514a5964780a24ffa7825328, type: 3}
+  hitSE: {fileID: 8300000, guid: 50b01190c1d315d40947b882bd06d093, type: 3}
 --- !u!82 &1552106025
 AudioSource:
   m_ObjectHideFlags: 0
