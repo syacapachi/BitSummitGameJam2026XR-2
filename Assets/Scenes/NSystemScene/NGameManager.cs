@@ -9,6 +9,7 @@ public class NGameManager : NetworkBehaviour
     public PhaseSO[] phases;
     private int currentPhaseIndex = -1;
     public float timer;
+    public bool isSkip = false;
     
     public NEnemySpawner spawner;
     public NetworkVariable<int> score = new NetworkVariable<int>(10000);
@@ -83,10 +84,11 @@ public class NGameManager : NetworkBehaviour
         if (currentPhaseIndex >= phases.Length) return;
         if (isCountingDown) return;
         if (!gameStarted) return;
+        if (isGameOver.Value) return;
 
         timer -= Time.deltaTime;
 
-        if (timer <= 0 )
+        if (timer <= 0 || isSkip && spawner.AllDead())
         {
             EndPhase();
         }
@@ -108,6 +110,7 @@ public class NGameManager : NetworkBehaviour
         {
             Debug.Log("GAME CLEAR");
             //OnGameEnd.Invoke();
+            spawner.KillAllEnemies();
             OnGameEndClientRpc();
             SendResults();
 
@@ -281,6 +284,7 @@ public class NGameManager : NetworkBehaviour
 
         Debug.Log("GAME OVER");
         isGameOver.Value = true;
+        spawner.KillAllEnemies();
         //OnGameEnd.Invoke();
         OnGameEndClientRpc();
         SendResults();
