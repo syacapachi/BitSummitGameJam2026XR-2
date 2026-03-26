@@ -11,23 +11,25 @@ public class NEnemySpawner : NetworkBehaviour
     private int remain;
     public int Remain => remain;
     private bool spawnFinished = false;
-/*
-    public void SpawnFromPhase(PhaseSO phase)
-    {
-        if (!IsServer) return;
-
-        remain = 0;
-
-        foreach (var data in phase.spawnList)
+    public bool SpawnFinished => spawnFinished;
+    private List<NEnemy> enemies = new List<NEnemy>();
+    /*
+        public void SpawnFromPhase(PhaseSO phase)
         {
-            for (int i = 0; i < data.count; i++)
+            if (!IsServer) return;
+
+            remain = 0;
+
+            foreach (var data in phase.spawnList)
             {
-                SpawnEnemy(data.enemyType, phase.usableSpawnPointIndex);
-                remain++;
+                for (int i = 0; i < data.count; i++)
+                {
+                    SpawnEnemy(data.enemyType, phase.usableSpawnPointIndex);
+                    remain++;
+                }
             }
         }
-    }
-*/
+    */
 
     public void SpawnFromPhase(PhaseSO phase)
     {
@@ -51,7 +53,7 @@ public class NEnemySpawner : NetworkBehaviour
         spawnFinished = false; // 念のためリセット
 
 
-        while (timer < phase.phaseTime)
+        while (index < events.Count)
         {
             timer += Time.deltaTime;
 
@@ -116,6 +118,9 @@ public class NEnemySpawner : NetworkBehaviour
         rot
     );
 
+    var enemy = obj.GetComponent<NEnemy>();
+
+    enemies.Add(enemy);
     obj.GetComponent<NetworkObject>().Spawn();
 }
 
@@ -127,6 +132,31 @@ public class NEnemySpawner : NetworkBehaviour
 
     public bool AllDead()
     {
-        return remain <= 0;
+        return spawnFinished && remain <= 0;
+    }
+
+    public void RegisterEnemy(NEnemy enemy)
+    {
+        enemies.Add(enemy);
+    }
+
+    public void UnregisterEnemy(NEnemy enemy)
+    {
+        enemies.Remove(enemy);
+    }
+
+    public void KillAllEnemies()
+    {
+        foreach (var enemy in enemies)
+        {
+            if (enemy != null && enemy.NetworkObject.IsSpawned)
+            {
+                enemy.NetworkObject.Despawn(true);
+            }
+        }
+
+        enemies.Clear();
+        remain = 0;
+        spawnFinished = false;
     }
 }
