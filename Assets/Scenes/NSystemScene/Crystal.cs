@@ -10,10 +10,12 @@ public class Crystal : MonoBehaviour
 
     [Header("Effect")]
     public GameObject breakEffectPrefab;
+    public GameObject hitEffectPrefab;
 
     [Header("Sound")]
     public AudioSource audioSource;
     public AudioClip breakSE;
+    public AudioClip hitSE;
 
     IEnumerator Start()
     {
@@ -35,6 +37,7 @@ public class Crystal : MonoBehaviour
         }
 
         nGameManager.isGameOver.OnValueChanged += OnGameOverChanged;
+        nGameManager.isBulletCome.OnValueChanged += OnBulletCome;
     }
 
     void OnGameOverChanged(bool oldValue, bool newValue)
@@ -51,6 +54,14 @@ public class Crystal : MonoBehaviour
         PlaySound();
         PlayEffect();
         PlayAnimation();
+    }
+
+    void OnBulletCome(bool oldValue, bool newValue)
+    {
+        if (!newValue) return;
+
+        PlayHitEffect();
+        PlayHitSound();
     }
 
     void PlaySound()
@@ -82,6 +93,22 @@ public class Crystal : MonoBehaviour
         if (crystal != null)
         {
             crystal.SetActive(false);
+        }
+    }
+
+    void PlayHitEffect()
+    {
+        if (hitEffectPrefab != null)
+        {
+            Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+        }
+    }
+
+    void PlayHitSound()
+    {
+        if (audioSource != null && hitSE != null)
+        {
+            audioSource.PlayOneShot(hitSE);
         }
     }
 }
