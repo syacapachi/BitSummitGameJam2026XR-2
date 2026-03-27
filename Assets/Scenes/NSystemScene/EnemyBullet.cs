@@ -37,7 +37,7 @@ private void OnTriggerEnter(Collider other)
     if (!IsServer) return;
 
     // PlayerRootを取得
-    var root = other.GetComponentInParent<PlayerRoot>();
+    var root = other.GetComponentInParent<NetworkPlayerRoot>();
     if (root == null) return;
 
     var player = root.propaty;

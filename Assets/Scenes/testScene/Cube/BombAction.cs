@@ -103,7 +103,7 @@ public class BombAction : NetworkBehaviour,IDamageSender
     }
     private void OnGUI()
     {
-        Vector3 position = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.cameraSetting.CurrentActiveCamera.WorldToScreenPoint(transform.position);
+        Vector3 position = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.CameraSetting.currentActiveCamera.WorldToScreenPoint(transform.position);
         GUI.Label(new Rect(position.x, Screen.height - position.y, 100, 20), $"Timer: {timer.Value:F1}");
     }
     public void SendDamage(IDamageReciever reciever, int damage)

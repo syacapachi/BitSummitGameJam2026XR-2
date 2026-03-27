@@ -7,13 +7,14 @@ using System;
 using Syacapachi.Attribute;
 public class PlayerManager : MonoBehaviour
 {
-    private readonly List<PlayerRoot> playerList = new();
+    private readonly List<NetworkPlayerRoot> playerList = new();
     /// <summary>
     /// このデバイスでのオーナーへの参照
     /// </summary>
-    public PlayerRoot LocalOwnerPlayer {  get; private set; }
-
-    public IReadOnlyList<PlayerRoot> AllPlayers => playerList;
+    [SerializeField] LocalPlayerRoot localRoot;
+    public NetworkPlayerRoot NetworkOwnerPlayer { get;private set; }
+    public LocalPlayerRoot LocalPlayerRoot => localRoot;
+    public IReadOnlyList<NetworkPlayerRoot> AllPlayers => playerList;
 
     public event Action<PlayerPropaty.PlayerJob> OnOwnerJobChanged;
     [Header("Owner Setting")]
@@ -25,30 +26,30 @@ public class PlayerManager : MonoBehaviour
     PlayerPropaty.PlayerJob JobOverride;
     public Camera PlayerCamera => mainCamera;
     public Canvas WorldCanvas => worldCanvas;
-    public void ResistPlayer(PlayerRoot playerRoot)
+    public void ResistPlayer(NetworkPlayerRoot playerRoot)
     {
         playerList.Add(playerRoot);
     }
-    public void UnResistPlayer(PlayerRoot playerRoot)
+    public void UnResistPlayer(NetworkPlayerRoot playerRoot)
     {
         playerList.Remove(playerRoot);
     }
-    public void ResistOwner(PlayerRoot playerRoot)
+    public void ResistOwner(NetworkPlayerRoot playerRoot)
     {
-        LocalOwnerPlayer = playerRoot;
+        NetworkOwnerPlayer = playerRoot;
         Debug.Log("Resist owner");
-        LocalOwnerPlayer.propaty.OnJobChanged += OnJobChanged;
+        NetworkOwnerPlayer.propaty.OnJobChanged += OnJobChanged;
         mainCamera.enabled = false;
-        worldCanvas.worldCamera = LocalOwnerPlayer.cameraSetting.localCamera;
+        worldCanvas.worldCamera = LocalPlayerRoot.CameraSetting.currentActiveCamera;
         if (IsJobOverride)
         {
             playerRoot.propaty.Job = JobOverride;
         }
     }
-    public void UnResistOwner(PlayerRoot playerRoot)
+    public void UnResistOwner(NetworkPlayerRoot playerRoot)
     {
-        LocalOwnerPlayer.propaty.OnJobChanged -= OnJobChanged;
-        LocalOwnerPlayer = null;
+        NetworkOwnerPlayer.propaty.OnJobChanged -= OnJobChanged;
+        NetworkOwnerPlayer = null;
         worldCanvas.worldCamera = null;
         mainCamera.enabled = true;
     }

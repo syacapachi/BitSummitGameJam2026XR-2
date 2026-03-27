@@ -1,7 +1,7 @@
-﻿using Netcode.Extensions;
+﻿using Syacapachi.util;
 using Unity.Netcode;
 using UnityEngine;
-using Yokoyama.Manager;
+using Syacapachi.Manager;
 
 public class ManagerLocator : MonoBehaviour
 {

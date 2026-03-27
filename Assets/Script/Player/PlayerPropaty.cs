@@ -67,13 +67,11 @@ public class PlayerPropaty : NetworkBehaviour
         get => playerjob != PlayerJob.Human;
     }
     [SerializeField] bool IsDebugMode = true;
-    private InputAction changeJobAction;
     public override void OnNetworkSpawn()
     {
         if (IsOwner && IsDebugMode)
         {
-            changeJobAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["SwitchJob"];
-            changeJobAction.performed += OnJobChangeHandle;
+            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnSwirchJob += OnJobChangeHandle;
             OnJobChanged?.Invoke(Job);
         }
         PlayerLayer.OnValueChanged += OnValueChanged;
@@ -82,17 +80,17 @@ public class PlayerPropaty : NetworkBehaviour
     {
         if (IsOwner && IsDebugMode)
         {
-            changeJobAction.performed -= OnJobChangeHandle;
+            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnSwirchJob -= OnJobChangeHandle;
         }
         PlayerLayer.OnValueChanged -= OnValueChanged;
     }
     public override void OnGainedOwnership()
     {
-        changeJobAction.performed += OnJobChangeHandle;
+        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnSwirchJob += OnJobChangeHandle;
     }
     public override void OnLostOwnership()
     {
-        changeJobAction.performed -= OnJobChangeHandle;
+        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnSwirchJob -= OnJobChangeHandle;
     }
     /// <summary>
     /// 物理演算はサーバーで行われるため、クライアント側でレイヤーを変更しても意味がない。
@@ -107,7 +105,7 @@ public class PlayerPropaty : NetworkBehaviour
             playerjob = layerToJobDic[LayerMask.LayerToName(newValue)];
         }
     }
-    private void OnJobChangeHandle(InputAction.CallbackContext context)
+    private void OnJobChangeHandle()
     {
         Debug.Log("SwitchJob action performed! Current job: " + Job);
         Job = Job switch

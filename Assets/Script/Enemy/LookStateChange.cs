@@ -12,9 +12,9 @@ public class LookStateChange : NetworkBehaviour
         PlayerManager playerManager = ManagerLocator.Instance.AllPlayerManager;
         playerManager.OnOwnerJobChanged += OnJobChangedHandle;
 
-        if (playerManager.LocalOwnerPlayer != null)
+        if (playerManager.NetworkOwnerPlayer != null)
         {
-            OnJobChangedHandle(playerManager.LocalOwnerPlayer.propaty.Job);
+            OnJobChangedHandle(playerManager.NetworkOwnerPlayer.propaty.Job);
         }
     }
 

@@ -15,12 +15,9 @@ public class NGun : NetworkBehaviour
     [SerializeField] AmmoUI ammoUI;
 
     [SerializeField] WeaponSettingsSO weaponSettings;
-
-    [SerializeField] AttachableNode node;
-    PlayerControls controls;
-    InputAction fireAction;
     
     float nextFire;
+    private static readonly WaitForSeconds wait01 = new WaitForSeconds(0.1f);
     [SerializeField] NetworkVariable<int> syncedAmmo = new(0,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);
     private bool isReloading = false;
     public WeaponSettingsSO WeaponSettings => weaponSettings;
@@ -70,11 +67,7 @@ public class NGun : NetworkBehaviour
     {
         if (IsOwner)
         {
-            fireAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Fire"];
-            
-
-            fireAction.performed += _ => ShootRpc();
-            
+            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed += ShootRpc;  
         }
     }
     protected override void OnNetworkPostSpawn()
@@ -88,13 +81,13 @@ public class NGun : NetworkBehaviour
     {
         if (IsOwner) 
         {
-            fireAction.performed -= _ => ShootRpc();
+            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed -= ShootRpc;
         }
     }
     
     public override void OnLostOwnership()
     {
-       controls?.Disable();
+
     }
     /*
     private void ShootRpc()
@@ -192,21 +185,25 @@ public class NGun : NetworkBehaviour
     {
         isReloading = true;
         audioObserver.PlayReloadSound();
-        ammoUI.OnReloadChanged(isReloading);
         Debug.Log("Reloading...");
         // ここでリロードのアニメーションやエフェクトを再生することができます。
-        var wait = new WaitForSeconds(weaponSettings.reloadTime);
-        yield return wait;
+        for (float t = 0; t < reloadTime; t += 0.1f)
+        {
+            ammoUI.UpdateReloadBar(t/reloadTime);
+            yield return wait01;
+        }
+        ammoUI.UpdateReloadBar(0);
 
         syncedAmmo.Value = weaponSettings.maxAmmo;
         isReloading = false;
-        ammoUI.OnReloadChanged(isReloading);
+        ammoUI.UpdateAmmoDisplay(weaponSettings.maxAmmo, weaponSettings.maxAmmo);
     }
     private void OnAmmoChanged(int oldVal, int newVal)
     {
-        ammoUI.OnReloadChanged(newVal == 0);
+        
         if (isReloading) return;
         if (oldVal < newVal) return;
+        ammoUI.UpdateAmmoDisplay(newVal, weaponSettings.maxAmmo);
         audioObserver.PlayShotSound();
         if (newVal <= 0)
         {
