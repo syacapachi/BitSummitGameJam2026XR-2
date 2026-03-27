@@ -76,7 +76,13 @@ public class Crystal : MonoBehaviour
     {
         if (breakEffectPrefab != null)
         {
-            Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
+            GameObject effect = Instantiate(
+                breakEffectPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+            Destroy(effect, 2f); // ← 2秒後に消す
         }
     }
 
@@ -100,7 +106,13 @@ public class Crystal : MonoBehaviour
     {
         if (hitEffectPrefab != null)
         {
-            Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+            GameObject effect = Instantiate(
+                hitEffectPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+            Destroy(effect, 2f); // ← 2秒後に消す
         }
     }
 
