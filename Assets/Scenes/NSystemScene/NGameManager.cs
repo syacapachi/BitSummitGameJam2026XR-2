@@ -14,10 +14,10 @@ public class NGameManager : NetworkBehaviour
 
     public NetworkVariable<bool> isBulletCome = new NetworkVariable<bool>(false);
     public NetworkVariable<GameState> gameState = new NetworkVariable<GameState>(
-    GameState.Waiting,
-    NetworkVariableReadPermission.Everyone,
-    NetworkVariableWritePermission.Server
-);
+        GameState.Waiting,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
 
     public event Action OnGameEnd;
 

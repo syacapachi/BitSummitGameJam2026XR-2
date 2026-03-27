@@ -18,6 +18,11 @@ public class PhaseManager : NetworkBehaviour
 
     public NetworkVariable<bool> allEnemyDeadEvent = new NetworkVariable<bool>(false);
     public NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(0);
+    public NetworkVariable<float> phaseProgress = new NetworkVariable<float>(
+        1f,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
 
     private bool isCountingDown = false;
     public bool isSkip = false;
@@ -54,6 +59,10 @@ public class PhaseManager : NetworkBehaviour
             return;
 
         timer -= Time.deltaTime;
+        float max = phases[currentPhaseIndex].phaseTime;
+
+        
+        phaseProgress.Value = Mathf.Clamp01(timer / max);
 
         if (timer <= 0 || (isSkip && spawner.AllDead()))
         {
@@ -139,7 +148,7 @@ public class PhaseManager : NetworkBehaviour
         allEnemyDeadEvent.Value = false;
         isCountingDown = false;
 
-        //StartNextPhase();
+        StartNextPhase();
     }
 
     private IEnumerator EndPhaseWithCountdown()
@@ -172,4 +181,5 @@ public class PhaseManager : NetworkBehaviour
         if (!IsServer) return;
         spawner.EnemyKilled();
     }
+
 }
