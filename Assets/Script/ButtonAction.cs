@@ -176,7 +176,7 @@ public class Scripts : MonoBehaviour
             connectionButtonActiveQueue.Enqueue(button);
         }
         button.GetComponentInChildren<TextMeshProUGUI>().text = $"{response.ServerName}[{sender}]";
-        button.onClick.AddListener(() => ConnectedToServer(sender.ToString(), response.Port));
+        button.onClick.AddListener(() => ConnectedToServer(sender.Address.ToString(), response.Port));
         button.gameObject.SetActive(true);
     }
     private void ConnectedToServer(string address,ushort port)
