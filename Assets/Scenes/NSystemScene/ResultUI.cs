@@ -51,10 +51,10 @@ void ShowResult()
 {
     panel.SetActive(true);
 
-    int score = nGameManager.GetScore();
-    int bonus = nGameManager.lastClearBonus.Value;
+    int score = nGameManager.scoreManager.GetScore();
+    int bonus = nGameManager.phaseManager.lastClearBonus.Value;
 
-    bool isGameOver = nGameManager.isGameOver.Value;
+    bool isGameOver = nGameManager.scoreManager.isGameOver.Value;
 
     // ⭐タイトル分岐
     if (isGameOver)
@@ -85,7 +85,7 @@ void ShowResult()
 
         panel.SetActive(true);
 
-        bool isGameOver = nGameManager.isGameOver.Value;
+        bool isGameOver = nGameManager.scoreManager.isGameOver.Value;
         titleText.text = isGameOver ? "GAME OVER!" : "GAME CLEAR!";
 
         // （必要なら）前回削除

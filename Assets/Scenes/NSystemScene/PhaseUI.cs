@@ -25,14 +25,14 @@ public class PhaseUI : MonoBehaviour
     void InitializeUI()
     {
         phaseText.gameObject.SetActive(false);
-        OnPhaseFinishingChanged(false, nGameManager.phaseFinishing.Value);
-        OnPhaseChanged(-1, nGameManager.syncedPhaseIndex.Value);
-        OnCountdownChanged(0, nGameManager.countdownValue.Value);
+        OnPhaseFinishingChanged(false, nGameManager.phaseManager.phaseFinishing.Value);
+        OnPhaseChanged(-1, nGameManager.phaseManager.syncedPhaseIndex.Value);
+        OnCountdownChanged(0, nGameManager.phaseManager.countdownValue.Value);
 
-        nGameManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
+        nGameManager.phaseManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
         nGameManager.OnGameEnd += OnGameFinishedChanged;
-        nGameManager.countdownValue.OnValueChanged += OnCountdownChanged;
-        nGameManager.allEnemyDeadEvent.OnValueChanged += OnAllEnemyDead;
+        nGameManager.phaseManager.countdownValue.OnValueChanged += OnCountdownChanged;
+        nGameManager.phaseManager.allEnemyDeadEvent.OnValueChanged += OnAllEnemyDead;
         //nGameManager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
 
     }
@@ -40,7 +40,7 @@ public class PhaseUI : MonoBehaviour
     void OnPhaseChanged(int oldValue, int newValue)
     {
         Debug.Log($"Phase Changed: {oldValue} -> {newValue}");
-        var manager = nGameManager;
+        var manager = nGameManager.phaseManager;
         if (manager == null) return;
 
         if (newValue >= 0 && newValue < manager.phases.Length)
@@ -103,7 +103,7 @@ public class PhaseUI : MonoBehaviour
             float hideTime = 1f;
 
             // 最終フェーズ終了カウントダウンなら長くする
-            if (nGameManager.syncedPhaseIndex.Value == nGameManager.phases.Length - 1)
+            if (nGameManager.phaseManager.syncedPhaseIndex.Value == nGameManager.phaseManager.phases.Length - 1)
             {
                 hideTime = 2.3f;
             }
@@ -114,8 +114,8 @@ public class PhaseUI : MonoBehaviour
 
     public void ShowPhaseFinish()
     {
-        int score = nGameManager.GetScore();
-        int phase = nGameManager.syncedPhaseIndex.Value;
+        int score = nGameManager.scoreManager.GetScore();
+        int phase = nGameManager.phaseManager.syncedPhaseIndex.Value;
 
         phaseText.text = $"Phase {phase + 1} FINISH!\nScore: {score} point";
         phaseText.gameObject.SetActive(true);
@@ -216,7 +216,7 @@ public class PhaseUI : MonoBehaviour
 
     IEnumerator AllEnemyDeadSequence()
     {
-        int bonus = nGameManager.lastClearBonus.Value;
+        int bonus = nGameManager.phaseManager.lastClearBonus.Value;
 
         // ① ALL ENEMY DEAD!（1秒）
         phaseText.fontSize = 100;

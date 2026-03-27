@@ -15,7 +15,7 @@ public class NPhaseAudioObserver : MonoBehaviour
         managerAll = ManagerLocator.Instance.AllGameManager;
         if (managerAll == null) return;
 
-        managerAll.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
+        managerAll.phaseManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
         managerAll.OnGameEnd += OnGameFinished;
     }
 
@@ -23,7 +23,7 @@ public class NPhaseAudioObserver : MonoBehaviour
     {
         if (managerAll == null) return;
 
-        managerAll.syncedPhaseIndex.OnValueChanged -= OnPhaseChanged;
+        managerAll.phaseManager.syncedPhaseIndex.OnValueChanged -= OnPhaseChanged;
         managerAll.OnGameEnd -= OnGameFinished;
     }
 
