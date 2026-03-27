@@ -2,6 +2,7 @@
 using Unity.Netcode;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class NBullet : NetworkBehaviour
 {
@@ -138,7 +139,7 @@ public class NBullet : NetworkBehaviour
                 return;
             }
 
-            var root = client.PlayerObject.GetComponent<PlayerRoot>();
+            var root = client.PlayerObject.GetComponent<NetworkPlayerRoot>();
             if (root == null) return;
 
 
@@ -193,10 +194,11 @@ public class NBullet : NetworkBehaviour
         Destroy(fx, 2f);
     }
 }
-
+[Flags]
 public enum BulletState
 {
-    Human,
-    Ghost,
-    Both
+    Nothing = 0,
+    Human = 1,
+    Ghost = 1 << 2,
+    Both = Human | Ghost,
 }

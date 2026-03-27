@@ -52,9 +52,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     private IEnumerator SetupPlayerCoroutine()
     {
         // OwnerPlayer が null でなくなるまで待機
-        yield return new WaitUntil(() => ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer != null);
+        yield return new WaitUntil(() => ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer != null);
 
-        var localPlayer = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer;
+        var localPlayer = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer;
 
         // Transform が存在するかチェック（通常は必ずある）
         if (localPlayer != null)
@@ -101,7 +101,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
         Debug.Log("Die");
         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(lastAttackerId, out var client))
         {
-            var root = client.PlayerObject.GetComponent<PlayerRoot>();
+            var root = client.PlayerObject.GetComponent<NetworkPlayerRoot>();
             Debug.Log("Attacker found: " + lastAttackerId);
             if (root != null)
             {

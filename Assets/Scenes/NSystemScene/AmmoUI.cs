@@ -7,48 +7,25 @@ public class AmmoUI : MonoBehaviour
 {
     public TextMeshProUGUI ammoText;
     public Image reloadBar; // ImageのTypeを Filled にする
-    public NGun gun;
 
     private Color normalColor = Color.black;
     private Color reloadingColor = new Color(0.6f, 0.6f, 0.6f);
-    void Start()
-    {
-        if (gun == null)
-        {
-            Debug.LogError("Gun not assigned in AmmoUI!");
-            return;
-        }
-        UpdateAmmoDisplay(false);
-    }
-    public void OnReloadChanged(bool isReloading)
-    {
-        UpdateAmmoDisplay(isReloading);
-        if (isReloading) StartCoroutine(ReloadCorutune()); // リロード開始時に記録
-    }
 
-    IEnumerator ReloadCorutune()
+    public void UpdateReloadBar(float progress)
     {
-        WaitForSeconds wait01 = new WaitForSeconds(0.1f);
-        reloadBar.gameObject.SetActive(true); // 確実に表示
-        for (float t = 0; t < gun.WeaponSettings.reloadTime; t += 0.1f)
-        {
-            reloadBar.fillAmount = t / gun.WeaponSettings.reloadTime;
-            yield return wait01;
-        }
-        reloadBar.fillAmount = 0;
-        reloadBar.gameObject.SetActive(false);
+        reloadBar.fillAmount = progress;
     }
-    void UpdateAmmoDisplay(bool isReloading)
+    public void UpdateAmmoDisplay(int remainVal, int maxVal)
     {
-        if (isReloading)
+        if (remainVal == 0)
         {
-            ammoText.text = $"0 / {gun.WeaponSettings.maxAmmo}";
+            ammoText.text = $"0 / {maxVal}";
             ammoText.color = reloadingColor;
-            reloadBar.gameObject.SetActive(true);
+            reloadBar.gameObject.SetActive(true); // 確実に表示
         }
         else
         {
-            ammoText.text = $"{gun.AmmoVal} / {gun.WeaponSettings.maxAmmo}";
+            ammoText.text = $"{remainVal} / {maxVal}";
             ammoText.color = normalColor;
             reloadBar.gameObject.SetActive(false);
         }

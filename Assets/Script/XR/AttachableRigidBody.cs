@@ -11,7 +11,7 @@ public class AttachableRigidBody : AttachableBehaviour
 
     public void Focus()
     {
-        NetworkObject owner = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.NetworkObject;
+        NetworkObject owner = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.NetworkObject;
         AttachRpc(owner);
     }
     public void UnFocus()
@@ -23,7 +23,7 @@ public class AttachableRigidBody : AttachableBehaviour
     {
         if(reference.TryGet(out var netObject))
         {
-            if (netObject.TryGetComponent<PlayerRoot>(out var root))
+            if (netObject.TryGetComponent<NetworkPlayerRoot>(out var root))
             {
                 Attach(root.itemControll.Node);
                 this.transform.localPosition = Vector3.zero;

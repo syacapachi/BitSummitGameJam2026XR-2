@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
-using Yokoyama.Data;
-namespace Yokoyama.Manager
+using Syacapachi.Data;
+namespace Syacapachi.Manager
 {
     public class RankingManager : MonoBehaviour
     {

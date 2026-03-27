@@ -88,7 +88,7 @@ public class GunController : NetworkBehaviour
 
         // ② 弾のLayerをプレイヤーのJobに合わせる
         //GameObject go = obj.gameObject;
-        var job = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.propaty.Job;
+        var job = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.propaty.Job;
         string layerName = PlayerPropaty.jobToLayerDic[job];
         obj.SetLayerRecursively(LayerMask.NameToLayer(layerName));
 

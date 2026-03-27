@@ -5,15 +5,15 @@ using UnityEngine;
 public class CanvasManager : MonoBehaviour
 {
     [SerializeField] List<Canvas> canvasList = new();
-    CameraSetting ownerSetting;
-    public void ResistOwner(CameraSetting cameraSetting)
+    LocalCameraSetting ownerSetting;
+    public void ResistOwner(LocalCameraSetting cameraSetting)
     {
         ownerSetting = cameraSetting;
-        cameraSetting.OnCameraChanged += CameraChange;
+        
     }
     public void UnResisiOwner()
     {
-        ownerSetting.OnCameraChanged -= CameraChange;
+        
     }
     private void CameraChange(Camera camera)
     {
