@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: -7986057631169363681}
   - component: {fileID: 4970832313522535071}
   m_Layer: 7
-  m_Name: testghost
+  m_Name: testRedghost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 521833891
+  GlobalObjectIdHash: 1718562029
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
+  enemySO: {fileID: 11400000, guid: 6b6089d75f0b0e948aa95150ecc1b657, type: 2}
   hpCanvas: {fileID: 8115059269520921985}
   hpImage: {fileID: 6392055257079718664}
   hpText: {fileID: 7872890923030782825}
@@ -665,8 +665,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  loopClipAll: {fileID: 8300000, guid: ed620494acb721c4f9b62ad6241c4889, type: 3}
-  loopVolumeAll: 0.35
+  loopClipAll: {fileID: 8300000, guid: 935aaa30e3a817b40a0fbd0d6230ed29, type: 3}
+  loopVolumeAll: 0.1
 --- !u!114 &4970832313522535071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -684,11 +684,11 @@ MonoBehaviour:
   firePoint: {fileID: 1540549378645820342}
   laserLine: {fileID: 0}
   weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
-  allShootSoundSource: {fileID: 0}
+  allShootSoundSource: {fileID: -4752889112109069225}
   allReloadSoundSource: {fileID: 0}
   syncedAmmo:
     m_InternalValue: 0
-  enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
+  enemySO: {fileID: 11400000, guid: 6b6089d75f0b0e948aa95150ecc1b657, type: 2}
 --- !u!1 &2789469182908074600
 GameObject:
   m_ObjectHideFlags: 0
@@ -1064,7 +1064,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3200bcc81d4868f49bd0afca6f50701f, type: 2}
+  - {fileID: 2100000, guid: e43407cadc1dced45af5fb6c7c592a72, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

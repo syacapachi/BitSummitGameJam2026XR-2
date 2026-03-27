@@ -13,30 +13,36 @@ MonoBehaviour:
   m_Name: Phase2
   m_EditorClassIdentifier: 
   phaseDisplayName: Phase2
-  phaseTime: 30
-  clearBonus: 1000
+  phaseTime: 40
+  clearBonus: 2000
   spawnEvents:
   - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
-    spawnPointIndex: 0
-    spawnTime: 0
+    spawnPointIndex: 11
+    spawnTime: 2
   - enemyType: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
-    spawnPointIndex: 2
+    spawnPointIndex: 4
     spawnTime: 4
   - enemyType: {fileID: 11400000, guid: 6b6089d75f0b0e948aa95150ecc1b657, type: 2}
-    spawnPointIndex: 4
-    spawnTime: 8
+    spawnPointIndex: 14
+    spawnTime: 20
   - enemyType: {fileID: 11400000, guid: f4f5d5bc426dc4549ba7f2a186c570f1, type: 2}
     spawnPointIndex: 6
-    spawnTime: 14
+    spawnTime: 3
   - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
-    spawnPointIndex: 1
+    spawnPointIndex: 9
     spawnTime: 10
   - enemyType: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
-    spawnPointIndex: 3
+    spawnPointIndex: 14
     spawnTime: 6
   - enemyType: {fileID: 11400000, guid: f4f5d5bc426dc4549ba7f2a186c570f1, type: 2}
     spawnPointIndex: 5
-    spawnTime: 2
+    spawnTime: 1
   - enemyType: {fileID: 11400000, guid: 6b6089d75f0b0e948aa95150ecc1b657, type: 2}
-    spawnPointIndex: 7
-    spawnTime: 12
+    spawnPointIndex: 18
+    spawnTime: 8
+  - enemyType: {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
+    spawnPointIndex: 11
+    spawnTime: 25
+  - enemyType: {fileID: 11400000, guid: 46de6dc1c82b9ce4eb12e4f1f3bada05, type: 2}
+    spawnPointIndex: 10
+    spawnTime: 15
