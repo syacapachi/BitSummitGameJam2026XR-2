@@ -238,8 +238,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.06962113, z: -0, w: 0.99757355}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3345077496170377422}
   - {fileID: 5323915209134148996}
@@ -665,8 +665,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  loopClipAll: {fileID: 8300000, guid: ed620494acb721c4f9b62ad6241c4889, type: 3}
-  loopVolumeAll: 0.35
+  loopClipAll: {fileID: 8300000, guid: 935aaa30e3a817b40a0fbd0d6230ed29, type: 3}
+  loopVolumeAll: 0.1
 --- !u!114 &4970832313522535071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -684,7 +684,7 @@ MonoBehaviour:
   firePoint: {fileID: 1540549378645820342}
   laserLine: {fileID: 0}
   weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
-  allShootSoundSource: {fileID: 0}
+  allShootSoundSource: {fileID: -4752889112109069225}
   allReloadSoundSource: {fileID: 0}
   syncedAmmo:
     m_InternalValue: 0

@@ -4618,8 +4618,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_Resource: {fileID: 8300000, guid: a1762ede81c1dd843856850bd746c8ea, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -4736,7 +4736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   phaseChangeClipAll: {fileID: 8300000, guid: fe3de2f1b36a2c44ab6bc1dc901d97a4, type: 3}
-  gameClearClipAll: {fileID: 8300000, guid: a7616ad726ace2d40b832352b81d80f3, type: 3}
+  gameClearClipAll: {fileID: 8300000, guid: a1762ede81c1dd843856850bd746c8ea, type: 3}
   phaseVolumeAll: 1
   clearVolumeAll: 1
 --- !u!114 &3704934150371127547
@@ -4771,7 +4771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  markerPlacedClipAll: {fileID: 8300000, guid: 6242e0ac546c66e48a244523820e7e51, type: 3}
+  markerPlacedClipAll: {fileID: 8300000, guid: 84de006a9c69e05469e8e7402c58543f, type: 3}
   markerPlacedVolumeAll: 1
   playAsUiAll: 0
 --- !u!1 &4474157034096068673
@@ -7230,7 +7230,7 @@ Transform:
   m_GameObject: {fileID: 6807088508019889038}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
