@@ -34,26 +34,26 @@ public class CrystalHPUI : NetworkBehaviour
         }
 
         //  scoreの初期値が入るまで待つ（0対策）
-        yield return new WaitUntil(() => nGameManager.score.Value > 0);
+        yield return new WaitUntil(() => nGameManager.scoreManager.score.Value > 0);
 
         //  初期値をmaxとして保存
-        maxScore = nGameManager.score.Value;
+        maxScore = nGameManager.scoreManager.score.Value;
 
         // 念のため保険（0除算防止）
         maxScore = Mathf.Max(1f, maxScore);
 
         // 初期表示
-        UpdateScoreUI(nGameManager.score.Value);
+        UpdateScoreUI(nGameManager.scoreManager.score.Value);
 
         // 変更監視
-        nGameManager.score.OnValueChanged += OnScoreChanged;
+        nGameManager.scoreManager.score.OnValueChanged += OnScoreChanged;
     }
 
     private void OnDestroy()
     {
         if (nGameManager != null)
         {
-            nGameManager.score.OnValueChanged -= OnScoreChanged;
+            nGameManager.scoreManager.score.OnValueChanged -= OnScoreChanged;
         }
     }
 

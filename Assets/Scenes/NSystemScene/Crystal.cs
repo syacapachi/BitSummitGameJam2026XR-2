@@ -31,12 +31,12 @@ public class Crystal : MonoBehaviour
 
     void Initialize()
     {
-        if (nGameManager.isGameOver.Value)
+        if (nGameManager.scoreManager.isGameOver.Value)
         {
             Broken();
         }
 
-        nGameManager.isGameOver.OnValueChanged += OnGameOverChanged;
+        nGameManager.scoreManager.isGameOver.OnValueChanged += OnGameOverChanged;
         nGameManager.isBulletCome.OnValueChanged += OnBulletCome;
     }
 

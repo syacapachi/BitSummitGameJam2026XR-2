@@ -110,8 +110,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
             }
         }
 
-        ManagerLocator.Instance.AllGameManager.EnemyKilled(enemySO.scoreValue);
-        ManagerLocator.Instance.AllGameManager.spawner.UnregisterEnemy(this);
+        ManagerLocator.Instance.AllGameManager.phaseManager.EnemyKilled(enemySO.scoreValue);
+        ManagerLocator.Instance.AllGameManager.phaseManager.spawner.UnregisterEnemy(this);
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

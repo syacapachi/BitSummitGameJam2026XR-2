@@ -23,10 +23,10 @@ public class ScoreUI : MonoBehaviour
         }
 
         // 初期表示
-        UpdateScore(gameManager.score.Value);
+        UpdateScore(gameManager.scoreManager.score.Value);
 
         // スコア変更イベント
-        gameManager.score.OnValueChanged += OnScoreChanged;
+        gameManager.scoreManager.score.OnValueChanged += OnScoreChanged;
     }
 
     void OnScoreChanged(int oldValue, int newValue)
@@ -42,6 +42,6 @@ public class ScoreUI : MonoBehaviour
     void OnDestroy()
     {
         if (gameManager != null)
-            gameManager.score.OnValueChanged -= OnScoreChanged;
+            gameManager.scoreManager.score.OnValueChanged -= OnScoreChanged;
     }
 }
