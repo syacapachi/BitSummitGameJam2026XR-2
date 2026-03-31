@@ -170,6 +170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5448289219832509873}
+  - component: {fileID: 2518024169551014488}
   m_Layer: 0
   m_Name: Character1_Reference
   m_TagString: Untagged
@@ -193,6 +194,28 @@ Transform:
   - {fileID: 5341587708494342414}
   m_Father: {fileID: 1358144342988845292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2518024169551014488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410873649936404306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be45b286bce2c6043944e7c9d905976c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  m_Renderer:
+  - {fileID: 3586039225926179217}
+  - {fileID: 5432640361929983673}
+  - {fileID: 4091245804222042064}
+  - {fileID: 831941241983055276}
+  - {fileID: 4920936882827532348}
+  - {fileID: 1691772848561932592}
+  - {fileID: 3828621274431044271}
+  - {fileID: 317982270822398407}
 --- !u!1 &461706426310686252
 GameObject:
   m_ObjectHideFlags: 0
@@ -6536,6 +6559,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4546744144211839506}
+  - component: {fileID: 3086293919807793909}
   m_Layer: 0
   m_Name: mesh_root
   m_TagString: Untagged
@@ -6573,6 +6597,35 @@ Transform:
   - {fileID: 1689981186547295924}
   m_Father: {fileID: 1358144342988845292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3086293919807793909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7461593286571409016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be45b286bce2c6043944e7c9d905976c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  m_Renderer:
+  - {fileID: 4281159005728926349}
+  - {fileID: 1316376018937414345}
+  - {fileID: 3383343395320133337}
+  - {fileID: 3559475421785764402}
+  - {fileID: 63048729133973833}
+  - {fileID: 259903870303151810}
+  - {fileID: 709622216469364738}
+  - {fileID: 5570861471647808663}
+  - {fileID: 2567692317010826513}
+  - {fileID: 3559466697350273178}
+  - {fileID: 7603699253049154860}
+  - {fileID: 653315225359795209}
+  - {fileID: 5956514954197854723}
+  - {fileID: 6187467347265150836}
+  - {fileID: 8020339182133992282}
 --- !u!1 &7526877304102688578
 GameObject:
   m_ObjectHideFlags: 0

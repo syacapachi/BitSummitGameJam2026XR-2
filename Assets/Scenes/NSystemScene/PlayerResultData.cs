@@ -1,17 +1,23 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using System;
+using Unity.Collections;
 
 [Serializable]
-public struct PlayerResultData : INetworkSerializable
+public struct PlayerResultData : INetworkSerializable,IEquatable<PlayerResultData>
 {
     public ulong clientId;
-    public string playerName;
+    public FixedString128Bytes playerName;
     public int score;
     public int shotsFired;
     public int hits;
     public int shield;
     public float damageDealt;
     public int[] killCounts;
+
+    public readonly bool Equals(PlayerResultData other)
+    {
+        return this.clientId == other.clientId;
+    }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
@@ -24,5 +30,9 @@ public struct PlayerResultData : INetworkSerializable
         serializer.SerializeValue(ref shield);
         serializer.SerializeValue(ref damageDealt);
         serializer.SerializeValue(ref killCounts);
+    }
+    public override readonly string ToString()
+    {
+        return base.ToString();
     }
 }

@@ -12,7 +12,6 @@ public class NetworkPlayerRoot : NetworkBehaviour
     /// オブジェクトの参照
     /// </summary>
     public Transform playerRoot;
-    [SerializeField] GameObject avatorRoot;
     public PlayerHealth playerHealth;
     public PlayerPropaty propaty;
     public PlayerItemControll itemControll;
@@ -29,7 +28,6 @@ public class NetworkPlayerRoot : NetworkBehaviour
             playerRoot.gameObject.name = $"You Player_{OwnerClientId}";
             playerManager.ResistOwner(this);
             isXREnabled = XRSettings.isDeviceActive;
-            avatorRoot.SetActive(false);
         }
         else
         {
