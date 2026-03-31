@@ -20,6 +20,7 @@ public class Syncronize : NetworkBehaviour
     public readonly NetworkVariable<int> JumpCount = new NetworkVariable<int>(0,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Owner);
     private LocalPlayerRoot playerRoot;
     private float lastOrigonRotation = 0;
+    private static Quaternion correction = Quaternion.Euler(0, 180, 0);
     public InputReciever Reciever => playerRoot.InputReciver;
     public override void OnNetworkSpawn()
     {
@@ -55,16 +56,17 @@ public class Syncronize : NetworkBehaviour
             if(xrOrigin.transform.localRotation.eulerAngles.y - lastOrigonRotation >  0.1f)
             {
                 avatorRootTransfrom.rotation = xrOrigin.transform.rotation;
+                lastOrigonRotation = avatorRootTransfrom.rotation.eulerAngles.y;
             }
             //頭の角度
             Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
             networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
 
             //手・コントローラー
-            networkLeftHand.SetPositionAndRotation(leftHand.position, leftHand.rotation);
-            networkRightHand.SetPositionAndRotation(rightHand.position, rightHand.rotation);
-            networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
-            networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
+            networkLeftHand.SetPositionAndRotation(leftHand.position, leftHand.rotation * correction);
+            networkRightHand.SetPositionAndRotation(rightHand.position, rightHand.rotation * correction);
+            networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation * correction);
+            networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation * correction);
         }
     }
 }

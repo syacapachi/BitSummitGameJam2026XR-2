@@ -75,7 +75,7 @@ void ShowResult()
     {
         if (nGameManager != null)
         {
-            nGameManager.OnGameEnd -= OnGameFinished;
+            nGameManager.OnGameEndRpc -= OnGameFinished;
         }
     }
 

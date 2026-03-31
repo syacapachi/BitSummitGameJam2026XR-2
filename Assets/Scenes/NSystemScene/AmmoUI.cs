@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-public class AmmoUI : MonoBehaviour
+public class AmmoUI : MonoBehaviour,IProgressUI, ICountDownUI
 {
     public TextMeshProUGUI ammoText;
     public Image reloadBar; // ImageのTypeを Filled にする
@@ -11,11 +11,11 @@ public class AmmoUI : MonoBehaviour
     private Color normalColor = Color.black;
     private Color reloadingColor = new Color(0.6f, 0.6f, 0.6f);
 
-    public void UpdateReloadBar(float progress)
+    public void UpdateProgress(float progress)
     {
         reloadBar.fillAmount = progress;
     }
-    public void UpdateAmmoDisplay(int remainVal, int maxVal)
+    public void UpdateCount(int remainVal, int maxVal)
     {
         if (remainVal == 0)
         {

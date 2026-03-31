@@ -9,12 +9,12 @@ public class StartButton : NetworkBehaviour
 
     private void Start()
     {
-        ManagerLocator.Instance.AllGameManager.OnGameEnd += GameEndHandle;
+        ManagerLocator.Instance.AllGameManager.OnGameEndRpc += GameEndHandle;
     }
     public override void OnDestroy()
     {
         base.OnDestroy();
-        ManagerLocator.Instance.AllGameManager.OnGameEnd -= GameEndHandle;
+        ManagerLocator.Instance.AllGameManager.OnGameEndRpc -= GameEndHandle;
     }
     public void SelectHuman()
     {

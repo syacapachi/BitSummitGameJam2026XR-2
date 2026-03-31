@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Unity.Netcode;
-using Unity.Netcode.Components;
-using Unity.XR.CoreUtils;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Timeline;
 public class NGun : NetworkBehaviour
 {
     [SerializeField] GameObject bulletPrefab;
@@ -13,7 +8,6 @@ public class NGun : NetworkBehaviour
     [SerializeField] LineRenderer laserLine;
     [SerializeField] NGunAudioObserver audioObserver;
     [SerializeField] AmmoUI ammoUI;
-
     [SerializeField] WeaponSettingsSO weaponSettings;
     
     float nextFire;
@@ -25,6 +19,8 @@ public class NGun : NetworkBehaviour
     public int AmmoVal => syncedAmmo.Value;
 
     public float reloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
+    private ICountDownUI CountDownUI => ammoUI; // ICountDownUIを実装したAmmoUIを参照
+    private IProgressUI ProgressUI => ammoUI; // IProgressUIを実装したAmmoUIを参照
 
     private void OnEnable()
     {
@@ -161,20 +157,12 @@ public class NGun : NetworkBehaviour
         bullet.shooterId = OwnerClientId;
 
         // ★ここでstateを設定
-        switch (job)
+        bullet.state = job switch
         {
-            case PlayerPropaty.PlayerJob.Human:
-                bullet.state = BulletState.Human;
-                break;
-
-            case PlayerPropaty.PlayerJob.Ghost:
-                bullet.state = BulletState.Ghost;
-                break;
-
-            default:
-                bullet.state = BulletState.Both;
-                break;
-        }
+            PlayerPropaty.PlayerJob.Human => BulletState.Human,
+            PlayerPropaty.PlayerJob.Ghost => BulletState.Ghost,
+            _ => BulletState.Both,
+        };
         var stats = GetComponent<PlayerStats>();
         stats.AddShot();
         obj.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
@@ -189,21 +177,21 @@ public class NGun : NetworkBehaviour
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         for (float t = 0; t < reloadTime; t += 0.1f)
         {
-            ammoUI.UpdateReloadBar(t/reloadTime);
+            ProgressUI.UpdateProgress(t/reloadTime);
             yield return wait01;
         }
-        ammoUI.UpdateReloadBar(0);
+        ProgressUI.UpdateProgress(0);
 
         syncedAmmo.Value = weaponSettings.maxAmmo;
         isReloading = false;
-        ammoUI.UpdateAmmoDisplay(weaponSettings.maxAmmo, weaponSettings.maxAmmo);
+        CountDownUI.UpdateCount(weaponSettings.maxAmmo, weaponSettings.maxAmmo);
     }
     private void OnAmmoChanged(int oldVal, int newVal)
     {
         
         if (isReloading) return;
         if (oldVal < newVal) return;
-        ammoUI.UpdateAmmoDisplay(newVal, weaponSettings.maxAmmo);
+        CountDownUI.UpdateCount(newVal, weaponSettings.maxAmmo);
         audioObserver.PlayShotSound();
         if (newVal <= 0)
         {

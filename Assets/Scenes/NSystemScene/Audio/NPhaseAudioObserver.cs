@@ -16,7 +16,7 @@ public class NPhaseAudioObserver : MonoBehaviour
         if (managerAll == null) return;
 
         managerAll.phaseManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
-        managerAll.OnGameEnd += OnGameFinished;
+        managerAll.OnGameEndRpc += OnGameFinished;
     }
 
     private void OnDestroy()
@@ -24,7 +24,7 @@ public class NPhaseAudioObserver : MonoBehaviour
         if (managerAll == null) return;
 
         managerAll.phaseManager.syncedPhaseIndex.OnValueChanged -= OnPhaseChanged;
-        managerAll.OnGameEnd -= OnGameFinished;
+        managerAll.OnGameEndRpc -= OnGameFinished;
     }
 
     private void OnPhaseChanged(int oldValue, int newValue)

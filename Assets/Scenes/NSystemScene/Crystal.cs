@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
-public class Crystal : MonoBehaviour
+public class Crystal : MonoBehaviour,IDamageReciever
 {
     private NGameManager nGameManager;
 
@@ -16,6 +16,12 @@ public class Crystal : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip breakSE;
     public AudioClip hitSE;
+
+    public GameObject GameObject => crystal;
+
+    public float CurrentHealth => throw new System.NotImplementedException();
+
+    public float MaxHealth => throw new System.NotImplementedException();
 
     IEnumerator Start()
     {
@@ -37,7 +43,7 @@ public class Crystal : MonoBehaviour
         }
 
         nGameManager.scoreManager.isGameOver.OnValueChanged += OnGameOverChanged;
-        nGameManager.isBulletCome.OnValueChanged += OnBulletCome;
+        nGameManager.OnbulletComeRpcEvent += OnBulletCome;
     }
 
     void OnGameOverChanged(bool oldValue, bool newValue)
@@ -55,11 +61,8 @@ public class Crystal : MonoBehaviour
         PlayEffect();
         PlayAnimation();
     }
-
-    void OnBulletCome(bool oldValue, bool newValue)
+    void OnBulletCome()
     {
-        if (!newValue) return;
-
         PlayHitEffect();
         PlayHitSound();
     }
@@ -122,5 +125,10 @@ public class Crystal : MonoBehaviour
         {
             audioSource.PlayOneShot(hitSE);
         }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        throw new System.NotImplementedException();
     }
 }

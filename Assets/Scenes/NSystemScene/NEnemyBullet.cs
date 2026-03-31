@@ -1,10 +1,14 @@
+﻿using Unity.Netcode;
 using UnityEngine;
-using Unity.Netcode;
 
-public class NEnemyBullet : NetworkBehaviour
+public class NEnemyBullet : NetworkBehaviour,IDamageSender
 {
     public EnemySO enemySO;
     float speed;
+
+    public GameObject GameObject => this.gameObject;
+
+    public int Damage => enemySO.Damage;
 
     private void Start()
     {
@@ -43,5 +47,10 @@ public class NEnemyBullet : NetworkBehaviour
 
             DespawnBullet();
         }
+    }
+
+    public void SendDamage(IDamageReciever reciever, int damage)
+    {
+        reciever.TakeDamage(damage);
     }
 }

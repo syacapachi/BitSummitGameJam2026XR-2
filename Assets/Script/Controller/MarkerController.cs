@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class MarkerController : NetworkBehaviour
 {
