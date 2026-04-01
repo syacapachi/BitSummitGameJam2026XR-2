@@ -21,7 +21,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     public GameObject GameObject => this.gameObject;
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => enemySO.HP;
-    public BulletState enemyType;
+    public DamageAvailableTarget enemyType;
     private ulong lastAttackerId;
 
     public override void OnNetworkSpawn()

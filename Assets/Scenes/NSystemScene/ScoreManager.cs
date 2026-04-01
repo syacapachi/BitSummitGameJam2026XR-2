@@ -1,4 +1,4 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 using System;
 
@@ -27,7 +27,7 @@ public class ScoreManager : NetworkBehaviour
         if (score.Value < 0)
             score.Value = 0;
 
-        Debug.Log("Score: " + score.Value);
+        //Debug.Log("Score: " + score.Value);
 
         if (score.Value <= 0 && !isGameOver.Value)
         {

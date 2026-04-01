@@ -2,13 +2,14 @@
 using Unity.Netcode;
 using System.Collections.Generic;
 using System.Linq;
+using Netcode.Extensions;
 public class MeshController : NetworkBehaviour
 {
     [SerializeField] List<Renderer> m_Renderer = new();
 
     public override void OnNetworkSpawn()
     {
-        if (!IsOwner)
+        if (IsOwner)
         {
             foreach (var renderer in m_Renderer)
             {

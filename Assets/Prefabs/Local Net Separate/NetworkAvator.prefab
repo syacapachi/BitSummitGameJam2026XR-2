@@ -677,7 +677,6 @@ GameObject:
   m_Component:
   - component: {fileID: 576923628704286524}
   - component: {fileID: 3674519587910054667}
-  - component: {fileID: 4662546396659238195}
   - component: {fileID: 6899035633538032396}
   - component: {fileID: 4653234135911055798}
   - component: {fileID: 4810429957344545880}
@@ -723,28 +722,15 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   bulletPrefab: {fileID: 1439048196768540335, guid: e638558d27e71d64d87307f4fa964cfa, type: 3}
   firePoint: {fileID: 3370151797791726346}
+  weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
+  allShootSoundSource: {fileID: 0}
+  allReloadSoundSource: {fileID: 0}
+  syncedAmmo:
+    m_InternalValue: 0
   laserLine: {fileID: 7394096815455282567}
   audioObserver: {fileID: 4810429957344545880}
   ammoUI: {fileID: 7644947338409356395}
-  weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
-  syncedAmmo:
-    m_InternalValue: 0
---- !u!114 &4662546396659238195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 895692829062592419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d2d5ebc452a3614597b0c2eb37f2896, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  PlayerRoot: {fileID: 6125224147537168939}
-  playerjob: 1
-  IsDebugMode: 1
+  playerStats: {fileID: 4829413826223807485}
 --- !u!114 &6899035633538032396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5020,6 +5006,7 @@ GameObject:
   - component: {fileID: 7394096815455282567}
   - component: {fileID: 7889881544440967155}
   - component: {fileID: 3274049462513833735}
+  - component: {fileID: 4493815394021470581}
   m_Layer: 0
   m_Name: NetworkAvator
   m_TagString: Untagged
@@ -5347,9 +5334,23 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   playerRoot: {fileID: 1358144342988845292}
   playerHealth: {fileID: 4653234135911055798}
-  propaty: {fileID: 4662546396659238195}
+  propaty: {fileID: 4493815394021470581}
   itemControll: {fileID: 6899035633538032396}
   stats: {fileID: 4829413826223807485}
+--- !u!114 &4493815394021470581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6125224147537168939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 644c1fab673f7a74faca2a45449a8b5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  avatorCollider: {fileID: 6125224147537168939}
 --- !u!1 &6205789068384561375
 GameObject:
   m_ObjectHideFlags: 0

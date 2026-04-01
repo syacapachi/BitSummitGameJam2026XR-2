@@ -1,34 +1,38 @@
 ﻿using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-public class NGun : NetworkBehaviour
+public class NGun : GunController
 {
-    [SerializeField] GameObject bulletPrefab;
-    [SerializeField] Transform firePoint;
     [SerializeField] LineRenderer laserLine;
     [SerializeField] NGunAudioObserver audioObserver;
     [SerializeField] AmmoUI ammoUI;
-    [SerializeField] WeaponSettingsSO weaponSettings;
+    [SerializeField] PlayerStats playerStats;
     
-    float nextFire;
-    private static readonly WaitForSeconds wait01 = new WaitForSeconds(0.1f);
-    [SerializeField] NetworkVariable<int> syncedAmmo = new(0,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);
-    private bool isReloading = false;
-    public WeaponSettingsSO WeaponSettings => weaponSettings;
-
     public int AmmoVal => syncedAmmo.Value;
 
-    public float reloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
-    private ICountDownUI CountDownUI => ammoUI; // ICountDownUIを実装したAmmoUIを参照
-    private IProgressUI ProgressUI => ammoUI; // IProgressUIを実装したAmmoUIを参照
+    protected override ICountDownUI CountDownUI =>ammoUI;
+    protected override IProgressUI ProgressUI => ammoUI;
+    protected override IShotSound ShotSound => audioObserver;
+    protected override IReloadSound ReloadSound => audioObserver;
 
-    private void OnEnable()
+    public override void OnNetworkSpawn()
     {
-        syncedAmmo.OnValueChanged += OnAmmoChanged;
+        if (IsOwner)
+        {
+            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed += base.Activate;  
+        }
     }
-    private void OnDisable()
+    public override void OnNetworkDespawn()
     {
-        syncedAmmo.OnValueChanged -= OnAmmoChanged;
+        if (IsOwner) 
+        {
+            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed -= base.Activate;
+        }
+    }
+    
+    public override void OnLostOwnership()
+    {
+
     }
     void Update()
     {
@@ -36,19 +40,19 @@ public class NGun : NetworkBehaviour
 
         UpdateLaser();
     }
-    
+
     void UpdateLaser()
     {
-        if (laserLine == null || firePoint == null) return;
+        if (laserLine == null || FirePoint == null) return;
 
         // �J�n�_
-        laserLine.SetPosition(0, firePoint.position);
+        laserLine.SetPosition(0, FirePoint.position);
 
         // Raycast �Œ��e�_�𔻒�
         RaycastHit hit;
-        Vector3 forward = firePoint.forward;
+        Vector3 forward = FirePoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out hit, weaponSettings.laserDistance))
+        if (Physics.Raycast(FirePoint.position, forward, out hit, WeaponSettings.laserDistance))
         {
             // ���������ꍇ
             laserLine.SetPosition(1, hit.point);
@@ -56,34 +60,8 @@ public class NGun : NetworkBehaviour
         else
         {
             // ������Ȃ������ꍇ
-            laserLine.SetPosition(1, firePoint.position + forward * weaponSettings.laserDistance);
+            laserLine.SetPosition(1, FirePoint.position + forward * WeaponSettings.laserDistance);
         }
-    }
-    public override void OnNetworkSpawn()
-    {
-        if (IsOwner)
-        {
-            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed += ShootRpc;  
-        }
-    }
-    protected override void OnNetworkPostSpawn()
-    {
-        if (IsServer)
-        {
-            syncedAmmo.Value = weaponSettings.maxAmmo;
-        }
-    }
-    public override void OnNetworkDespawn()
-    {
-        if (IsOwner) 
-        {
-            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed -= ShootRpc;
-        }
-    }
-    
-    public override void OnLostOwnership()
-    {
-
     }
     /*
     private void ShootRpc()
@@ -109,7 +87,6 @@ public class NGun : NetworkBehaviour
         obj.GetComponent<NetworkObject>().Spawn();
     }
     */
-    [Rpc(SendTo.Server)]
     /*
     private void ShootRpc()
     {
@@ -138,64 +115,9 @@ public class NGun : NetworkBehaviour
     }
     */
 
-    private void ShootRpc()
+    protected override void OnShoot()
     {
-        if(!ManagerLocator.Instance.AllGameManager.IsGameStart) return;
-        if (isReloading) return;
-        if (Time.time < nextFire) return;
-
-        nextFire = Time.time + weaponSettings.fireRate;
-        syncedAmmo.Value--;
-
-        GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-
-        var job = GetComponent<PlayerPropaty>().Job;
-
-
-        var bullet = obj.GetComponent<NBullet>();
-
-        bullet.shooterId = OwnerClientId;
-
-        // ★ここでstateを設定
-        bullet.state = job switch
-        {
-            PlayerPropaty.PlayerJob.Human => BulletState.Human,
-            PlayerPropaty.PlayerJob.Ghost => BulletState.Ghost,
-            _ => BulletState.Both,
-        };
-        var stats = GetComponent<PlayerStats>();
-        stats.AddShot();
-        obj.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
-    }
-
-
-    private IEnumerator Reload()
-    {
-        isReloading = true;
-        audioObserver.PlayReloadSound();
-        Debug.Log("Reloading...");
-        // ここでリロードのアニメーションやエフェクトを再生することができます。
-        for (float t = 0; t < reloadTime; t += 0.1f)
-        {
-            ProgressUI.UpdateProgress(t/reloadTime);
-            yield return wait01;
-        }
-        ProgressUI.UpdateProgress(0);
-
-        syncedAmmo.Value = weaponSettings.maxAmmo;
-        isReloading = false;
-        CountDownUI.UpdateCount(weaponSettings.maxAmmo, weaponSettings.maxAmmo);
-    }
-    private void OnAmmoChanged(int oldVal, int newVal)
-    {
-        
-        if (isReloading) return;
-        if (oldVal < newVal) return;
-        CountDownUI.UpdateCount(newVal, weaponSettings.maxAmmo);
-        audioObserver.PlayShotSound();
-        if (newVal <= 0)
-        {
-            StartCoroutine(Reload());
-        }
+        base.OnShoot();
+        playerStats.AddShot();
     }
 }

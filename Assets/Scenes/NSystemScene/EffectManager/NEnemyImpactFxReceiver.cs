@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -51,7 +51,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             fxPosition = other.transform.position;
         }
 
-        PlayerPropaty.PlayerJob shooterJob = ResolveShooterJobServer(bullet.shooterId);
+        PlayerPropaty.PlayerJob shooterJob = ResolveShooterJobServer(bullet.ShooterId);
         bool isEffective = fxRuleServer == null || fxRuleServer.IsEffectiveFor(shooterJob);
 
         if (isEffective)

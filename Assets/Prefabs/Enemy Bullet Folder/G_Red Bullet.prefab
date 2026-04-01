@@ -9708,7 +9708,6 @@ GameObject:
   - component: {fileID: 9051326447991478589}
   - component: {fileID: 1808916243272969063}
   - component: {fileID: 2852131888510272425}
-  - component: {fileID: 3319732457440082594}
   - component: {fileID: 5976123196702261469}
   m_Layer: 0
   m_Name: G_Red Bullet
@@ -9923,22 +9922,6 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
---- !u!114 &3319732457440082594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6912148272411766303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b308c020f10cb748885d3ca367dfda3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  meshRenderer: {fileID: 3314569257148106165}
-  lookableJob: 2
-  hpCanvas: {fileID: 0}
 --- !u!114 &5976123196702261469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9952,4 +9935,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  gunSO: {fileID: 11400000, guid: 18cf6d010be7d7f4796103ae0820aa3e, type: 2}
+  lifeTime: 5
+  rb: {fileID: 7725814623509018697}
   enemySO: {fileID: 11400000, guid: 6b6089d75f0b0e948aa95150ecc1b657, type: 2}

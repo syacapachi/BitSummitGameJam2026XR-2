@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
-
+using System;
+[Obsolete("このクラスは、カメラのCullingMaskを変更する方針に変えたことで非推奨です")]
 public class LookStateChange : NetworkBehaviour
 {
     [SerializeField] Renderer meshRenderer;
@@ -14,7 +15,7 @@ public class LookStateChange : NetworkBehaviour
 
         if (playerManager.NetworkOwnerPlayer != null)
         {
-            OnJobChangedHandle(playerManager.NetworkOwnerPlayer.propaty.Job);
+            OnJobChangedHandle(playerManager.LocalPlayerRoot.Propaty.Job);
         }
     }
 

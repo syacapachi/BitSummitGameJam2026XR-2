@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 
 public class RoleButton : NetworkBehaviour
@@ -16,12 +16,14 @@ public class RoleButton : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!IsServer) return;
-        if (!other.CompareTag("Bullet")) return;
+        if(!other.TryGetComponent<IDamageSender>(out var damageSender))
+        {
+            return;
+        }
 
-        var bullet = other.GetComponentInParent<NBullet>();
-        if (bullet == null) return;
+        if (damageSender is not NBullet bullet) return;
 
-        ulong shooterId = bullet.shooterId;
+        ulong shooterId = bullet.ShooterId;
 
         if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(shooterId, out var client))
             return;

@@ -2,9 +2,13 @@
 using Unity.Netcode;
 using System.Collections;
 using System.Collections.Generic;
+using Syacapachi.util;
+
 
 public class NEnemySpawner : NetworkBehaviour
 {
+    //[SerializeField] LocalObjectPoolManager localPoolManager;
+    [SerializeField] NetworkObjectPool networkPool;
     public Transform[] spawnPoints;
     public Transform protectArea;
 
@@ -100,29 +104,28 @@ public class NEnemySpawner : NetworkBehaviour
     */
 
     void SpawnEnemy(EnemySO enemyData, int spawnIndex)
-{
-    if (spawnIndex < 0 || spawnIndex >= spawnPoints.Length)
     {
-        Debug.LogWarning("Invalid spawn index!");
-        return;
+        if (spawnIndex < 0 || spawnIndex >= spawnPoints.Length)
+        {
+            Debug.LogWarning("Invalid spawn index!");
+            return;
+        }
+
+        Transform point = spawnPoints[spawnIndex];
+
+        Vector3 dir = protectArea.position - point.position;
+        Quaternion rot = Quaternion.LookRotation(dir);
+
+        NetworkObject networkObject = networkPool.GetNetworkObject(
+            enemyData.prefab,
+               point.position,
+               rot);
+
+        var enemy = networkObject.GetComponent<NEnemy>();
+
+        enemies.Add(enemy);
+        networkObject.Spawn();
     }
-
-    Transform point = spawnPoints[spawnIndex];
-
-    Vector3 dir = protectArea.position - point.position;
-    Quaternion rot = Quaternion.LookRotation(dir);
-
-    GameObject obj = Instantiate(
-        enemyData.prefab,
-        point.position,
-        rot
-    );
-
-    var enemy = obj.GetComponent<NEnemy>();
-
-    enemies.Add(enemy);
-    obj.GetComponent<NetworkObject>().Spawn();
-}
 
     public void EnemyKilled()
     {

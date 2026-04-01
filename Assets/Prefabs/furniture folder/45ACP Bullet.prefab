@@ -155,11 +155,11 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   gunSO: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
   lifeTime: 5
+  rb: {fileID: 2101342538799749373}
+  target: 0
   hitFxPrefab: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
   shieldFxPrefab: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
   hitFxLife: 2
-  shooterId: 0
-  state: 0
 --- !u!96 &3060220139113979187
 TrailRenderer:
   serializedVersion: 3

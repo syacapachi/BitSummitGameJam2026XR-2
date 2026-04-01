@@ -13,7 +13,7 @@ public class NetworkPlayerRoot : NetworkBehaviour
     /// </summary>
     public Transform playerRoot;
     public PlayerHealth playerHealth;
-    public PlayerPropaty propaty;
+    public SyncroPropaty propaty; 
     public PlayerItemControll itemControll;
     public PlayerStats stats; // プレイヤーの統計情報を管理するコンポーネント
     private bool isXREnabled = false;

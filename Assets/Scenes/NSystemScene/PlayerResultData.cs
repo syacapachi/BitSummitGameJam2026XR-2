@@ -22,7 +22,7 @@ public struct PlayerResultData : INetworkSerializable,IEquatable<PlayerResultDat
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref clientId);
-        if (playerName == null) playerName = "";
+        if (playerName.IsEmpty) playerName = "";
         serializer.SerializeValue(ref playerName);
         serializer.SerializeValue(ref score);
         serializer.SerializeValue(ref shotsFired);

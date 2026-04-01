@@ -1,56 +1,24 @@
-﻿using Unity.Netcode;
+﻿using Syacapachi.util;
+using Unity.Netcode;
 using UnityEngine;
 
-public class NEnemyBullet : NetworkBehaviour,IDamageSender
+public class NEnemyBullet :　BulletBaseController
 {
     public EnemySO enemySO;
-    float speed;
 
-    public GameObject GameObject => this.gameObject;
 
-    public int Damage => enemySO.Damage;
-
-    private void Start()
+    protected override void OnHitServer(IDamageReciever reciever, GameObject other)
     {
-        speed = enemySO.BulletSpeed;
-
-        if (IsServer)
-        {
-            Invoke(nameof(DespawnBullet), 5f); // 5秒後に消える
-        }
-    }
-
-    void DespawnBullet()
-    {
-        if (NetworkObject.IsSpawned)
-        {
-            GetComponent<NetworkObject>().Despawn(true);
-        }
-    }
-
-    void Update()
-    {
-        if (!IsServer) return;
-
-        transform.position += transform.forward * speed * Time.deltaTime;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!IsServer) return;
-
-        if (other.gameObject == ManagerLocator.Instance.AllGameManager.protectArea)
+        if (reciever.GameObject == ManagerLocator.Instance.AllGameManager.protectArea)
         {
             Debug.Log("Bullet hit ProtectArea");
 
             ManagerLocator.Instance.AllGameManager.BulletHitProtectArea(-enemySO.Damage);
 
-            DespawnBullet();
+            if (NetworkObject.IsSpawned)
+            {
+                NetworkObject.Despawn(true);
+            }
         }
-    }
-
-    public void SendDamage(IDamageReciever reciever, int damage)
-    {
-        reciever.TakeDamage(damage);
     }
 }

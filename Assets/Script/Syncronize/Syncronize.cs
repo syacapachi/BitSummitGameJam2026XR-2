@@ -63,10 +63,10 @@ public class Syncronize : NetworkBehaviour
             networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
 
             //手・コントローラー
-            networkLeftHand.SetPositionAndRotation(leftHand.position, leftHand.rotation * correction);
-            networkRightHand.SetPositionAndRotation(rightHand.position, rightHand.rotation * correction);
-            networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation * correction);
-            networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation * correction);
+            networkLeftHand.SetPositionAndRotation(leftHand.position, leftHand.rotation);
+            networkRightHand.SetPositionAndRotation(rightHand.position, rightHand.rotation);
+            networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
+            networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
         }
     }
 }
