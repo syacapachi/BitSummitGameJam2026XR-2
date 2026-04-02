@@ -109,6 +109,6 @@ public class BombAction : NetworkBehaviour,IDamageSender
     public void SendDamage(IDamageReciever reciever, float damage)
     {
         if(IsServer)
-            reciever.TakeDamage(damage);
+            reciever.TakeDamage(this,damage);
     }
 }

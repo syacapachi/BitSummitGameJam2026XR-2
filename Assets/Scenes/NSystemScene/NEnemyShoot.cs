@@ -34,7 +34,7 @@ public class NEnemyShoot : GunController
             Quaternion.LookRotation(direction)
             );
         var bullet = networkObject.GetComponent<BulletBaseController>();
-        bullet.BulletInit(0,weaponSO.target,weaponSO);
+        bullet.BulletInit(0,PlayerJob.Nothing,weaponSO);
         networkObject.Spawn();
         
     }

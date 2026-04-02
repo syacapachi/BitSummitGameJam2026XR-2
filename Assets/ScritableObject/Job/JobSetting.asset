@@ -13,24 +13,39 @@ MonoBehaviour:
   m_Name: JobSetting
   m_EditorClassIdentifier: 
   playerLayerSettingsList:
-  - ColliderLayerMask:
+  - Job: 1
+    AttackableJob: 0
+    ColliderLayerMask:
       serializedVersion: 2
       m_Bits: 128
     CullingMask:
       serializedVersion: 2
       m_Bits: 831
-    Job: 1
-  - ColliderLayerMask:
+    AttackableLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    Layer: 0
+  - Job: 2
+    AttackableJob: 0
+    ColliderLayerMask:
       serializedVersion: 2
       m_Bits: 256
     CullingMask:
       serializedVersion: 2
       m_Bits: 703
-    Job: 2
-  - ColliderLayerMask:
+    AttackableLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    Layer: 0
+  - Job: 0
+    AttackableJob: 0
+    ColliderLayerMask:
       serializedVersion: 2
       m_Bits: 1
     CullingMask:
       serializedVersion: 2
       m_Bits: 958
-    Job: 0
+    AttackableLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    Layer: 0

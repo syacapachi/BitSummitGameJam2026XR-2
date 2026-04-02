@@ -17,5 +17,5 @@ public class WeaponSettingsSO : ScriptableObject
     [SerializeField] float damage = 1;
     public float Damage => damage;
     [Header("Target")]
-    public PlayerJob target;
+    public PlayerJob targetJob;
 }

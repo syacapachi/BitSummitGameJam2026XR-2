@@ -96,9 +96,9 @@ public class GunController : NetworkBehaviour
         var layerName = jobToLayerMaskDic[job];
         //go.SetLayerRecursively(LayerMask.NameToLayer(layerName));
 
-        var bullet = obj.GetComponent<NBullet>();
+        var bullet = obj.GetComponent<BulletBaseController>();
 
-        bullet.BulletInit(OwnerClientId, job,weaponSettings);
+        bullet.BulletInit(OwnerClientId,job,weaponSettings);
         // ③ ネットワークでSpawn
         obj.SpawnWithOwnership(OwnerClientId);
     }

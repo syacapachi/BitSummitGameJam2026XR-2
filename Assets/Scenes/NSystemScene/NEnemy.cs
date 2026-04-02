@@ -22,6 +22,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     private Transform targetPlayer;
     public GameObject GameObject => this.gameObject;
     NetworkObject IEnemy.NetworkObject => this.NetworkObject;
+    public EnemySO EnemySO => enemySO;  
+    public int Layer => gameObject.layer;
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => enemySO.HP;
     public PlayerJob enemyJob;
@@ -81,7 +83,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(IDamageSender sender, float damage)
     {
         if (!IsServer) return;
 
@@ -137,10 +139,5 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
         if (hpText != null)
             hpText.text = $"{hp} / {enemySO.HP}";
-    }
-
-    public void SetAttacker(ulong attackerId)
-    {
-        lastAttackerId = attackerId;
     }
 }
