@@ -4,12 +4,14 @@ using Syacapachi.Attribute;
 using System;
 public class SampleScript : MonoBehaviour
 {
-    [ShowInspector,SerializeField] int a;
+    [ShowInspector, SerializeField] int a;
     [ShowInspector, SerializeField] float b;
     [ShowInspector, SerializeField] Vector3 vec;
     [ShowInspector, SerializeField] Color color;
     [ShowInspector, SerializeField] GameObject obj;
     [ShowInspector, SerializeField] InlineClass clazz;
+    [ShowInspector, SerializeField] List<float> list = new List<float>();
+    [ShowInspector, SerializeField] List<InlineClass> classList = new List<InlineClass>();
     [ShowInspector, SerializeField] Dictionary<int,string> adic = new Dictionary<int,string>();
     public class InlineClass
     {
