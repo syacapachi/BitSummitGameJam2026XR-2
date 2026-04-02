@@ -10,8 +10,9 @@ public class SyncroPropaty : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
         );
-    private PlayerJob job = PlayerJob.Both;
-    public PlayerJob Job => job;
+
+    [field: SerializeField]
+    public PlayerJob Job { get; private set; } = PlayerJob.Both;
     private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new Dictionary<PlayerJob, PlayerLayerSettings>();
 
 
@@ -27,18 +28,24 @@ public class SyncroPropaty : NetworkBehaviour
     }
     public override void OnNetworkSpawn()
     {
-        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.OnJobChanged += OnJobChangeHandle;
+        if (IsOwner)
+        {
+            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.OnJobChanged += OnJobChangeHandle;
+        }
         PlayerLayer.OnValueChanged += OnValueChanged;
     }
 
     public override void OnNetworkDespawn()
     {
-        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.OnJobChanged -= OnJobChangeHandle;
+        if (IsOwner)
+        {
+            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.OnJobChanged -= OnJobChangeHandle;
+        }
         PlayerLayer.OnValueChanged -= OnValueChanged;
     }
     private void OnJobChangeHandle(PlayerJob newJob)
     {
-        job = newJob;
+        Job = newJob;
         PlayerLayerSettings setting = jobToLayerMaskDic[newJob];
         PlayerLayer.Value = setting.Layer;
     }
