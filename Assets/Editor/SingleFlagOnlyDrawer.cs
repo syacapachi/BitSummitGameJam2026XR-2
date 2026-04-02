@@ -3,12 +3,10 @@ namespace Syacapachi.Editor
 {
     using Syacapachi.Attribute;
     using System;
-    using System.Linq;
     using System.Reflection;
     using UnityEditor;
     using UnityEditorInternal;
     using UnityEngine;
-    using UnityEngine.UIElements;
 
     [CustomPropertyDrawer(typeof(SingleFlagOnlyAttribute))]
     public class SingleFlagOnlyDrawer : PropertyDrawer

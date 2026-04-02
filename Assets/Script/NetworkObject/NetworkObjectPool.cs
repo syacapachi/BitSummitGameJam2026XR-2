@@ -132,6 +132,12 @@ namespace Syacapachi.util
             void ActionOnRelease(NetworkObject networkObject)
             {
                 networkObject.gameObject.SetActive(false);
+                if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb))
+                {
+                    if(rb.isKinematic) return; 
+                    rb.linearVelocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                }
             }
 
             void ActionOnDestroy(NetworkObject networkObject)

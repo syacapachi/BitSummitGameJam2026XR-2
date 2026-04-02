@@ -92,7 +92,7 @@ public class PlayerPropaty : MonoBehaviour
     /// <param name="newValue"></param>
     private void OnLayerChange(PlayerLayerSettings newSetting)
     {
-        PlayerCollider.layer = newSetting.ColliderLayer;
+        PlayerCollider.layer = newSetting.Layer;
         // カメラのカリングマスクを更新
         PlayerCamera.cullingMask = newSetting.CullingMask;
     }

@@ -40,11 +40,15 @@ public class PlayerJobManager : MonoBehaviour
                 JobToLayerMaskDic[playerJob] = new PlayerLayerSettings
                 {
                     Job = playerJob,
-                    ColliderLayer = colliderLayer,
+                    ColliderLayerMask = colliderLayer,
                     CullingMask = cullingMask
                 };
                 Debug.LogWarning($"[JobManager]Job {playerJob} is not defined in JobSettingSO. ColliderLayer set to 0, CullingMask set to intersection of all defined jobs.");
             }
+        }
+        foreach (var kvp in JobLayerMaskDic)
+        {
+            Debug.Log($"Job: {kvp.Key}, ColliderLayer: {kvp.Value.ColliderLayerMask.value}, CullingMask: {kvp.Value.CullingMask.value}");
         }
     }
 }

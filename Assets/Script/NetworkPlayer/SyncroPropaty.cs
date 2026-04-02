@@ -39,8 +39,8 @@ public class SyncroPropaty : NetworkBehaviour
     private void OnJobChangeHandle(PlayerJob newJob)
     {
         job = newJob;
-        PlayerLayerSettings layerName = jobToLayerMaskDic[newJob];
-        PlayerLayer.Value = layerName.CullingMask;
+        PlayerLayerSettings setting = jobToLayerMaskDic[newJob];
+        PlayerLayer.Value = setting.Layer;
     }
     private void OnValueChanged(int previousValue, int newValue)
     {
