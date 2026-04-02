@@ -4,6 +4,7 @@ using System;
 
 public class ScoreManager : NetworkBehaviour
 {
+    public int initilScore;
     public NetworkVariable<int> score = new NetworkVariable<int>(
         10000,
         NetworkVariableReadPermission.Everyone,
@@ -35,6 +36,11 @@ public class ScoreManager : NetworkBehaviour
             Debug.Log("GAME OVER (ScoreManager)");
             OnGameOver?.Invoke();
         }
+    }
+
+    public void SetScore()
+    {
+        score.Value = initilScore;
     }
 
     public int GetScore()

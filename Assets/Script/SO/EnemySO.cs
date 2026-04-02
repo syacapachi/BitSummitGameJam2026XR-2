@@ -12,5 +12,7 @@ public class EnemySO : ScriptableObject
     public float FirstShootDelay = 10;
     public float shootInterval = 10;
     public int scoreValue = 100;
+    public int Speed = 100;
     public GameObject prefab;
+    public EnemyWeaponSettingsSO enemyWeapon;
 }

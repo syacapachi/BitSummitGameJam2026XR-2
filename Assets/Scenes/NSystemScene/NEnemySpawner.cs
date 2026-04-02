@@ -122,7 +122,7 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever
                point.position,
                rot);
 
-        var enemy = networkObject.GetComponent<NEnemy>();
+        var enemy = networkObject.GetComponent<IEnemy>();
         enemy.Init(reciver);
         RegisterEnemy(enemy);
         networkObject.Spawn();

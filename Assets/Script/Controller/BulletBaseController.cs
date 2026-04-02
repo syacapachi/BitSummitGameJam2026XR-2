@@ -22,14 +22,17 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
         if (IsServer)
         {
             rb = GetComponent<Rigidbody>();
-            rb.linearVelocity = transform.forward * gunSO.speed;
-            despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
+            
         }
     }
-    public void BulletInit(ulong id,PlayerJob target)
+    public void BulletInit(ulong id,PlayerJob target,WeaponSettingsSO so)
     {
         shooterId = id;
         this.target = target;
+        gunSO = so;
+        
+        rb.linearVelocity = transform.forward * gunSO.speed;
+        despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
     }
     private IEnumerator DespawnCorutine(float time)
     {
