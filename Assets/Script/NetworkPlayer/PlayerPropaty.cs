@@ -7,58 +7,29 @@ using UnityEngine;
 public class PlayerPropaty : MonoBehaviour
 {
     [SerializeField] InputReciever inputReciever;
-    public readonly static Dictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new()
-    {
-        { PlayerJob.Nothing , 
-            new PlayerLayerSettings(
-                LayerMask.NameToLayer("Default"),
-                1 << LayerMask.NameToLayer("Default"), 
-                PlayerJob.Nothing
-                ) 
-        },
-        { PlayerJob.Human, 
-            new PlayerLayerSettings(
-                LayerMask.NameToLayer("Human"),
-                1 << LayerMask.NameToLayer("Human"),
-                PlayerJob.Human
-                ) 
-        },
-        { PlayerJob.Ghost, 
-            new PlayerLayerSettings(
-                LayerMask.NameToLayer("Ghost"),
-                1 << LayerMask.NameToLayer("Ghost"),
-                PlayerJob.Ghost
-                )
-        },
-        { PlayerJob.Both, 
-            new PlayerLayerSettings(
-                LayerMask.NameToLayer("Both"),
-                (1 << LayerMask.NameToLayer("Human")) | (1 << LayerMask.NameToLayer("Ghost")),
-                PlayerJob.Both
-                ) 
-        }
-    };
- 
     [SerializeField] GameObject PlayerCollider;
     [SerializeField] Camera PlayerCamera;
-    [Flags]
-    public enum PlayerJob { 
-        Nothing = 0,//両方見えない。両方あたる。
-        Human = 1,//人間だけ見える。おばけだけ当たる。
-        Ghost = 1<<1,//おばけだけ見える。人間だけ当たる。
-        Both = Human | Ghost,//両方見える。両方当たらない。
-    }
-    public readonly struct PlayerLayerSettings
-    {
-        public readonly int layer;//Colliderのレイヤー
-        public readonly LayerMask LayerMask;//Cameraのカリングマスク
-        public readonly PlayerJob Job;//プレイヤーの職業
+    private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new Dictionary<PlayerJob, PlayerLayerSettings>();
 
-        public PlayerLayerSettings(int layer, LayerMask playerLayer, PlayerJob job)
+
+    private void Start()
+    {
+        var jobManager = ManagerLocator.Instance.JobManager;
+        if (jobManager == null)
         {
-            this.layer = layer;
-            LayerMask = playerLayer;
-            Job = job;
+            Debug.LogError("PlayerJobManager not found in the scene.");
+            return;
+        }
+        jobToLayerMaskDic = jobManager.JobLayerMaskDic;
+        
+        // 初期レイヤー設定
+        if (jobToLayerMaskDic.TryGetValue(playerjob, out var initialSettings))
+        {
+            OnLayerChange(initialSettings);
+        }
+        else
+        {
+            Debug.LogError($"Initial PlayerJob {playerjob} not found in JobLayerMaskDic.");
         }
     }
     public event Action<PlayerJob> OnJobChanged;
@@ -121,9 +92,9 @@ public class PlayerPropaty : MonoBehaviour
     /// <param name="newValue"></param>
     private void OnLayerChange(PlayerLayerSettings newSetting)
     {
-        PlayerCollider.layer = newSetting.layer;
+        PlayerCollider.layer = newSetting.ColliderLayer;
         // カメラのカリングマスクを更新
-        PlayerCamera.cullingMask = newSetting.LayerMask;
+        PlayerCamera.cullingMask = newSetting.CullingMask;
     }
     private void OnJobChangeHandle()
     {

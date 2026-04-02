@@ -9,7 +9,7 @@ public class EnemyShoot : GunController
 
     Transform target;
     Coroutine shootCorutine;
-    public DamageAvailableTarget enemyType; // Human / Ghost
+    public PlayerJob enemyJob; // Human / Ghost
 
     public override void OnNetworkSpawn()
     {
@@ -63,16 +63,10 @@ public class EnemyShoot : GunController
             var prop = player.propaty;
             if (prop == null) continue;
 
-            var job = prop.Job;
+            var playerJob = prop.Job;
 
             // 敵タイプに応じたフィルタ
-            bool canTarget = enemyType switch
-            {
-                DamageAvailableTarget.Human => (job & PlayerPropaty.PlayerJob.Human) != 0,
-                DamageAvailableTarget.Ghost => (job & PlayerPropaty.PlayerJob.Ghost) != 0,
-                DamageAvailableTarget.Both => true,
-                _ => false
-            };
+            bool canTarget = (enemyJob & playerJob) != 0;
 
             if (!canTarget) continue;
 

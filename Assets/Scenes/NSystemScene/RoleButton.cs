@@ -42,13 +42,13 @@ public class RoleButton : NetworkBehaviour
         if (role == RoleType.Human)
         {
             Debug.Log("Setting Human");
-            player.Job = PlayerPropaty.PlayerJob.Human;
+            player.Job = PlayerJob.Human;
             startButton.SelectHuman();
         }
         else
         {
             Debug.Log("Setting Ghost");
-            player.Job = PlayerPropaty.PlayerJob.Ghost;
+            player.Job = PlayerJob.Ghost;
             startButton.SelectGhost();
         }
 

@@ -5,7 +5,7 @@ using System;
 public class LookStateChange : NetworkBehaviour
 {
     [SerializeField] Renderer meshRenderer;
-    [SerializeField] PlayerPropaty.PlayerJob lookableJob;
+    [SerializeField] PlayerJob lookableJob;
     [SerializeField] Canvas hpCanvas; // ←HPバーのCanvasをここにアサイン
 
     public override void OnNetworkSpawn()
@@ -24,7 +24,7 @@ public class LookStateChange : NetworkBehaviour
         ManagerLocator.Instance.AllPlayerManager.OnOwnerJobChanged -= OnJobChangedHandle;
     }
 
-    private void OnJobChangedHandle(PlayerPropaty.PlayerJob job)
+    private void OnJobChangedHandle(PlayerJob job)
     {
         bool isVisible = (job & lookableJob) != 0;
 

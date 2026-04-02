@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Syacapachi.Attribute;
+using System;
 public class SampleScript : MonoBehaviour
 {
     [ShowInspector,SerializeField] int a;
@@ -17,7 +18,14 @@ public class SampleScript : MonoBehaviour
         {
             Debug.Log($"This is an inline method. name = {name}");
         }
-    }   
+    }
+    [Flags]
+    public enum SampleEnum
+    {
+        Value1,
+        Value2,
+        Value3
+    }
     [OnInspectorButton]
     public void SampleMethod()
     {
@@ -25,6 +33,11 @@ public class SampleScript : MonoBehaviour
     }
     [OnInspectorButton]
     public void SampleMethodWithParameter(string message)
+    {
+        Debug.Log("Message: " + message);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(SampleEnum message)
     {
         Debug.Log("Message: " + message);
     }

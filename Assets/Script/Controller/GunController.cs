@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.XR.CoreUtils;
@@ -34,6 +35,19 @@ public class GunController : NetworkBehaviour
     private float nextFire;
     //こいつは、残段数のみを同期してればわかる
     private bool isReloading = false;
+    private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new Dictionary<PlayerJob, PlayerLayerSettings>();
+
+
+    private void Start()
+    {
+        var jobManager = ManagerLocator.Instance.JobManager;
+        if (jobManager == null)
+        {
+            Debug.LogError("PlayerJobManager not found in the scene.");
+            return;
+        }
+        jobToLayerMaskDic = jobManager.JobLayerMaskDic;
+    }
     private void OnEnable()
     {
         syncedAmmo.OnValueChanged += OnAmmoChanged;
@@ -83,20 +97,12 @@ public class GunController : NetworkBehaviour
         // ② 弾のLayerをプレイヤーのJobに合わせる
         GameObject go = obj.gameObject;
         var job = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.propaty.Job;
-        string layerName = PlayerPropaty.jobToLayerMaskDic[job];
+        var layerName = jobToLayerMaskDic[job];
         //go.SetLayerRecursively(LayerMask.NameToLayer(layerName));
 
         var bullet = obj.GetComponent<NBullet>();
 
-        // ★ここでstateを設定
-        var target = job switch
-        {
-            PlayerPropaty.PlayerJob.Human => DamageAvailableTarget.Human,
-            PlayerPropaty.PlayerJob.Ghost => DamageAvailableTarget.Ghost,
-            _ => DamageAvailableTarget.Both,
-        };
-
-        bullet.BulletInit(OwnerClientId, target);
+        bullet.BulletInit(OwnerClientId, job);
         // ③ ネットワークでSpawn
         obj.SpawnWithOwnership(OwnerClientId);
     }

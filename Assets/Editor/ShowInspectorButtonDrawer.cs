@@ -8,6 +8,7 @@ namespace Syacapachi.Editor
     using System.Reflection;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.TextCore.Text;
     using UnityEngine.UIElements;
 
     [CustomPropertyDrawer(typeof(ShowInspectorAttribute))]
@@ -34,15 +35,15 @@ namespace Syacapachi.Editor
             SerializedPropertyType type = property.propertyType;
             if (type == SerializedPropertyType.ManagedReference)
             {
-                //DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
+                DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
             }
             else if (type == SerializedPropertyType.ObjectReference)
             {
-                //DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
+                DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
             }
             else 
             {
-                //DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
+                DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
             }
                 
         }
@@ -63,6 +64,12 @@ namespace Syacapachi.Editor
             name = ObjectNames.NicifyVariableName(name);
             if (t == typeof(int))
                 return EditorGUI.IntField(rect, name, currentValue != null ? (int)currentValue : 0);
+            if (t == typeof(byte))
+                return EditorGUI.IntField(rect, name, currentValue != null ? (int)(byte)currentValue : 0);
+            if (t == typeof(uint))
+                return EditorGUI.IntField(rect, name, currentValue != null ? (int)(uint)currentValue : 0);
+            if (t == typeof(short))
+                return EditorGUI.IntField(rect, name, currentValue != null ? (int)(short)currentValue : 0);
             if (t == typeof(float))
                 return EditorGUI.FloatField(rect, name, currentValue != null ? (float)currentValue : 0f);
             if (t == typeof(double))
@@ -93,6 +100,8 @@ namespace Syacapachi.Editor
                 return EditorGUI.CurveField(rect, name, currentValue as AnimationCurve ?? new AnimationCurve());
             if (t == typeof(Gradient))
                 return EditorGUI.GradientField(rect, name, currentValue as Gradient ?? new Gradient());
+            if(t == typeof(LayerMask))
+                return EditorGUI.LayerField(rect, name, currentValue != null ? (LayerMask)currentValue : new LayerMask());
             // Enum
             if (t.IsEnum)
             {

@@ -8,13 +8,13 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     [SerializeField] WeaponSettingsSO gunSO;
     [SerializeField] float lifeTime = 5f;
     [SerializeField] Rigidbody rb;
-    private DamageAvailableTarget target = DamageAvailableTarget.Both;
+    private PlayerJob target = PlayerJob.Both;
     private ulong shooterId;
     protected Coroutine despawnTimer;
     public ulong ShooterId => shooterId;
     public GameObject GameObject => gameObject;
 
-    public DamageAvailableTarget Target => target;
+    public PlayerJob Target => target;
 
     public float Damage => gunSO.Damage;
     public override void OnNetworkSpawn()
@@ -26,7 +26,7 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
             despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
         }
     }
-    public void BulletInit(ulong id,DamageAvailableTarget target)
+    public void BulletInit(ulong id,PlayerJob target)
     {
         shooterId = id;
         this.target = target;

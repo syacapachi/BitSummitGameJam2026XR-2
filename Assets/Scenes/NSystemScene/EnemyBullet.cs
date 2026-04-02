@@ -5,7 +5,7 @@ public class EnemyBullet : NetworkBehaviour
 {
     public EnemySO enemySO;
     float speed;
-    public DamageAvailableTarget bulletState;
+    public PlayerJob bulletTargetJob;
 
     private void Start()
     {

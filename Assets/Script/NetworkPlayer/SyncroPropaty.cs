@@ -1,8 +1,6 @@
-﻿using Unity.Netcode;
-using Unity.XR.CoreUtils;
+﻿using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.LowLevel;
-using static PlayerPropaty;
 
 public class SyncroPropaty : NetworkBehaviour
 {
@@ -14,6 +12,19 @@ public class SyncroPropaty : NetworkBehaviour
         );
     private PlayerJob job = PlayerJob.Both;
     public PlayerJob Job => job;
+    private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new Dictionary<PlayerJob, PlayerLayerSettings>();
+
+
+    private void Start()
+    {
+        var jobManager = ManagerLocator.Instance.JobManager;
+        if (jobManager == null)
+        {
+            Debug.LogError("PlayerJobManager not found in the scene.");
+            return;
+        }
+        jobToLayerMaskDic = jobManager.JobLayerMaskDic;
+    }
     public override void OnNetworkSpawn()
     {
         ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.OnJobChanged += OnJobChangeHandle;
@@ -28,8 +39,8 @@ public class SyncroPropaty : NetworkBehaviour
     private void OnJobChangeHandle(PlayerJob newJob)
     {
         job = newJob;
-        string layerName = jobToLayerMaskDic[newJob];
-        PlayerLayer.Value = LayerMask.NameToLayer(layerName);
+        PlayerLayerSettings layerName = jobToLayerMaskDic[newJob];
+        PlayerLayer.Value = layerName.CullingMask;
     }
     private void OnValueChanged(int previousValue, int newValue)
     {

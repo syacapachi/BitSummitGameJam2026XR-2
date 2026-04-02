@@ -17,13 +17,5 @@ public class WeaponSettingsSO : ScriptableObject
     [SerializeField] float damage = 1;
     public float Damage => damage;
     [Header("Target")]
-    public DamageAvailableTarget target;
-}
-[Flags]
-public enum DamageAvailableTarget
-{
-    Nothing = 0,
-    Human = 1,
-    Ghost = 1 << 2,
-    Both = Human | Ghost,
+    public PlayerJob target;
 }

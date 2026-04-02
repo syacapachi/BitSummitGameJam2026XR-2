@@ -44,7 +44,7 @@ public class NBullet : BulletBaseController
         if (enemy != null)
         {
             // ★弾のstateと敵のtypeを比較
-            if (Target == DamageAvailableTarget.Both || Target == enemy.enemyType)
+            if ((Target & enemy.enemyJob) != 0)
             {
                 // ダメージが通る
                 Debug.Log("Damage");

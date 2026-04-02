@@ -19,7 +19,7 @@ public class StartButton : NetworkBehaviour
     public void SelectHuman()
     {
         if(IsServer) return;
-        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.Job = PlayerPropaty.PlayerJob.Human;
+        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.Job = PlayerJob.Human;
         humanUI.SetActive(false);
         Debug.Log("Human");
     }
@@ -27,7 +27,7 @@ public class StartButton : NetworkBehaviour
     public void SelectGhost()
     {
         if (IsServer) return;
-        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.Job = PlayerPropaty.PlayerJob.Ghost;
+        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.Job = PlayerJob.Ghost;
         ghostUI.SetActive(false);
         Debug.Log("Ghost");
     }

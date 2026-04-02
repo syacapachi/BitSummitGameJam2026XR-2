@@ -51,7 +51,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             fxPosition = other.transform.position;
         }
 
-        PlayerPropaty.PlayerJob shooterJob = ResolveShooterJobServer(bullet.ShooterId);
+        PlayerJob shooterJob = ResolveShooterJobServer(bullet.ShooterId);
         bool isEffective = fxRuleServer == null || fxRuleServer.IsEffectiveFor(shooterJob);
 
         if (isEffective)
@@ -75,16 +75,16 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         }
     }
 
-    private PlayerPropaty.PlayerJob ResolveShooterJobServer(ulong shooterId)
+    private PlayerJob ResolveShooterJobServer(ulong shooterId)
     {
-        if (NetworkManager.Singleton == null) return PlayerPropaty.PlayerJob.Nothing;
+        if (NetworkManager.Singleton == null) return PlayerJob.Nothing;
         if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(shooterId, out var client))
-            return PlayerPropaty.PlayerJob.Nothing;
+            return PlayerJob.Nothing;
 
-        if (client.PlayerObject == null) return PlayerPropaty.PlayerJob.Nothing;
+        if (client.PlayerObject == null) return PlayerJob.Nothing;
 
         PlayerPropaty propaty = client.PlayerObject.GetComponentInChildren<PlayerPropaty>();
-        if (propaty == null) return PlayerPropaty.PlayerJob.Nothing;
+        if (propaty == null) return PlayerJob.Nothing;
 
         return propaty.Job;
     }

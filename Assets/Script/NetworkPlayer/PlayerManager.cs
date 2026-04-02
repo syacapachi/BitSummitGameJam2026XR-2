@@ -16,14 +16,14 @@ public class PlayerManager : MonoBehaviour
     public LocalPlayerRoot LocalPlayerRoot => localRoot;
     public IReadOnlyList<NetworkPlayerRoot> AllPlayers => playerList;
 
-    public event Action<PlayerPropaty.PlayerJob> OnOwnerJobChanged;
+    public event Action<PlayerJob> OnOwnerJobChanged;
     [Header("Owner Setting")]
     [Tooltip("ホスト、クライアント設定前のカメラ")]
     [SerializeField] Camera mainCamera;
     [SerializeField] Canvas worldCanvas;
     [SerializeField] bool IsJobOverride;
     [SerializeField,EnableIf(nameof(IsJobOverride))]
-    PlayerPropaty.PlayerJob JobOverride;
+    PlayerJob JobOverride;
     public Camera PlayerCamera => mainCamera;
     public Canvas WorldCanvas => worldCanvas;
     public void ResistPlayer(NetworkPlayerRoot playerRoot)
@@ -53,7 +53,7 @@ public class PlayerManager : MonoBehaviour
         worldCanvas.worldCamera = null;
         mainCamera.enabled = true;
     }
-    private void OnJobChanged(PlayerPropaty.PlayerJob job)
+    private void OnJobChanged(PlayerJob job)
     {
         OnOwnerJobChanged?.Invoke(job);
     }
