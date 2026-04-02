@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using Unity.Netcode;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
-public class PlayerEffects : NetworkBehaviour
+public class PlayerEffects : MonoBehaviour
 {
     [SerializeField] private GameObject[] damageBorders;
     [SerializeField] private float flashTime = 0.3f;

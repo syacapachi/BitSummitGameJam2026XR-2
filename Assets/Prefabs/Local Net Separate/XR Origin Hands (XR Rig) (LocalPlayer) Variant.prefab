@@ -116,7 +116,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a68185c628e611444b5a25eb835e72bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   scoreBar: {fileID: 2498042923667313934}
   scoreText: {fileID: 777735876539211152}
 --- !u!1 &1125860013004341346
@@ -753,7 +752,6 @@ GameObject:
   - component: {fileID: 8807509076992176207}
   - component: {fileID: 1777064568029597602}
   - component: {fileID: 8495756359389418233}
-  - component: {fileID: 4842023194665267277}
   - component: {fileID: 7250739930929237557}
   - component: {fileID: 284508064165480584}
   m_Layer: 5
@@ -845,21 +843,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4842023194665267277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5432610159161070515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a68185c628e611444b5a25eb835e72bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  scoreBar: {fileID: 0}
-  scoreText: {fileID: 0}
 --- !u!114 &7250739930929237557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1153,7 +1136,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b558a321ee8d5ee4aada17d72a025140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   damageBorders:
   - {fileID: 3778646378708611657}
   flashTime: 0.3
@@ -1771,6 +1753,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3704889835333334857, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3849287962258532554, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4025051795825305909, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -2118,6 +2108,14 @@ PrefabInstance:
     - target: {fileID: 7917674757885691568, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_EnableUIInteraction
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7917674758240283209, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7917674758919744168, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8146434125951353786, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: phaseBoard
