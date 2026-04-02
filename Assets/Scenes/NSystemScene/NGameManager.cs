@@ -38,6 +38,7 @@ public class NGameManager : NetworkBehaviour
         Debug.Log("Game Start");
         gameStarted = true;
         gameState.Value = GameState.Playing;
+        scoreManager.SetScore();
         phaseManager.StartPhases();
     }
 

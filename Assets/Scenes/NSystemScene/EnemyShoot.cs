@@ -6,6 +6,7 @@ using Syacapachi.util;
 public class EnemyShoot : GunController
 {
     public EnemySO enemySO;
+    private EnemyWeaponSettingsSO weaponSO; 
 
     Transform target;
     Coroutine shootCorutine;
@@ -17,6 +18,7 @@ public class EnemyShoot : GunController
         if (!IsServer) return;
 
         //target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
+        weaponSO = enemySO.enemyWeapon;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
 

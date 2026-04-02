@@ -98,7 +98,7 @@ public class GunController : NetworkBehaviour
 
         var bullet = obj.GetComponent<NBullet>();
 
-        bullet.BulletInit(OwnerClientId, job);
+        bullet.BulletInit(OwnerClientId, job,weaponSettings);
         // ③ ネットワークでSpawn
         obj.SpawnWithOwnership(OwnerClientId);
     }
