@@ -1,79 +1,90 @@
-using Unity.Netcode;
-using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
+using static UnityEngine.Rendering.DebugUI;
 
-[Serializable]
-public class EnemyKillData
+public class PlayerStats : MonoBehaviour
 {
-    public string enemyType;
-    public int killCount;
-}
-
-public class PlayerStats : NetworkBehaviour
-{
-    public NetworkVariable<int> score = new NetworkVariable<int>(0);
-
-    public NetworkVariable<int> shotsFired = new NetworkVariable<int>(0);
-    public NetworkVariable<int> hits = new NetworkVariable<int>(0);
-    public NetworkVariable<int> shiled = new NetworkVariable<int>(0);
-    public NetworkVariable<float> damageDealt = new NetworkVariable<float>(0);
+    public int score = 0;
+    public int shotsFired = 0;
+    public int hits = 0;
+    public int shield = 0;
+    public float damageDealt = 0;
 
     [SerializeField]
-    private List<EnemyKillData> killCounts = new List<EnemyKillData>();
+    private int enemyTypeCount = 10; // 敵の種類数（固定）
+    [SerializeField]
+    private int[] killCounts;
 
+    public static List<PlayerStats> AllPlayers = new List<PlayerStats>();
+    void Awake()
+    {
+        killCounts = new int[enemyTypeCount];
+    }
 
     // 発射
     public void AddShot()
     {
-        if (!IsServer) return;
-        shotsFired.Value++;
+        shotsFired++;
     }
 
     // 命中
     public void AddHit()
     {
-        if (!IsServer) return;
-        hits.Value++;
+        hits++;
     }
 
     // 与ダメージ
     public void AddDamage(float damage)
     {
-        if (!IsServer) return;
-        damageDealt.Value += damage;
+        damageDealt += damage;
     }
 
-    // 敵撃破
-    public void AddKill(string enemyType, int scoreValue)
+    // 敵撃破（enemyIdに変更）
+    public void AddKill(int enemyId, int scoreValue)
     {
-        if (!IsServer) return;
+        score += scoreValue;
 
-        score.Value += scoreValue;
-
-        EnemyKillData data = killCounts.Find(x => x.enemyType == enemyType);
-
-        if (data == null)
+        if (enemyId < 0 || enemyId >= killCounts.Length)
         {
-            data = new EnemyKillData();
-            data.enemyType = enemyType;
-            data.killCount = 0;
-            killCounts.Add(data);
+            Debug.LogWarning($"Invalid enemyId: {enemyId}");
+            return;
         }
 
-        data.killCount++;
+        killCounts[enemyId]++;
     }
 
     public void AddShield()
     {
-        if (!IsServer) return;
-        shiled.Value++;
+        shield++;
     }
 
     // 命中率
     public float GetAccuracy()
     {
-        if (shotsFired.Value == 0) return 0;
-        return (float)hits.Value / shotsFired.Value;
+        if (shotsFired == 0) return 0;
+        return (float)hits / shotsFired;
+    }
+
+    // 外部から取得用（重要）
+    public int[] GetKillCounts()
+    {
+        return killCounts;
+    }
+
+    public PlayerResultData CreateResultData()
+    {
+        return new PlayerResultData
+        {
+            clientId = GetComponentInParent<NetworkObject>().OwnerClientId,
+            score = score,
+            shotsFired = shotsFired,
+            hits = hits,
+            shield = shield,
+            damageDealt = damageDealt,
+            killCounts = (int[])killCounts.Clone() // 重要：コピー
+        };
     }
 }

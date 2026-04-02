@@ -1,10 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
+using Syacapachi.util;
 
 public class NEnemyShoot : GunController
 {
     public EnemySO enemySO;
+    public EnemyWeaponSettingsSO weaponSO;
 
     Transform target;
     Coroutine shootCorutine;
@@ -16,20 +18,23 @@ public class NEnemyShoot : GunController
         if (!IsServer) return;
 
         target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
+        weaponSO = enemySO.enemyWeapon;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
 
-    private void Shoot()
+    protected override void OnShoot()
     {
         Vector3 direction = (target.position - transform.position).normalized;
 
-        GameObject bullet = Instantiate(
-            bulletPrefab,
-            firePoint.position,
+        NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(
+            BulletPrefab, 
+            FirePoint.position, 
             Quaternion.LookRotation(direction)
-        );
-
-        bullet.GetComponent<NetworkObject>().Spawn();
+            );
+        var bullet = networkObject.GetComponent<BulletBaseController>();
+        bullet.BulletInit(0,weaponSO.target,weaponSO);
+        networkObject.Spawn();
+        
     }
 
     private IEnumerator ShootCorutine()
@@ -38,13 +43,13 @@ public class NEnemyShoot : GunController
 
         while (true)
         {
-            for (float i = enemySO.shootInterval; i > 0f; i -= 0.1f)
+            for (float i = weaponSO.reloadTime; i > 0f; i -= 0.1f)
             {
                 //演出
                 yield return wait01;
             }
 
-            Shoot();
+            OnShoot();
 
             //打った後の待機時間
             yield return wait01;

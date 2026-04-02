@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
   m_Name: testGhost1
   m_EditorClassIdentifier: 
-  Name: Enemy
+  ID: 0
+  Name: testGhost1
+  icon: {fileID: 21300000, guid: aa1e07d3e3ba968489f3cba3bbe76b41, type: 3}
   HP: 100
   Damage: 100
   Speed: 0.1

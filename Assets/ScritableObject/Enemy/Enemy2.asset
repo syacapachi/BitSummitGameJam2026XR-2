@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
   m_Name: Enemy2
   m_EditorClassIdentifier: 
+  ID: 13
+  Name: Enemy
   HP: 200
   Damage: 100
   Speed: 1
+  BulletSpeed: 5
+  FirstShootDelay: 10
+  shootInterval: 10
   scoreValue: 200
   prefab: {fileID: 2105836037167788384, guid: a016579188040ef409a81af685d0d865, type: 3}

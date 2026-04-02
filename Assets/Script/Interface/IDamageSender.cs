@@ -3,6 +3,6 @@
 public interface IDamageSender
 {
     public GameObject GameObject { get; }
-    public int Damage { get; }
-    public void SendDamage(IDamageReciever reciever,int damage);
+    public float Damage { get; }
+    public void SendDamage(IDamageReciever reciever,float damage);
 }

@@ -103,10 +103,16 @@ namespace Syacapachi.Editor
             {
                 Debug.LogWarning($"[EnableIfEnumDrawer] skipped drawing due to UnityException: {e.Message}");
             }
+            catch (ExitGUIException)
+            {
+                // これはUnityの正常動作なのでそのまま投げ直す
+                throw;
+            }
             catch (Exception ex)
             {
                 Debug.LogError($"[EnableIfEnumDrawer] unexpected error: {ex}");
             }
+            
         }
 
         /// <summary>

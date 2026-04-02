@@ -1,7 +1,6 @@
 ﻿#if UNITY_EDITOR
 namespace Syacapachi.Editor
 {
-    using Meta.XR.ImmersiveDebugger.Utils;
     using Syacapachi.Attribute;
     using System;
     using System.Collections;
@@ -9,6 +8,7 @@ namespace Syacapachi.Editor
     using System.Reflection;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.TextCore.Text;
     using UnityEngine.UIElements;
 
     [CustomPropertyDrawer(typeof(ShowInspectorAttribute))]
@@ -31,21 +31,28 @@ namespace Syacapachi.Editor
             }
             var attr = (ShowInspectorAttribute)attribute;
             Type targetType = fieldInfo.FieldType;
-            Debug.Log(targetType);
             SerializedPropertyType type = property.propertyType;
+
+            //プロパティはラッパークラスなので、実際のオブジェクトを取得する必要がある
+            //しかし、値を変更する場合はラッパークラス越しに変更する必要があるため、プロパティから直接値を取得して描画するのではなく、リフレクションでフィールドの値を取得して描画する。
+            object target = property.serializedObject.targetObject;
+
+
+            EditorGUI.BeginProperty(position, label, property);
             if (type == SerializedPropertyType.ManagedReference)
             {
-                //DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
+                DrawField(position, targetType, label.text, fieldInfo.GetValue(target));
             }
             else if (type == SerializedPropertyType.ObjectReference)
             {
-                //DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
+                DrawField(position, targetType, label.text, fieldInfo.GetValue(target));
             }
             else 
             {
-                //DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
+                DrawField(position, targetType, label.text, fieldInfo.GetValue(target));
             }
-                
+            EditorGUI.EndProperty();
+
         }
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
@@ -64,6 +71,12 @@ namespace Syacapachi.Editor
             name = ObjectNames.NicifyVariableName(name);
             if (t == typeof(int))
                 return EditorGUI.IntField(rect, name, currentValue != null ? (int)currentValue : 0);
+            if (t == typeof(byte))
+                return EditorGUI.IntField(rect, name, currentValue != null ? (int)(byte)currentValue : 0);
+            if (t == typeof(uint))
+                return EditorGUI.IntField(rect, name, currentValue != null ? (int)(uint)currentValue : 0);
+            if (t == typeof(short))
+                return EditorGUI.IntField(rect, name, currentValue != null ? (int)(short)currentValue : 0);
             if (t == typeof(float))
                 return EditorGUI.FloatField(rect, name, currentValue != null ? (float)currentValue : 0f);
             if (t == typeof(double))
@@ -94,6 +107,8 @@ namespace Syacapachi.Editor
                 return EditorGUI.CurveField(rect, name, currentValue as AnimationCurve ?? new AnimationCurve());
             if (t == typeof(Gradient))
                 return EditorGUI.GradientField(rect, name, currentValue as Gradient ?? new Gradient());
+            if(t == typeof(LayerMask))
+                return EditorGUI.LayerField(rect, name, currentValue != null ? (LayerMask)currentValue : new LayerMask());
             // Enum
             if (t.IsEnum)
             {

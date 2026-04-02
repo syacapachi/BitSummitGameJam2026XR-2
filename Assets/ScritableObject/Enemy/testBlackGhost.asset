@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
   m_Name: testBlackGhost
   m_EditorClassIdentifier: 
-  Name: Enemy
-  HP: 100
-  Damage: 200
+  ID: 1
+  Name: testBlackGhost
+  icon: {fileID: 21300000, guid: 9fe4f9eb838ecb4419917ae68007ca2d, type: 3}
+  HP: 1000
+  Damage: 500
   Speed: 0.1
-  BulletSpeed: 10
-  FirstShootDelay: 10
+  BulletSpeed: 20
+  FirstShootDelay: 3
   shootInterval: 2
-  scoreValue: 500
+  scoreValue: 1000
   prefab: {fileID: 2515483553086041883, guid: 4d89a9c5f68b98442bfda5a4d87c9aef, type: 3}

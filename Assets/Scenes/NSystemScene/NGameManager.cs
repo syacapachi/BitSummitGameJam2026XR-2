@@ -1,293 +1,128 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
-using Syacapachi.Attribute;
 using System;
+using System.Collections.Generic;
+using Syacapachi.Attribute;
+
 public class NGameManager : NetworkBehaviour
 {
-    public PhaseSO[] phases;
-    private int currentPhaseIndex = -1;
-    public float timer;
-    
-    public NEnemySpawner spawner;
-    public NetworkVariable<int> score = new NetworkVariable<int>(10000);
-
     public GameObject protectArea;
-    private bool isEnemycome = false;
-
-    public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
-    public NetworkVariable<bool> IsGameFinished = new NetworkVariable<bool>(false);
-    bool gameStarted = false;
+    public ScoreManager scoreManager;
+    public PhaseManager phaseManager;
+    private bool gameStarted = false;
     public bool IsGameStart => gameStarted;
-    public NetworkVariable<bool> isBulletCome = new NetworkVariable<bool>(
-        false,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
-    public NetworkVariable<int> countdownValue = new NetworkVariable<int>(
-        0,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
-    private bool isCountingDown = false;
-    public NetworkVariable<bool> phaseFinishing = new NetworkVariable<bool>(
-        false,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
 
-    public NetworkVariable<bool> allEnemyDeadEvent = new NetworkVariable<bool>(
-        false,
+    public NetworkVariable<GameState> gameState = new NetworkVariable<GameState>(
+        GameState.Waiting,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-
-    public NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(
-        0,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
-
-    public NetworkVariable<bool> isGameOver = new NetworkVariable<bool>(
-        false,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
-
-    public event Action OnGameEnd;
+    public event Action OnbulletComeRpcEvent;
+    public event Action OnGameEndRpc;
 
     public override void OnNetworkSpawn()
     {
-        Debug.Log("GameManager OnNetworkSpawn : " + IsServer + " / " + IsClient);
-        syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
-
         if (!IsServer) return;
 
-        spawner = GetComponentInChildren<NEnemySpawner>();
+        // 🔗 イベント接続
+        scoreManager.OnGameOver += HandleGameOver;
+        phaseManager.OnGameClear += HandleGameClear;
+        phaseManager.OnPhaseClearBonus += HandleBonus;
     }
 
+    [OnInspectorButton("Start Game")]
     public void StartGame()
     {
         if (!IsServer) return;
 
         Debug.Log("Game Start");
         gameStarted = true;
-
-        ResetAndStartGame();
+        gameState.Value = GameState.Playing;
+        scoreManager.SetScore();
+        phaseManager.StartPhases();
     }
 
-    void Update()
+    void HandleBonus(int bonus)
     {
-        if (!IsServer) return;
-        if (currentPhaseIndex >= phases.Length) return;
-        if (isCountingDown) return;
-        if (!gameStarted) return;
-        if (IsGameFinished.Value) return; 
-
-        timer -= Time.deltaTime;
-
-        if (timer <= 0 )
-        {
-            EndPhase();
-        }
+        scoreManager.AddScore(bonus);
     }
 
-    [OnInspectorButton("Reset And Start Game")]
-    public void ResetAndStartGame()
+    void HandleGameOver()
     {
-        gameStarted = true;
-        currentPhaseIndex = -1;
-        StartNextPhase();
+        Debug.Log("GAME OVER");
+        gameState.Value = GameState.GameOver;
+
+        phaseManager.spawner.KillAllEnemies();
+
+        OnGameEndClientRpc();
+        SendResults();
     }
 
-    void StartNextPhase()
+    void HandleGameClear()
     {
-        currentPhaseIndex++;
+        Debug.Log("GAME CLEAR");
+        gameState.Value = GameState.GameClear;
 
-        if (currentPhaseIndex >= phases.Length)
-        {
-            Debug.Log("GAME CLEAR");
-            OnGameEnd.Invoke();
-
-            return;
-        }
-
-        StartCoroutine(StartPhaseWithCountdown(currentPhaseIndex));
-    }
-
-        private IEnumerator StartPhaseWithCountdown(int phaseIndex)
-        {
-            isCountingDown = true;
-            int count = 3;
-            while (count > 0)
-            {
-                countdownValue.Value = count;
-                Debug.Log("Countdown: " + count);
-                yield return new WaitForSeconds(1f);
-                count--;
-            }
-
-            countdownValue.Value = 0; // 0でカウントダウン終了
-            isCountingDown = false;
-
-            // Phase開始
-            syncedPhaseIndex.Value = phaseIndex;
-
-            PhaseSO phase = phases[phaseIndex];
-            timer = phase.phaseTime;
-
-            spawner.SpawnFromPhase(phase);
-
-            Debug.Log("Start Phase: " + phaseIndex);
-        }
-
-    void EndPhase()
-    {
-        // 通常進行
-        if (currentPhaseIndex == phases.Length - 1)
-        {
-            StartCoroutine(EndPhaseWithCountdown());
-        }
-        else
-        {
-        if (spawner.AllDead())
-        {
-            int bonus = phases[currentPhaseIndex].clearBonus;
-            AddScore(bonus);
-
-            lastClearBonus.Value = bonus;
-            StartCoroutine(AllDeadSequence());
-            return; // ←ここ重要（すぐ次に行かない）
-        }
-            StartNextPhase();
-        }
-    }
-
-    private IEnumerator AllDeadSequence()
-    {
-        isCountingDown = true;
-
-        allEnemyDeadEvent.Value = true;
-
-        yield return new WaitForSeconds(3.1f);
-
-        allEnemyDeadEvent.Value = false;
-        isCountingDown = false;
-
-        // 次フェーズへ
-        if (currentPhaseIndex == phases.Length - 1)
-        {
-            StartCoroutine(EndPhaseWithCountdown());
-        }
-        else
-        {
-            StartNextPhase();
-        }
-    }
-    private IEnumerator EndPhaseWithCountdown()
-    {
-        isCountingDown = true;
-
-        int count = 3;
-        float interval = 7f / 3f; // 約2.33秒
-
-        while (count > 0)
-        {
-            countdownValue.Value = count;
-            Debug.Log("End Phase Countdown: " + count);
-
-            yield return new WaitForSeconds(interval);
-            count--;
-        }
-
-        countdownValue.Value = 0;
-
-        Debug.Log("FINISH!");
-
-        IsGameFinished.Value = true; // ここでFINISH表示
-
-        isCountingDown = false;
-
-        StartNextPhase();
-    }
-
-    public void EnemyKilled(int scoreValue)
-    {
-        //AddScore(scoreValue);
-        spawner.EnemyKilled();
-    }
-
-    public void AddScore(int value)
-    {
-        if (value > 0) Debug.Log("Add Score");
-        else
-        {
-            Debug.Log("Subtract Score");
-        }
-
-        score.Value += value;
-
-        // 👇 下限を0に固定（おすすめ）
-        if (score.Value < 0)
-        {
-            score.Value = 0;
-        }
-
-        Debug.Log("Score: " + score.Value);
-
-        // 🔥 ゲームオーバー判定
-        if (score.Value <= 0 && !isGameOver.Value)
-        {
-            StartGameOver();
-        }
-    }
-
-    public void Enemycome()
-    {
-        isEnemycome = true;
-    }
-
-    void OnPhaseChanged(int oldValue, int newValue)
-    {
-        if (newValue < 0 || newValue >= phases.Length) return;
-
-        PhaseSO phase = phases[newValue];
-
-    }
-
-    public int GetScore()
-    {
-        return score.Value;
+        OnGameEndClientRpc();
+        SendResults();
     }
 
     public void BulletHitProtectArea(int damage)
     {
-        AddScore(damage);
-        isBulletCome.Value = true;
+        scoreManager.AddScore(damage);
+        InvokeEventRpc();
     }
-
-    public void ResetBulletFlag()
+    [Rpc(SendTo.ClientsAndHost,InvokePermission = RpcInvokePermission.Server)]
+    private void InvokeEventRpc()
     {
-        isBulletCome.Value = false;
+        OnbulletComeRpcEvent?.Invoke();
     }
 
-    void StartGameOver()
+
+    [ClientRpc]
+    void OnGameEndClientRpc()
     {
-        if (!IsServer) return;
-
-        Debug.Log("GAME OVER");
-        isGameOver.Value = true;
-        IsGameFinished.Value = true;
-
-        StopAllCoroutines(); // ← これ重要（カウントダウン等止める）
-
-        isCountingDown = false;
-
-        // 必要なら敵停止
-        // spawner.StopAllEnemies();
-
-        // 必要ならここでUIイベント用フラグも出せる
-        OnGameEnd.Invoke();
+        OnGameEndRpc?.Invoke();
     }
+
+    [ClientRpc]
+    void ShowResultsClientRpc(PlayerResultData[] results)
+    {
+        var manager = ManagerLocator.Instance.AllPlayerManager;
+
+        foreach (var player in manager.AllPlayers)
+        {
+            var ui = player.GetComponentInChildren<ResultUI>();
+            if (ui != null)
+            {
+                ui.Show(results);
+            }
+        }
+    }
+
+    void SendResults()
+    {
+        var list = new List<PlayerResultData>();
+        var manager = ManagerLocator.Instance.AllPlayerManager;
+
+        foreach (var player in manager.AllPlayers)
+        {
+            if (player == null) continue;
+
+            var stats = player.stats;
+            if (stats == null) continue;
+
+            list.Add(stats.CreateResultData());
+        }
+
+        ShowResultsClientRpc(list.ToArray());
+    }
+}
+
+public enum GameState
+{
+    Waiting,     // 開始前
+    Playing,     // プレイ中
+    GameClear,   // クリア
+    GameOver     // ゲームオーバー
 }

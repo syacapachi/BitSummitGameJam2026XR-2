@@ -1,7 +1,7 @@
-﻿using Netcode.Extensions;
+﻿using Syacapachi.util;
 using Unity.Netcode;
 using UnityEngine;
-using Yokoyama.Manager;
+using Syacapachi.Manager;
 
 public class ManagerLocator : MonoBehaviour
 {
@@ -9,10 +9,13 @@ public class ManagerLocator : MonoBehaviour
 
     [field:SerializeField] public NetworkManager NetworkManager { get; private set; }
     [field:SerializeField] public PlayerManager AllPlayerManager { get; private set; }
+    [field:SerializeField] public PlayerJobManager JobManager { get; private set; }
     [field:SerializeField] public NGameManager AllGameManager { get; private set; }
-    [field:SerializeField] public NetworkObjectPool AllObjectPool { get; private set; }
+    [field:SerializeField] public NetworkObjectPool AllNetworkObjectPool { get; private set; }
+    [field: SerializeField] public LocalObjectPoolManager LocalObjectPool { get; private set; }
     [field:SerializeField] public GameAudioManager GameAudioManager { get; private set; }
     [field:SerializeField] public RankingManager RankingManager { get; private set; }
+    [field:SerializeField] public TutorialManager TutorialManager { get; private set; }
     void Awake()
     {
         if(Instance == null)

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CameraMove : MonoBehaviour
@@ -16,7 +16,7 @@ public class CameraMove : MonoBehaviour
     void OnEnable()
     {
         playerInput.ActivateInput();
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
         Vector3 angle = localCamera.transform.eulerAngles;
         cameraAngle.x = angle.y;
         cameraAngle.y = angle.x;

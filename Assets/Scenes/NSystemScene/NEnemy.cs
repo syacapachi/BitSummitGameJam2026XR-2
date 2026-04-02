@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro; // ← 追加
 using System.Collections;
 
-public class NEnemy : NetworkBehaviour,IDamageReciever
+public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 {
     [SerializeField] EnemySO enemySO;
     private readonly NetworkVariable<float> currentHP = new(
@@ -17,12 +17,20 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     [SerializeField] private Image hpImage; // Filled Image
     [SerializeField] private TextMeshProUGUI hpText;
 
+    private IEnemyBrokenReciever reciver;
+
     private Transform targetPlayer;
     public GameObject GameObject => this.gameObject;
+    NetworkObject IEnemy.NetworkObject => this.NetworkObject;
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => enemySO.HP;
-    public BulletState enemyType;
+    public PlayerJob enemyJob;
     private ulong lastAttackerId;
+
+    public void Init(IEnemyBrokenReciever s)
+    {
+        reciver = s;
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -52,9 +60,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     private IEnumerator SetupPlayerCoroutine()
     {
         // OwnerPlayer が null でなくなるまで待機
-        yield return new WaitUntil(() => ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer != null);
+        yield return new WaitUntil(() => ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer != null);
 
-        var localPlayer = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer;
+        var localPlayer = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer;
 
         // Transform が存在するかチェック（通常は必ずある）
         if (localPlayer != null)
@@ -101,16 +109,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
         Debug.Log("Die");
         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(lastAttackerId, out var client))
         {
-            var root = client.PlayerObject.GetComponent<PlayerRoot>();
+            var root = client.PlayerObject.GetComponent<NetworkPlayerRoot>();
             Debug.Log("Attacker found: " + lastAttackerId);
             if (root != null)
             {
                 Debug.Log("Add kill");
-                root.stats.AddKill(enemySO.Name, enemySO.scoreValue);
+                root.stats.AddKill(enemySO.ID, enemySO.scoreValue);
             }
         }
 
-        ManagerLocator.Instance.AllGameManager.EnemyKilled(enemySO.scoreValue);
+        reciver.EnemyKilled(this);
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

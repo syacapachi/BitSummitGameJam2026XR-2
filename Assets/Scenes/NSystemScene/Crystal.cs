@@ -1,7 +1,7 @@
+﻿using System.Collections;
 using UnityEngine;
-using System.Collections;
 
-public class Crystal : MonoBehaviour
+public class Crystal : MonoBehaviour,IDamageReciever
 {
     private NGameManager nGameManager;
 
@@ -10,10 +10,18 @@ public class Crystal : MonoBehaviour
 
     [Header("Effect")]
     public GameObject breakEffectPrefab;
+    public GameObject hitEffectPrefab;
 
     [Header("Sound")]
     public AudioSource audioSource;
     public AudioClip breakSE;
+    public AudioClip hitSE;
+
+    public GameObject GameObject => crystal;
+
+    public float CurrentHealth => throw new System.NotImplementedException();
+
+    public float MaxHealth => throw new System.NotImplementedException();
 
     IEnumerator Start()
     {
@@ -29,12 +37,13 @@ public class Crystal : MonoBehaviour
 
     void Initialize()
     {
-        if (nGameManager.isGameOver.Value)
+        if (nGameManager.scoreManager.isGameOver.Value)
         {
             Broken();
         }
 
-        nGameManager.isGameOver.OnValueChanged += OnGameOverChanged;
+        nGameManager.scoreManager.isGameOver.OnValueChanged += OnGameOverChanged;
+        nGameManager.OnbulletComeRpcEvent += OnBulletCome;
     }
 
     void OnGameOverChanged(bool oldValue, bool newValue)
@@ -52,6 +61,11 @@ public class Crystal : MonoBehaviour
         PlayEffect();
         PlayAnimation();
     }
+    void OnBulletCome()
+    {
+        PlayHitEffect();
+        PlayHitSound();
+    }
 
     void PlaySound()
     {
@@ -65,7 +79,13 @@ public class Crystal : MonoBehaviour
     {
         if (breakEffectPrefab != null)
         {
-            Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
+            GameObject effect = Instantiate(
+                breakEffectPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+            Destroy(effect, 2f); // ← 2秒後に消す
         }
     }
 
@@ -83,5 +103,32 @@ public class Crystal : MonoBehaviour
         {
             crystal.SetActive(false);
         }
+    }
+
+    void PlayHitEffect()
+    {
+        if (hitEffectPrefab != null)
+        {
+            GameObject effect = Instantiate(
+                hitEffectPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+            Destroy(effect, 2f); // ← 2秒後に消す
+        }
+    }
+
+    void PlayHitSound()
+    {
+        if (audioSource != null && hitSE != null)
+        {
+            audioSource.PlayOneShot(hitSE);
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Yokoyama.Data
+namespace Syacapachi.Data
 {
     /// <summary>
     /// データを全員分集めたもの

@@ -1,17 +1,17 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyFxRule : MonoBehaviour
 {
-    [SerializeField] private PlayerPropaty.PlayerJob visibleToJobsAll = PlayerPropaty.PlayerJob.Both;
+    [SerializeField] private PlayerJob visibleToJobsAll = PlayerJob.Both;
 
-    public PlayerPropaty.PlayerJob VisibleToJobsAll => visibleToJobsAll;
+    public PlayerJob VisibleToJobsAll => visibleToJobsAll;
 
-    public bool IsEffectiveFor(PlayerPropaty.PlayerJob shooterJob)
+    public bool IsEffectiveFor(PlayerJob shooterJob)
     {
         return (shooterJob & visibleToJobsAll) != 0;
     }
 
-    public bool IsVisibleTo(PlayerPropaty.PlayerJob viewerJob)
+    public bool IsVisibleTo(PlayerJob viewerJob)
     {
         return (viewerJob & visibleToJobsAll) != 0;
     }

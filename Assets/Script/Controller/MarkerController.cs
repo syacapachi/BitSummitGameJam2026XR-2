@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class MarkerController : NetworkBehaviour
 {
@@ -14,15 +12,13 @@ public class MarkerController : NetworkBehaviour
     [SerializeField] int laserDistance = 10;
     [SerializeField] MarkerAudioController markerAudioController;
     AttachableBehaviour attach;
-    InputAction markerAction;
     bool isMarkAttached = true;
     Coroutine markerCoroutine;
     
     public override void OnNetworkSpawn()
     {
         if(!IsOwner) return;
-        markerAction = ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.playerInput.actions["Marker"];
-        markerAction.performed += _ => PlaceMarkerRpc();
+        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnMarker += PlaceMarkerRpc;
     }
     protected override void OnNetworkPostSpawn()
     {
@@ -46,7 +42,7 @@ public class MarkerController : NetworkBehaviour
         }
         if (IsOwner)
         {
-            markerAction.performed -= _ => PlaceMarkerRpc();
+            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnMarker -= PlaceMarkerRpc;
         }
     }
     [Rpc(SendTo.Server)]

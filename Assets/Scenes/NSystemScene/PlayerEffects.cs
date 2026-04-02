@@ -24,18 +24,12 @@ public class PlayerEffects : NetworkBehaviour
 
     private void Start()
     {
-        if (ManagerLocator.Instance.AllGameManager != null)
-        {
-            ManagerLocator.Instance.AllGameManager.isBulletCome.OnValueChanged += OnBulletComeChanged;
-        }
+         ManagerLocator.Instance.AllGameManager.OnbulletComeRpcEvent += OnBulletComeChanged;
     }
 
-    private void OnBulletComeChanged(bool oldValue, bool newValue)
+    private void OnBulletComeChanged()
     {
-        if (newValue)
-        {
-            StartCoroutine(DamageFlash());
-        }
+         StartCoroutine(DamageFlash());        
     }
 
     private IEnumerator DamageFlash()
@@ -57,8 +51,5 @@ public class PlayerEffects : NetworkBehaviour
         for (int i = 0; i < damageBorders.Length; i++)
             damageBorders[i].SetActive(false);
 
-        // Server側でフラグをリセット
-        if (IsServer)
-            ManagerLocator.Instance.AllGameManager.ResetBulletFlag();
     }
 }

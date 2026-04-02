@@ -9,17 +9,17 @@ public class StartButton : NetworkBehaviour
 
     private void Start()
     {
-        ManagerLocator.Instance.AllGameManager.OnGameEnd += GameEndHandle;
+        ManagerLocator.Instance.AllGameManager.OnGameEndRpc += GameEndHandle;
     }
     public override void OnDestroy()
     {
         base.OnDestroy();
-        ManagerLocator.Instance.AllGameManager.OnGameEnd -= GameEndHandle;
+        ManagerLocator.Instance.AllGameManager.OnGameEndRpc -= GameEndHandle;
     }
     public void SelectHuman()
     {
         if(IsServer) return;
-        ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.propaty.Job = PlayerPropaty.PlayerJob.Human;
+        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.Job = PlayerJob.Human;
         humanUI.SetActive(false);
         Debug.Log("Human");
     }
@@ -27,7 +27,7 @@ public class StartButton : NetworkBehaviour
     public void SelectGhost()
     {
         if (IsServer) return;
-        ManagerLocator.Instance.AllPlayerManager.LocalOwnerPlayer.propaty.Job = PlayerPropaty.PlayerJob.Ghost;
+        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.Job = PlayerJob.Ghost;
         ghostUI.SetActive(false);
         Debug.Log("Ghost");
     }

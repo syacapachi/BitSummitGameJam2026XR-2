@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
-
+using System;
+[Obsolete("このクラスは、カメラのCullingMaskを変更する方針に変えたことで非推奨です")]
 public class LookStateChange : NetworkBehaviour
 {
     [SerializeField] Renderer meshRenderer;
-    [SerializeField] PlayerPropaty.PlayerJob lookableJob;
+    [SerializeField] PlayerJob lookableJob;
     [SerializeField] Canvas hpCanvas; // ←HPバーのCanvasをここにアサイン
 
     public override void OnNetworkSpawn()
@@ -12,9 +13,9 @@ public class LookStateChange : NetworkBehaviour
         PlayerManager playerManager = ManagerLocator.Instance.AllPlayerManager;
         playerManager.OnOwnerJobChanged += OnJobChangedHandle;
 
-        if (playerManager.LocalOwnerPlayer != null)
+        if (playerManager.NetworkOwnerPlayer != null)
         {
-            OnJobChangedHandle(playerManager.LocalOwnerPlayer.propaty.Job);
+            OnJobChangedHandle(playerManager.LocalPlayerRoot.Propaty.Job);
         }
     }
 
@@ -23,7 +24,7 @@ public class LookStateChange : NetworkBehaviour
         ManagerLocator.Instance.AllPlayerManager.OnOwnerJobChanged -= OnJobChangedHandle;
     }
 
-    private void OnJobChangedHandle(PlayerPropaty.PlayerJob job)
+    private void OnJobChangedHandle(PlayerJob job)
     {
         bool isVisible = (job & lookableJob) != 0;
 

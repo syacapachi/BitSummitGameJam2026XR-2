@@ -155,6 +155,12 @@ namespace Syacapachi.Editor
             if (t.IsEnum)
             {
                 currentValue ??= Enum.GetValues(t).GetValue(0);
+                if(t.GetCustomAttribute<FlagsAttribute>() != null)
+                {
+                    // [Flags]属性がある場合はEnumFlagsFieldで描画
+                    return EditorGUILayout.EnumFlagsField(name, (Enum)currentValue);
+                }
+                // 通常のEnumはEnumPopupで描画
                 return EditorGUILayout.EnumPopup(name, (Enum)currentValue);
             }
 
