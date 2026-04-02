@@ -38,7 +38,7 @@ public class PlayerManager : MonoBehaviour
     {
         NetworkOwnerPlayer = playerRoot;
         Debug.Log("Resist owner");
-        localRoot.Propaty.OnJobChanged += OnJobChanged;
+        localRoot.Propaty.OnLocalJobChanged += OnJobChanged;
         mainCamera.enabled = false;
         worldCanvas.worldCamera = LocalPlayerRoot.CameraSetting.currentActiveCamera;
         if (IsJobOverride)
@@ -48,7 +48,7 @@ public class PlayerManager : MonoBehaviour
     }
     public void UnResistOwner(NetworkPlayerRoot playerRoot)
     {
-        localRoot.Propaty.OnJobChanged -= OnJobChanged;
+        localRoot.Propaty.OnLocalJobChanged -= OnJobChanged;
         NetworkOwnerPlayer = null;
         worldCanvas.worldCamera = null;
         mainCamera.enabled = true;

@@ -32,7 +32,7 @@ public class PlayerPropaty : MonoBehaviour
             Debug.LogError($"Initial PlayerJob {playerjob} not found in JobLayerMaskDic.");
         }
     }
-    public event Action<PlayerJob> OnJobChanged;
+    public event Action<PlayerJob> OnLocalJobChanged;
     [SerializeField] PlayerJob playerjob = PlayerJob.Both;
     
     public PlayerJob Job {
@@ -45,7 +45,7 @@ public class PlayerPropaty : MonoBehaviour
                 PlayerLayerSettings settings = jobToLayerMaskDic[playerjob];
                 
                 OnLayerChange(settings);
-                OnJobChanged?.Invoke(playerjob);
+                OnLocalJobChanged?.Invoke(playerjob);
             }
         }
     }
@@ -75,7 +75,7 @@ public class PlayerPropaty : MonoBehaviour
         if (IsDebugMode)
         {
             inputReciever.OnSwirchJob += OnJobChangeHandle;
-            OnJobChanged?.Invoke(Job);
+            OnLocalJobChanged?.Invoke(Job);
         }
     }
     void OnDisable()

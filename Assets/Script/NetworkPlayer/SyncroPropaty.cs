@@ -5,14 +5,13 @@ using UnityEngine;
 public class SyncroPropaty : NetworkBehaviour
 {
     [SerializeField] GameObject avatorCollider;
-    private readonly NetworkVariable<int> PlayerLayer = new(
-        0,
+    private int PlayerLayer = 0;
+    [SerializeField] NetworkVariable<PlayerJob> syncroJob = new(
+        PlayerJob.Both,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
-        );
-
-    [field: SerializeField]
-    public PlayerJob Job { get; private set; } = PlayerJob.Both;
+    );
+    public PlayerJob Job => syncroJob.Value;
     private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new Dictionary<PlayerJob, PlayerLayerSettings>();
 
 
@@ -26,36 +25,43 @@ public class SyncroPropaty : NetworkBehaviour
         }
         jobToLayerMaskDic = jobManager.JobLayerMaskDic;
     }
+    private void OnEnable()
+    {
+        syncroJob.OnValueChanged += OnJobChanged;
+    }
+    private void OnDisable()
+    {
+        syncroJob.OnValueChanged -= OnJobChanged;
+    }
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
         {
             PlayerPropaty playerPropaty = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty;
-            playerPropaty.OnJobChanged += OnJobChangeHandle;
-            Job = playerPropaty.Job;
+            playerPropaty.OnLocalJobChanged += OnJobChangeHandle;
+            syncroJob.Value = playerPropaty.Job;
         }
-        PlayerLayer.OnValueChanged += OnValueChanged;
     }
 
     public override void OnNetworkDespawn()
     {
         if (IsOwner)
         {
-            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.OnJobChanged -= OnJobChangeHandle;
+            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.OnLocalJobChanged -= OnJobChangeHandle;
         }
-        PlayerLayer.OnValueChanged -= OnValueChanged;
     }
     private void OnJobChangeHandle(PlayerJob newJob)
     {
-        Job = newJob;
+        syncroJob.Value = newJob;
         PlayerLayerSettings setting = jobToLayerMaskDic[newJob];
-        PlayerLayer.Value = setting.Layer;
+        PlayerLayer = setting.Layer;
     }
-    private void OnValueChanged(int previousValue, int newValue)
+    private void OnJobChanged(PlayerJob previousJob, PlayerJob newJob)
     {
-        if (previousValue != newValue)
+        if (previousJob != newJob)
         {
-            avatorCollider.layer = newValue;
+            PlayerLayerSettings setting = jobToLayerMaskDic[newJob];
+            PlayerLayer = setting.Layer;
         }
     }
 }
