@@ -27,17 +27,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1348667923245579269}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.01867803, y: 0.16242641, z: -0.22293474, w: 0.96102494}
   m_LocalPosition: {x: 0, y: 0, z: 0.051}
   m_LocalScale: {x: 0.0019999999, y: 0.0019999999, z: 0.0019999999}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6544410558023983939}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 6.219, y: 17.798, z: -25.146}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.244, y: -0.134}
+  m_AnchoredPosition: {x: 0.24401855, y: 0.49798584}
   m_SizeDelta: {x: 693, y: 703}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1337594487190388721
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &8072825229889922026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,7 +117,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ammoText: {fileID: 3191515280674789802}
   reloadBar: {fileID: 4201406764940465355}
-  gun: {fileID: 0}
 --- !u!1 &3532523241650081150
 GameObject:
   m_ObjectHideFlags: 0

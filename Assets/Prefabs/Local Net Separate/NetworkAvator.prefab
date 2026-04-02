@@ -4319,17 +4319,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4542551736261408709}
-  m_LocalRotation: {x: -0.2764912, y: 0.11790645, z: -0.8706003, w: 0.3894944}
-  m_LocalPosition: {x: 0, y: 0, z: 0.0044615204}
+  m_LocalRotation: {x: -0.006253219, y: 0.0149945095, z: 0.0049012206, w: 0.999856}
+  m_LocalPosition: {x: 0, y: 0, z: -0.00015}
   m_LocalScale: {x: 0.000097864584, y: 0.00009786462, z: 0.00009786463}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 347016626613449461}
   m_Father: {fileID: 3251633885000797466}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.725, y: 1.715, z: 0.551}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.006408978, y: -0.030766793}
+  m_AnchoredPosition: {x: 0.00784, y: 0.00139}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6992503059009998912
@@ -5853,7 +5853,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.021505376
+        value: 0.0018978324
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -5865,8 +5865,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0, g: 0.9685534, b: 0.15111433, a: 1}
+      key1: {r: 0.028301716, g: 1, b: 0.20356494, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
