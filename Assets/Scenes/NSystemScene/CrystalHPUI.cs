@@ -1,10 +1,9 @@
-using UnityEngine;
-using Unity.Netcode;
-using UnityEngine.UI;
+ï»¿using System.Collections;
 using TMPro;
-using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
 
-public class CrystalHPUI : NetworkBehaviour
+public class CrystalHPUI : MonoBehaviour
 {
     private NGameManager nGameManager;
 
@@ -16,7 +15,7 @@ public class CrystalHPUI : NetworkBehaviour
 
     IEnumerator Start()
     {
-        // GameManager‘Ò‹@
+        // GameManagerå¾…æ©Ÿ
         while (ManagerLocator.Instance.AllGameManager == null)
         {
             yield return null;
@@ -24,28 +23,21 @@ public class CrystalHPUI : NetworkBehaviour
 
         nGameManager = ManagerLocator.Instance.AllGameManager;
 
-        Debug.Log("GameManageræ“¾¬Œ÷");
+        Debug.Log("GameManagerå–å¾—æˆåŠŸ");
 
-        //  ©•ª‚ÌƒNƒ‰ƒCƒAƒ“ƒg‚¾‚¯•\¦
-        if (!IsOwner)
-        {
-            gameObject.SetActive(false);
-            yield break;
-        }
-
-        //  score‚Ì‰Šú’l‚ª“ü‚é‚Ü‚Å‘Ò‚Âi0‘Îôj
+        //  scoreã®åˆæœŸå€¤ãŒå…¥ã‚‹ã¾ã§å¾…ã¤ï¼ˆ0å¯¾ç­–ï¼‰
         yield return new WaitUntil(() => nGameManager.scoreManager.score.Value > 0);
 
-        //  ‰Šú’l‚ğmax‚Æ‚µ‚Ä•Û‘¶
+        //  åˆæœŸå€¤ã‚’maxã¨ã—ã¦ä¿å­˜
         maxScore = nGameManager.scoreManager.score.Value;
 
-        // ”O‚Ì‚½‚ß•ÛŒ¯i0œZ–h~j
+        // å¿µã®ãŸã‚ä¿é™ºï¼ˆ0é™¤ç®—é˜²æ­¢ï¼‰
         maxScore = Mathf.Max(1f, maxScore);
 
-        // ‰Šú•\¦
+        // åˆæœŸè¡¨ç¤º
         UpdateScoreUI(nGameManager.scoreManager.score.Value);
 
-        // •ÏXŠÄ‹
+        // å¤‰æ›´ç›£è¦–
         nGameManager.scoreManager.score.OnValueChanged += OnScoreChanged;
     }
 
@@ -64,13 +56,13 @@ public class CrystalHPUI : NetworkBehaviour
 
     void UpdateScoreUI(int score)
     {
-        // ƒo[XV
+        // ãƒãƒ¼æ›´æ–°
         if (scoreBar != null)
         {
             scoreBar.fillAmount = Mathf.Clamp01((float)score / maxScore);
         }
 
-        // ƒeƒLƒXƒgXV
+        // ãƒ†ã‚­ã‚¹ãƒˆæ›´æ–°
         if (scoreText != null)
         {
             scoreText.text = $"{score} / {maxScore}";

@@ -55,7 +55,7 @@ namespace Syacapachi.Editor
             int intValue = Convert.ToInt32(newValue);
 
             // 単一化
-            if (!IsSingleFlag(intValue) && fieldInfo.FieldType.GetCustomAttribute<FlagsAttribute>() != null)
+            if (!IsSingleFlag(intValue,attr) && fieldInfo.FieldType.GetCustomAttribute<FlagsAttribute>() != null)
             {
                 intValue = FixEnum(intValue, attr);
                 GUI.color = Color.red;
@@ -95,9 +95,9 @@ namespace Syacapachi.Editor
         // 共通処理
         // =========================
 
-        bool IsSingleFlag(int value)
+        bool IsSingleFlag(int value, SingleFlagOnlyAttribute attr)
         {
-            return value != 0 && (value & (value - 1)) == 0;
+            return (attr.allowNothing || value != 0) && (value & (value - 1)) == 0;
         }
 
         int FixEnum(int value, SingleFlagOnlyAttribute attr)
