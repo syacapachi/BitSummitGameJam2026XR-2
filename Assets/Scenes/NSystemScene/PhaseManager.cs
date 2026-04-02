@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using System;
@@ -16,7 +16,6 @@ public class PhaseManager : NetworkBehaviour
     public NetworkVariable<int> countdownValue = new NetworkVariable<int>(0);
     public NetworkVariable<bool> phaseFinishing = new NetworkVariable<bool>(false);
 
-    public NetworkVariable<bool> allEnemyDeadEvent = new NetworkVariable<bool>(false);
     public NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(0);
     public NetworkVariable<float> phaseProgress = new NetworkVariable<float>(
         1f,
@@ -28,9 +27,16 @@ public class PhaseManager : NetworkBehaviour
     public bool isSkip = false;
     private bool isPhaseStart = false;
 
+    public event Action AllEnemyDeadEventRpc;
     public event Action OnGameClear;
     public event Action<int> OnPhaseChange;
-    public event Action<int> OnPhaseClearBonus; // Å© ScoreManagerÇ…ìnÇ∑óp
+    public event Action<int> OnPhaseClearBonus; // ‚Üê ScoreManager„Å´Ê∏°„ÅôÁî®
+
+    [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
+    private void AllEnemyDeathRpc()
+    {
+        AllEnemyDeadEventRpc?.Invoke();
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -86,7 +92,7 @@ public class PhaseManager : NetworkBehaviour
 
         StartCoroutine(StartPhaseWithCountdown(currentPhaseIndex));
     }
-
+    
     IEnumerator StartPhaseWithCountdown(int phaseIndex)
     {
         isCountingDown = true;
@@ -127,7 +133,7 @@ public class PhaseManager : NetworkBehaviour
                 int bonus = phases[currentPhaseIndex].clearBonus;
 
                 lastClearBonus.Value = bonus;
-                OnPhaseClearBonus?.Invoke(bonus); // Å© Ç±Ç±èdóv
+                OnPhaseClearBonus?.Invoke(bonus); // ‚Üê „Åì„ÅìÈáçË¶Å
 
                 StartCoroutine(AllDeadSequence());
                 return;
@@ -141,11 +147,10 @@ public class PhaseManager : NetworkBehaviour
     {
         isCountingDown = true;
 
-        allEnemyDeadEvent.Value = true;
-
+        AllEnemyDeathRpc();
+        
         yield return new WaitForSeconds(3.1f);
 
-        allEnemyDeadEvent.Value = false;
         isCountingDown = false;
 
         StartNextPhase();
@@ -156,7 +161,7 @@ public class PhaseManager : NetworkBehaviour
         isCountingDown = true;
 
         int count = 3;
-        float interval = 7f / 3f; // ñÒ2.33ïb
+        const float interval = 7f / 3f; // Á¥Ñ2.33Áßí
 
         while (count > 0)
         {

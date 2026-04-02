@@ -20,6 +20,7 @@ public class Syncronize : NetworkBehaviour
     public readonly NetworkVariable<int> JumpCount = new NetworkVariable<int>(0,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Owner);
     private LocalPlayerRoot playerRoot;
     private float lastOrigonRotation = 0;
+    private static Quaternion correction = Quaternion.Euler(0, 180, 0);
     public InputReciever Reciever => playerRoot.InputReciver;
     public override void OnNetworkSpawn()
     {
@@ -55,6 +56,7 @@ public class Syncronize : NetworkBehaviour
             if(xrOrigin.transform.localRotation.eulerAngles.y - lastOrigonRotation >  0.1f)
             {
                 avatorRootTransfrom.rotation = xrOrigin.transform.rotation;
+                lastOrigonRotation = avatorRootTransfrom.rotation.eulerAngles.y;
             }
             //頭の角度
             Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;

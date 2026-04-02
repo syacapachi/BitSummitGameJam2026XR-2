@@ -1,6 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
+using Syacapachi.util;
 
 public class NEnemyShoot : GunController
 {
@@ -19,17 +20,15 @@ public class NEnemyShoot : GunController
         shootCorutine = StartCoroutine(ShootCorutine());
     }
 
-    private void Shoot()
+    protected override void OnShoot()
     {
         Vector3 direction = (target.position - transform.position).normalized;
 
-        GameObject bullet = Instantiate(
-            bulletPrefab,
-            firePoint.position,
+        NetworkObjectPool.Singleton.GetNetworkObject(
+            BulletPrefab, 
+            FirePoint.position, 
             Quaternion.LookRotation(direction)
-        );
-
-        bullet.GetComponent<NetworkObject>().Spawn();
+            ).Spawn();
     }
 
     private IEnumerator ShootCorutine()
@@ -38,13 +37,13 @@ public class NEnemyShoot : GunController
 
         while (true)
         {
-            for (float i = enemySO.shootInterval; i > 0f; i -= 0.1f)
+            for (float i = WeaponSettings.fireInterval; i > 0f; i -= 0.1f)
             {
                 //演出
                 yield return wait01;
             }
 
-            Shoot();
+            OnShoot();
 
             //打った後の待機時間
             yield return wait01;

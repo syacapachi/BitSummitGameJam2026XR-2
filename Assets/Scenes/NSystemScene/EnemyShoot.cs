@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
+using Syacapachi.util;
 
 public class EnemyShoot : GunController
 {
@@ -8,7 +9,7 @@ public class EnemyShoot : GunController
 
     Transform target;
     Coroutine shootCorutine;
-    public BulletState enemyType; // Human / Ghost
+    public PlayerJob enemyJob; // Human / Ghost
 
     public override void OnNetworkSpawn()
     {
@@ -28,13 +29,11 @@ public class EnemyShoot : GunController
 
         Vector3 direction = (target.position - transform.position).normalized;
 
-        GameObject bullet = Instantiate(
-            bulletPrefab,
-            firePoint.position,
+        NetworkObjectPool.Singleton.GetNetworkObject(
+            BulletPrefab,
+            FirePoint.position,
             Quaternion.LookRotation(direction)
-        );
-
-        bullet.GetComponent<NetworkObject>().Spawn();
+            ).Spawn();
     }
     private IEnumerator ShootCorutine()
     {
@@ -64,16 +63,10 @@ public class EnemyShoot : GunController
             var prop = player.propaty;
             if (prop == null) continue;
 
-            var job = prop.Job;
+            var playerJob = prop.Job;
 
             // 敵タイプに応じたフィルタ
-            bool canTarget = enemyType switch
-            {
-                BulletState.Human => (job & PlayerPropaty.PlayerJob.Human) != 0,
-                BulletState.Ghost => (job & PlayerPropaty.PlayerJob.Ghost) != 0,
-                BulletState.Both => true,
-                _ => false
-            };
+            bool canTarget = (enemyJob & playerJob) != 0;
 
             if (!canTarget) continue;
 

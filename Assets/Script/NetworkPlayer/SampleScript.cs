@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Syacapachi.Attribute;
+using System;
 public class SampleScript : MonoBehaviour
 {
-    [ShowInspector,SerializeField] int a;
+    [ShowInspector, SerializeField] int a;
     [ShowInspector, SerializeField] float b;
     [ShowInspector, SerializeField] Vector3 vec;
     [ShowInspector, SerializeField] Color color;
     [ShowInspector, SerializeField] GameObject obj;
     [ShowInspector, SerializeField] InlineClass clazz;
+    [ShowInspector, SerializeField] List<float> list = new List<float>();
+    [ShowInspector, SerializeField] List<InlineClass> classList = new List<InlineClass>();
     [ShowInspector, SerializeField] Dictionary<int,string> adic = new Dictionary<int,string>();
     public class InlineClass
     {
@@ -17,7 +20,14 @@ public class SampleScript : MonoBehaviour
         {
             Debug.Log($"This is an inline method. name = {name}");
         }
-    }   
+    }
+    [Flags]
+    public enum SampleEnum
+    {
+        Value1,
+        Value2,
+        Value3
+    }
     [OnInspectorButton]
     public void SampleMethod()
     {
@@ -25,6 +35,11 @@ public class SampleScript : MonoBehaviour
     }
     [OnInspectorButton]
     public void SampleMethodWithParameter(string message)
+    {
+        Debug.Log("Message: " + message);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(SampleEnum message)
     {
         Debug.Log("Message: " + message);
     }

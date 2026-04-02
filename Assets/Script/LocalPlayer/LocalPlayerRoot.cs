@@ -22,6 +22,7 @@ public class LocalPlayerRoot : MonoBehaviour
     [SerializeField] InputReciever InputReciever;
     [SerializeField] LocalCharactorControll characterControll;
     [SerializeField] LocalCameraSetting cameraSetting;
+    [SerializeField] PlayerPropaty propaty;
     private PlayerManager playerManager;
     public Transform PlayerRoot => playerRoot;
     public Transform LeftHand => leftHand;
@@ -33,6 +34,7 @@ public class LocalPlayerRoot : MonoBehaviour
     public InputReciever InputReciver => InputReciever;
     public LocalCameraSetting CameraSetting => cameraSetting;
     public LocalCharactorControll CharacterControll => characterControll;
+    public PlayerPropaty Propaty => propaty;
 
     private void Start()
     {

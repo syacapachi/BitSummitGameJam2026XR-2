@@ -12,14 +12,13 @@ public class NGameManager : NetworkBehaviour
     private bool gameStarted = false;
     public bool IsGameStart => gameStarted;
 
-    public NetworkVariable<bool> isBulletCome = new NetworkVariable<bool>(false);
     public NetworkVariable<GameState> gameState = new NetworkVariable<GameState>(
         GameState.Waiting,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-
-    public event Action OnGameEnd;
+    public event Action OnbulletComeRpcEvent;
+    public event Action OnGameEndRpc;
 
     public override void OnNetworkSpawn()
     {
@@ -70,18 +69,19 @@ public class NGameManager : NetworkBehaviour
     public void BulletHitProtectArea(int damage)
     {
         scoreManager.AddScore(damage);
-        isBulletCome.Value = true;
+        InvokeEventRpc();
+    }
+    [Rpc(SendTo.ClientsAndHost,InvokePermission = RpcInvokePermission.Server)]
+    private void InvokeEventRpc()
+    {
+        OnbulletComeRpcEvent?.Invoke();
     }
 
-    public void ResetBulletFlag()
-    {
-        isBulletCome.Value = false;
-    }
 
     [ClientRpc]
     void OnGameEndClientRpc()
     {
-        OnGameEnd?.Invoke();
+        OnGameEndRpc?.Invoke();
     }
 
     [ClientRpc]

@@ -16,14 +16,14 @@ public class PlayerManager : MonoBehaviour
     public LocalPlayerRoot LocalPlayerRoot => localRoot;
     public IReadOnlyList<NetworkPlayerRoot> AllPlayers => playerList;
 
-    public event Action<PlayerPropaty.PlayerJob> OnOwnerJobChanged;
+    public event Action<PlayerJob> OnOwnerJobChanged;
     [Header("Owner Setting")]
     [Tooltip("ホスト、クライアント設定前のカメラ")]
     [SerializeField] Camera mainCamera;
     [SerializeField] Canvas worldCanvas;
     [SerializeField] bool IsJobOverride;
     [SerializeField,EnableIf(nameof(IsJobOverride))]
-    PlayerPropaty.PlayerJob JobOverride;
+    PlayerJob JobOverride;
     public Camera PlayerCamera => mainCamera;
     public Canvas WorldCanvas => worldCanvas;
     public void ResistPlayer(NetworkPlayerRoot playerRoot)
@@ -38,22 +38,22 @@ public class PlayerManager : MonoBehaviour
     {
         NetworkOwnerPlayer = playerRoot;
         Debug.Log("Resist owner");
-        NetworkOwnerPlayer.propaty.OnJobChanged += OnJobChanged;
+        localRoot.Propaty.OnJobChanged += OnJobChanged;
         mainCamera.enabled = false;
         worldCanvas.worldCamera = LocalPlayerRoot.CameraSetting.currentActiveCamera;
         if (IsJobOverride)
         {
-            playerRoot.propaty.Job = JobOverride;
+            LocalPlayerRoot.Propaty.Job = JobOverride;
         }
     }
     public void UnResistOwner(NetworkPlayerRoot playerRoot)
     {
-        NetworkOwnerPlayer.propaty.OnJobChanged -= OnJobChanged;
+        localRoot.Propaty.OnJobChanged -= OnJobChanged;
         NetworkOwnerPlayer = null;
         worldCanvas.worldCamera = null;
         mainCamera.enabled = true;
     }
-    private void OnJobChanged(PlayerPropaty.PlayerJob job)
+    private void OnJobChanged(PlayerJob job)
     {
         OnOwnerJobChanged?.Invoke(job);
     }

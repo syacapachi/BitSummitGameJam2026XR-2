@@ -2,7 +2,7 @@
 using Unity.Netcode;
 
 [RequireComponent(typeof(AudioSource))]
-public class NGunAudioObserver : NetworkBehaviour
+public class NGunAudioObserver : NetworkBehaviour, IShotSound, IReloadSound
 {
     [SerializeField] private AudioClip shotClipAll;
     [SerializeField] private AudioClip reloadClipAll;
@@ -23,10 +23,10 @@ public class NGunAudioObserver : NetworkBehaviour
 
     public void PlayShotSound()
     {
-        audioSourceAll.PlayOneShot(shotClipAll, shotVolumeAll);
+        audioSourceAll?.PlayOneShot(shotClipAll, shotVolumeAll);
     }
     public void PlayReloadSound()
     {
-        audioSourceAll.PlayOneShot(reloadClipAll, reloadVolumeAll);
+        audioSourceAll?.PlayOneShot(reloadClipAll, reloadVolumeAll);
     }
 }

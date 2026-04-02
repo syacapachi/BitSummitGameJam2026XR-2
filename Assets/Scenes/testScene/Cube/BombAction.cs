@@ -31,7 +31,7 @@ public class BombAction : NetworkBehaviour,IDamageSender
 
     public GameObject GameObject => this.gameObject;
 
-    public int Damage => explosionDamage;
+    public float Damage => explosionDamage;
 
     public override void OnNetworkSpawn()
     {
@@ -106,7 +106,7 @@ public class BombAction : NetworkBehaviour,IDamageSender
         Vector3 position = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.CameraSetting.currentActiveCamera.WorldToScreenPoint(transform.position);
         GUI.Label(new Rect(position.x, Screen.height - position.y, 100, 20), $"Timer: {timer.Value:F1}");
     }
-    public void SendDamage(IDamageReciever reciever, int damage)
+    public void SendDamage(IDamageReciever reciever, float damage)
     {
         if(IsServer)
             reciever.TakeDamage(damage);

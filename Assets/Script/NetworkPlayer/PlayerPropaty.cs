@@ -1,36 +1,38 @@
-﻿using Unity.XR.CoreUtils;
-using UnityEngine;
-using Unity.Netcode;
-using System;
-using UnityEngine.InputSystem;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.XR.CoreUtils;
+using UnityEngine;
 
-public class PlayerPropaty : NetworkBehaviour
+public class PlayerPropaty : MonoBehaviour
 {
-    public readonly static Dictionary<PlayerJob, string> jobToLayerDic = new()
+    [SerializeField] InputReciever inputReciever;
+    [SerializeField] GameObject PlayerCollider;
+    [SerializeField] Camera PlayerCamera;
+    private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new Dictionary<PlayerJob, PlayerLayerSettings>();
+
+
+    private void Start()
     {
-        { PlayerJob.Nothing,"Default" },
-        { PlayerJob.Human, "Human" },
-        { PlayerJob.Ghost, "Ghost" },
-        { PlayerJob.Both, "Both" }
-    };
-    public readonly static Dictionary<string, PlayerJob> layerToJobDic = jobToLayerDic.ToDictionary(pair=>pair.Value,pair=>pair.Key);
- 
-    [SerializeField] GameObject PlayerRoot;
-    [Flags]
-    public enum PlayerJob { 
-        Nothing = 0,
-        Human = 1,
-        Ghost = 1<<1,
-        Both = Human | Ghost,
+        var jobManager = ManagerLocator.Instance.JobManager;
+        if (jobManager == null)
+        {
+            Debug.LogError("PlayerJobManager not found in the scene.");
+            return;
+        }
+        jobToLayerMaskDic = jobManager.JobLayerMaskDic;
+        
+        // 初期レイヤー設定
+        if (jobToLayerMaskDic.TryGetValue(playerjob, out var initialSettings))
+        {
+            OnLayerChange(initialSettings);
+        }
+        else
+        {
+            Debug.LogError($"Initial PlayerJob {playerjob} not found in JobLayerMaskDic.");
+        }
     }
     public event Action<PlayerJob> OnJobChanged;
-    private readonly NetworkVariable<int> PlayerLayer = new (
-        0,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner
-        );
     [SerializeField] PlayerJob playerjob = PlayerJob.Both;
     
     public PlayerJob Job {
@@ -40,8 +42,9 @@ public class PlayerPropaty : NetworkBehaviour
             if (playerjob != value)
             {
                 playerjob = value;
-                string layerName = jobToLayerDic[playerjob];
-                PlayerLayer.Value = LayerMask.NameToLayer(layerName);         
+                PlayerLayerSettings settings = jobToLayerMaskDic[playerjob];
+                
+                OnLayerChange(settings);
                 OnJobChanged?.Invoke(playerjob);
             }
         }
@@ -67,43 +70,31 @@ public class PlayerPropaty : NetworkBehaviour
         get => playerjob != PlayerJob.Human;
     }
     [SerializeField] bool IsDebugMode = true;
-    public override void OnNetworkSpawn()
+    void OnEnable()
     {
-        if (IsOwner && IsDebugMode)
+        if (IsDebugMode)
         {
-            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnSwirchJob += OnJobChangeHandle;
+            inputReciever.OnSwirchJob += OnJobChangeHandle;
             OnJobChanged?.Invoke(Job);
         }
-        PlayerLayer.OnValueChanged += OnValueChanged;
     }
-    public override void OnNetworkDespawn()
+    void OnDisable()
     {
-        if (IsOwner && IsDebugMode)
+        if (IsDebugMode)
         {
-            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnSwirchJob -= OnJobChangeHandle;
+            inputReciever.OnSwirchJob -= OnJobChangeHandle;
         }
-        PlayerLayer.OnValueChanged -= OnValueChanged;
-    }
-    public override void OnGainedOwnership()
-    {
-        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnSwirchJob += OnJobChangeHandle;
-    }
-    public override void OnLostOwnership()
-    {
-        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnSwirchJob -= OnJobChangeHandle;
     }
     /// <summary>
     /// 物理演算はサーバーで行われるため、クライアント側でレイヤーを変更しても意味がない。
     /// </summary>
     /// <param name="previousValue"></param>
     /// <param name="newValue"></param>
-    private void OnValueChanged(int previousValue, int newValue)
+    private void OnLayerChange(PlayerLayerSettings newSetting)
     {
-        if (previousValue != newValue)
-        {
-            PlayerRoot.SetLayerRecursively(newValue);
-            playerjob = layerToJobDic[LayerMask.LayerToName(newValue)];
-        }
+        PlayerCollider.layer = newSetting.ColliderLayer;
+        // カメラのカリングマスクを更新
+        PlayerCamera.cullingMask = newSetting.CullingMask;
     }
     private void OnJobChangeHandle()
     {
@@ -113,7 +104,7 @@ public class PlayerPropaty : NetworkBehaviour
             PlayerJob.Nothing => PlayerJob.Human,
             PlayerJob.Human => PlayerJob.Ghost,
             PlayerJob.Ghost => PlayerJob.Both,
-            PlayerJob.Both => PlayerJob.Human,
+            PlayerJob.Both => PlayerJob.Nothing,
             _ => throw new System.NotImplementedException(),
         };
         Debug.Log("Job changed to: " + Job);

@@ -2228,6 +2228,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9175574321871755296, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2638564923191586443}
+    - targetCorrespondingSourceObject: {fileID: 9175574321871755296, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4914199544241334910}
     - targetCorrespondingSourceObject: {fileID: 3109645734885711778, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4655516222985191313}
@@ -2343,6 +2346,23 @@ MonoBehaviour:
   jumpForce: 5
   normalSpeed: 5
   dashSpeed: 10
+--- !u!114 &4914199544241334910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5314097806109584105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d2d5ebc452a3614597b0c2eb37f2896, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputReciever: {fileID: 4859624014147803353}
+  PlayerCollider: {fileID: 5539175048557814108}
+  PlayerCamera: {fileID: 6559630063663495174}
+  playerjob: 3
+  IsDebugMode: 1
 --- !u!114 &5427845105487880413 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9059786329452581396, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
@@ -2399,6 +2419,7 @@ MonoBehaviour:
   InputReciever: {fileID: 4859624014147803353}
   characterControll: {fileID: 2638564923191586443}
   cameraSetting: {fileID: 3554926086581726263}
+  propaty: {fileID: 4914199544241334910}
 --- !u!4 &5539175048557814111 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8806329115733545878, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}

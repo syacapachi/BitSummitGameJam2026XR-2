@@ -30,9 +30,9 @@ public class PhaseUI : MonoBehaviour
         OnCountdownChanged(0, nGameManager.phaseManager.countdownValue.Value);
 
         nGameManager.phaseManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
-        nGameManager.OnGameEnd += OnGameFinishedChanged;
+        nGameManager.OnGameEndRpc += OnGameFinishedChanged;
         nGameManager.phaseManager.countdownValue.OnValueChanged += OnCountdownChanged;
-        nGameManager.phaseManager.allEnemyDeadEvent.OnValueChanged += OnAllEnemyDead;
+        nGameManager.phaseManager.AllEnemyDeadEventRpc += OnAllEnemyDead;
         //nGameManager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
 
     }
@@ -204,10 +204,8 @@ public class PhaseUI : MonoBehaviour
         Hide();
     }
 
-    void OnAllEnemyDead(bool oldValue, bool newValue)
+    void OnAllEnemyDead()
     {
-        if (!newValue) return;
-
         StopAllCoroutines();
         CancelInvoke(nameof(Hide));
 
