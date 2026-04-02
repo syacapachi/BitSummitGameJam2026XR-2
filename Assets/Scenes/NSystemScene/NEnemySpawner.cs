@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using Syacapachi.util;
 
 
-public class NEnemySpawner : NetworkBehaviour
+public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever
 {
     //[SerializeField] LocalObjectPoolManager localPoolManager;
     [SerializeField] NetworkObjectPool networkPool;
+    [SerializeField] EnemyDeathReciver reciver;
     public Transform[] spawnPoints;
     public Transform protectArea;
 
@@ -16,7 +17,7 @@ public class NEnemySpawner : NetworkBehaviour
     public int Remain => remain;
     private bool spawnFinished = false;
     public bool SpawnFinished => spawnFinished;
-    private List<NEnemy> enemies = new List<NEnemy>();
+    private List<IEnemy> enemies = new List<IEnemy>();
     /*
         public void SpawnFromPhase(PhaseSO phase)
         {
@@ -122,15 +123,17 @@ public class NEnemySpawner : NetworkBehaviour
                rot);
 
         var enemy = networkObject.GetComponent<NEnemy>();
-
-        enemies.Add(enemy);
+        enemy.Init(reciver);
+        RegisterEnemy(enemy);
         networkObject.Spawn();
+        
     }
 
-    public void EnemyKilled()
+    public void EnemyKilled(IEnemy enemy)
     {
         if (!IsServer) return;
         remain--;
+        UnregisterEnemy(enemy);
     }
 
     public bool AllDead()
@@ -138,12 +141,12 @@ public class NEnemySpawner : NetworkBehaviour
         return spawnFinished && remain <= 0;
     }
 
-    public void RegisterEnemy(NEnemy enemy)
+    private void RegisterEnemy(IEnemy enemy)
     {
         enemies.Add(enemy);
     }
 
-    public void UnregisterEnemy(NEnemy enemy)
+    private void UnregisterEnemy(IEnemy enemy)
     {
         enemies.Remove(enemy);
     }
@@ -154,10 +157,9 @@ public class NEnemySpawner : NetworkBehaviour
         {
             if (enemy != null && enemy.NetworkObject.IsSpawned)
             {
-                enemy.NetworkObject.Despawn(true);
+                enemy.NetworkObject.Despawn(true);   
             }
         }
-
         enemies.Clear();
         remain = 0;
         spawnFinished = false;

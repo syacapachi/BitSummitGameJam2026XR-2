@@ -180,11 +180,4 @@ public class PhaseManager : NetworkBehaviour
 
         StartNextPhase();
     }
-
-    public void EnemyKilled(int score)
-    {
-        if (!IsServer) return;
-        spawner.EnemyKilled();
-    }
-
 }
