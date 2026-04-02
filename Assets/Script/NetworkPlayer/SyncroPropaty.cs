@@ -30,7 +30,9 @@ public class SyncroPropaty : NetworkBehaviour
     {
         if (IsOwner)
         {
-            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.OnJobChanged += OnJobChangeHandle;
+            PlayerPropaty playerPropaty = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty;
+            playerPropaty.OnJobChanged += OnJobChangeHandle;
+            Job = playerPropaty.Job;
         }
         PlayerLayer.OnValueChanged += OnValueChanged;
     }

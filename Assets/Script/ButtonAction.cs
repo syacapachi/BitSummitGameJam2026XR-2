@@ -132,7 +132,7 @@ public class Scripts : MonoBehaviour
     {
         if (m_Discovery.IsRunning)
         {
-                RefreshList();
+            RefreshList();
         }
         else
         {

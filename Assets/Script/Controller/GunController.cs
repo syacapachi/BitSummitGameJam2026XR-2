@@ -32,7 +32,7 @@ public class GunController : NetworkBehaviour
     //こいつは、残段数のみを同期してればわかる
     private bool isReloading = false;
     private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new Dictionary<PlayerJob, PlayerLayerSettings>();
-
+    private NetworkPlayerRoot playerRoot;
 
     private void Start()
     {
@@ -61,6 +61,7 @@ public class GunController : NetworkBehaviour
     {
         if (IsServer)
         {
+            playerRoot = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<NetworkPlayerRoot>();
             syncedAmmo.Value = weaponSettings.maxAmmo;
         }
     }
@@ -92,7 +93,7 @@ public class GunController : NetworkBehaviour
 
         // ② 弾のLayerをプレイヤーのJobに合わせる
         GameObject go = obj.gameObject;
-        var job = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.propaty.Job;
+        var job = playerRoot.propaty.Job;
         var layerName = jobToLayerMaskDic[job];
         //go.SetLayerRecursively(LayerMask.NameToLayer(layerName));
 

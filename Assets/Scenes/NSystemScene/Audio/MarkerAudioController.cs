@@ -10,7 +10,7 @@ public class MarkerAudioController : NetworkBehaviour
     [SerializeField, Range(0f, 1f)] private float markerPlacedVolumeAll = 1f;
     [SerializeField] private bool playAsUiAll = false;
 
-    [Rpc(SendTo.NotServer)]
+    [Rpc(SendTo.ClientsAndHost)]
     public void OnMarkerSondPlayRpc(Vector3 hitPoint)
     {
         var audioManager = ManagerLocator.Instance.GameAudioManager;
