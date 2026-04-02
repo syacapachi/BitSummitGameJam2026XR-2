@@ -31,21 +31,28 @@ namespace Syacapachi.Editor
             }
             var attr = (ShowInspectorAttribute)attribute;
             Type targetType = fieldInfo.FieldType;
-            Debug.Log(targetType);
             SerializedPropertyType type = property.propertyType;
+
+            //プロパティはラッパークラスなので、実際のオブジェクトを取得する必要がある
+            //しかし、値を変更する場合はラッパークラス越しに変更する必要があるため、プロパティから直接値を取得して描画するのではなく、リフレクションでフィールドの値を取得して描画する。
+            object target = property.serializedObject.targetObject;
+
+
+            EditorGUI.BeginProperty(position, label, property);
             if (type == SerializedPropertyType.ManagedReference)
             {
-                DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
+                DrawField(position, targetType, label.text, fieldInfo.GetValue(target));
             }
             else if (type == SerializedPropertyType.ObjectReference)
             {
-                DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
+                DrawField(position, targetType, label.text, fieldInfo.GetValue(target));
             }
             else 
             {
-                DrawField(position, targetType, label.text, fieldInfo.GetValue(property));
+                DrawField(position, targetType, label.text, fieldInfo.GetValue(target));
             }
-                
+            EditorGUI.EndProperty();
+
         }
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
