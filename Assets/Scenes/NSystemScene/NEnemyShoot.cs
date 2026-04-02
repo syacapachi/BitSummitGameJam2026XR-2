@@ -6,6 +6,7 @@ using Syacapachi.util;
 public class NEnemyShoot : GunController
 {
     public EnemySO enemySO;
+    public EnemyWeaponSettingsSO weaponSO;
 
     Transform target;
     Coroutine shootCorutine;
@@ -17,6 +18,7 @@ public class NEnemyShoot : GunController
         if (!IsServer) return;
 
         target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
+        weaponSO = enemySO.enemyWeapon;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
 
@@ -24,11 +26,15 @@ public class NEnemyShoot : GunController
     {
         Vector3 direction = (target.position - transform.position).normalized;
 
-        NetworkObjectPool.Singleton.GetNetworkObject(
+        NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(
             BulletPrefab, 
             FirePoint.position, 
             Quaternion.LookRotation(direction)
-            ).Spawn();
+            );
+        var bullet = networkObject.GetComponent<BulletBaseController>();
+        bullet.BulletInit(0,weaponSO.target,weaponSO);
+        networkObject.Spawn();
+        
     }
 
     private IEnumerator ShootCorutine()
@@ -37,7 +43,7 @@ public class NEnemyShoot : GunController
 
         while (true)
         {
-            for (float i = WeaponSettings.fireInterval; i > 0f; i -= 0.1f)
+            for (float i = weaponSO.reloadTime; i > 0f; i -= 0.1f)
             {
                 //演出
                 yield return wait01;

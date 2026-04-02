@@ -2,7 +2,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class NEnemyBullet :　BulletBaseController
+public class NEnemyBullet : BulletBaseController
 {
     public EnemySO enemySO;
 
