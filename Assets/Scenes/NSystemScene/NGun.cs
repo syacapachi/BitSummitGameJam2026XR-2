@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using Unity.Netcode;
-using UnityEngine;
+﻿using UnityEngine;
 public class NGun : GunController
 {
     [SerializeField] LineRenderer laserLine;
@@ -10,7 +8,7 @@ public class NGun : GunController
     
     public int AmmoVal => syncedAmmo.Value;
 
-    protected override ICountDownUI CountDownUI =>ammoUI;
+    protected override ICountDownUI CountDownUI => ammoUI;
     protected override IProgressUI ProgressUI => ammoUI;
     protected override IShotSound ShotSound => audioObserver;
     protected override IReloadSound ReloadSound => audioObserver;

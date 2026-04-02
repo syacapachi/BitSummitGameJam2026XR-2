@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.Netcode.Components;
-using Unity.XR.CoreUtils;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class GunController : NetworkBehaviour
 {
