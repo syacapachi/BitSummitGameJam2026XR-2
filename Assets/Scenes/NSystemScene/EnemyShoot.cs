@@ -42,7 +42,7 @@ public class EnemyShoot : GunController
         WaitForSeconds wait01 = new(0.1f);
         while (true)
         {
-            for (float i = enemySO.shootInterval; i > 0f; i -= 0.1f)
+            for (float i = weaponSO.fireInterval; i > 0f; i -= 0.1f)
             {
                 //演出
                 yield return wait01;
