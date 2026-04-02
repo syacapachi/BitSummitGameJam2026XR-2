@@ -153,10 +153,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  gunSO: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
   lifeTime: 5
   rb: {fileID: 2101342538799749373}
-  target: 0
   hitFxPrefab: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
   shieldFxPrefab: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
   hitFxLife: 2
@@ -205,7 +203,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.4
+  m_Time: 0.2
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -224,7 +222,7 @@ TrailRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.40453976
-        value: 0.11310753
+        value: 0.028138965
         inSlope: 0
         outSlope: 0
         tangentMode: 0

@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5d4ed68d17b39c42980fe611297e6dd, type: 3}
   m_Name: GunSettings
   m_EditorClassIdentifier: 
-  fireRate: 0.2
-  maxAmmo: 10
-  reloadTime: 5
-  speed: 20
+  fireInterval: 0.2
+  maxAmmo: 20
+  reloadTime: 3
+  speed: 30
   laserDistance: 100
   damage: 100
+  target: 0
