@@ -6,7 +6,8 @@ using Syacapachi.util;
 public class NEnemyShoot : GunController
 {
     public EnemySO enemySO;
-    public EnemyWeaponSettingsSO weaponSO;
+    
+    private EnemyWeaponSettingsSO weaponSO;
 
     Transform target;
     Coroutine shootCorutine;
@@ -19,6 +20,7 @@ public class NEnemyShoot : GunController
 
         target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
         weaponSO = enemySO.enemyWeapon;
+        weaponSO ??= base.WeaponSettings as EnemyWeaponSettingsSO;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
 

@@ -5,9 +5,9 @@ using UnityEngine;
 
 public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
 {
-    [SerializeField] WeaponSettingsSO gunSO;
     [SerializeField] float lifeTime = 5f;
     [SerializeField] Rigidbody rb;
+    WeaponSettingsSO gunSO;
     private PlayerJob target = PlayerJob.Both;
     private ulong shooterId;
     protected Coroutine despawnTimer;
@@ -22,7 +22,8 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
         if (IsServer)
         {
             rb = GetComponent<Rigidbody>();
-            
+            rb.linearVelocity = transform.forward * gunSO.speed;
+            despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
         }
     }
     public void BulletInit(ulong id,PlayerJob target,WeaponSettingsSO so)
@@ -30,9 +31,6 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
         shooterId = id;
         this.target = target;
         gunSO = so;
-        
-        rb.linearVelocity = transform.forward * gunSO.speed;
-        despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
     }
     private IEnumerator DespawnCorutine(float time)
     {

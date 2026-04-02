@@ -379,7 +379,7 @@ MonoBehaviour:
   hpCanvas: {fileID: 8115059269520921985}
   hpImage: {fileID: 6392055257079718664}
   hpText: {fileID: 7872890923030782825}
-  enemyType: 0
+  enemyJob: 0
 --- !u!120 &984271367505881240
 LineRenderer:
   serializedVersion: 2
@@ -665,12 +665,13 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   bulletPrefab: {fileID: 4022916156752048900, guid: bab683d334cc24943aa54f5fcfbc3e4b, type: 3}
   firePoint: {fileID: 1540549378645820342}
-  weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
+  weaponSettings: {fileID: 11400000, guid: 66323ddfe1ed57d4c8504254422d2057, type: 2}
   allShootSoundSource: {fileID: -4752889112109069225}
   allReloadSoundSource: {fileID: 0}
   syncedAmmo:
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
+  weaponSO: {fileID: 11400000, guid: 66323ddfe1ed57d4c8504254422d2057, type: 2}
 --- !u!1 &2789469182908074600
 GameObject:
   m_ObjectHideFlags: 0
