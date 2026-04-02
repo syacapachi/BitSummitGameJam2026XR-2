@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro; // ← 追加
 using System.Collections;
 
-public class NEnemy : NetworkBehaviour,IDamageReciever
+public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 {
     [SerializeField] EnemySO enemySO;
     private readonly NetworkVariable<float> currentHP = new(
@@ -17,12 +17,20 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
     [SerializeField] private Image hpImage; // Filled Image
     [SerializeField] private TextMeshProUGUI hpText;
 
+    private IEnemyBrokenReciever reciver;
+
     private Transform targetPlayer;
     public GameObject GameObject => this.gameObject;
+    NetworkObject IEnemy.NetworkObject => this.NetworkObject;
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => enemySO.HP;
     public PlayerJob enemyJob;
     private ulong lastAttackerId;
+
+    public void Init(IEnemyBrokenReciever s)
+    {
+        reciver = s;
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -110,8 +118,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever
             }
         }
 
-        ManagerLocator.Instance.AllGameManager.phaseManager.EnemyKilled(enemySO.scoreValue);
-        ManagerLocator.Instance.AllGameManager.phaseManager.spawner.UnregisterEnemy(this);
+        reciver.EnemyKilled(this);
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);
