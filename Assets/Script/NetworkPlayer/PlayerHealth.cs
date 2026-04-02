@@ -28,7 +28,7 @@ public class PlayerHealth : NetworkBehaviour,IDamageReciever
         currentHP.OnValueChanged -= OnServerHPChanged;
         Debug.Log($"PlayerHealth despawned on network. owner:{OwnerClientId},NetworkId = {NetworkObjectId}");
     }
-    public void TakeDamage(float damage)
+    public void TakeDamage(IDamageSender sender, float damage)
     {
         if (IsServer)
         {

@@ -28,7 +28,7 @@ public class NBullet : BulletBaseController
 
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
     {
-        var enemy = other.GetComponent<NEnemy>();
+        var enemy = other.GetComponent<IEnemy>();
         var nm = NetworkManager.Singleton;
 
         if (!nm.ConnectedClients.TryGetValue(ShooterId, out var client))
@@ -38,20 +38,23 @@ public class NBullet : BulletBaseController
         }
 
         var root = client.PlayerObject.GetComponent<NetworkPlayerRoot>();
-        if (root == null) return;
-
 
         if (enemy != null)
         {
+            if(!ManagerLocator.Instance.JobManager.JobLayerMaskDic.TryGetValue(ShooterJob, out var layerMaskSetting))
+            {
+                Debug.LogError($"LayerMask setting not found for job: {ShooterJob}");
+                return;
+            }
             // ★弾のstateと敵のtypeを比較
-            if ((Target & enemy.enemyJob) != 0)
+            //見えない敵なら当たる。
+            if (!layerMaskSetting.IsVisibleLayer(enemy.Layer))
             {
                 // ダメージが通る
                 Debug.Log("Damage");
                 root.stats.AddHit();
                 root.stats.AddDamage(Damage);
-                enemy.SetAttacker(ShooterId);
-                reciever.TakeDamage(Damage);
+                reciever.TakeDamage(this,Damage);
                 SpawnHitFxClientRpc(transform.position);
             }
             else

@@ -127,7 +127,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(IDamageSender sender, float damage)
     {
         throw new System.NotImplementedException();
     }
