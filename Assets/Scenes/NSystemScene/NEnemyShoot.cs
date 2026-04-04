@@ -41,20 +41,14 @@ public class NEnemyShoot : GunController
 
     private IEnumerator ShootCorutine()
     {
-        WaitForSeconds wait01 = new(0.1f);
+        // 初弾
+        yield return new WaitForSeconds(weaponSO.FirstShootDelay);
+        OnShoot();
 
         while (true)
         {
-            for (float i = weaponSO.reloadTime; i > 0f; i -= 0.1f)
-            {
-                //演出
-                yield return wait01;
-            }
-
+            yield return new WaitForSeconds(weaponSO.reloadTime);
             OnShoot();
-
-            //打った後の待機時間
-            yield return wait01;
         }
     }
 }
