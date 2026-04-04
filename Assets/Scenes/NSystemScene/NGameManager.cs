@@ -6,28 +6,58 @@ using Syacapachi.Attribute;
 
 public class NGameManager : NetworkBehaviour
 {
-    public GameObject protectArea;
-    public ScoreManager scoreManager;
-    public PhaseManager phaseManager;
-    private bool gameStarted = false;
-    public bool IsGameStart => gameStarted;
+    [SerializeField] GameObject protectArea;
+    [SerializeField] ScoreManager scoreManager;
+    [SerializeField] PhaseManager phaseManager;
 
-    public NetworkVariable<GameState> gameState = new NetworkVariable<GameState>(
+    public ScoreManager ScoreManager => scoreManager;
+    public PhaseManager PhaseManager => phaseManager;
+    public GameObject ProtectArea => protectArea;
+    public bool IsGamePlaying => CurrentGameState == GameState.Playing;
+    public bool IsGameOver => CurrentGameState == GameState.GameOver;
+
+    [SerializeField] NetworkVariable<GameState> gameState = new(
         GameState.Waiting,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+    public GameState CurrentGameState {
+        get => gameState.Value;
+        private set {
+            if (!IsServer) return;
+            if(gameState.Value == value) return;
+            gameState.Value = value;
+        }
+    }
     public event Action OnbulletComeRpcEvent;
-    public event Action<PlayerResultData[]> OnGameEndRpc;
+    public event Action<PlayerResultData[]> OnGameResultRpc;
 
+    public event Action OnGameStartRpcEvent;
+    public event Action OnGameResetRpcEvent;
+    public event Action OnGameClearRpcEvent;
+    public event Action OnGameOverRpcEvent;
+    private void OnEnable()
+    {
+        gameState.OnValueChanged += HandleGameStateChanged;
+    }
+    private void OnDisable()
+    {
+        gameState.OnValueChanged -= HandleGameStateChanged;
+    }
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
 
         // 🔗 イベント接続
-        scoreManager.OnGameOver += HandleGameOver;
-        phaseManager.OnGameClear += HandleGameClear;
-        phaseManager.OnPhaseClearBonus += HandleBonus;
+        scoreManager.OnScoreReachZero += HandleScoreZero;
+        phaseManager.OnAllPhaseEnded += HandleAllPhaseEnded;
+    }
+    public override void OnNetworkDespawn()
+    {
+        if (!IsServer) return;
+        // 🔗 イベント切断
+        scoreManager.OnScoreReachZero -= HandleScoreZero;
+        phaseManager.OnAllPhaseEnded -= HandleAllPhaseEnded;
     }
 
     [OnInspectorButton("Start Game")]
@@ -36,38 +66,52 @@ public class NGameManager : NetworkBehaviour
         if (!IsServer) return;
 
         Debug.Log("Game Start");
-        gameStarted = true;
         gameState.Value = GameState.Playing;
-        scoreManager.SetScore();
+        scoreManager.SetScoreServerOnly();
         phaseManager.StartPhases();
     }
 
-    void HandleBonus(int bonus)
+    void HandleGameStateChanged(GameState oldState, GameState newState)
     {
-        scoreManager.AddScore(bonus);
+        switch (newState)
+        {
+            case GameState.Playing:
+                if (oldState == GameState.Waiting)
+                    OnGameStartRpcEvent?.Invoke();
+                break;
+            case GameState.Waiting:
+                OnGameResetRpcEvent?.Invoke();
+                break;
+            case GameState.GameClear:
+                if(oldState == GameState.Playing)
+                    OnGameClearRpcEvent?.Invoke();
+                break;
+            case GameState.GameOver:
+                if (oldState == GameState.Playing)
+                    OnGameOverRpcEvent?.Invoke();
+                break;
+        }
     }
-
-    void HandleGameOver()
+    void HandleScoreZero()
     {
         Debug.Log("GAME OVER");
-        gameState.Value = GameState.GameOver;
-
-        phaseManager.spawner.KillAllEnemies();
+        CurrentGameState = GameState.GameOver;
+        phaseManager.KillableHandle.KillAll();
 
         SendResults();
     }
 
-    void HandleGameClear()
+    void HandleAllPhaseEnded()
     {
         Debug.Log("GAME CLEAR");
-        gameState.Value = GameState.GameClear;
+        CurrentGameState = GameState.GameClear;
 
         SendResults();
     }
 
     public void BulletHitProtectArea(int damage)
     {
-        scoreManager.AddScore(damage);
+        scoreManager.AddScoreServerOnly(damage);
         InvokeEventRpc();
     }
     [Rpc(SendTo.ClientsAndHost,InvokePermission = RpcInvokePermission.Server)]
@@ -78,9 +122,9 @@ public class NGameManager : NetworkBehaviour
 
 
     [Rpc(SendTo.ClientsAndHost)]
-    void OnGameEndClientRpc(PlayerResultData[] result)
+    void OnSendResultRpc(PlayerResultData[] result)
     {
-        OnGameEndRpc?.Invoke(result);
+        OnGameResultRpc?.Invoke(result);
     }
 
     void SendResults()
@@ -98,7 +142,7 @@ public class NGameManager : NetworkBehaviour
             list.Add(stats.CreateResultData());
         }
 
-        OnGameEndClientRpc(list.ToArray());
+        OnSendResultRpc(list.ToArray());
     }
 }
 

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 
 public class GameManagerSpawner : NetworkBehaviour
@@ -10,21 +10,22 @@ public class GameManagerSpawner : NetworkBehaviour
         if (!IsServer) return;
 
         Debug.Log("Spawner OnNetworkSpawn");
-
-        GameObject obj = Instantiate(gameManagerPrefab);
-
-        Debug.Log("GameManager Instance : " + obj.name);
-
-        var netObj = obj.GetComponent<NetworkObject>();
-
-        if (netObj == null)
+        if(ManagerLocator.Instance.AllGameManager != null)
         {
-            Debug.LogError("NetworkObject missing!");
-            return;
+            GameObject obj = Instantiate(gameManagerPrefab);
+            Debug.LogWarning("GameManager already exists. Spawner will not create another one.");
+            Debug.Log("GameManager Instance : " + obj.name);
+
+            var netObj = obj.GetComponent<NetworkObject>();
+
+            if (netObj == null)
+            {
+                Debug.LogError("NetworkObject missing!");
+                return;
+            }
+            netObj.Spawn();
+
+            Debug.Log("GameManager Spawned id=" + netObj.NetworkObjectId);
         }
-
-        netObj.Spawn();
-
-        Debug.Log("GameManager Spawned id=" + netObj.NetworkObjectId);
     }
 }

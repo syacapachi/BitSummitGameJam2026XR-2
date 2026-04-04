@@ -1,16 +1,16 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class PhaseBarUI : MonoBehaviour
 {
     [Header("UI")]
-    public GameObject phaseBarPrefab;
-    public GameObject separatorPrefab;
-    public Transform container;
+    [SerializeField] GameObject phaseBarPrefab;
+    [SerializeField] GameObject separatorPrefab;
+    [SerializeField] Transform container;
 
     [Header("Size")]
-    public float maxWidth = 300f; // Å‘åƒtƒF[ƒY‚Ì’·‚³
+    [SerializeField] float maxWidth = 300f; // æœ€å¤§ãƒ•ã‚§ãƒ¼ã‚ºã®é•·ã•
 
     private List<Image> phaseBars = new List<Image>();
     private List<Image> separators = new List<Image>();
@@ -22,8 +22,8 @@ public class PhaseBarUI : MonoBehaviour
 
     void Start()
     {
-        // GameManageræ“¾
-        phaseManager = ManagerLocator.Instance.AllGameManager.phaseManager;
+        // GameManagerå–å¾—
+        phaseManager = ManagerLocator.Instance.AllGameManager.PhaseManager;
 
         if (phaseManager == null)
         {
@@ -39,7 +39,7 @@ public class PhaseBarUI : MonoBehaviour
     {
         if (phaseManager == null) return;
 
-        int current = phaseManager.syncedPhaseIndex.Value;
+        int current = phaseManager.CurrentPhaseIndex;
         float progress = phaseManager.phaseProgress.Value;
 
         if (current < 0) return;
@@ -49,21 +49,21 @@ public class PhaseBarUI : MonoBehaviour
             int visualIndex = phaseBars.Count - 1 - i;
             if (i < current)
             {
-                // ‰ß‹ƒtƒF[ƒY ¨ Š®—¹
+                // éå»ãƒ•ã‚§ãƒ¼ã‚º â†’ å®Œäº†
                 phaseBars[visualIndex].fillAmount = 0f;
                 phaseBars[visualIndex].color = Color.gray;
                 separators[visualIndex].enabled = false;
             }
             else if (i == current)
             {
-                // Œ»İƒtƒF[ƒY ¨ Œ¸­
+                // ç¾åœ¨ãƒ•ã‚§ãƒ¼ã‚º â†’ æ¸›å°‘
                 phaseBars[visualIndex].fillAmount = progress;
                 phaseBars[visualIndex].color = Color.yellow;
                 separators[visualIndex].enabled = true;
             }
             else
             {
-                // –¢—ˆƒtƒF[ƒY ¨ ƒtƒ‹
+                // æœªæ¥ãƒ•ã‚§ãƒ¼ã‚º â†’ ãƒ•ãƒ«
                 phaseBars[visualIndex].fillAmount = 1f;
                 phaseBars[visualIndex].color = defaultColor;
                 separators[visualIndex].enabled = true;
@@ -72,11 +72,11 @@ public class PhaseBarUI : MonoBehaviour
     }
 
     // =========================
-    // ƒtƒF[ƒYƒo[¶¬
+    // ãƒ•ã‚§ãƒ¼ã‚ºãƒãƒ¼ç”Ÿæˆ
     // =========================
     void CreateBars()
     {
-        int count = phaseManager.phases.Length;
+        int count = phaseManager.Phases.Length;
 
         for (int i = 0; i < count; i++)
         {
@@ -96,23 +96,23 @@ public class PhaseBarUI : MonoBehaviour
     }
 
     // =========================
-    // ƒo[‚Ì’·‚³İ’è
+    // ãƒãƒ¼ã®é•·ã•è¨­å®š
     // =========================
     void SetupBarLength()
     {
         float maxTime = 0f;
 
-        // Å‘åŠÔæ“¾
-        foreach (var phase in phaseManager.phases)
+        // æœ€å¤§æ™‚é–“å–å¾—
+        foreach (var phase in phaseManager.Phases)
         {
-            if (phase.phaseTime > maxTime)
-                maxTime = phase.phaseTime;
+            if (phase.PhaseTime > maxTime)
+                maxTime = phase.PhaseTime;
         }
 
-        // Šeƒo[‚É”½‰f
+        // å„ãƒãƒ¼ã«åæ˜ 
         for (int i = 0; i < phaseBars.Count; i++)
         {
-            float time = phaseManager.phases[i].phaseTime;
+            float time = phaseManager.Phases[i].PhaseTime;
             float ratio = time / maxTime;
 
             RectTransform rt = phaseBars[i].rectTransform;

@@ -1,8 +1,5 @@
-﻿using Unity.Netcode;
-using Unity.XR.CoreUtils;
-using UnityEditor;
+﻿using Unity.XR.CoreUtils;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.XR;
 /// <summary>
 /// プレイヤークラスのルートコンポーネント。プレイヤーに関連するすべてのコンポーネントを管理するためのクラス。プレイヤーの入力、キャラクターコントロール、ヘルス、プロパティ、カメラ設定などを統括する役割を持つ。

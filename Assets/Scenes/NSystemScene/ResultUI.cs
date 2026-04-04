@@ -7,16 +7,16 @@ public class ResultUI : MonoBehaviour
 {
     private NGameManager nGameManager;
 
-    public GameObject panel;
-    public TextMeshProUGUI resultText;
-    public TextMeshProUGUI titleText;
+    [SerializeField] GameObject panel;
+    [SerializeField] TextMeshProUGUI resultText;
+    [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] private EnemySO[] enemyDatabase;
     [SerializeField] private GameObject enemyRowPrefab;
     [SerializeField] private Transform contentParent;
-    public Font textFont;                 // 必要に応じて設定
-    public int fontSizeHeader = 28;
-    public int fontSizeStats = 22;
-    public int fontSizeKill = 20;
+    [SerializeField] Font textFont;                 // 必要に応じて設定
+    [SerializeField] int fontSizeHeader = 28;
+    [SerializeField] int fontSizeStats = 22;
+    [SerializeField] int fontSizeKill = 20;
 
 
     IEnumerator Start()
@@ -39,20 +39,20 @@ public class ResultUI : MonoBehaviour
         panel.SetActive(false);
 
         // イベント登録
-        nGameManager.OnGameEndRpc += OnGameFinished;
+        nGameManager.OnGameResultRpc += OnGameFinished;
     }
     private void OnEnable()
     {
         if(nGameManager != null)
         {
-            nGameManager.OnGameEndRpc += OnGameFinished;
+            nGameManager.OnGameResultRpc += OnGameFinished;
         }
     }
     private void OnDisable()
     {
         if (nGameManager != null)
         {
-            nGameManager.OnGameEndRpc -= OnGameFinished;
+            nGameManager.OnGameResultRpc -= OnGameFinished;
         }
     }
 
@@ -66,10 +66,10 @@ public class ResultUI : MonoBehaviour
     {
         panel.SetActive(true);
 
-        int score = nGameManager.scoreManager.GetScore();
-        int bonus = nGameManager.phaseManager.lastClearBonus.Value;
+        int score = nGameManager.ScoreManager.GetScore();
+        int bonus = nGameManager.ScoreManager.totalBonus.Value;
 
-        bool isGameOver = nGameManager.scoreManager.isGameOver.Value;
+        bool isGameOver = nGameManager.IsGameOver;
 
         // ⭐タイトル分岐
         if (isGameOver)
@@ -92,7 +92,7 @@ public class ResultUI : MonoBehaviour
     {
         panel.SetActive(true);
 
-        bool isGameOver = nGameManager.scoreManager.isGameOver.Value;
+        bool isGameOver = nGameManager.IsGameOver;
         titleText.text = isGameOver ? "GAME OVER!" : "GAME CLEAR!";
 
         // （必要なら）前回削除
@@ -145,7 +145,7 @@ public class ResultUI : MonoBehaviour
                 var obj = Instantiate(enemyRowPrefab, contentParent);
                 var row = obj.GetComponent<EnemyResultRow>();
 
-                row.Setup(enemy.icon, enemy.Name, count);
+                row.Setup(enemy.Icon, enemy.EnemyName, count);
             }
 
             var sepObj = new GameObject("Separator");

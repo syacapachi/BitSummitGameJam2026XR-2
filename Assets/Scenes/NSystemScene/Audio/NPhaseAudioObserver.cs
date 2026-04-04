@@ -10,26 +10,26 @@ public class NPhaseAudioObserver : MonoBehaviour
 
     private NGameManager managerAll;
 
-    private void Start()
+    private void OnEnable()
     {
         managerAll = ManagerLocator.Instance.AllGameManager;
         if (managerAll == null) return;
 
-        managerAll.phaseManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
-        managerAll.OnGameEndRpc += data =>OnGameFinished();
+        managerAll.PhaseManager.OnPhaseChange += OnPhaseChanged;
+        managerAll.OnGameResultRpc += data => OnGameFinished();
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (managerAll == null) return;
 
-        managerAll.phaseManager.syncedPhaseIndex.OnValueChanged -= OnPhaseChanged;
-        managerAll.OnGameEndRpc -= data => OnGameFinished();
+        managerAll.PhaseManager.OnPhaseChange -= OnPhaseChanged;
+        managerAll.OnGameResultRpc -= data => OnGameFinished();
     }
 
-    private void OnPhaseChanged(int oldValue, int newValue)
+    private void OnPhaseChanged(int newValue)
     {
-        if (newValue >= 0 && oldValue != newValue)
+        if (newValue >= 0)
         {
             ManagerLocator.Instance.GameAudioManager?.PlayUI(phaseChangeClipAll, phaseVolumeAll);
         }

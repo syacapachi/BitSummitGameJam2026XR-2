@@ -2,35 +2,38 @@
 using Unity.Netcode;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class PhaseManager : NetworkBehaviour
 {
-    public PhaseSO[] phases;
-    public NEnemySpawner spawner;
+    [SerializeField] PhaseSO[] phases;
+    [SerializeField] NEnemySpawner spawner;
+    [SerializeField] ScoreManager scoreManager;
+       
+    public IKillable KillableHandle => spawner;
+    public ISpawnable SpawnableHandle => spawner;
 
-    private int currentPhaseIndex = -1;
-    private float timer;
 
-    public NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
+    [SerializeField] NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
 
     public NetworkVariable<int> countdownValue = new NetworkVariable<int>(0);
-    public NetworkVariable<bool> phaseFinishing = new NetworkVariable<bool>(false);
+    public NetworkVariable<bool> phaseFinished = new NetworkVariable<bool>(false);
 
-    public NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(0);
     public NetworkVariable<float> phaseProgress = new NetworkVariable<float>(
         1f,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+    [SerializeField] bool isSkip = false;
+    public PhaseSO[] Phases => phases;
+    public int CurrentPhaseIndex => syncedPhaseIndex.Value;
 
+    private float timer;
     private bool isCountingDown = false;
-    public bool isSkip = false;
-    private bool isPhaseStart = false;
 
     public event Action AllEnemyDeadEventRpc;
-    public event Action OnGameClear;
+    public event Action OnAllPhaseEnded;
     public event Action<int> OnPhaseChange;
-    public event Action<int> OnPhaseClearBonus; // ← ScoreManagerに渡す用
 
     [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
     private void AllEnemyDeathRpc()
@@ -45,99 +48,100 @@ public class PhaseManager : NetworkBehaviour
         if (spawner == null)
             spawner = GetComponentInChildren<NEnemySpawner>();
     }
+    private void OnEnable()
+    {
+        syncedPhaseIndex.OnValueChanged += OnPhaseChanedHaldle;
+    }
+    private void OnDisable()
+    {
+        syncedPhaseIndex.OnValueChanged -= OnPhaseChanedHaldle;
+    }
+    private void OnPhaseChanedHaldle(int oldValue, int newValue)
+    {
+        OnPhaseChange?.Invoke(newValue);
+    }
 
     public void StartPhases()
     {
         Debug.Log("StartPhases called: " + this.name);
         if (!IsServer) return;
 
-        currentPhaseIndex = -1;
+        syncedPhaseIndex.Value = -1;
         StartNextPhase();
-    }
-
-    void Update()
-    {
-        if (!IsServer) return;
-        if (currentPhaseIndex >= phases.Length) return;
-        if (isCountingDown) return;
-        if (!isPhaseStart) return;
-        if (ManagerLocator.Instance.AllGameManager.gameState.Value != GameState.Playing)
-            return;
-
-        timer -= Time.deltaTime;
-        float max = phases[currentPhaseIndex].phaseTime;
-
-        
-        phaseProgress.Value = Mathf.Clamp01(timer / max);
-
-        if (timer <= 0 || (isSkip && spawner.AllDead()))
-        {
-            EndPhase();
-        }
     }
 
     void StartNextPhase()
     {
-        isPhaseStart = true;
         Debug.Log("StartNextPhase called: " + this.name);
-        currentPhaseIndex++;
+        syncedPhaseIndex.Value++;
 
-        if (currentPhaseIndex >= phases.Length)
+        if (CurrentPhaseIndex >= phases.Length)
         {
             Debug.Log("GAME CLEAR");
-            spawner.KillAllEnemies();
-            OnGameClear?.Invoke();
+            spawner.KillAll();
+            OnAllPhaseEnded?.Invoke();
             return;
         }
 
-        StartCoroutine(StartPhaseWithCountdown(currentPhaseIndex));
+        StartCoroutine(StartPhaseWithCountdown(CurrentPhaseIndex));
     }
-    
     IEnumerator StartPhaseWithCountdown(int phaseIndex)
     {
+        yield return new WaitWhile(() => isCountingDown); // カウントダウン中は待機
         isCountingDown = true;
 
         int count = 3;
+        //キャッシュを作ることでGCを減らす
+        var wait01s = new WaitForSeconds(1f);
         while (count > 0)
         {
             countdownValue.Value = count;
             Debug.Log("Countdown: " + count);
-            yield return new WaitForSeconds(1f);
+            yield return wait01s;
             count--;
         }
 
         countdownValue.Value = 0;
         isCountingDown = false;
 
-        syncedPhaseIndex.Value = phaseIndex;
-
         var phase = phases[phaseIndex];
-        timer = phase.phaseTime;
-
-        spawner.SpawnFromPhase(phase);
-
+        timer = phase.PhaseTime;
+        SpawnableHandle.SpawnFromEvent(phase.SpawnEvents.ToList());
         OnPhaseChange?.Invoke(phaseIndex);
+
+        StartCoroutine(PhaseProgress());
+    }
+    IEnumerator PhaseProgress()
+    {
+        
+        float max = phases[CurrentPhaseIndex].PhaseTime;
+        while (timer > 0 && spawner.IsAllDead)
+        {
+            //コルーチンは1フレームごとに呼ばれるため、Time.deltaTimeを引いていくことで、フェーズの残り時間を管理する
+            timer -= Time.deltaTime;
+            phaseProgress.Value = Mathf.Clamp01(timer / max);
+            yield return null;
+        }
+        if (phaseProgress.Value < 0f)
+        {
+            phaseProgress.Value = 0f;
+        }
+        StartCoroutine(EndPhase());
     }
 
-    void EndPhase()
+    IEnumerator EndPhase()
     {
-        if (currentPhaseIndex == phases.Length - 1)
+        if (CurrentPhaseIndex == phases.Length - 1)
         {
-            StartCoroutine(EndPhaseWithCountdown());
-            return;
+            yield return EndPhaseWithCountdown();
         }
-        else
+        else if (spawner.IsAllDead)
         {
-            if (spawner.AllDead())
-            {
-                int bonus = phases[currentPhaseIndex].clearBonus;
+            int bonus = phases[CurrentPhaseIndex].ClearBonus;
 
-                lastClearBonus.Value = bonus;
-                OnPhaseClearBonus?.Invoke(bonus); // ← ここ重要
+            scoreManager.AddBonusServerOnly(bonus); // ← ここ重要
 
-                StartCoroutine(AllDeadSequence());
-                return;
-            }
+            yield return AllDeadSequence();
         }
 
         StartNextPhase();
@@ -152,8 +156,6 @@ public class PhaseManager : NetworkBehaviour
         yield return new WaitForSeconds(3.1f);
 
         isCountingDown = false;
-
-        StartNextPhase();
     }
 
     private IEnumerator EndPhaseWithCountdown()
@@ -177,7 +179,5 @@ public class PhaseManager : NetworkBehaviour
         Debug.Log("FINISH!");
 
         isCountingDown = false;
-
-        StartNextPhase();
     }
 }

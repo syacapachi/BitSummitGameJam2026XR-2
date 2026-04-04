@@ -1,8 +1,6 @@
-﻿using UnityEngine;
-using Unity.Netcode;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using Unity.Netcode;
 using Unity.XR.CoreUtils;
+using UnityEngine;
 public class Syncronize : NetworkBehaviour
 {
     XROrigin xrOrigin;

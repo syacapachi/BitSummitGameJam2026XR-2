@@ -114,7 +114,7 @@ MonoBehaviour:
   <LocalObjectPool>k__BackingField: {fileID: 4446207769095747314}
   <GameAudioManager>k__BackingField: {fileID: 6731689958154144565}
   <RankingManager>k__BackingField: {fileID: 2563868915211156367}
-  <TutorialManager>k__BackingField: {fileID: 0}
+  <TutorialManager>k__BackingField: {fileID: 8343285116251111980}
 --- !u!114 &4316947998156742355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,8 +127,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3819407862
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 3782534606
+  InScenePlacedSourceGlobalObjectIdHash: 657380702
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -189,6 +189,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
   - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
   spawner: {fileID: 819919111548997275}
+  scoreManager: {fileID: 7622921992766210704}
   syncedPhaseIndex:
     m_InternalValue: -1
   countdownValue:
@@ -446,11 +447,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  initilScore: 0
+  initilScore: 50000
   score:
     m_InternalValue: 50000
-  isGameOver:
-    m_InternalValue: 0
 --- !u!1 &7146760537532538251
 GameObject:
   m_ObjectHideFlags: 0

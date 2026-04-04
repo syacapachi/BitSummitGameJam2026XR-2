@@ -9,8 +9,8 @@ public class NBullet : BulletBaseController
     [SerializeField] GameObject hitFxPrefab;
     [SerializeField] GameObject shieldFxPrefab;
     [SerializeField] float hitFxLife = 2f;
-    
-    [ClientRpc]
+
+    [Rpc(SendTo.ClientsAndHost)]
     void SpawnHitFxClientRpc(Vector3 pos)
     {
         GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(hitFxPrefab);
@@ -18,8 +18,8 @@ public class NBullet : BulletBaseController
         ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
     }
 
-    [ClientRpc]
-    void SpawnShieldFxClientRpc(Vector3 pos, ClientRpcParams rpcParams = default)
+    [Rpc(SendTo.ClientsAndHost)]
+    void SpawnShieldFxClientRpc(Vector3 pos)
     {
         GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(shieldFxPrefab);
         fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
@@ -62,15 +62,8 @@ public class NBullet : BulletBaseController
                 // シールド
                 Debug.Log("Shield");
                 root.stats.AddShield();
-                ClientRpcParams rpcParams = new ClientRpcParams
-                {
-                    Send = new ClientRpcSendParams
-                    {
-                        TargetClientIds = new ulong[] { ShooterId }
-                    }
-                };
 
-                SpawnShieldFxClientRpc(transform.position, rpcParams);
+                SpawnShieldFxClientRpc(transform.position);
             }
         }
 

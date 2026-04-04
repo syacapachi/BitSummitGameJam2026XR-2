@@ -18,7 +18,7 @@ public class EnemyShoot : GunController
         if (!IsServer) return;
 
         //target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
-        weaponSO = enemySO.enemyWeapon;
+        weaponSO = enemySO.EnemyWeapon;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
 

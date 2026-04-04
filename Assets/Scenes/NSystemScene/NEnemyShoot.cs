@@ -18,8 +18,8 @@ public class NEnemyShoot : GunController
 
         if (!IsServer) return;
 
-        target = ManagerLocator.Instance.AllGameManager.protectArea.transform;
-        weaponSO = enemySO.enemyWeapon;
+        target = ManagerLocator.Instance.AllGameManager.ProtectArea.transform;
+        weaponSO = enemySO.EnemyWeapon;
         weaponSO ??= base.WeaponSettings as EnemyWeaponSettingsSO;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
@@ -42,7 +42,7 @@ public class NEnemyShoot : GunController
     private IEnumerator ShootCorutine()
     {
         // 初弾
-        yield return new WaitForSeconds(weaponSO.FirstShootDelay);
+        yield return new WaitForSeconds(weaponSO.FirstShootDelayTime);
         OnShoot();
 
         while (true)

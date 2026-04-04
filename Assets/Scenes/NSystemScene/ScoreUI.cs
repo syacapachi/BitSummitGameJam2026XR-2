@@ -3,7 +3,7 @@ using TMPro;
 
 public class ScoreUI : MonoBehaviour
 {
-    public TextMeshProUGUI scoreText;
+    [SerializeField] TextMeshProUGUI scoreText;
 
     NGameManager gameManager;
 
@@ -15,7 +15,6 @@ public class ScoreUI : MonoBehaviour
     void TryRegister()
     {
         gameManager = ManagerLocator.Instance?.AllGameManager;
-
         if (gameManager == null)
         {
             Invoke(nameof(TryRegister), 0.5f);
@@ -23,10 +22,10 @@ public class ScoreUI : MonoBehaviour
         }
 
         // 初期表示
-        UpdateScore(gameManager.scoreManager.score.Value);
+        UpdateScore(gameManager.ScoreManager.score.Value);
 
         // スコア変更イベント
-        gameManager.scoreManager.score.OnValueChanged += OnScoreChanged;
+        gameManager.ScoreManager.score.OnValueChanged += OnScoreChanged;
     }
 
     void OnScoreChanged(int oldValue, int newValue)
@@ -42,6 +41,6 @@ public class ScoreUI : MonoBehaviour
     void OnDestroy()
     {
         if (gameManager != null)
-            gameManager.scoreManager.score.OnValueChanged -= OnScoreChanged;
+            gameManager.ScoreManager.score.OnValueChanged -= OnScoreChanged;
     }
 }

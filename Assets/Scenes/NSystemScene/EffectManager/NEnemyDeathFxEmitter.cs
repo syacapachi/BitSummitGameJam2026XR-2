@@ -1,4 +1,4 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 public class NEnemyDeathFxEmitter : NetworkBehaviour
@@ -7,32 +7,26 @@ public class NEnemyDeathFxEmitter : NetworkBehaviour
     [SerializeField] private AudioClip deathSfxAll;
     [SerializeField] private float deathFxLifeTimeAll = 2f;
     [SerializeField, Range(0f, 1f)] private float deathVolumeAll = 1f;
-
-    private bool reachedProtectArea = false;
+    [SerializeField] NetworkVariable<bool> reachedProtectArea = new(false,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);
 
     public override void OnNetworkSpawn()
     {
-        reachedProtectArea = false;
+        if (!IsServer) return;
+            reachedProtectArea.Value = false;
     }
 
     public void MarkReachedProtectAreaServer()
     {
         if (!IsServer) return;
 
-        reachedProtectArea = true;
-        SyncReachedProtectAreaClientRpc();
+        reachedProtectArea.Value = true;
     }
 
-    [ClientRpc]
-    private void SyncReachedProtectAreaClientRpc()
-    {
-        reachedProtectArea = true;
-    }
 
     public override void OnNetworkDespawn()
     {
         if (!IsClient) return;
-        if (reachedProtectArea) return;
+        if (reachedProtectArea.Value) return;
 
         NetFxSpawnUtility.Spawn(
             deathFxPrefabAll,

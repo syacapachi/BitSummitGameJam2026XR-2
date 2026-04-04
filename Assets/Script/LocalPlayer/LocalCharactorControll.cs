@@ -1,8 +1,5 @@
-﻿using System;
-using Unity.Netcode;
-using Unity.Netcode.Components;
+﻿using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class LocalCharactorControll : MonoBehaviour 
 { 

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyDeathReciver : MonoBehaviour,IEnemyBrokenReciever
@@ -11,11 +11,11 @@ public class EnemyDeathReciver : MonoBehaviour,IEnemyBrokenReciever
         recievers.Add(tutorialManager);
     }
     readonly List<IEnemyBrokenReciever> recievers = new ();
-        public void EnemyKilled(IEnemy enemy)
+    public void OnEnemyKilled(IEnemy enemy)
     {
-        foreach(var r in recievers)
+        foreach (var r in recievers)
         {
-            r.EnemyKilled(enemy);
-        } 
+            r.OnEnemyKilled(enemy);
+        }
     }
 }

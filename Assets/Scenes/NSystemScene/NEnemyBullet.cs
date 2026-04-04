@@ -6,7 +6,7 @@ public class NEnemyBullet : BulletBaseController
 {
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
     {
-        if (reciever.GameObject == ManagerLocator.Instance.AllGameManager.protectArea)
+        if (reciever.GameObject == ManagerLocator.Instance.AllGameManager.ProtectArea)
         {
             Debug.Log("Bullet hit ProtectArea");
             Debug.Log($"Damage: {Damage}");

@@ -9016,6 +9016,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2438303990599014401, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: jumpEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 487f5666afd6c2645a0cd1c6f0b13534, type: 2}
     - target: {fileID: 5539175048557814108, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_Name
       value: XR Origin Hands (XR Rig) (LocalPlayer) Variant
@@ -9059,6 +9063,10 @@ PrefabInstance:
     - target: {fileID: 5539175048557814111, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8374655287254423967, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: playerjob
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2909935722504132863, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
@@ -23115,10 +23123,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 3782534606
       objectReference: {fileID: 0}
-    - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 657380702
-      objectReference: {fileID: 0}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -23167,10 +23171,6 @@ PrefabInstance:
       propertyPath: protectArea
       value: 
       objectReference: {fileID: 1552106020}
-    - target: {fileID: 7622921992766210704, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: initilScore
-      value: 50000
-      objectReference: {fileID: 0}
     - target: {fileID: 8012348177458703508, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: localRoot
       value: 
