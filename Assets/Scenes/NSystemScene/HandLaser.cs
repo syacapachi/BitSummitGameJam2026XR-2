@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 
-public class HandLaser : NetworkBehaviour
+public class HandLaser : MonoBehaviour
 {
     public Transform leftHand;
     public Transform rightHand;
@@ -13,8 +13,6 @@ public class HandLaser : NetworkBehaviour
 
     void Update()
     {
-        if (!IsOwner) return;
-
         UpdateLaser(leftHand, leftLaser);
         UpdateLaser(rightHand, rightLaser);
     }

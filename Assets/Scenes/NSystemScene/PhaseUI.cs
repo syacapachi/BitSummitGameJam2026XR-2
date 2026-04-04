@@ -30,7 +30,7 @@ public class PhaseUI : MonoBehaviour
         OnCountdownChanged(0, nGameManager.phaseManager.countdownValue.Value);
 
         nGameManager.phaseManager.syncedPhaseIndex.OnValueChanged += OnPhaseChanged;
-        nGameManager.OnGameEndRpc += OnGameFinishedChanged;
+        nGameManager.OnGameEndRpc += data => OnGameFinishedChanged();
         nGameManager.phaseManager.countdownValue.OnValueChanged += OnCountdownChanged;
         nGameManager.phaseManager.AllEnemyDeadEventRpc += OnAllEnemyDead;
         //nGameManager.phaseFinishing.OnValueChanged += OnPhaseFinishingChanged;
