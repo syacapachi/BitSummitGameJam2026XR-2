@@ -3,7 +3,7 @@ using TMPro;
 using Unity.Netcode;
 using System.Collections;
 
-public class ResultUI : NetworkBehaviour
+public class ResultUI : MonoBehaviour
 {
     private NGameManager nGameManager;
 
@@ -39,39 +39,16 @@ public class ResultUI : NetworkBehaviour
         panel.SetActive(false);
 
         // イベント登録
-        //nGameManager.OnGameEnd += OnGameFinished;
+        nGameManager.OnGameEndRpc += OnGameFinished;
     }
-
-    void OnGameFinished()
+    private void OnEnable()
     {
-        ShowResult();
+        if(nGameManager != null)
+        {
+            nGameManager.OnGameEndRpc += OnGameFinished;
+        }
     }
-
-void ShowResult()
-{
-    panel.SetActive(true);
-
-    int score = nGameManager.scoreManager.GetScore();
-    int bonus = nGameManager.phaseManager.lastClearBonus.Value;
-
-    bool isGameOver = nGameManager.scoreManager.isGameOver.Value;
-
-    // ⭐タイトル分岐
-    if (isGameOver)
-    {
-        titleText.text = "GAME OVER!";
-    }
-    else
-    {
-        titleText.text = "GAME CLEAR!";
-    }
-
-    resultText.text =
-        $"SCORE : {score}\n" +
-        $"BONUS : {bonus}";
-    }
-
-    void OnDestroy()
+    private void OnDisable()
     {
         if (nGameManager != null)
         {
@@ -79,10 +56,40 @@ void ShowResult()
         }
     }
 
-    public void Show(PlayerResultData[] results)
+    void OnGameFinished(PlayerResultData[] resultData)
     {
-        if (!IsOwner) return;
+        ShowResult();
+        ShowDetail(resultData);
+    }
 
+    void ShowResult()
+    {
+        panel.SetActive(true);
+
+        int score = nGameManager.scoreManager.GetScore();
+        int bonus = nGameManager.phaseManager.lastClearBonus.Value;
+
+        bool isGameOver = nGameManager.scoreManager.isGameOver.Value;
+
+        // ⭐タイトル分岐
+        if (isGameOver)
+        {
+            titleText.text = "GAME OVER!";
+        }
+        else
+        {
+            titleText.text = "GAME CLEAR!";
+        }
+
+        resultText.text =
+            $"SCORE : {score}\n" +
+            $"BONUS : {bonus}";
+    }
+
+    
+
+    void ShowDetail(PlayerResultData[] results)
+    {
         panel.SetActive(true);
 
         bool isGameOver = nGameManager.scoreManager.isGameOver.Value;

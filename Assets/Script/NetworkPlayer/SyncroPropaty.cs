@@ -12,10 +12,22 @@ public class SyncroPropaty : NetworkBehaviour
         NetworkVariableWritePermission.Owner
     );
     public PlayerJob Job => syncroJob.Value;
-    private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new Dictionary<PlayerJob, PlayerLayerSettings>();
+    private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic;
 
 
-    private void Start()
+    private void OnEnable()
+    {
+        if(jobToLayerMaskDic == null)
+        {
+            ResistJobDic();
+        }
+        syncroJob.OnValueChanged += OnJobChanged;
+    }
+    private void OnDisable()
+    {
+        syncroJob.OnValueChanged -= OnJobChanged;
+    }
+    private void ResistJobDic()
     {
         var jobManager = ManagerLocator.Instance.JobManager;
         if (jobManager == null)
@@ -24,14 +36,6 @@ public class SyncroPropaty : NetworkBehaviour
             return;
         }
         jobToLayerMaskDic = jobManager.JobLayerMaskDic;
-    }
-    private void OnEnable()
-    {
-        syncroJob.OnValueChanged += OnJobChanged;
-    }
-    private void OnDisable()
-    {
-        syncroJob.OnValueChanged -= OnJobChanged;
     }
     public override void OnNetworkSpawn()
     {

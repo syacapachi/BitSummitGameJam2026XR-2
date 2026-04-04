@@ -18,7 +18,7 @@ public class NGameManager : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
     public event Action OnbulletComeRpcEvent;
-    public event Action OnGameEndRpc;
+    public event Action<PlayerResultData[]> OnGameEndRpc;
 
     public override void OnNetworkSpawn()
     {
@@ -54,7 +54,6 @@ public class NGameManager : NetworkBehaviour
 
         phaseManager.spawner.KillAllEnemies();
 
-        OnGameEndClientRpc();
         SendResults();
     }
 
@@ -63,7 +62,6 @@ public class NGameManager : NetworkBehaviour
         Debug.Log("GAME CLEAR");
         gameState.Value = GameState.GameClear;
 
-        OnGameEndClientRpc();
         SendResults();
     }
 
@@ -79,25 +77,10 @@ public class NGameManager : NetworkBehaviour
     }
 
 
-    [ClientRpc]
-    void OnGameEndClientRpc()
+    [Rpc(SendTo.ClientsAndHost)]
+    void OnGameEndClientRpc(PlayerResultData[] result)
     {
-        OnGameEndRpc?.Invoke();
-    }
-
-    [ClientRpc]
-    void ShowResultsClientRpc(PlayerResultData[] results)
-    {
-        var manager = ManagerLocator.Instance.AllPlayerManager;
-
-        foreach (var player in manager.AllPlayers)
-        {
-            var ui = player.GetComponentInChildren<ResultUI>();
-            if (ui != null)
-            {
-                ui.Show(results);
-            }
-        }
+        OnGameEndRpc?.Invoke(result);
     }
 
     void SendResults()
@@ -115,7 +98,7 @@ public class NGameManager : NetworkBehaviour
             list.Add(stats.CreateResultData());
         }
 
-        ShowResultsClientRpc(list.ToArray());
+        OnGameEndClientRpc(list.ToArray());
     }
 }
 
