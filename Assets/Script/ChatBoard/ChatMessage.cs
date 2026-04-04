@@ -1,5 +1,4 @@
-﻿
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Netcode;
 
 /// <summary>

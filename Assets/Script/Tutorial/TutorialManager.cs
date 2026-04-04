@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour,IEnemyBrokenReciever,ITutorialStart
@@ -10,7 +10,7 @@ public class TutorialManager : MonoBehaviour,IEnemyBrokenReciever,ITutorialStart
         if(button != null)
             button.onClick.AddListener(OnTutorialStart);
     }
-    public void EnemyKilled(IEnemy enemy)
+    public void OnEnemyKilled(IEnemy enemy)
     {
         Debug.Log("EnemyKilled!");
     }

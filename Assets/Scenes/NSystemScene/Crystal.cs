@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class Crystal : MonoBehaviour,IDamageReciever
@@ -23,6 +24,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
 
     public float MaxHealth => throw new System.NotImplementedException();
 
+
     IEnumerator Start()
     {
         while (ManagerLocator.Instance.AllGameManager == null)
@@ -37,19 +39,17 @@ public class Crystal : MonoBehaviour,IDamageReciever
 
     void Initialize()
     {
-        if (nGameManager.scoreManager.isGameOver.Value)
+        if (nGameManager.CurrentGameState == GameState.GameOver)
         {
             Broken();
         }
 
-        nGameManager.scoreManager.isGameOver.OnValueChanged += OnGameOverChanged;
+        nGameManager.OnGameOverRpcEvent += OnGameOverChanged;
         nGameManager.OnbulletComeRpcEvent += OnBulletCome;
     }
 
-    void OnGameOverChanged(bool oldValue, bool newValue)
+    void OnGameOverChanged()
     {
-        if (!newValue) return;
-
         Broken();
     }
 

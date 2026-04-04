@@ -1,10 +1,7 @@
-﻿using UnityEngine;
-using Unity.Netcode;
-using UnityEngine.InputSystem;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using Syacapachi.Attribute;
 using System;
-using Syacapachi.Attribute;
+using System.Collections.Generic;
+using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     private readonly List<NetworkPlayerRoot> playerList = new();

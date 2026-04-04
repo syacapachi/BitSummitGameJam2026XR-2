@@ -63,15 +63,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             ulong[] targetIds = CollectVisibleClientIdsServer();
             if (targetIds.Length == 0) return;
 
-            ClientRpcParams rpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = targetIds
-                }
-            };
-
-            PlayInvalidHitClientRpc(fxPosition, rpcParams);
+            PlayInvalidHitClientRpc(fxPosition);
         }
     }
 
@@ -112,7 +104,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         return ids.ToArray();
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void PlayValidHitClientRpc(Vector3 position)
     {
         NetFxSpawnUtility.Spawn(
@@ -124,8 +116,8 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             validHitVolumeAll);
     }
 
-    [ClientRpc]
-    private void PlayInvalidHitClientRpc(Vector3 position, ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.ClientsAndHost)]
+    private void PlayInvalidHitClientRpc(Vector3 position)
     {
         NetFxSpawnUtility.Spawn(
             invalidHitFxPrefabAll,

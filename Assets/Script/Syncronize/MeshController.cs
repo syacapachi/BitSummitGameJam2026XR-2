@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using Unity.Netcode;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Netcode.Extensions;
+using Unity.Netcode;
+using UnityEngine;
 public class MeshController : NetworkBehaviour
 {
     [SerializeField] List<Renderer> m_Renderer = new();

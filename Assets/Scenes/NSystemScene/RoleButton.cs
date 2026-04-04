@@ -55,7 +55,7 @@ public class RoleButton : NetworkBehaviour
         Debug.Log("Current Job: " + player.Job);
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     void HideClientRpc()
     {
         Debug.Log("HideClientRpc called");

@@ -25,7 +25,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public EnemySO EnemySO => enemySO;  
     public int Layer => gameObject.layer;
     public float CurrentHealth => currentHP.Value;
-    public float MaxHealth => enemySO.HP;
+    public float MaxHealth => enemySO.Hp;
     public PlayerJob enemyJob;
     private ulong lastAttackerId;
 
@@ -38,7 +38,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         if (IsServer)
         {
-            currentHP.Value = enemySO.HP;
+            currentHP.Value = enemySO.Hp;
         }
 
         currentHP.OnValueChanged += OnHPChanged;
@@ -53,7 +53,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         if (hpText != null)
         {
-            hpText.text = $"{currentHP.Value} / {enemySO.HP}";
+            hpText.text = $"{currentHP.Value} / {enemySO.Hp}";
         }
 
         StartCoroutine(SetupPlayerCoroutine());
@@ -91,11 +91,11 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         currentHP.Value -= damage;
         if (hpImage != null)
         {
-            hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.HP);
+            hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.Hp);
         }
         if (hpText != null)
         {
-            hpText.text = $"{currentHP.Value} / {enemySO.HP}";
+            hpText.text = $"{currentHP.Value} / {enemySO.Hp}";
         }
         
 
@@ -116,11 +116,11 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             if (root != null)
             {
                 Debug.Log("Add kill");
-                root.stats.AddKill(enemySO.ID, enemySO.scoreValue);
+                root.stats.AddKill(enemySO.Id, enemySO.ScoreValue);
             }
         }
 
-        reciver.EnemyKilled(this);
+        reciver.OnEnemyKilled(this);
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);
@@ -135,9 +135,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     void UpdateHPUI(float hp)
     {
         if (hpImage != null)
-            hpImage.fillAmount = Mathf.Clamp01((float)hp / enemySO.HP);
+            hpImage.fillAmount = Mathf.Clamp01((float)hp / enemySO.Hp);
 
         if (hpText != null)
-            hpText.text = $"{hp} / {enemySO.HP}";
+            hpText.text = $"{hp} / {enemySO.Hp}";
     }
 }

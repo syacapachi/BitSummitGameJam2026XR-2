@@ -1,23 +1,22 @@
-﻿using UnityEngine;
-using Unity.Netcode;
+﻿using Syacapachi.util;
 using System.Collections;
 using System.Collections.Generic;
-using Syacapachi.util;
+using Unity.Netcode;
+using UnityEngine;
 
 
-public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever
+public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IKillable
 {
-    //[SerializeField] LocalObjectPoolManager localPoolManager;
     [SerializeField] NetworkObjectPool networkPool;
     [SerializeField] EnemyDeathReciver reciver;
-    public Transform[] spawnPoints;
-    public Transform protectArea;
+    [SerializeField] Transform[] spawnPoints;
+    [SerializeField] Transform protectArea;
 
     private int remain;
     public int Remain => remain;
     private bool spawnFinished = false;
     public bool SpawnFinished => spawnFinished;
-    private List<IEnemy> enemies = new List<IEnemy>();
+    private readonly List<IEnemy> enemies = new List<IEnemy>();
     /*
         public void SpawnFromPhase(PhaseSO phase)
         {
@@ -36,38 +35,37 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever
         }
     */
 
-    public void SpawnFromPhase(PhaseSO phase)
+    public void SpawnFromEvent(List<SpawnEvent> events)
     {
         if (!IsServer) return;
 
         StopAllCoroutines();
         remain = 0;
 
-        StartCoroutine(SpawnRoutine(phase));
+        StartCoroutine(SpawnRoutine(events));
     }
 
-    IEnumerator SpawnRoutine(PhaseSO phase)
+    IEnumerator SpawnRoutine(List<SpawnEvent> spawnEvents)
     {
         float timer = 0f;
 
         // spawnTime順にソート（重要）
-        var events = new List<SpawnEvent>(phase.spawnEvents);
-        events.Sort((a, b) => a.spawnTime.CompareTo(b.spawnTime));
+        spawnEvents.Sort((a, b) => a.SpawnTime.CompareTo(b.SpawnTime));
 
         int index = 0;
         spawnFinished = false; // 念のためリセット
 
 
-        while (index < events.Count)
+        while (index < spawnEvents.Count)
         {
             timer += Time.deltaTime;
 
             // 今の時間で出すべき敵を全部出す
-            while (index < events.Count && events[index].spawnTime <= timer)
+            while (index < spawnEvents.Count && spawnEvents[index].SpawnTime <= timer)
             {
-                SpawnEvent e = events[index];
+                SpawnEvent e = spawnEvents[index];
 
-                SpawnEnemy(e.enemyType, e.spawnPointIndex);
+                SpawnEnemy(e.EnemyType, e.SpawnPointIndex);
                 remain++;
 
                 index++;
@@ -118,7 +116,7 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever
         Quaternion rot = Quaternion.LookRotation(dir);
 
         NetworkObject networkObject = networkPool.GetNetworkObject(
-            enemyData.prefab,
+            enemyData.Prefab,
                point.position,
                rot);
 
@@ -129,17 +127,14 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever
         
     }
 
-    public void EnemyKilled(IEnemy enemy)
+    public void OnEnemyKilled(IEnemy enemy)
     {
         if (!IsServer) return;
         remain--;
         UnregisterEnemy(enemy);
     }
 
-    public bool AllDead()
-    {
-        return spawnFinished && remain <= 0;
-    }
+    public bool IsAllDead => (spawnFinished && remain <= 0);
 
     private void RegisterEnemy(IEnemy enemy)
     {
@@ -151,7 +146,7 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever
         enemies.Remove(enemy);
     }
 
-    public void KillAllEnemies()
+    public void KillAll()
     {
         foreach (var enemy in enemies)
         {

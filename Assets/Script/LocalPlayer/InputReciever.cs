@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,7 +18,7 @@ public class InputReciever : MonoBehaviour
     Vector2 lookInput = Vector2.zero;
     public Vector2 MoveInput => moveInput;
     public Vector2 LookInput => lookInput;
-
+    [SerializeField] GameEventSO jumpEvent;
     public event Action OnJumped;
     public event Action OnSetted;
     public event Action<bool> OnDashChanged;
@@ -106,6 +105,7 @@ public class InputReciever : MonoBehaviour
     }
     private void JumpActionCallback(InputAction.CallbackContext context)
     {
+        jumpEvent.Invoke();
         OnJumped?.Invoke();
     }
 

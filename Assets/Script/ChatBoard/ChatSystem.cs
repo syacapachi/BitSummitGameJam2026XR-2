@@ -39,7 +39,7 @@ public class ChatSystem : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.ClientsAndHost)]
     private void SendHistoryClientRpc(ChatMessage msg, ulong targetClientId)
     {
         if (NetworkManager.Singleton.LocalClientId != targetClientId) return;

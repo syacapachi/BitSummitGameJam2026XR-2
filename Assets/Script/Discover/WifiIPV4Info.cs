@@ -2,8 +2,6 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using UnityEngine;
-using UnityEngine.UI;
 
 public sealed class WifiIPV4Info
 {

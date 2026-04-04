@@ -1,4 +1,4 @@
-public interface IEnemyBrokenReciever
+﻿public interface IEnemyBrokenReciever
 {
-    public void EnemyKilled(IEnemy enemy);
+    public void OnEnemyKilled(IEnemy enemy);
 }

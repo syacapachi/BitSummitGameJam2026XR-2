@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
-using UnityEditor.Build;
 using UnityEngine;
 
 public class PlayerItemControll : NetworkBehaviour
