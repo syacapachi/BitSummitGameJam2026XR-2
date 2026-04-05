@@ -49,7 +49,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &1615890855193563394
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,9 +193,7 @@ MonoBehaviour:
     m_InternalValue: -1
   countdownValue:
     m_InternalValue: 0
-  phaseFinishing:
-    m_InternalValue: 0
-  lastClearBonus:
+  phaseFinished:
     m_InternalValue: 0
   phaseProgress:
     m_InternalValue: 1
@@ -293,8 +290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localRoot: {fileID: 0}
-  mainCamera: {fileID: 0}
-  worldCanvas: {fileID: 0}
+  jobEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
   IsJobOverride: 1
   JobOverride: 2
 --- !u!1 &5382503739911564800
@@ -450,6 +446,10 @@ MonoBehaviour:
   initilScore: 50000
   score:
     m_InternalValue: 50000
+  totalBonus:
+    m_InternalValue: 0
+  lastClearBonus:
+    m_InternalValue: 0
 --- !u!1 &7146760537532538251
 GameObject:
   m_ObjectHideFlags: 0

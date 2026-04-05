@@ -19,7 +19,7 @@ public class StatusViewer : NetworkBehaviour
         //オーナーでないプレイヤーの情報を表示するためのコード。オーナーでないプレイヤーのカメラが有効な場合は、そのカメラの位置にプレイヤーのIDとジャンプ回数を表示する。
         if (!IsOwner)
         {
-            Vector3 positon = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.CameraSetting.currentActiveCamera.WorldToScreenPoint(playerRootTransform.position);
+            Vector3 positon = mainCamera.WorldToScreenPoint(playerRootTransform.position);
             if (positon.z < 0) return; // カメラの前にいる場合のみ表示
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 120, 100, 20), $"{OwnerClientId}");
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 100, 100, 20), $"jump: {syncro.JumpCount}");

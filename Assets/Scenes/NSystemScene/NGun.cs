@@ -5,7 +5,8 @@ public class NGun : GunController
     [SerializeField] NGunAudioObserver audioObserver;
     [SerializeField] AmmoUI ammoUI;
     [SerializeField] PlayerStats playerStats;
-    
+    [Header("Subscribe Event")]
+    [SerializeField] VoidEventSO fireEvent;
     public int AmmoVal => syncedAmmo.Value;
 
     protected override ICountDownUI CountDownUI => ammoUI;
@@ -17,14 +18,16 @@ public class NGun : GunController
     {
         if (IsOwner)
         {
-            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed += base.Activate;  
+            //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed += base.Activate;
+            fireEvent.Register(base.Activate);
         }
     }
     public override void OnNetworkDespawn()
     {
         if (IsOwner) 
         {
-            ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed -= base.Activate;
+            //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed -= base.Activate;
+            fireEvent.Unregister(base.Activate);
         }
     }
     
