@@ -24,7 +24,7 @@ public class NEnemyShoot : GunController
         shootCorutine = StartCoroutine(ShootCorutine());
     }
 
-    protected override void OnShoot()
+    protected override void OnShootServer()
     {
         Vector3 direction = (target.position - transform.position).normalized;
 
@@ -43,12 +43,12 @@ public class NEnemyShoot : GunController
     {
         // 初弾
         yield return new WaitForSeconds(weaponSO.FirstShootDelayTime);
-        OnShoot();
+        OnShootServer();
 
         while (true)
         {
             yield return new WaitForSeconds(weaponSO.reloadTime);
-            OnShoot();
+            OnShootServer();
         }
     }
 }

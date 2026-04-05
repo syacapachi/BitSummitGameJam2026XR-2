@@ -77,12 +77,12 @@ public class GunController : NetworkBehaviour
     {
         if (isReloading) return;
         if (Time.time < nextFire) return;
-        OnShoot();
+        OnShootServer();
     }
     /// <summary>
     /// 銃を撃つ具体的な処理。サーバーでのみ呼ばれる。
     /// </summary>
-    protected virtual void OnShoot()
+    protected virtual void OnShootServer()
     {
         nextFire = Time.time + weaponSettings.fireInterval;
         syncedAmmo.Value--;
@@ -123,7 +123,6 @@ public class GunController : NetworkBehaviour
         }
         ProgressUI?.UpdateProgress(0);
 
-        syncedAmmo.Value = weaponSettings.maxAmmo;
         isReloading = false;
         CountDownUI?.UpdateCount(weaponSettings.maxAmmo, weaponSettings.maxAmmo);
 

@@ -116,9 +116,9 @@ public class NGun : GunController
     }
     */
 
-    protected override void OnShoot()
+    protected override void OnShootServer()
     {
-        base.OnShoot();
+        base.OnShootServer();
         playerStats.AddShot();
     }
 }
