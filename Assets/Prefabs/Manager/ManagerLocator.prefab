@@ -189,9 +189,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
   spawner: {fileID: 819919111548997275}
   scoreManager: {fileID: 7622921992766210704}
+  uiSettings: {fileID: 11400000, guid: 501a16477cf3ffe419cd09b562a62f7a, type: 2}
   syncedPhaseIndex:
     m_InternalValue: -1
-  countdownValue:
+  IsCountingDown:
     m_InternalValue: 0
   phaseFinished:
     m_InternalValue: 0
@@ -495,6 +496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 0}
+  KilledEvent: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
 --- !u!1 &8596286252487718755
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,6 +603,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 4908882465109089120}
     m_Modifications:
     - target: {fileID: 1624047670963601631, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: EnemyKilled
+      value: 
+      objectReference: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
+    - target: {fileID: 1624047670963601631, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: networkPool
       value: 
       objectReference: {fileID: 4084111059737820316}
@@ -648,6 +654,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3236578938828554086, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: KilledEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
     - target: {fileID: 3236578938828554086, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: tutorialManager
       value: 

@@ -2,7 +2,7 @@
 {
     using System;
 
-    [AttributeUsage(AttributeTargets.Class |AttributeTargets.Struct |AttributeTargets.Enum)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct |AttributeTargets.Enum |AttributeTargets.Interface)]
     public class GenerateEventAttribute : Attribute
     {
         public Type GenerateClass;

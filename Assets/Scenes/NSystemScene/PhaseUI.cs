@@ -6,6 +6,7 @@ public class PhaseUI : MonoBehaviour
 {
     [SerializeField] GameObject phaseBoard;
     [SerializeField] TextMeshProUGUI phaseText;
+    [SerializeField] PhaseCountDownSettingSO phaseUISettingSO;
     private NGameManager nGameManager;
 
     private Coroutine currentRoutine;
@@ -39,7 +40,7 @@ public class PhaseUI : MonoBehaviour
 
         nGameManager.PhaseManager.OnPhaseChange += OnPhaseChanged;
         nGameManager.OnGameResultRpc += data => ChangeState(UIState.GameFinish);
-        nGameManager.PhaseManager.countdownValue.OnValueChanged += OnCountdownChanged;
+        nGameManager.PhaseManager.CountdownValue.OnValueChanged += OnCountdownChanged;
         nGameManager.PhaseManager.AllEnemyDeadEventRpc += () => ChangeState(UIState.AllEnemyDead);
     }
 
@@ -102,10 +103,7 @@ public class PhaseUI : MonoBehaviour
 
     void OnCountdownChanged(int oldValue, int newValue)
     {
-        if (newValue > 0)
-        {
-            ChangeState(UIState.Countdown, newValue);
-        }
+        ChangeState(UIState.Countdown,newValue);
     }
 
     // =========================
@@ -131,24 +129,14 @@ public class PhaseUI : MonoBehaviour
         ChangeState(UIState.Idle);
     }
 
-    IEnumerator CountdownRoutine(int value)
+    IEnumerator CountdownRoutine(int index)
     {
         SetupNormal();
 
-        phaseText.text = value.ToString();
+
+        phaseText.text = index.ToString();
         phaseText.gameObject.SetActive(true);
-
         yield return PopAnimation();
-
-        float wait = 1f;
-
-        if (nGameManager.PhaseManager.CurrentPhaseIndex ==
-            nGameManager.PhaseManager.Phases.Length - 1)
-        {
-            wait = 2.3f;
-        }
-
-        yield return new WaitForSeconds(wait);
 
         ChangeState(UIState.Idle);
     }
