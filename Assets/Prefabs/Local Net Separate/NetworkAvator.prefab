@@ -731,6 +731,7 @@ MonoBehaviour:
   audioObserver: {fileID: 4810429957344545880}
   ammoUI: {fileID: 6286586579024811426}
   playerStats: {fileID: 4829413826223807485}
+  fireEvent: {fileID: 11400000, guid: 4cbe807c5f2ef6d47b2440ff35bb0265, type: 2}
 --- !u!114 &6899035633538032396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -930,6 +931,7 @@ MonoBehaviour:
   node: {fileID: 8728330705531562455}
   laserDistance: 10
   markerAudioController: {fileID: 4900913473063518847}
+  markerEvent: {fileID: 11400000, guid: 4f90a0dcf15ac3346a5d4dc1ef33d19a, type: 2}
 --- !u!114 &4900913473063518847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5920,6 +5922,8 @@ MonoBehaviour:
   animator: {fileID: 6816636258855139339}
   NetworkAnimator: {fileID: 1717994374167425491}
   syncronizeSetting: {fileID: 4030435899186503764}
+  jumpEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
+  moveEvent: {fileID: 11400000, guid: 5fc02d6a0c59226468d706cf6757d428, type: 2}
 --- !u!114 &3274049462513833735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5952,6 +5956,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   avatorCollider: {fileID: 6125224147537168939}
+  syncroJob:
+    m_InternalValue: 3
+  jobEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
 --- !u!1 &6205789068384561375
 GameObject:
   m_ObjectHideFlags: 0

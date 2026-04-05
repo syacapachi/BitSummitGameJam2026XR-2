@@ -28,10 +28,14 @@ public class BombAction : NetworkBehaviour,IDamageSender
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-
+    private Camera mainCamera;
     public GameObject GameObject => this.gameObject;
 
     public float Damage => explosionDamage;
+    void Start()
+    {
+        mainCamera = Camera.main;
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -103,7 +107,7 @@ public class BombAction : NetworkBehaviour,IDamageSender
     }
     private void OnGUI()
     {
-        Vector3 position = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.CameraSetting.currentActiveCamera.WorldToScreenPoint(transform.position);
+        Vector3 position = mainCamera.WorldToScreenPoint(transform.position);
         GUI.Label(new Rect(position.x, Screen.height - position.y, 100, 20), $"Timer: {timer.Value:F1}");
     }
     public void SendDamage(IDamageReciever reciever, float damage)

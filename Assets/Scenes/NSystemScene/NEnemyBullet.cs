@@ -8,8 +8,8 @@ public class NEnemyBullet : BulletBaseController
     {
         if (reciever.GameObject == ManagerLocator.Instance.AllGameManager.ProtectArea)
         {
-            Debug.Log("Bullet hit ProtectArea");
-            Debug.Log($"Damage: {Damage}");
+            //Debug.Log("Bullet hit ProtectArea");
+            //Debug.Log($"Damage: {Damage}");
 
             ManagerLocator.Instance.AllGameManager.BulletHitProtectArea((int)-Damage);
 

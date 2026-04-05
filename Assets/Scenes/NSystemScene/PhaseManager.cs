@@ -9,17 +9,18 @@ public class PhaseManager : NetworkBehaviour
     [SerializeField] PhaseSO[] phases;
     [SerializeField] NEnemySpawner spawner;
     [SerializeField] ScoreManager scoreManager;
+    [SerializeField] PhaseCountDownSettingSO uiSettings;
        
     public IKillable KillableHandle => spawner;
     public ISpawnable SpawnableHandle => spawner;
 
 
-    [SerializeField] NetworkVariable<int> syncedPhaseIndex = new NetworkVariable<int>(-1);
+    [SerializeField] NetworkVariable<int> syncedPhaseIndex = new(-1);
+    public NetworkVariable<int> CountdownValue = new(0);
+    
+    public NetworkVariable<bool> phaseFinished = new (false);
 
-    public NetworkVariable<int> countdownValue = new NetworkVariable<int>(0);
-    public NetworkVariable<bool> phaseFinished = new NetworkVariable<bool>(false);
-
-    public NetworkVariable<float> phaseProgress = new NetworkVariable<float>(
+    public NetworkVariable<float> phaseProgress = new(
         1f,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
@@ -29,7 +30,7 @@ public class PhaseManager : NetworkBehaviour
     public int CurrentPhaseIndex => syncedPhaseIndex.Value;
 
     private float timer;
-    private bool isCountingDown = false;
+    private bool IsCountingDown = false;
 
     public event Action AllEnemyDeadEventRpc;
     public event Action OnAllPhaseEnded;
@@ -87,22 +88,22 @@ public class PhaseManager : NetworkBehaviour
     }
     IEnumerator StartPhaseWithCountdown(int phaseIndex)
     {
-        yield return new WaitWhile(() => isCountingDown); // カウントダウン中は待機
-        isCountingDown = true;
-
-        int count = 3;
+        yield return new WaitWhile(() => IsCountingDown); // カウントダウン中は待機
+        IsCountingDown = true;
+        
+        int count = uiSettings.CountdownStart;
         //キャッシュを作ることでGCを減らす
-        var wait01s = new WaitForSeconds(1f);
+        var waitBase = new WaitForSeconds(uiSettings.CountDownBaseDuration);
         while (count > 0)
         {
-            countdownValue.Value = count;
+            CountdownValue.Value = count;
             Debug.Log("Countdown: " + count);
-            yield return wait01s;
+            yield return waitBase;
             count--;
         }
 
-        countdownValue.Value = 0;
-        isCountingDown = false;
+        CountdownValue.Value = 0;
+        IsCountingDown = false;
 
         var phase = phases[phaseIndex];
         timer = phase.PhaseTime;
@@ -115,7 +116,7 @@ public class PhaseManager : NetworkBehaviour
     {
         
         float max = phases[CurrentPhaseIndex].PhaseTime;
-        while (timer > 0 && spawner.IsAllDead)
+        while (timer > 0 && !spawner.IsAllDead)
         {
             //コルーチンは1フレームごとに呼ばれるため、Time.deltaTimeを引いていくことで、フェーズの残り時間を管理する
             timer -= Time.deltaTime;
@@ -149,35 +150,34 @@ public class PhaseManager : NetworkBehaviour
 
     IEnumerator AllDeadSequence()
     {
-        isCountingDown = true;
+        IsCountingDown = true;
 
         AllEnemyDeathRpc();
         
         yield return new WaitForSeconds(3.1f);
 
-        isCountingDown = false;
+        IsCountingDown = false;
     }
 
     private IEnumerator EndPhaseWithCountdown()
     {
-        isCountingDown = true;
+        IsCountingDown = true;
 
-        int count = 3;
-        const float interval = 7f / 3f; // 約2.33秒
-
+        int count = uiSettings.CountdownStart;
+        var waitlast = new WaitForSeconds(uiSettings.CountdownLastDuration);
         while (count > 0)
         {
-            countdownValue.Value = count;
+            CountdownValue.Value = count;
             Debug.Log("End Phase Countdown: " + count);
 
-            yield return new WaitForSeconds(interval);
+            yield return waitlast;
             count--;
         }
 
-        countdownValue.Value = 0;
+        CountdownValue.Value = 0;
 
         Debug.Log("FINISH!");
 
-        isCountingDown = false;
+        IsCountingDown = false;
     }
 }

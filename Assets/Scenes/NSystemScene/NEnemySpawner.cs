@@ -1,4 +1,5 @@
-﻿using Syacapachi.util;
+﻿using Syacapachi.Attribute;
+using Syacapachi.util;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -11,6 +12,8 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
     [SerializeField] EnemyDeathReciver reciver;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform protectArea;
+    [Header("SubScribe Event")]
+    [SerializeField] EnemyKilledEvent EnemyKilled;
 
     private int remain;
     public int Remain => remain;
@@ -35,6 +38,14 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
         }
     */
 
+    public override void OnNetworkSpawn()
+    {
+        EnemyKilled.Register(t => OnEnemyKilled(t.KilledEnemy));
+    }
+    public override void OnNetworkDespawn()
+    {
+        EnemyKilled.Unregister(t => OnEnemyKilled(t.KilledEnemy));
+    }
     public void SpawnFromEvent(List<SpawnEvent> events)
     {
         if (!IsServer) return;
@@ -159,4 +170,9 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
         remain = 0;
         spawnFinished = false;
     }
+}
+[GenerateEvent(typeof(GameEventSOBase<>))]
+public class EnemyKilled 
+{
+    public IEnemy KilledEnemy;
 }
