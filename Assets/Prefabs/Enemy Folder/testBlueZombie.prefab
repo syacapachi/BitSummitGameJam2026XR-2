@@ -940,7 +940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  validHitFxPrefabAll: {fileID: 0}
+  validHitFxPrefabAll: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
   validHitSfxAll: {fileID: 8300000, guid: c337d469678aa0d4fb70415fb29fb25d, type: 3}
   validHitLifeTimeAll: 2
   validHitVolumeAll: 1
@@ -965,6 +965,8 @@ MonoBehaviour:
   deathSfxAll: {fileID: 8300000, guid: 28110385e59aa2a48aac031f73088dc4, type: 3}
   deathFxLifeTimeAll: 2
   deathVolumeAll: 1
+  reachedProtectArea:
+    m_InternalValue: 0
 --- !u!82 &-5080072534731083706
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1076,7 +1078,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   loopClipAll: {fileID: 8300000, guid: dc8f926fab434a844b493d2f6b677a58, type: 3}
-  loopVolumeAll: 0.1
+  loopVolumeAll: 0.3
 --- !u!82 &7408496459583059300
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1195,4 +1197,3 @@ MonoBehaviour:
   syncedAmmo:
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: f4f5d5bc426dc4549ba7f2a186c570f1, type: 2}
-  weaponSO: {fileID: 11400000, guid: 432610b31202a6c4fad5d4d697891ac4, type: 2}
