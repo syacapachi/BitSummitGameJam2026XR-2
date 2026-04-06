@@ -14,6 +14,7 @@ public class InputReciever : MonoBehaviour
     InputAction lookAction;
     InputAction switchJobAction;
     InputAction markerAction;
+    InputAction uiAction;
     Vector2 moveInput = Vector2.zero;
     Vector2 lookInput = Vector2.zero;
     public Vector2 MoveInput => moveInput;
@@ -28,6 +29,7 @@ public class InputReciever : MonoBehaviour
     [SerializeField] VoidEventSO cameraSwitchEvent;
     [SerializeField] VoidEventSO switchJobEvent;
     [SerializeField] VoidEventSO markerEvent;
+    [SerializeField] VoidEventSO uiEvent;
     //public event Action OnJumped;
     //public event Action OnSetted;
     //public event Action<bool> OnDashChanged;
@@ -47,6 +49,7 @@ public class InputReciever : MonoBehaviour
         
         switchJobAction = PlayerInput.actions["SwitchJob"];
         markerAction = PlayerInput.actions["Marker"];
+        uiAction = PlayerInput.actions["ShowUI"];
     }
     protected virtual void OnEnable()
     {
@@ -68,7 +71,12 @@ public class InputReciever : MonoBehaviour
 
         switchJobAction.performed += OnSwirchJobCallback;
         markerAction.performed += OnMarkerCallback;
+
+        uiAction.performed += UiActionCallback;
     }
+
+    
+
     protected virtual void OnDisable()
     {
         if (moveAction != null)
@@ -103,6 +111,7 @@ public class InputReciever : MonoBehaviour
         switchCameraAction.performed -= SwitchCamera;
         switchJobAction.performed -= OnSwirchJobCallback;
         markerAction.performed -= OnMarkerCallback;
+        uiAction.performed -= UiActionCallback;
     }
     private void MoveActionCallback(InputAction.CallbackContext context)
     {
@@ -149,5 +158,9 @@ public class InputReciever : MonoBehaviour
     {
         markerEvent.Invoke();
         //OnMarker?.Invoke();
+    }
+    private void UiActionCallback(InputAction.CallbackContext obj)
+    {
+        uiEvent.Invoke();
     }
 }

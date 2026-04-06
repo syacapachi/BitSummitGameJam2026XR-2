@@ -281,6 +281,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -23
       objectReference: {fileID: 0}
+    - target: {fileID: 1430656364623336651, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 1430656364623336651, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_ActionEvents.Array.data[23].m_ActionId
+      value: c94b32bb-fc85-4d40-835d-8444c230fc53
+      objectReference: {fileID: 0}
+    - target: {fileID: 1430656364623336651, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_ActionEvents.Array.data[23].m_ActionName
+      value: 'Player/ShowUI[/Keyboard/u]'
+      objectReference: {fileID: 0}
     - target: {fileID: 2472540509493967239, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.8
@@ -598,6 +610,7 @@ MonoBehaviour:
   cameraSwitchEvent: {fileID: 11400000, guid: 146e83d8d5f1d4041aaf212501131a73, type: 2}
   switchJobEvent: {fileID: 11400000, guid: f9e23ca27358a3f419041719b45bce40, type: 2}
   markerEvent: {fileID: 11400000, guid: 4f90a0dcf15ac3346a5d4dc1ef33d19a, type: 2}
+  uiEvent: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
 --- !u!114 &7681755971826896723
 MonoBehaviour:
   m_ObjectHideFlags: 0
