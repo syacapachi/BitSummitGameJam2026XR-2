@@ -123,7 +123,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
     {
         if (audioSource != null && hitSE != null)
         {
-            audioSource.PlayOneShot(hitSE);
+            audioSource.PlayOneShot(hitSE,0.3f);
         }
     }
 
