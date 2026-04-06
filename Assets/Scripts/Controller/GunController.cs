@@ -31,8 +31,7 @@ public class GunController : NetworkBehaviour
     private float nextFire;
     //こいつは、残段数のみを同期してればわかる
     private bool isReloading = false;
-    private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new Dictionary<PlayerJob, PlayerLayerSettings>();
-    private NetworkPlayerRoot playerRoot;
+    private SyncroPropaty Propaty;
 
     private void Start()
     {
@@ -42,7 +41,6 @@ public class GunController : NetworkBehaviour
             Debug.LogError("PlayerJobManager not found in the scene.");
             return;
         }
-        jobToLayerMaskDic = jobManager.JobLayerMaskDic;
     }
     private void OnEnable()
     {
@@ -61,7 +59,7 @@ public class GunController : NetworkBehaviour
     {
         if (IsServer)
         {
-            playerRoot = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<NetworkPlayerRoot>();
+            Propaty = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponentInChildren<SyncroPropaty>();
             syncedAmmo.Value = weaponSettings.maxAmmo;
         }
     }
@@ -93,8 +91,7 @@ public class GunController : NetworkBehaviour
 
         // ② 弾のLayerをプレイヤーのJobに合わせる
         GameObject go = obj.gameObject;
-        var job = playerRoot.propaty.Job;
-        var layerName = jobToLayerMaskDic[job];
+        var job = Propaty.Job;
         //go.SetLayerRecursively(LayerMask.NameToLayer(layerName));
 
         var bullet = obj.GetComponent<BulletBaseController>();
