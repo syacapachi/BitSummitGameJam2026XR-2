@@ -102,7 +102,7 @@ public class Scripts : MonoBehaviour
             }
             isNetworkStarted = false;
             SetActiveButtons(true);
-
+            StopDiscovery();
 
         }
         else
