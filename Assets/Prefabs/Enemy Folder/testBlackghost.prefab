@@ -514,11 +514,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   validHitFxPrefabAll: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
-  validHitSfxAll: {fileID: 8300000, guid: c337d469678aa0d4fb70415fb29fb25d, type: 3}
+  validHitSfxAll: {fileID: 0}
   validHitLifeTimeAll: 2
   validHitVolumeAll: 1
   invalidHitFxPrefabAll: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
-  invalidHitSfxAll: {fileID: 8300000, guid: c974731f514a5964780a24ffa7825328, type: 3}
+  invalidHitSfxAll: {fileID: 0}
   invalidHitLifeTimeAll: 2
   invalidHitVolumeAll: 1
 --- !u!114 &-1831760746074150659
@@ -551,7 +551,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: ed620494acb721c4f9b62ad6241c4889, type: 3}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
