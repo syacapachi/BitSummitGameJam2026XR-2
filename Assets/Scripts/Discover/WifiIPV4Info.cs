@@ -30,7 +30,22 @@ public sealed class WifiIPV4Info
     public static IReadOnlyList<WifiIPV4Info> Create(PrivateIPv4Range type = PrivateIPv4Range.Any)
     {
         List<WifiIPV4Info> list = new List<WifiIPV4Info>();
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+    //→ Android専用実装
+        string ip = AndroidNetworkDiscoverSupport.GetAndroidIP();
+        string mask = AndroidNetworkDiscoverSupport.GetMask(ip);
+        string broadcast = AndroidNetworkDiscoverSupport.GetBroadcast(ip);
+
+        list.Add(new WifiIPV4Info(
+            IPAddress.Parse(ip),
+            IPAddress.Parse(mask),
+            IPAddress.Parse(broadcast)
+            ));
+#else
+
         // ネットワークインターフェース一覧から Wi-Fi の IPv4 アドレスを取得
+        //ここは、Android だと検出できない
         foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
         {
             //検索ネットワーク
@@ -39,6 +54,7 @@ public sealed class WifiIPV4Info
 
             var ipProps = nic.GetIPProperties();
 
+            //UnicastAddresss 1対1通信を行うIPAddressを取得
             foreach (var ua in ipProps.UnicastAddresses)
             {
                 // IPv4以外を除外
@@ -53,9 +69,10 @@ public sealed class WifiIPV4Info
                         broadcast
                     )
                 );
-                
+
             }
         }
+#endif
         return list;
     }
     private static bool IsValidInterface(NetworkInterface nic, PrivateIPv4Range type)
