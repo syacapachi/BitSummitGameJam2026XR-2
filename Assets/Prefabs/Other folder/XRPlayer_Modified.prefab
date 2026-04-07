@@ -3668,6 +3668,7 @@ MonoBehaviour:
   audioObserver: {fileID: 1840299474899798204}
   ammoUI: {fileID: 0}
   playerStats: {fileID: 0}
+  fireEvent: {fileID: 0}
 --- !u!114 &4021316936165528260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3680,9 +3681,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2d5ebc452a3614597b0c2eb37f2896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputReciever: {fileID: 0}
   PlayerCollider: {fileID: 0}
   PlayerCamera: {fileID: 0}
+  JobEvent: {fileID: 0}
+  switchJobEvent: {fileID: 0}
   playerjob: 1
   IsDebugMode: 1
 --- !u!114 &6089842242769989286
@@ -3884,6 +3886,7 @@ MonoBehaviour:
   node: {fileID: 0}
   laserDistance: 10
   markerAudioController: {fileID: 4011302328935387629}
+  markerEvent: {fileID: 0}
 --- !u!114 &4011302328935387629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8705,6 +8708,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 113149987623306627}
     m_Modifications:
+    - target: {fileID: 324063366522656297, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: phaseBoard
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2817683232110569357, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0

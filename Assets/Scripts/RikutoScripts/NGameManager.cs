@@ -9,6 +9,7 @@ public class NGameManager : NetworkBehaviour
     [SerializeField] GameObject protectArea;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseManager phaseManager;
+    [SerializeField] BGMManager bgmManager;
 
     public ScoreManager ScoreManager => scoreManager;
     public PhaseManager PhaseManager => phaseManager;
@@ -46,6 +47,15 @@ public class NGameManager : NetworkBehaviour
     }
     public override void OnNetworkSpawn()
     {
+
+        if (IsClient)
+        {
+            OnGameStartRpcEvent += bgmManager.OnGameStart;
+            OnGameResetRpcEvent += bgmManager.OnGameReset;
+            OnGameClearRpcEvent += bgmManager.OnGameClear;
+            OnGameOverRpcEvent += bgmManager.OnGameOver;
+        }
+
         if (!IsServer) return;
 
         // 🔗 イベント接続
