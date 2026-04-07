@@ -186,13 +186,14 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   phases:
   - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
-  - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
+  - {fileID: 11400000, guid: 9130db537808a9a4bbf5f8c246970b30, type: 2}
+  - {fileID: 11400000, guid: 09e28c63f7a683f46919a5d21940185b, type: 2}
   spawner: {fileID: 819919111548997275}
   scoreManager: {fileID: 7622921992766210704}
   uiSettings: {fileID: 11400000, guid: 501a16477cf3ffe419cd09b562a62f7a, type: 2}
   syncedPhaseIndex:
     m_InternalValue: -1
-  IsCountingDown:
+  CountdownValue:
     m_InternalValue: 0
   phaseFinished:
     m_InternalValue: 0

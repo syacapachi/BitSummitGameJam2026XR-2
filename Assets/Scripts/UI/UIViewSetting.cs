@@ -22,5 +22,9 @@ public class UIViewSetting : MonoBehaviour
     {
         isShowing = !isShowing;
         canvas.gameObject.SetActive(isShowing);
+        if (isShowing)
+        {
+            canvas.transform.position = playerCamera.transform.position + Vector3.Scale(playerCamera.transform.forward, offset);
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace Syacapachi.util
         {
             GenerateAll();
         }
+        //スクリプト更新時に呼ばれる
         [DidReloadScripts]
         static void OnScriptReloaded()
         { 
@@ -24,6 +25,7 @@ namespace Syacapachi.util
 
         static void GenerateAll()
         {
+            //アセンブリからGenerateEventAttributeがついたクラス・構造体を検索
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
                 .Where(t => t.GetCustomAttributes(typeof(GenerateEventAttribute), false).Length > 0);
@@ -33,6 +35,7 @@ namespace Syacapachi.util
                 var attr = (GenerateEventAttribute)type
                     .GetCustomAttributes(typeof(GenerateEventAttribute), false)
                     .First();
+                //<T>か調べる
                 if (!attr.GenerateClass.IsGenericType)
                 {
                     Debug.Log($"[EventGen] {attr.GenerateClass} は GenericTypeではありません"); 
@@ -45,6 +48,7 @@ namespace Syacapachi.util
                     Debug.LogError($"[EventGen] {attr.GenerateClass} は ScriptableObject を継承していません");
                     continue;
                 }
+                //ジェネリック型は、NameSpace.ClassName`1 のように型が1つ入ることを書くので`以降を無視。
                 string GenerateClass = attr.GenerateClass.Name;
                 int index = GenerateClass.IndexOf("`");
                 string GenerateClassName = GenerateClass.Substring(0,index);
@@ -64,11 +68,11 @@ namespace Syacapachi.util
                 // ■ 重複チェック（強化）
                 if (File.Exists(path) || AlreadyExists(className))
                     continue;
-
+                //内部クラスは、NameSpace.SampleClass+InlineClassのように+で表されるが、書くときは.なので、書き換える。
                 string code =
 $@"using UnityEngine;
 [CreateAssetMenu(menuName = ""GameEvents/{className}"")]
-public class {className} : {GenerateClassName}<{type.FullName}>
+public class {className} : {GenerateClassName}<{type.FullName.Replace("+",".")}>
 {{
 }}
 ";
