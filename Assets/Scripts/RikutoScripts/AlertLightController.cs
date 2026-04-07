@@ -8,6 +8,10 @@ public class AlertLightController : MonoBehaviour
     [SerializeField] int threshold = 2000;
     [SerializeField] float rotateSpeed = 100f;
 
+    float timer = 0f;
+    [SerializeField] float interval = 3f;
+    [SerializeField] AudioClip buzzerClip;
+
     bool isActive = false;
 
     ScoreManager scoreManager;
@@ -50,6 +54,16 @@ public class AlertLightController : MonoBehaviour
         if (isActive && alertObject != null)
         {
             alertObject.transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
+            timer += Time.deltaTime;
+
+            if (timer >= interval)
+            {
+                ManagerLocator.Instance
+                    .GameAudioManager
+                    .PlayLoopSE(buzzerClip);
+
+                timer = 0f;
+            }
         }
     }
 

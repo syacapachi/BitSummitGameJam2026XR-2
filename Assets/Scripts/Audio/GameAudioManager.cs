@@ -5,6 +5,7 @@ public class GameAudioManager : MonoBehaviour
 
     [SerializeField] private AudioSource uiSourceAll;
     [SerializeField, Range(0f, 1f)] private float masterSfxVolumeAll = 1f;
+    [SerializeField] private AudioSource loopSource;
 
     private void Awake()
     {
@@ -14,6 +15,14 @@ public class GameAudioManager : MonoBehaviour
             uiSourceAll.playOnAwake = false;
             uiSourceAll.loop = false;
             uiSourceAll.spatialBlend = 0f;
+        }
+
+        if (loopSource == null)
+        {
+            loopSource = gameObject.AddComponent<AudioSource>();
+            loopSource.playOnAwake = false;
+            loopSource.loop = false; // ← 今回はfalse（間隔鳴らし）
+            loopSource.spatialBlend = 0f;
         }
     }
 
@@ -27,5 +36,12 @@ public class GameAudioManager : MonoBehaviour
     {
         if (clipAll == null) return;
         AudioSource.PlayClipAtPoint(clipAll, positionAll, volumeAll * masterSfxVolumeAll);
+    }
+
+    public void PlayLoopSE(AudioClip clipAll, float volumeAll = 1f)
+    {
+        if (clipAll == null || loopSource == null) return;
+
+        loopSource.PlayOneShot(clipAll, volumeAll * masterSfxVolumeAll);
     }
 }
