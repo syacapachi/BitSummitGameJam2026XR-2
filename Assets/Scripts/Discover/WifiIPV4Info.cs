@@ -32,15 +32,14 @@ public sealed class WifiIPV4Info
         List<WifiIPV4Info> list = new List<WifiIPV4Info>();
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-    //→ Android専用実装
-        string ip = AndroidNetworkDiscoverSupport.GetAndroidIP();
-        string mask = AndroidNetworkDiscoverSupport.GetMask(ip);
-        string broadcast = AndroidNetworkDiscoverSupport.GetBroadcast(ip);
-
+        //→ Android専用実装
+        IPAddress ip = IPAddress.Parse(AndroidNetworkDiscoverSupport.GetAndroidIP());
+        IPAddress mask = IPAddress.Parse(AndroidNetworkDiscoverSupport.GetMask());
+        IPAddress broadcast = CalcBroadcast(ip, mask);
         list.Add(new WifiIPV4Info(
-            IPAddress.Parse(ip),
-            IPAddress.Parse(mask),
-            IPAddress.Parse(broadcast)
+            ip,
+            mask,
+            broadcast
             ));
 #else
 
