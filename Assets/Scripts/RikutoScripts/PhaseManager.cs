@@ -180,4 +180,16 @@ public class PhaseManager : NetworkBehaviour
 
         IsCountingDown = false;
     }
+
+    public void ResetPhase()
+    {
+        StopAllCoroutines();
+
+        syncedPhaseIndex.Value = -1;
+        CountdownValue.Value = 0;
+        phaseProgress.Value = 1f;
+
+        timer = 0f;
+        IsCountingDown = false;
+    }
 }

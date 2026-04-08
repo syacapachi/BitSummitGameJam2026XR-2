@@ -170,6 +170,16 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
         remain = 0;
         spawnFinished = false;
     }
+
+    public void ResetSpawner()
+    {
+        StopAllCoroutines();
+
+        KillAll();
+
+        remain = 0;
+        spawnFinished = false;
+    }
 }
 [GenerateEvent(typeof(GameEventSOBase<>))]
 public class EnemyKilled 

@@ -74,11 +74,26 @@ public class NGameManager : NetworkBehaviour
     public void StartGame()
     {
         if (!IsServer) return;
+        if (CurrentGameState != GameState.Waiting) return;
 
         Debug.Log("Game Start");
         gameState.Value = GameState.Playing;
         scoreManager.SetScoreServerOnly();
         phaseManager.StartPhases();
+    }
+
+    [OnInspectorButton("Reset")]
+    public void ResetGame()
+    {
+        if (!IsServer) return;
+
+        Debug.Log("GAME RESET");
+
+        CurrentGameState = GameState.Waiting;
+
+        phaseManager.ResetPhase();
+        phaseManager.KillableHandle.KillAll();
+        scoreManager.ResetScore();
     }
 
     void HandleGameStateChanged(GameState oldState, GameState newState)
@@ -107,6 +122,7 @@ public class NGameManager : NetworkBehaviour
         Debug.Log("GAME OVER");
         CurrentGameState = GameState.GameOver;
         phaseManager.KillableHandle.KillAll();
+        phaseManager.StopAllCoroutines();
 
         SendResults();
     }
@@ -115,6 +131,8 @@ public class NGameManager : NetworkBehaviour
     {
         Debug.Log("GAME CLEAR");
         CurrentGameState = GameState.GameClear;
+        phaseManager.KillableHandle.KillAll();
+        phaseManager.StopAllCoroutines();
 
         SendResults();
     }
