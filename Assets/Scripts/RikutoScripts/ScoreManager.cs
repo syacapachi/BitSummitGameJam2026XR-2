@@ -52,4 +52,9 @@ public class ScoreManager : NetworkBehaviour
     {
         return score.Value;
     }
+
+    public void ResetScore()
+    {
+        SetScoreServerOnly();
+    }
 }

@@ -46,6 +46,16 @@ public class Crystal : MonoBehaviour,IDamageReciever
 
         nGameManager.OnGameOverRpcEvent += OnGameOverChanged;
         nGameManager.OnbulletComeRpcEvent += OnBulletCome;
+        nGameManager.OnGameResetRpcEvent += OnGameReset;
+    }
+
+    void OnDestroy()
+    {
+        if (nGameManager == null) return;
+
+        nGameManager.OnGameOverRpcEvent -= OnGameOverChanged;
+        nGameManager.OnbulletComeRpcEvent -= OnBulletCome;
+        nGameManager.OnGameResetRpcEvent -= OnGameReset;
     }
 
     void OnGameOverChanged()
@@ -130,5 +140,22 @@ public class Crystal : MonoBehaviour,IDamageReciever
     public void TakeDamage(IDamageSender sender, float damage)
     {
         throw new System.NotImplementedException();
+    }
+
+    void OnGameReset()
+    {
+        Restore();
+    }
+
+    void Restore()
+    {
+        Debug.Log("Crystal Restore");
+
+        StopAllCoroutines();
+
+        if (crystal != null)
+        {
+            crystal.SetActive(true);
+        }
     }
 }

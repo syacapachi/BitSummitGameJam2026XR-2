@@ -14,6 +14,7 @@ public class BGMManager : MonoBehaviour
 
     public void PlayBGM(AudioClip clip, bool loop)
     {
+        Debug.Log($"PlayBGM called on {gameObject.name}");
         if (clip == null) return;
 
         // PlayingéûÇÃÇ›ìrêÿÇÍñhé~
