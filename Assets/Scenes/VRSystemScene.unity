@@ -11669,7 +11669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alertObject: {fileID: 663026568}
-  threshold: 2000
+  threshold: 45000
   rotateSpeed: 100
   interval: 3
   buzzerClip: {fileID: 8300000, guid: b09fc9b896fbdae44bd5ff26fac6c32d, type: 3}
@@ -23297,12 +23297,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: phases.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phases.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: d7082165d4081364ba8128e09e7602a7, type: 2}
+      objectReference: {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phases.Array.data[1]'
       value: 
@@ -23375,6 +23375,14 @@ PrefabInstance:
       propertyPath: protectArea
       value: 
       objectReference: {fileID: 1552106020}
+    - target: {fileID: 7622921992766210704, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: initilScore
+      value: 50000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7622921992766210704, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: score.m_InternalValue
+      value: 50000
+      objectReference: {fileID: 0}
     - target: {fileID: 8012348177458703508, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: localRoot
       value: 
