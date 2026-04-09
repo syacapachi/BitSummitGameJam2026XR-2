@@ -1,5 +1,4 @@
-﻿using Oculus.Interaction;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.UI;
@@ -12,8 +11,6 @@ public class GrabableLazyFollowHelper : MonoBehaviour
     [HideInInspector,SerializeField]
     XRGrabInteractable m_GrabInteractable;
     [SerializeField] Camera Camera;
-
-    static Vector3 viewPortOffset = new Vector3(0.5f,0.5f,0f);
     private void Awake()
     {
         m_LazyFollow ??= GetComponent<LazyFollow>();
