@@ -22,14 +22,14 @@ public class InputReciever : MonoBehaviour
     [Header("Publish Event")]
     [SerializeField] Vector2Event moveEvent;
     [SerializeField] Vector2Event lookEvent;
-    [SerializeField] VoidEventSO jumpEvent;
-    [SerializeField] VoidEventSO setEvent;
+    [SerializeField] VoidEvent jumpEvent;
+    [SerializeField] VoidEvent setEvent;
     [SerializeField] BoolEventSO dashEvent;
-    [SerializeField] VoidEventSO fireEvent;
-    [SerializeField] VoidEventSO cameraSwitchEvent;
-    [SerializeField] VoidEventSO switchJobEvent;
-    [SerializeField] VoidEventSO markerEvent;
-    [SerializeField] VoidEventSO uiEvent;
+    [SerializeField] VoidEvent fireEvent;
+    [SerializeField] VoidEvent cameraSwitchEvent;
+    [SerializeField] VoidEvent switchJobEvent;
+    [SerializeField] VoidEvent markerEvent;
+    [SerializeField] VoidEvent uiEvent;
     //public event Action OnJumped;
     //public event Action OnSetted;
     //public event Action<bool> OnDashChanged;

@@ -7,14 +7,15 @@ public class StartButton : NetworkBehaviour
     [SerializeField] GameObject humanUI;
     [SerializeField] GameObject ghostUI;
 
-    private void Start()
+    [SerializeField] GameStateEvent gameStateEvent;
+
+    private void OnEnable()
     {
-        ManagerLocator.Instance.AllGameManager.OnGameResultRpc += data => GameEndHandle();
+        gameStateEvent.Register(OnGameStateChange);
     }
-    public override void OnDestroy()
+    private void OnDisable()
     {
-        base.OnDestroy();
-        ManagerLocator.Instance.AllGameManager.OnGameResultRpc -= data => GameEndHandle();
+        gameStateEvent.Unregister(OnGameStateChange);
     }
     public void SelectHuman()
     {
@@ -31,7 +32,18 @@ public class StartButton : NetworkBehaviour
         ghostUI.SetActive(false);
         Debug.Log("Ghost");
     }
-
+    private void OnGameStateChange(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.GameClear:
+                GameEndHandle();
+                break;
+            case GameState.GameOver:
+                GameEndHandle(); break;
+            default: break;
+        }
+    }
     public void SelectStartGame()
     {
         StartGameRpc();

@@ -73,7 +73,7 @@ namespace Syacapachi.util
                         if (prop.propertyType == UnityEditor.SerializedPropertyType.ObjectReference &&
                             prop.objectReferenceValue == target)
                         {
-                            results.Add(comp.gameObject);
+                            results.Add(comp.gameObject); 
                             break;
                         }
                     }
@@ -93,8 +93,8 @@ namespace Syacapachi.util
                 //参照を上から順に調べる。
                 while (prop.NextVisible(true))
                 {
-                    if (prop.propertyType == SerializedPropertyType.ObjectReference &&
-                        prop.objectReferenceValue == target)
+                    if (prop.propertyType == SerializedPropertyType.ObjectReference 
+                        && prop.objectReferenceValue == target)
                     {
                         results.Add(obj);
                         break;

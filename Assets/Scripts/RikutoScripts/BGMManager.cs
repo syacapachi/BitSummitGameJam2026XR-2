@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class BGMManager : MonoBehaviour
 {
@@ -9,7 +9,8 @@ public class BGMManager : MonoBehaviour
     [SerializeField] AudioClip playingBGM;
     [SerializeField] AudioClip clearBGM;
     [SerializeField] AudioClip gameOverBGM;
-
+    [Header("Subscribe Event")]
+    [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     private AudioClip currentClip;
 
     public void PlayBGM(AudioClip clip, bool loop)
@@ -17,7 +18,7 @@ public class BGMManager : MonoBehaviour
         Debug.Log($"PlayBGM called on {gameObject.name}");
         if (clip == null) return;
 
-        // PlayingŽž‚Ì‚Ý“rØ‚ê–hŽ~
+        // Playingæ™‚ã®ã¿é€”åˆ‡ã‚Œé˜²æ­¢
         if (loop && currentClip == clip) return;
 
         currentClip = clip;
@@ -25,16 +26,33 @@ public class BGMManager : MonoBehaviour
         bgmSource.loop = loop;
         bgmSource.Play();
     }
-
+    private void OnEnable()
+    {
+        OnGameStateChangeRpcEvent.Register(OnGameStateChanged);
+    }
+    private void OnDisable()
+    {
+        OnGameStateChangeRpcEvent.Unregister(OnGameStateChanged);
+    }
     public void StopBGM()
     {
         bgmSource.Stop();
         currentClip = null;
     }
-
-    // ó‘Ô‚²‚Æ‚ÌØ‚è‘Ö‚¦
-    public void OnGameStart() => PlayBGM(playingBGM, true);   // © ƒ‹[ƒv
-    public void OnGameReset() => PlayBGM(waitingBGM, false);
-    public void OnGameClear() => PlayBGM(clearBGM, true);
-    public void OnGameOver() => PlayBGM(gameOverBGM, false);
+    private void OnGameStateChanged(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.Playing:
+                PlayBGM(playingBGM, true);
+                break;
+            case GameState.Initializing:
+                PlayBGM(waitingBGM, false);
+                break;
+            case GameState.GameClear:
+                PlayBGM(clearBGM, true); break;
+            case GameState.GameOver:
+                PlayBGM(gameOverBGM, false);break;
+        }
+    }
 }

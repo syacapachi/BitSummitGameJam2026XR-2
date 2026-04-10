@@ -54,7 +54,8 @@ namespace Syacapachi.util
                 string GenerateClassName = GenerateClass.Substring(0,index);
 
                 string className = string.IsNullOrEmpty(attr.ClassName)
-                    ? $"{type.Name}Event"
+                    ? 
+                    attr.IsArray ? $"{type.Name}ArrayEvent" : $"{type.Name}Event"
                     : attr.ClassName;
 
                 string folder = string.IsNullOrEmpty(attr.Folder)
@@ -69,15 +70,21 @@ namespace Syacapachi.util
                 if (File.Exists(path) || AlreadyExists(className))
                     continue;
                 //内部クラスは、NameSpace.SampleClass+InlineClassのように+で表されるが、書くときは.なので、書き換える。
+                string inlineClassName = type.FullName.Replace("+", ".");
+                if (attr.IsArray)
+                {
+                    inlineClassName += "[]";
+                }
                 string code =
 $@"using UnityEngine;
 [CreateAssetMenu(menuName = ""GameEvents/{className}"")]
-public class {className} : {GenerateClassName}<{type.FullName.Replace("+",".")}>
+public class {className} : {GenerateClassName}<{inlineClassName}>
 {{
 }}
 ";
 
                 File.WriteAllText(path, code);
+                Debug.Log($"[{nameof(AutoEventGenerator)}]Create new Script At :{path},Name = {className} extends {GenerateClassName}");
             }
 
             AssetDatabase.Refresh();

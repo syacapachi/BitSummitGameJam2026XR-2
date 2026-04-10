@@ -10,12 +10,11 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     [SerializeField] LocalPlayerRoot localRoot;
     [Header("Subscribe Event")]
-    [SerializeField] PlayerJobEvent jobEvent;
+    [SerializeField] PlayerJobEvent jobChangeEvent;
     public NetworkPlayerRoot NetworkOwnerPlayer { get;private set; }
     public LocalPlayerRoot LocalPlayerRoot => localRoot;
     public IReadOnlyList<NetworkPlayerRoot> AllPlayers => playerList;
 
-    public event Action<PlayerJob> OnOwnerJobChanged;
     [Header("Owner Setting")]
     [Tooltip("ホスト、クライアント設定前のカメラ")]
     [SerializeField] bool IsJobOverride;
@@ -33,7 +32,6 @@ public class PlayerManager : MonoBehaviour
     {
         NetworkOwnerPlayer = playerRoot;
         Debug.Log("Resist owner");
-        jobEvent.Register(OnJobChanged);
         if (IsJobOverride)
         {
             LocalPlayerRoot.Propaty.Job = JobOverride;
@@ -41,11 +39,6 @@ public class PlayerManager : MonoBehaviour
     }
     public void UnResistOwner(NetworkPlayerRoot playerRoot)
     {
-        jobEvent.Unregister(OnJobChanged);
         NetworkOwnerPlayer = null;
-    }
-    private void OnJobChanged(PlayerJob job)
-    {
-        OnOwnerJobChanged?.Invoke(job);
     }
 }

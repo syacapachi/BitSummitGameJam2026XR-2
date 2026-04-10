@@ -8,7 +8,7 @@ public class JobSettingSO : ScriptableObject
     [SerializeField] List<PlayerLayerSettings> playerLayerSettingsList = new List<PlayerLayerSettings>();
     public IReadOnlyList<PlayerLayerSettings> PlayerLayerSettingsList => playerLayerSettingsList;
 }
-//[GenerateEvent(typeof(GameEventSOBase<>))]
+//[GenerateEvent(typeof(GameEventSOBase<>),isArray:true)]
 [Flags]
 public enum PlayerJob
 {

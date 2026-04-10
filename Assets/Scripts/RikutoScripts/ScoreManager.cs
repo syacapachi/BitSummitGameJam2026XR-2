@@ -14,8 +14,8 @@ public class ScoreManager : NetworkBehaviour
     public NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(0);
     bool isGameOver = false;
 
-
-    public event Action OnScoreReachZero;
+    [Header("Publish Event")]
+    [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
     public void AddBonusServerOnly(int value)
     {
         if (!IsServer) return;
@@ -39,7 +39,7 @@ public class ScoreManager : NetworkBehaviour
         {
             isGameOver = true;
             Debug.Log("GAME OVER (ScoreManager)");
-            OnScoreReachZero?.Invoke();
+            OnScoreReachZeroServerEvent?.Invoke();
         }
     }
 

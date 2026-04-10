@@ -7,21 +7,21 @@ public class LookStateChange : NetworkBehaviour
     [SerializeField] Renderer meshRenderer;
     [SerializeField] PlayerJob lookableJob;
     [SerializeField] Canvas hpCanvas; // ←HPバーのCanvasをここにアサイン
-
+    [Header("SubscribeEvent")]
+    [SerializeField] PlayerJobEvent jobChanged;
     public override void OnNetworkSpawn()
     {
-        PlayerManager playerManager = ManagerLocator.Instance.AllPlayerManager;
-        playerManager.OnOwnerJobChanged += OnJobChangedHandle;
-
-        if (playerManager.NetworkOwnerPlayer != null)
-        {
-            OnJobChangedHandle(playerManager.LocalPlayerRoot.Propaty.Job);
-        }
+        PlayerJob currentJob = jobChanged.CurrentValue;
+        if(currentJob != default)
+            OnJobChangedHandle(currentJob);
     }
-
-    public override void OnNetworkDespawn()
+    private void OnEnable()
     {
-        ManagerLocator.Instance.AllPlayerManager.OnOwnerJobChanged -= OnJobChangedHandle;
+        jobChanged.Register(OnJobChangedHandle);
+    }
+    private void OnDisable()
+    {
+        jobChanged.Unregister(OnJobChangedHandle);
     }
 
     private void OnJobChangedHandle(PlayerJob job)

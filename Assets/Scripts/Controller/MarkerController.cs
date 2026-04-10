@@ -12,7 +12,7 @@ public class MarkerController : NetworkBehaviour
     [SerializeField] int laserDistance = 10;
     [SerializeField] MarkerAudioController markerAudioController;
     [Header("Subscribe Event")]
-    [SerializeField] VoidEventSO markerEvent;
+    [SerializeField] VoidEvent markerEvent;
     AttachableBehaviour attach;
     bool isMarkAttached = true;
     Coroutine markerCoroutine;

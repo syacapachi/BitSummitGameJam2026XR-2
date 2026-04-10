@@ -60,6 +60,10 @@ namespace Syacapachi.util
                     // ▼ フィルタ済みリスト
                     filtered = group.Value.Where(e => MatchSearch(e.name)).ToList();   
                 }
+                else
+                {
+                    filtered = group.Value;
+                }
                 if (filtered.Count == 0)
                     continue;
                 DrawGroup(group.Key, filtered);
@@ -71,7 +75,7 @@ namespace Syacapachi.util
         void DrawGroup(System.Type type, List<ScriptableObject> list)
         {
             if (!typeFoldouts.ContainsKey(type)) typeFoldouts[type] = false;
-            typeFoldouts[type] = EditorGUILayout.Foldout(typeFoldouts[type], type.Name, true, EditorStyles.boldLabel);
+            typeFoldouts[type] = EditorGUILayout.Foldout(typeFoldouts[type], type.Name, true);
             // ▼ 展開時のみ結果表示
             if (!typeFoldouts[type]) return;
 
@@ -103,9 +107,7 @@ namespace Syacapachi.util
                         if (GUILayout.Button("Select", GUILayout.Width(60)))
                         {
                             Selection.activeObject = e;
-                        }
-
-                        
+                        }  
                     }
 
                     // ▼ 検索中表示
@@ -120,6 +122,7 @@ namespace Syacapachi.util
                         GUILayout.Space(3);
                         foreach (var r in cache[e])
                         {
+                            if(r == null) continue;
                             using (new GUILayout.HorizontalScope())
                             {
                                 GUILayout.Label(r.name);

@@ -31,16 +31,11 @@ public class PhaseManager : NetworkBehaviour
 
     private float timer;
     private bool IsCountingDown = false;
-
-    public event Action AllEnemyDeadEventRpc;
-    public event Action OnAllPhaseEnded;
-    public event Action<int> OnPhaseChange;
-
-    [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
-    private void AllEnemyDeathRpc()
-    {
-        AllEnemyDeadEventRpc?.Invoke();
-    }
+    [Header("Publish Event")]
+    [SerializeField] VoidEvent OnAllPhaseEndedServerOnly;
+    //public event Action OnAllPhaseEnded;
+    [SerializeField] IntEvent OnPhaseChangeRpcEvent;
+    //public event Action<int> OnPhaseChange;
 
     public override void OnNetworkSpawn()
     {
@@ -59,7 +54,7 @@ public class PhaseManager : NetworkBehaviour
     }
     private void OnPhaseChanedHaldle(int oldValue, int newValue)
     {
-        OnPhaseChange?.Invoke(newValue);
+        OnPhaseChangeRpcEvent.Invoke(newValue);
     }
 
     public void StartPhases()
@@ -80,7 +75,7 @@ public class PhaseManager : NetworkBehaviour
         {
             Debug.Log("GAME CLEAR");
             spawner.KillAll();
-            OnAllPhaseEnded?.Invoke();
+            OnAllPhaseEndedServerOnly?.Invoke();
             return;
         }
 
@@ -108,7 +103,7 @@ public class PhaseManager : NetworkBehaviour
         var phase = phases[phaseIndex];
         timer = phase.PhaseTime;
         SpawnableHandle.SpawnFromEvent(phase.SpawnEvents.ToList());
-        OnPhaseChange?.Invoke(phaseIndex);
+        OnPhaseChangeRpcEvent?.Invoke(phaseIndex);
 
         StartCoroutine(PhaseProgress());
     }
@@ -116,7 +111,7 @@ public class PhaseManager : NetworkBehaviour
     {
         
         float max = phases[CurrentPhaseIndex].PhaseTime;
-        while (timer > 0 && !spawner.IsAllDead)
+        while (timer > 0 && !spawner.IsAllDeadServerOnly)
         {
             //コルーチンは1フレームごとに呼ばれるため、Time.deltaTimeを引いていくことで、フェーズの残り時間を管理する
             timer -= Time.deltaTime;
@@ -136,7 +131,7 @@ public class PhaseManager : NetworkBehaviour
         {
             yield return EndPhaseWithCountdown();
         }
-        else if (spawner.IsAllDead)
+        else if (spawner.IsAllDeadServerOnly)
         {
             int bonus = phases[CurrentPhaseIndex].ClearBonus;
 
@@ -151,8 +146,6 @@ public class PhaseManager : NetworkBehaviour
     IEnumerator AllDeadSequence()
     {
         IsCountingDown = true;
-
-        AllEnemyDeathRpc();
         
         yield return new WaitForSeconds(3.1f);
 

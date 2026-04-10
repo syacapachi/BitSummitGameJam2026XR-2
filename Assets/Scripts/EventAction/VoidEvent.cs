@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 [CreateAssetMenu(fileName = "VoidEvent", menuName = "GameEvents/VoidEventSO", order = 1)]
-public class VoidEventSO : ScriptableObject, IResisterable<Action>, IInvokable
+public class VoidEvent : ScriptableObject, IResisterable<Action>, IInvokable
 {
     private event Action linsteners;
 

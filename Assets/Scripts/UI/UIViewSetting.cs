@@ -10,7 +10,7 @@ public class UIViewSetting : MonoBehaviour
     [SerializeField] float distance = 2f;
     [SerializeField] Vector3 panelOffset;
     [Header("Subsctibe Event")]
-    [SerializeField] VoidEventSO uiEvent;
+    [SerializeField] VoidEvent uiEvent;
     private bool isShowing = false;
     private void OnEnable()
     {

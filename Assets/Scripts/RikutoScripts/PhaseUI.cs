@@ -7,6 +7,10 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] GameObject phaseBoard;
     [SerializeField] TextMeshProUGUI phaseText;
     [SerializeField] PhaseCountDownSettingSO phaseUISettingSO;
+    [Header("Subscribe Event")]
+    [SerializeField] VoidEvent AllEnemyDeadRpcEvent;
+    [SerializeField] IntEvent OnPhaseChangeRpcEvent;
+    [SerializeField] GameStateEvent GameStateChangeRpcEvent;
     private NGameManager nGameManager;
 
     private Coroutine currentRoutine;
@@ -38,12 +42,31 @@ public class PhaseUI : MonoBehaviour
     {
         phaseText.gameObject.SetActive(false);
 
-        nGameManager.PhaseManager.OnPhaseChange += OnPhaseChanged;
-        nGameManager.OnGameResultRpc += data => ChangeState(UIState.GameFinish);
-        nGameManager.PhaseManager.CountdownValue.OnValueChanged += OnCountdownChanged;
-        nGameManager.PhaseManager.AllEnemyDeadEventRpc += () => ChangeState(UIState.AllEnemyDead);
+        nGameManager.PhaseManager.CountdownValue.OnValueChanged += OnCountdownChanged; 
     }
-
+    private void OnEnable()
+    {
+        AllEnemyDeadRpcEvent.Register(OnAllEnemyKilled);
+        OnPhaseChangeRpcEvent.Register(OnPhaseChanged);
+        GameStateChangeRpcEvent.Register(OnGameStateChanged);
+    }
+    private void OnDisable()
+    {
+        AllEnemyDeadRpcEvent.Unregister(OnAllEnemyKilled);
+        OnPhaseChangeRpcEvent.Unregister(OnPhaseChanged);
+        GameStateChangeRpcEvent.Unregister(OnGameStateChanged);
+    }
+    private void OnGameStateChanged(GameState newState)
+    {
+        if(newState == GameState.GameOver || newState == GameState.GameOver)
+        {
+            ChangeState(UIState.GameFinish);
+        }
+    }
+    private void OnAllEnemyKilled()
+    {
+        ChangeState(UIState.AllEnemyDead);
+    }
     // =========================
     // 🔥 ステート管理
     // =========================

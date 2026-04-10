@@ -8,7 +8,7 @@ public class AnimationSuncro : NetworkBehaviour
     [SerializeField] NetworkAnimator NetworkAnimator;
     [SerializeField] Syncronize syncronizeSetting;
     [Header("Subscribe Event")]
-    [SerializeField] VoidEventSO jumpEvent;
+    [SerializeField] VoidEvent jumpEvent;
     [SerializeField] Vector2Event moveEvent;
     //すべてのスポーンが終わってから購読
     protected override void OnNetworkPostSpawn()

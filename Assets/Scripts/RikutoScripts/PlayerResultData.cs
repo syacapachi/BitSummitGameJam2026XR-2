@@ -1,8 +1,10 @@
 ﻿using Unity.Netcode;
 using System;
 using Unity.Collections;
+using Syacapachi.Attribute;
 
 [Serializable]
+[GenerateEvent(typeof(GameEventSOBase<>),IsArray = true)]
 public struct PlayerResultData : INetworkSerializable,IEquatable<PlayerResultData>
 {
     public ulong clientId;
