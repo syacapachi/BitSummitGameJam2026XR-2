@@ -1,4 +1,4 @@
-using Syacapachi.Attribute;
+﻿using Syacapachi.Attribute;
 using UnityEngine;
 
 public class SkyColer : MonoBehaviour
@@ -6,16 +6,24 @@ public class SkyColer : MonoBehaviour
     [SerializeField]Camera m_camera;
     [SerializeField]Color defaultcolor;
     [SerializeField]Color backgroundcolor;
-
-    [SerializeField] NGameManager nGameManager;
+    [SerializeField] GameStateEvent gameStateEvent;
     private void OnEnable()
     {
-        nGameManager.OnGameResetRpcEvent += ResetColor;
-        nGameManager.OnGameClearRpcEvent += CamereColer;
+        gameStateEvent.Register(OnGameStateChange);
     }
-    public void OnGameClear()
+    private void OnDisable()
     {
-        CamereColer();
+        gameStateEvent.Unregister(OnGameStateChange);
+    }
+    private void OnGameStateChange(GameState state)
+    {
+        switch(state)
+        {
+            case GameState.GameClear:
+                CamereColer();break;
+            case GameState.Initializing:
+                ResetColor(); break;
+        }
     }
     [OnInspectorButton]
     private void CamereColer()
