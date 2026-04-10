@@ -4,8 +4,7 @@ using Unity.Netcode;
 public class StartButton : NetworkBehaviour
 {
     [SerializeField] GameObject startUI;
-    [SerializeField] GameObject humanUI;
-    [SerializeField] GameObject ghostUI;
+    [SerializeField] GameObject resetUI;
 
     [SerializeField] GameStateEvent gameStateEvent;
 
@@ -21,7 +20,6 @@ public class StartButton : NetworkBehaviour
     {
         if(IsServer) return;
         ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.Job = PlayerJob.Human;
-        humanUI.SetActive(false);
         Debug.Log("Human");
     }
 
@@ -29,16 +27,17 @@ public class StartButton : NetworkBehaviour
     {
         if (IsServer) return;
         ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.Job = PlayerJob.Ghost;
-        ghostUI.SetActive(false);
         Debug.Log("Ghost");
     }
     private void OnGameStateChange(GameState state)
     {
         switch (state)
         {
+            case GameState.Initializing:
+                OnGameInitialize(); break;
+
             case GameState.GameClear:
-                GameEndHandle();
-                break;
+                GameEndHandle();break;
             case GameState.GameOver:
                 GameEndHandle(); break;
             default: break;
@@ -48,10 +47,11 @@ public class StartButton : NetworkBehaviour
     {
         StartGameRpc();
     }
-    private void GameEndHandle()
+    public void SelectResetGame()
     {
-        HideUIRpc(true);
+        ResetGameRpc();
     }
+    
 
     private void OnTriggerEnter(Collider other)
     {
@@ -65,15 +65,22 @@ public class StartButton : NetworkBehaviour
     void StartGameRpc()
     {
         Debug.Log("[Start Game Rpc]");
-        ManagerLocator.Instance.AllGameManager.StartGame();
-        HideUIRpc(false);
+        ManagerLocator.Instance.AllGameManager.StartGameServerOnly();
+        startUI.SetActive(false);
     }
-
-    [Rpc(SendTo.Everyone)]
-    void HideUIRpc(bool enabled)
+    [Rpc(SendTo.Server)]
+    void ResetGameRpc()
     {
-        startUI.SetActive(enabled);
-        humanUI.SetActive(enabled);
-        ghostUI.SetActive(enabled);
+        Debug.Log("[Start Game Rpc]");
+        ManagerLocator.Instance.AllGameManager.ResetGameServerOnly();
+        resetUI.SetActive(false);
+    }
+    private void GameEndHandle()
+    {
+        resetUI.SetActive(true);
+    }
+    private void OnGameInitialize()
+    {
+        startUI.SetActive(true);
     }
 }

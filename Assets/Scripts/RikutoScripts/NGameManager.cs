@@ -54,18 +54,18 @@ public class NGameManager : NetworkBehaviour
         if (!IsServer) return;
         // 🔗 イベント接続
         OnAllPhaseEndedServerEvent.Register(HandleAllPhaseEnded);
-        OnScoreReachZeroServerEvent.Register(HandleScoreZero);
+        OnScoreReachZeroServerEvent.Register(HandleScoreZeroServer);
     }
     public override void OnNetworkDespawn()
     {
         if (!IsServer) return;
         // 🔗 イベント切断
         OnAllPhaseEndedServerEvent.Unregister(HandleAllPhaseEnded);
-        OnScoreReachZeroServerEvent.Unregister(HandleScoreZero);
+        OnScoreReachZeroServerEvent.Unregister(HandleScoreZeroServer);
     }
 
     [OnInspectorButton("Start Game")]
-    public void StartGame()
+    public void StartGameServerOnly()
     {
         if (!IsServer) return;
         if (CurrentGameState != GameState.Initializing) return;
@@ -77,7 +77,7 @@ public class NGameManager : NetworkBehaviour
     }
 
     [OnInspectorButton("Reset")]
-    public void ResetGame()
+    public void ResetGameServerOnly()
     {
         if (!IsServer) return;
 
@@ -94,7 +94,7 @@ public class NGameManager : NetworkBehaviour
     {
         OnGameStateChangeRpcEvent.Invoke(newState);
     }
-    void HandleScoreZero()
+    void HandleScoreZeroServer()
     {
         if (!IsServer) return;
         Debug.Log("GAME OVER");
@@ -153,7 +153,7 @@ public class NGameManager : NetworkBehaviour
 }
 public enum GameState
 {
-    Initializing,     // 開始前
+    Initializing,// 開始前
     Playing,     // プレイ中
     GameClear,   // クリア
     GameOver     // ゲームオーバー

@@ -871,9 +871,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
     - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: RecieveResultRpcEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: b1254d9a30b83b44ca1aa9f037d0a8fc, type: 2}
+    - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: OnGameStateChangeRpcEvent
       value: 
       objectReference: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
+    - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: OnAllPhaseEndedServerEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
     - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: OnScoreReachZeroServerEvent
       value: 
