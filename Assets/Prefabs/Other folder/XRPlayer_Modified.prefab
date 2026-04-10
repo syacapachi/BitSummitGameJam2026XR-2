@@ -3619,7 +3619,6 @@ GameObject:
   - component: {fileID: 1840299474899798204}
   - component: {fileID: 2859907203708093746}
   - component: {fileID: 8884494692843386286}
-  - component: {fileID: 8147270009200705217}
   - component: {fileID: 3704934150371127547}
   - component: {fileID: 4011302328935387629}
   m_Layer: 0
@@ -3746,7 +3745,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: a1762ede81c1dd843856850bd746c8ea, type: 3}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -3851,22 +3850,6 @@ MonoBehaviour:
   damageDealt: 0
   enemyTypeCount: 10
   killCounts: 
---- !u!114 &8147270009200705217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4461847731376564659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f1717d797148bd48abf925381f561d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  phaseChangeClipAll: {fileID: 8300000, guid: fe3de2f1b36a2c44ab6bc1dc901d97a4, type: 3}
-  gameClearClipAll: {fileID: 8300000, guid: a1762ede81c1dd843856850bd746c8ea, type: 3}
-  phaseVolumeAll: 1
-  clearVolumeAll: 1
 --- !u!114 &3704934150371127547
 MonoBehaviour:
   m_ObjectHideFlags: 0
