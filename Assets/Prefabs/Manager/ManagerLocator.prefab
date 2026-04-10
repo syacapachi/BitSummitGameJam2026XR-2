@@ -91,6 +91,7 @@ Transform:
   - {fileID: 1689715881194066189}
   - {fileID: 4411501771318302359}
   - {fileID: 5418814566632101354}
+  - {fileID: 4322182251488153399}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &577900837676337283
@@ -126,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 684620830
+  GlobalObjectIdHash: 3782534606
   InScenePlacedSourceGlobalObjectIdHash: 657380702
   DeferredDespawnTick: 0
   Ownership: 1
@@ -192,14 +193,28 @@ MonoBehaviour:
   scoreManager: {fileID: 7622921992766210704}
   uiSettings: {fileID: 11400000, guid: 501a16477cf3ffe419cd09b562a62f7a, type: 2}
   syncedPhaseIndex:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: -1
   CountdownValue:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   phaseFinished:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   phaseProgress:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 1
   isSkip: 0
+  OnAllPhaseEndedServerOnly: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
+  OnPhaseChangeRpcEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
 --- !u!1 &2223224338536376484
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,7 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localRoot: {fileID: 0}
-  jobEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
+  jobChangeEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
   IsJobOverride: 1
   JobOverride: 2
 --- !u!1 &5382503739911564800
@@ -400,6 +415,51 @@ MonoBehaviour:
     PrewarmCount: 10
   - Prefab: {fileID: 4022916156752048900, guid: 18254f0b07ec8924d89429cf843b0c78, type: 3}
     PrewarmCount: 10
+--- !u!1 &5799241829086758109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4322182251488153399}
+  - component: {fileID: 1359393835639082135}
+  m_Layer: 0
+  m_Name: UIService
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4322182251488153399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5799241829086758109}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4908882465109089120}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1359393835639082135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5799241829086758109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d73f383f8d1a834eb0bd80edef65566, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  langEvent: {fileID: 11400000, guid: 4679bf21cf536b540b9507d956586d16, type: 2}
 --- !u!1 &6159796624332967230
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,11 +507,21 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   initilScore: 50000
   score:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 50000
   totalBonus:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   lastClearBonus:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  OnScoreReachZeroServerEvent: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
 --- !u!1 &7146760537532538251
 GameObject:
   m_ObjectHideFlags: 0
@@ -559,7 +629,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4219804600817405800}
   - component: {fileID: 6731689958154144565}
-  - component: {fileID: 5648944161369652242}
+  - component: {fileID: 194056741851315779}
+  - component: {fileID: 8908327882870161611}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -594,10 +665,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6941f1a6cf7c874baa43d8cdf5f70d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiSourceAll: {fileID: 5648944161369652242}
+  uiSourceAll: {fileID: 8908327882870161611}
   masterSfxVolumeAll: 1
-  loopSource: {fileID: 0}
---- !u!82 &5648944161369652242
+--- !u!114 &194056741851315779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8974977137299023905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef3720fff8783f408504688fb05d091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bgmSource: {fileID: 8908327882870161611}
+  waitingBGM: {fileID: 0}
+  playingBGM: {fileID: 8300000, guid: fe3de2f1b36a2c44ab6bc1dc901d97a4, type: 3}
+  clearBGM: {fileID: 8300000, guid: a1762ede81c1dd843856850bd746c8ea, type: 3}
+  gameOverBGM: {fileID: 8300000, guid: f9071797b02d0914abf12510ba5b3899, type: 3}
+  OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
+--- !u!82 &8908327882870161611
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -710,6 +798,10 @@ PrefabInstance:
       propertyPath: networkPool
       value: 
       objectReference: {fileID: 4084111059737820316}
+    - target: {fileID: 1624047670963601631, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: OnAllEnemyDeadRpcEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: d48233639feb72e4ba705392d35f3c40, type: 2}
     - target: {fileID: 2422005359530234837, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -763,6 +855,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8343285116251111980}
     - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: bgmManager
+      value: 
+      objectReference: {fileID: 194056741851315779}
+    - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: phaseManager
       value: 
       objectReference: {fileID: 1871165705981970814}
@@ -770,6 +866,26 @@ PrefabInstance:
       propertyPath: scoreManager
       value: 
       objectReference: {fileID: 7622921992766210704}
+    - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: OnbulletComeRpcEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
+    - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: RecieveResultRpcEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: b1254d9a30b83b44ca1aa9f037d0a8fc, type: 2}
+    - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: OnGameStateChangeRpcEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
+    - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: OnAllPhaseEndedServerEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
+    - target: {fileID: 4779798465316006427, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: OnScoreReachZeroServerEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

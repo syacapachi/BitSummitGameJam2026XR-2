@@ -13,12 +13,12 @@ namespace Syacapachi.util
         //ScriptableObjectのリスト
         readonly Dictionary<System.Type, List<ScriptableObject>> groupedEvents = new();
         //参照キャッシュ
-        readonly Dictionary<UnityEngine.Object, List<UnityEngine.Object>> cache = new();
+        readonly Dictionary<ScriptableObject, List<UnityEngine.Object>> cache = new();
         //折りたたみ状態
         readonly Dictionary<System.Type, bool> typeFoldouts = new();
-        readonly Dictionary<UnityEngine.Object, bool> contentFoldouts = new();
+        readonly Dictionary<ScriptableObject, bool> contentFoldouts = new();
         //検索状態
-        readonly Dictionary<UnityEngine.Object, bool> isSearching = new();
+        readonly Dictionary<ScriptableObject, bool> isSearching = new();
         Vector2 scroll;
         string searchText = string.Empty;
         bool isSearchClass = false;
@@ -46,7 +46,6 @@ namespace Syacapachi.util
                 Refresh();
 
             DrawToolbar();
-
             scroll = GUILayout.BeginScrollView(scroll);
 
             foreach (var group in groupedEvents)
@@ -61,18 +60,22 @@ namespace Syacapachi.util
                     // ▼ フィルタ済みリスト
                     filtered = group.Value.Where(e => MatchSearch(e.name)).ToList();   
                 }
+                else
+                {
+                    filtered = group.Value;
+                }
                 if (filtered.Count == 0)
                     continue;
                 DrawGroup(group.Key, filtered);
             }
-
+            //Endしないと終わらない
             GUILayout.EndScrollView();
         }
 
         void DrawGroup(System.Type type, List<ScriptableObject> list)
         {
             if (!typeFoldouts.ContainsKey(type)) typeFoldouts[type] = false;
-            typeFoldouts[type] = EditorGUILayout.Foldout(typeFoldouts[type], type.Name, true, EditorStyles.boldLabel);
+            typeFoldouts[type] = EditorGUILayout.Foldout(typeFoldouts[type], type.Name, true);
             // ▼ 展開時のみ結果表示
             if (!typeFoldouts[type]) return;
 
@@ -80,58 +83,59 @@ namespace Syacapachi.util
             {
                 if (!contentFoldouts.ContainsKey(e)) contentFoldouts[e] = true;
                 if (!isSearching.ContainsKey(e)) isSearching[e] = false;
-                GUILayout.BeginVertical("box");
-
-                GUILayout.BeginHorizontal();
-
-                //折りたたみを更新
-                contentFoldouts[e] = EditorGUILayout.Foldout(contentFoldouts[e], e.name, true);
-
-                if (GUILayout.Button("Ping", GUILayout.Width(50)))
-                    EditorGUIUtility.PingObject(e);
-
-                if (GUILayout.Button("Select", GUILayout.Width(60)))
-                    Selection.activeObject = e;
-
-                if (GUILayout.Button("Find", GUILayout.Width(50)))
+                using (new GUILayout.VerticalScope("box"))
                 {
-                    StartSearch(e, false);
-                }
-
-                if (GUILayout.Button("ReFind", GUILayout.Width(70)))
-                {
-                    StartSearch(e, true);
-                }
-
-                GUILayout.EndHorizontal();
-
-                // ▼ 検索中表示
-                if (isSearching[e])
-                {
-                    GUILayout.Label("Searching...");
-                }
-
-                // ▼ 展開時に結果表示
-                if (contentFoldouts[e] && cache.ContainsKey(e))
-                {
-                    GUILayout.Space(3);
-                    foreach (var r in cache[e])
+                    using (new GUILayout.HorizontalScope())
                     {
-                        GUILayout.BeginHorizontal();
+                        //折りたたみを更新
+                        contentFoldouts[e] = EditorGUILayout.Foldout(contentFoldouts[e], e.name, true);
 
-                        GUILayout.Label(r.name);
+                        if (GUILayout.Button("Find", GUILayout.Width(50)))
+                        {
+                            StartSearch(e, false);
+                        }
 
+                        if (GUILayout.Button("ReFind", GUILayout.Width(60)))
+                        {
+                            StartSearch(e, true);
+                        }
                         if (GUILayout.Button("Ping", GUILayout.Width(50)))
-                            EditorGUIUtility.PingObject(r);
+                        {
+                            EditorGUIUtility.PingObject(e);
+                        }
 
                         if (GUILayout.Button("Select", GUILayout.Width(60)))
-                            Selection.activeObject = r;
+                        {
+                            Selection.activeObject = e;
+                        }  
+                    }
 
-                        GUILayout.EndHorizontal();
+                    // ▼ 検索中表示
+                    if (isSearching[e])
+                    {
+                        GUILayout.Label("Searching...");
+                    }
+
+                    // ▼ 展開時に結果表示
+                    if (contentFoldouts[e] && cache.ContainsKey(e))
+                    {
+                        GUILayout.Space(3);
+                        foreach (var r in cache[e])
+                        {
+                            if(r == null) continue;
+                            using (new GUILayout.HorizontalScope())
+                            {
+                                GUILayout.Label(r.name);
+
+                                if (GUILayout.Button("Ping", GUILayout.Width(50)))
+                                    EditorGUIUtility.PingObject(r);
+
+                                if (GUILayout.Button("Select", GUILayout.Width(60)))
+                                    Selection.activeObject = r;
+                            }
+                        }
                     }
                 }
-
-                GUILayout.EndVertical();
             }
         }
         void DrawRefrence(List<UnityEngine.Object> refrenceObjects)
@@ -140,28 +144,28 @@ namespace Syacapachi.util
         }
         void DrawToolbar()
         {
-            GUILayout.BeginHorizontal("box");
-
-            GUILayout.Label("Search:", GUILayout.Width(50));
-
-            isSearchClass = GUILayout.Toggle(isSearchClass, "Include ClassName");
-            isSearchName = GUILayout.Toggle(isSearchName, "Include FileName");
-            string newSearch = GUILayout.TextField(searchText);
-
-            // 入力変化検知（Repaint最適化）
-            if (newSearch != searchText)
+            //usingを使ったスコープなら、勝手にEndを呼んでくれる。
+            using (new GUILayout.HorizontalScope("box"))
             {
-                searchText = newSearch;
-                Repaint();
-            }
+                GUILayout.Label("Search:", GUILayout.Width(50));
 
-            if (GUILayout.Button("Clear", GUILayout.Width(60)))
-            {
-                searchText = "";
-                GUI.FocusControl(null);
-            }
+                isSearchClass = GUILayout.Toggle(isSearchClass, "Include ClassName");
+                isSearchName = GUILayout.Toggle(isSearchName, "Include FileName");
+                string newSearch = GUILayout.TextField(searchText);
 
-            GUILayout.EndHorizontal();
+                // 入力変化検知（Repaint最適化）
+                if (newSearch != searchText)
+                {
+                    searchText = newSearch;
+                    Repaint();
+                }
+
+                if (GUILayout.Button("Clear", GUILayout.Width(60)))
+                {
+                    searchText = "";
+                    GUI.FocusControl(null);
+                }
+            }
         }
         /// <summary>
         /// 検索テキストの文字が、引数の文字に含まれているか。 Spaceで分ける
@@ -217,7 +221,7 @@ namespace Syacapachi.util
                 .Where(o => o != null)
                 .ToList();
         }
-        void StartSearch(UnityEngine.Object target, bool force)
+        void StartSearch(ScriptableObject target, bool force)
         {
             if (!force && cache.ContainsKey(target))
                 return;

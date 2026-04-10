@@ -9,7 +9,6 @@ public class NGameManager : NetworkBehaviour
     [SerializeField] GameObject protectArea;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseManager phaseManager;
-    [SerializeField] BGMManager bgmManager;
 
     SkyColer skybox;
 
@@ -20,7 +19,7 @@ public class NGameManager : NetworkBehaviour
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
 
     [SerializeField] NetworkVariable<GameState> gameState = new(
-        GameState.Waiting,
+        GameState.Initializing,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
@@ -32,51 +31,46 @@ public class NGameManager : NetworkBehaviour
             gameState.Value = value;
         }
     }
-    public event Action OnbulletComeRpcEvent;
-    public event Action<PlayerResultData[]> OnGameResultRpc;
+    [Header("Publish Event")]
+    [SerializeField] VoidEvent OnbulletComeRpcEvent;
+    [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
+    [SerializeField] PlayerResultDataArrayEvent RecieveResultRpcEvent;
 
-    public event Action OnGameStartRpcEvent;
-    public event Action OnGameResetRpcEvent;
-    public event Action OnGameClearRpcEvent;
-    public event Action OnGameOverRpcEvent;
+    [Header("SubscribeEvent")]
+    [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
+    [SerializeField] VoidEvent OnAllPhaseEndedServerEvent;
+
+
     private void OnEnable()
     {
         gameState.OnValueChanged += HandleGameStateChanged;
+        
     }
     private void OnDisable()
     {
         gameState.OnValueChanged -= HandleGameStateChanged;
+        
     }
     public override void OnNetworkSpawn()
     {
-
-        if (IsClient)
-        {
-            OnGameStartRpcEvent += bgmManager.OnGameStart;
-            OnGameResetRpcEvent += bgmManager.OnGameReset;
-            OnGameClearRpcEvent += bgmManager.OnGameClear;
-            OnGameOverRpcEvent += bgmManager.OnGameOver;
-        }
-
         if (!IsServer) return;
-
         // 🔗 イベント接続
-        scoreManager.OnScoreReachZero += HandleScoreZero;
-        phaseManager.OnAllPhaseEnded += HandleAllPhaseEnded;
+        OnAllPhaseEndedServerEvent.Register(HandleAllPhaseEnded);
+        OnScoreReachZeroServerEvent.Register(HandleScoreZeroServer);
     }
     public override void OnNetworkDespawn()
     {
         if (!IsServer) return;
         // 🔗 イベント切断
-        scoreManager.OnScoreReachZero -= HandleScoreZero;
-        phaseManager.OnAllPhaseEnded -= HandleAllPhaseEnded;
+        OnAllPhaseEndedServerEvent.Unregister(HandleAllPhaseEnded);
+        OnScoreReachZeroServerEvent.Unregister(HandleScoreZeroServer);
     }
 
     [OnInspectorButton("Start Game")]
-    public void StartGame()
+    public void StartGameServerOnly()
     {
         if (!IsServer) return;
-        if (CurrentGameState != GameState.Waiting) return;
+        if (CurrentGameState != GameState.Initializing) return;
 
         Debug.Log("Game Start");
         gameState.Value = GameState.Playing;
@@ -85,13 +79,13 @@ public class NGameManager : NetworkBehaviour
     }
 
     [OnInspectorButton("Reset")]
-    public void ResetGame()
+    public void ResetGameServerOnly()
     {
         if (!IsServer) return;
 
         Debug.Log("GAME RESET");
 
-        CurrentGameState = GameState.Waiting;
+        CurrentGameState = GameState.Initializing;
 
         phaseManager.ResetPhase();
         phaseManager.KillableHandle.KillAll();
@@ -100,27 +94,11 @@ public class NGameManager : NetworkBehaviour
 
     void HandleGameStateChanged(GameState oldState, GameState newState)
     {
-        switch (newState)
-        {
-            case GameState.Playing:
-                if (oldState == GameState.Waiting)
-                    OnGameStartRpcEvent?.Invoke();
-                break;
-            case GameState.Waiting:
-                OnGameResetRpcEvent?.Invoke();
-                break;
-            case GameState.GameClear:
-                if(oldState == GameState.Playing)
-                    OnGameClearRpcEvent?.Invoke();
-                break;
-            case GameState.GameOver:
-                if (oldState == GameState.Playing)
-                    OnGameOverRpcEvent?.Invoke();
-                break;
-        }
+        OnGameStateChangeRpcEvent.Invoke(newState);
     }
-    void HandleScoreZero()
+    void HandleScoreZeroServer()
     {
+        if (!IsServer) return;
         Debug.Log("GAME OVER");
         CurrentGameState = GameState.GameOver;
         phaseManager.KillableHandle.KillAll();
@@ -147,14 +125,14 @@ public class NGameManager : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost,InvokePermission = RpcInvokePermission.Server)]
     private void InvokeEventRpc()
     {
-        OnbulletComeRpcEvent?.Invoke();
+        OnbulletComeRpcEvent.Invoke();
     }
 
 
     [Rpc(SendTo.ClientsAndHost)]
     void OnSendResultRpc(PlayerResultData[] result)
     {
-        OnGameResultRpc?.Invoke(result);
+        RecieveResultRpcEvent.Invoke(result);
     }
 
     void SendResults()
@@ -175,10 +153,9 @@ public class NGameManager : NetworkBehaviour
         OnSendResultRpc(list.ToArray());
     }
 }
-
 public enum GameState
 {
-    Waiting,     // 開始前
+    Initializing,// 開始前
     Playing,     // プレイ中
     GameClear,   // クリア
     GameOver     // ゲームオーバー

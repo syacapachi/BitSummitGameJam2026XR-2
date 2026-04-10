@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AlertLightController : MonoBehaviour
 {
@@ -40,7 +40,6 @@ public class AlertLightController : MonoBehaviour
 
 
         int score = scoreManager.GetScore();
-        Debug.Log("Score: " + score);
 
         if (score <= threshold)
         {

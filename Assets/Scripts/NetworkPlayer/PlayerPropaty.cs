@@ -9,7 +9,7 @@ public class PlayerPropaty : MonoBehaviour
     [Header("Publish Event")]
     [SerializeField] PlayerJobEvent JobEvent;
     [Header("Subscribe Event")]
-    [SerializeField] VoidEventSO switchJobEvent;
+    [SerializeField] VoidEvent switchJobEvent;
     private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic = new Dictionary<PlayerJob, PlayerLayerSettings>();
 
 

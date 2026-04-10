@@ -12,13 +12,17 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
     [SerializeField] EnemyDeathReciver reciver;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform protectArea;
+    [Header("PublishEvent")]
+    [SerializeField] VoidEvent OnAllEnemyDeadRpcEvent;
     [Header("SubScribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
 
     private int remain;
-    public int Remain => remain;
-    private bool spawnFinished = false;
-    public bool SpawnFinished => spawnFinished;
+    public int RemainServerOnly => remain;
+    private bool isSpawnFinished = false;
+    private bool isAllDead = false;
+    public bool IsSpawnFinishedServerOnly => isSpawnFinished;
+    public bool IsAllDeadServerOnly => isAllDead;
     private readonly List<IEnemy> enemies = new List<IEnemy>();
     /*
         public void SpawnFromPhase(PhaseSO phase)
@@ -64,7 +68,7 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
         spawnEvents.Sort((a, b) => a.SpawnTime.CompareTo(b.SpawnTime));
 
         int index = 0;
-        spawnFinished = false; // 念のためリセット
+        isSpawnFinished = false; // 念のためリセット
 
 
         while (index < spawnEvents.Count)
@@ -84,7 +88,7 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
 
             yield return null;
         }
-        spawnFinished = true;
+        isSpawnFinished = true;
     }
     /*
     void SpawnEnemy(EnemySO enemyData, int[] usableIndex)
@@ -142,10 +146,19 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
     {
         if (!IsServer) return;
         remain--;
+        if(remain == 0 && isSpawnFinished)
+        {
+            isAllDead = true;
+            InvokeAllEnemyDeadRpc();
+        }
         UnregisterEnemy(enemy);
     }
-
-    public bool IsAllDead => (spawnFinished && remain <= 0);
+    [Rpc(SendTo.ClientsAndHost)]
+    private void InvokeAllEnemyDeadRpc()
+    {
+        OnAllEnemyDeadRpcEvent.Invoke();
+    }
+    
 
     private void RegisterEnemy(IEnemy enemy)
     {
@@ -168,7 +181,7 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
         }
         enemies.Clear();
         remain = 0;
-        spawnFinished = false;
+        isSpawnFinished = false;
     }
 
     public void ResetSpawner()
@@ -178,7 +191,7 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
         KillAll();
 
         remain = 0;
-        spawnFinished = false;
+        isSpawnFinished = false;
     }
 }
 [GenerateEvent(typeof(GameEventSOBase<>))]

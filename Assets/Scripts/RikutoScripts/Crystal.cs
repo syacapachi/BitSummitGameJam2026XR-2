@@ -17,7 +17,9 @@ public class Crystal : MonoBehaviour,IDamageReciever
     public AudioSource audioSource;
     public AudioClip breakSE;
     public AudioClip hitSE;
-
+    [Header("Subscribe event")]
+    [SerializeField] VoidEvent OnbulletComeRpcEvent;
+    [SerializeField] GameStateEvent GameStateChangeRpcEvent;
     public GameObject GameObject => crystal;
 
     public float CurrentHealth => throw new System.NotImplementedException();
@@ -43,21 +45,31 @@ public class Crystal : MonoBehaviour,IDamageReciever
         {
             Broken();
         }
-
-        nGameManager.OnGameOverRpcEvent += OnGameOverChanged;
-        nGameManager.OnbulletComeRpcEvent += OnBulletCome;
-        nGameManager.OnGameResetRpcEvent += OnGameReset;
+    }
+    void OnEnable()
+    {
+        OnbulletComeRpcEvent.Register(OnBulletCome);
+        GameStateChangeRpcEvent.Register(OnGameStateChanged);
     }
 
-    void OnDestroy()
+    void OnDisable()
     {
         if (nGameManager == null) return;
 
-        nGameManager.OnGameOverRpcEvent -= OnGameOverChanged;
-        nGameManager.OnbulletComeRpcEvent -= OnBulletCome;
-        nGameManager.OnGameResetRpcEvent -= OnGameReset;
+        OnbulletComeRpcEvent.Unregister(OnBulletCome);
+        GameStateChangeRpcEvent.Unregister(OnGameStateChanged);
     }
-
+    private void OnGameStateChanged(GameState state)
+    {
+        switch(state)
+        {
+            case GameState.GameOver:
+                OnGameStateChanged(state); break;
+            case GameState.Initializing:
+                OnGameReset(); break;
+            default: break;
+        }
+    }
     void OnGameOverChanged()
     {
         Broken();

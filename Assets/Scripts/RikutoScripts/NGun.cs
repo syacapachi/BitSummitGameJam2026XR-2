@@ -6,7 +6,7 @@ public class NGun : GunController
     [SerializeField] AmmoUI ammoUI;
     [SerializeField] PlayerStats playerStats;
     [Header("Subscribe Event")]
-    [SerializeField] VoidEventSO fireEvent;
+    [SerializeField] VoidEvent fireEvent;
     public int AmmoVal => syncedAmmo.Value;
 
     protected override ICountDownUI CountDownUI => ammoUI;

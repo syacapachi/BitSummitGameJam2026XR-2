@@ -18,7 +18,8 @@ public class ResultUI : MonoBehaviour
     [SerializeField] int fontSizeStats = 22;
     [SerializeField] int fontSizeKill = 20;
 
-
+    [Header("SubscribeEvent")]
+    [SerializeField] PlayerResultDataArrayEvent OnGameResultRpc;
     IEnumerator Start()
     {
         // GameManager待機
@@ -38,22 +39,15 @@ public class ResultUI : MonoBehaviour
     {
         panel.SetActive(false);
 
-        // イベント登録
-        nGameManager.OnGameResultRpc += OnGameFinished;
     }
     private void OnEnable()
     {
-        if(nGameManager != null)
-        {
-            nGameManager.OnGameResultRpc += OnGameFinished;
-        }
+        // イベント登録
+        OnGameResultRpc.Register(OnGameFinished);
     }
     private void OnDisable()
     {
-        if (nGameManager != null)
-        {
-            nGameManager.OnGameResultRpc -= OnGameFinished;
-        }
+        OnGameResultRpc.Unregister(OnGameFinished);
     }
 
     void OnGameFinished(PlayerResultData[] resultData)

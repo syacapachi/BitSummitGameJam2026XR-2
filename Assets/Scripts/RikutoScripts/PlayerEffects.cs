@@ -5,6 +5,8 @@ public class PlayerEffects : MonoBehaviour
 {
     [SerializeField] private GameObject[] damageBorders;
     [SerializeField] private float flashTime = 0.3f;
+    [Header("Subscribe event")]
+    [SerializeField] VoidEvent OnbulletComeRpcEvent;
     private CanvasGroup[] borderGroups;
 
     private void Awake()
@@ -21,9 +23,13 @@ public class PlayerEffects : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void OnEnable()
     {
-         ManagerLocator.Instance.AllGameManager.OnbulletComeRpcEvent += OnBulletComeChanged;
+         OnbulletComeRpcEvent.Register(OnBulletComeChanged);
+    }
+    private void OnDisable()
+    {
+        OnbulletComeRpcEvent.Unregister(OnBulletComeChanged);
     }
 
     private void OnBulletComeChanged()
