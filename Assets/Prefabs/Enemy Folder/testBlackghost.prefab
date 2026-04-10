@@ -539,6 +539,9 @@ MonoBehaviour:
   deathFxLifeTimeAll: 2
   deathVolumeAll: 1
   reachedProtectArea:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
 --- !u!82 &-4752889112109069225
 AudioSource:
@@ -665,12 +668,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  bulletPrefab: {fileID: 4022916156752048900, guid: bab683d334cc24943aa54f5fcfbc3e4b, type: 3}
+  bulletPrefab: {fileID: 4022916156752048900, guid: 902efd2e55e158b46b527cc46cd7cc68, type: 3}
   firePoint: {fileID: 1540549378645820342}
   weaponSettings: {fileID: 11400000, guid: 66323ddfe1ed57d4c8504254422d2057, type: 2}
   allShootSoundSource: {fileID: -4752889112109069225}
   allReloadSoundSource: {fileID: 0}
   syncedAmmo:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
 --- !u!1 &2789469182908074600

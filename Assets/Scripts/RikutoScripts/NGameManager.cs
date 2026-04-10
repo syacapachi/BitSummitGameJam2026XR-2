@@ -11,6 +11,8 @@ public class NGameManager : NetworkBehaviour
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] BGMManager bgmManager;
 
+    SkyColer skybox;
+
     public ScoreManager ScoreManager => scoreManager;
     public PhaseManager PhaseManager => phaseManager;
     public GameObject ProtectArea => protectArea;
