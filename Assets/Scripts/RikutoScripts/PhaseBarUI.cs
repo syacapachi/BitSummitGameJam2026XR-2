@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Unity.XR.CoreUtils.Collections;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class PhaseBarUI : MonoBehaviour
 {
@@ -10,10 +11,11 @@ public class PhaseBarUI : MonoBehaviour
     [SerializeField] Transform container;
 
     [Header("Size")]
-    [SerializeField] float maxWidth = 300f; // 最大フェーズの長さ
+    [SerializeField] RectTransform rect;
+    float MaxWidth => rect.rect.width; // 最大フェーズの長さ
 
-    private List<Image> phaseBars = new List<Image>();
-    private List<Image> separators = new List<Image>();
+    private readonly List<Image> phaseBars = new List<Image>();
+    private readonly List<Image> separators = new List<Image>();
 
 
     private PhaseManager phaseManager;
@@ -101,12 +103,10 @@ public class PhaseBarUI : MonoBehaviour
     void SetupBarLength()
     {
         float maxTime = 0f;
-
         // 最大時間取得
         foreach (var phase in phaseManager.Phases)
         {
-            if (phase.PhaseTime > maxTime)
-                maxTime = phase.PhaseTime;
+            maxTime += phase.PhaseTime;
         }
 
         // 各バーに反映
@@ -117,7 +117,7 @@ public class PhaseBarUI : MonoBehaviour
 
             RectTransform rt = phaseBars[i].rectTransform;
 
-            rt.sizeDelta = new Vector2(maxWidth * ratio, rt.sizeDelta.y);
+            rt.sizeDelta = new Vector2(MaxWidth * ratio, rt.sizeDelta.y);
         }
     }
 }

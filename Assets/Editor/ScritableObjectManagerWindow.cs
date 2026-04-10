@@ -1,9 +1,8 @@
 ﻿#if UNITY_EDITOR
 namespace Syacapachi.util
 {
-    using NUnit.Framework;
+    using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using UnityEditor;
     using UnityEngine;
@@ -14,7 +13,7 @@ namespace Syacapachi.util
         //ScriptableObjectのリスト
         readonly Dictionary<System.Type, List<ScriptableObject>> groupedEvents = new();
         //参照キャッシュ
-        readonly Dictionary<UnityEngine.Object, List<Object>> cache = new();
+        readonly Dictionary<UnityEngine.Object, List<UnityEngine.Object>> cache = new();
         //折りたたみ状態
         readonly Dictionary<System.Type, bool> typeFoldouts = new();
         readonly Dictionary<UnityEngine.Object, bool> contentFoldouts = new();
@@ -22,6 +21,8 @@ namespace Syacapachi.util
         readonly Dictionary<UnityEngine.Object, bool> isSearching = new();
         Vector2 scroll;
         string searchText = string.Empty;
+        bool isSearchClass = false;
+        bool isSearchName = true;
         //メニューにこの間数を呼ぶボタンを追加
         [MenuItem("Tools/Event Manager Advanced")]
         public static void Open()
@@ -50,12 +51,18 @@ namespace Syacapachi.util
 
             foreach (var group in groupedEvents)
             {
-                // ▼ フィルタ済みリスト
-                var filtered = group.Value.Where(e => MatchSearch(e.name)).ToList();
-
+                List<ScriptableObject> filtered = new();
+                if (isSearchClass && MatchSearch(group.Key.Name))
+                {
+                    filtered = group.Value;
+                }
+                else if (isSearchName)
+                {
+                    // ▼ フィルタ済みリスト
+                    filtered = group.Value.Where(e => MatchSearch(e.name)).ToList();   
+                }
                 if (filtered.Count == 0)
                     continue;
-
                 DrawGroup(group.Key, filtered);
             }
 
@@ -127,7 +134,7 @@ namespace Syacapachi.util
                 GUILayout.EndVertical();
             }
         }
-        void DrawRefrence(List<Object> refrenceObjects)
+        void DrawRefrence(List<UnityEngine.Object> refrenceObjects)
         {
 
         }
@@ -137,6 +144,8 @@ namespace Syacapachi.util
 
             GUILayout.Label("Search:", GUILayout.Width(50));
 
+            isSearchClass = GUILayout.Toggle(isSearchClass, "Include ClassName");
+            isSearchName = GUILayout.Toggle(isSearchName, "Include FileName");
             string newSearch = GUILayout.TextField(searchText);
 
             // 入力変化検知（Repaint最適化）
@@ -154,11 +163,16 @@ namespace Syacapachi.util
 
             GUILayout.EndHorizontal();
         }
+        /// <summary>
+        /// 検索テキストの文字が、引数の文字に含まれているか。 Spaceで分ける
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         bool MatchSearch(string name)
         {
             if (string.IsNullOrEmpty(searchText)) return true;
-
-            return name.IndexOf(searchText, System.StringComparison.OrdinalIgnoreCase) >= 0;
+            var tokens = searchText.Split(' ');
+            return tokens.All(t => name.Contains(t, StringComparison.OrdinalIgnoreCase));
         }
         void Refresh()
         {

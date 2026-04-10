@@ -5,20 +5,23 @@ namespace Syacapachi.util
     using System.Collections.Generic;
     using System.Linq;
     using UnityEditor;
-    using UnityEngine.PlayerLoop;
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
     using Object = UnityEngine.Object;
 
     public class AsyncReferenceFinder
     {
-        private Dictionary<UnityEngine.Object,List<UnityEngine.Object>> cache = new();
+        private readonly Dictionary<UnityEngine.Object,List<UnityEngine.Object>> cache = new();
         private UnityEngine.Object target;
         private string[] guids;
-        private int index;
-        private List<UnityEngine.Object> results = new();
+        private int guidsIndex;
+        private int objectIndex;
+        private UnityEngine.GameObject[] sceneObjects;
+        private readonly List<UnityEngine.Object> results = new();
 
         private Action<List<UnityEngine.Object>> onComplete;
 
-        public float Progress => (float)index / guids.Length;
+        public float Progress => (float)(guidsIndex + objectIndex) / (guids.Length + sceneObjects.Length);
         public bool IsRunning { get; private set; }
 
         public void StartSearch(Object target, Action<List<Object>> onComplete, bool forceRefresh = false)
@@ -37,23 +40,50 @@ namespace Syacapachi.util
             this.onComplete = onComplete;
             //アセットへのGUIDがもらえる(検索範囲は、プレハブと、ScriptableObjectとシーン)
             guids = AssetDatabase.FindAssets("t:Prefab t:ScriptableObject t:Scene");
-            
-            index = 0;
+            //現在のシーンからシーンないルートオブジェクトを取得
+            Scene currentScene = SceneManager.GetActiveScene();
+            sceneObjects = currentScene.GetRootGameObjects();
+            guidsIndex = 0;
+            objectIndex = 0;
             results.Clear();
 
             IsRunning = true;
             //Editorの更新と共に非同期的に実行
             EditorApplication.update += Update;
         }
+
         private void Update()
         {
             // 1フレームで処理する数（調整可能）
             int batch = 20;
+            int i = 0;
+            for(;i<batch && objectIndex < sceneObjects.Length; i++, objectIndex++)
+            {
+                var components = sceneObjects[objectIndex].GetComponentsInChildren<Component>(true);
 
-            for (int i = 0; i < batch && index < guids.Length; i++, index++)
+                foreach (var comp in components)
+                {
+                    if (comp == null) continue;
+
+                    var so = new UnityEditor.SerializedObject(comp);
+                    var prop = so.GetIterator();
+
+                    while (prop.NextVisible(true))
+                    {
+                        if (prop.propertyType == UnityEditor.SerializedPropertyType.ObjectReference &&
+                            prop.objectReferenceValue == target)
+                        {
+                            results.Add(comp.gameObject);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for (; i < batch && guidsIndex < guids.Length; i++, guidsIndex++)
             {
                 //GUIDをパスへ変換
-                string path = AssetDatabase.GUIDToAssetPath(guids[index]);
+                string path = AssetDatabase.GUIDToAssetPath(guids[guidsIndex]);
                 //パスから実体を得る
                 var obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
                 if (obj == null) continue;
@@ -80,7 +110,7 @@ namespace Syacapachi.util
             );
 
             // 完了
-            if (index >= guids.Length)
+            if (guidsIndex >= guids.Length)
             {
                 EditorUtility.ClearProgressBar();
                 EditorApplication.update -= Update;
