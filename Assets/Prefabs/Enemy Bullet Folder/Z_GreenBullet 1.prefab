@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1604111546383279813}
   - component: {fileID: 227772082233414436}
   - component: {fileID: 149389364656128860}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4845,7 +4845,7 @@ GameObject:
   - component: {fileID: 6117726931272768414}
   - component: {fileID: 5779545191722118857}
   - component: {fileID: 7182706902024317023}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AuraGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9709,7 +9709,7 @@ GameObject:
   - component: {fileID: 5158083865324121612}
   - component: {fileID: 2438645337064451966}
   - component: {fileID: -7458399323481798108}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Z_GreenBullet 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9726,8 +9726,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.6493373, y: 0.71897435, z: -1.9020596}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1604111546383279813}
   - {fileID: 1624592080042920462}
@@ -9937,4 +9937,3 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   lifeTime: 5
   rb: {fileID: 1573959926225779258}
-  enemySO: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
