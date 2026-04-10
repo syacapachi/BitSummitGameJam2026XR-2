@@ -29,8 +29,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5046866034117022431}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
@@ -4859,6 +4859,7 @@ MonoBehaviour:
   meshRenderer: {fileID: 5779545191722118857}
   lookableJob: 1
   hpCanvas: {fileID: 0}
+  jobChanged: {fileID: 0}
 --- !u!1 &4022916156752048900
 GameObject:
   m_ObjectHideFlags: 0
