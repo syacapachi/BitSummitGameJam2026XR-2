@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using UnityEngine;
 
 public sealed class WifiIPV4Info
 {
@@ -32,15 +33,20 @@ public sealed class WifiIPV4Info
         List<WifiIPV4Info> list = new List<WifiIPV4Info>();
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-        //→ Android専用実装
-        IPAddress ip = IPAddress.Parse(AndroidNetworkDiscoverSupport.GetAndroidIP());
-        IPAddress mask = IPAddress.Parse(AndroidNetworkDiscoverSupport.GetMask());
-        IPAddress broadcast = CalcBroadcast(ip, mask);
-        list.Add(new WifiIPV4Info(
-            ip,
-            mask,
-            broadcast
+        // Android では Java 側の LinkProperties / DhcpInfo から
+        // IPv4 情報を取得して BroadcastAddress を組み立てる。
+        if (AndroidIPv4NetworkInfo.TryGet(out var androidInfo))
+        {
+            list.Add(new WifiIPV4Info(
+                androidInfo.IPAddress,
+                androidInfo.SubnetMask,
+                androidInfo.BroadcastAddress
             ));
+        }
+        else
+        {
+            Debug.LogWarning("Android で IPv4 の BroadcastAddress を取得できませんでした。");
+        }
 #else
 
         // ネットワークインターフェース一覧から Wi-Fi の IPv4 アドレスを取得
