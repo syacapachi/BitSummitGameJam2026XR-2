@@ -456,7 +456,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       propertyPath: m_Name
-      value: testZombie
+      value: testshootZombie
       objectReference: {fileID: 0}
     - target: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       propertyPath: m_Layer
@@ -683,9 +683,6 @@ PrefabInstance:
       addedObject: {fileID: 7449354282299013003}
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2144525077374001555}
-    - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -1222087266907519768}
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
@@ -736,7 +733,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2838145174
+  GlobalObjectIdHash: 3592569655
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -812,7 +809,7 @@ MonoBehaviour:
   hpCanvas: {fileID: 1696206507279681442}
   hpImage: {fileID: 7028729913468153075}
   hpText: {fileID: 108117791681994854}
-  enemyType: 1
+  enemyJob: 0
 --- !u!114 &7449354282299013003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -830,22 +827,6 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
---- !u!114 &2144525077374001555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1124331973230472586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b308c020f10cb748885d3ca367dfda3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  meshRenderer: {fileID: 6916242476052379585}
-  lookableJob: 1
-  hpCanvas: {fileID: 1696206507279681442}
 --- !u!114 &-1222087266907519768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -861,14 +842,16 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   bulletPrefab: {fileID: 4022916156752048900, guid: 18254f0b07ec8924d89429cf843b0c78, type: 3}
   firePoint: {fileID: 1124331973230440958}
-  laserLine: {fileID: 7556053039345494618}
   weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
   allShootSoundSource: {fileID: 0}
   allReloadSoundSource: {fileID: 0}
   syncedAmmo:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
-  enemyType: 0
+  enemyJob: 0
 --- !u!120 &7556053039345494618
 LineRenderer:
   serializedVersion: 2
@@ -1027,6 +1010,11 @@ MonoBehaviour:
   deathSfxAll: {fileID: 8300000, guid: 28110385e59aa2a48aac031f73088dc4, type: 3}
   deathFxLifeTimeAll: 2
   deathVolumeAll: 1
+  reachedProtectArea:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
 --- !u!82 &-5080072534731083706
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1236,8 +1224,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!137 &6916242476052379585 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 6190876443068651048, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-  m_PrefabInstance: {fileID: 725366170435265001}
-  m_PrefabAsset: {fileID: 0}

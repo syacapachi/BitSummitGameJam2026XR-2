@@ -64,7 +64,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
         switch(state)
         {
             case GameState.GameOver:
-                OnGameStateChanged(state); break;
+                OnGameOverChanged(); break;
             case GameState.Initializing:
                 OnGameReset(); break;
             default: break;

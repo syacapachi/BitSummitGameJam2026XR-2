@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 5158083865324121612}
   - component: {fileID: 2438645337064451966}
   - component: {fileID: -6874603212770946765}
-  - component: {fileID: 6640881804800104708}
   m_Layer: 0
   m_Name: ZombieshootBullet
   m_TagString: Untagged
@@ -153,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2569614095
+  GlobalObjectIdHash: 2869944105
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -242,20 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  lifeTime: 5
+  rb: {fileID: 0}
   enemySO: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
---- !u!114 &6640881804800104708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4022916156752048900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b308c020f10cb748885d3ca367dfda3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  meshRenderer: {fileID: 1889808807597214699}
-  lookableJob: 1
-  hpCanvas: {fileID: 0}
+  bulletTargetJob: 0
