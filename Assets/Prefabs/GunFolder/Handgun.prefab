@@ -193,6 +193,10 @@ PrefabInstance:
       propertyPath: SyncScaleY
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5998375124044811000, guid: a78a725941312494b930d664f3b315d0, type: 3}
+      propertyPath: AuthorityMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
       propertyPath: m_MatchAttachRotation
       value: 0
@@ -200,6 +204,14 @@ PrefabInstance:
     - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
       propertyPath: m_InteractionLayers.m_Bits
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
+      propertyPath: m_FocusExited.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8101192311143894851, guid: a78a725941312494b930d664f3b315d0, type: 3}
+      propertyPath: m_FocusEntered.m_PersistentCalls.m_Calls.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9215887592849576065, guid: a78a725941312494b930d664f3b315d0, type: 3}
       propertyPath: ComponentControllers.Array.data[0].name
