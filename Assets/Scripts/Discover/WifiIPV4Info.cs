@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using UnityEngine;
 
 public sealed class WifiIPV4Info
 {
@@ -14,6 +15,12 @@ public sealed class WifiIPV4Info
     public IPAddress IPAddress { get; }
     public IPAddress SubnetMask { get; }
     public IPAddress BroadcastAddress { get; }
+    private WifiIPV4Info(IPAddress ip, IPAddress mask,IPAddress broadcastAddress)
+    {
+        IPAddress = ip;
+        SubnetMask = mask;
+        BroadcastAddress = broadcastAddress;
+    }
     private WifiIPV4Info(IPAddress ip, IPAddress mask)
     {
         IPAddress = ip;
@@ -33,7 +40,7 @@ public sealed class WifiIPV4Info
     /// interface. The list is empty if no suitable Wi-Fi interfaces are found.</returns>
     public static IReadOnlyList<WifiIPV4Info> Create(PrivateIPv4Range type = PrivateIPv4Range.Any)
     {
-        List<WifiIPV4Info> list = new List<WifiIPV4Info>();
+        List<WifiIPV4Info> list = new();
 
 #if UNITY_ANDROID && !UNITY_EDITOR
         // Android では Java 側の LinkProperties / DhcpInfo から
@@ -45,8 +52,7 @@ public sealed class WifiIPV4Info
                 $"IP={androidInfo.IPAddress}, Mask={androidInfo.SubnetMask}, Broadcast={androidInfo.BroadcastAddress}, Prefix={androidInfo.PrefixLength}");
             list.Add(new WifiIPV4Info(
                 androidInfo.IPAddress,
-                androidInfo.SubnetMask,
-                androidInfo.BroadcastAddress
+                androidInfo.SubnetMask
             ));
         }
         else
