@@ -7,7 +7,15 @@ public class StartButton : NetworkBehaviour
     [SerializeField] GameObject resetUI;
 
     [SerializeField] GameStateEvent gameStateEvent;
-
+    private void Start()
+    {
+        startUI.SetActive(false);
+        resetUI.SetActive(false);
+    }
+    public override void OnNetworkSpawn()
+    {
+        startUI.SetActive(true);
+    }
     private void OnEnable()
     {
         gameStateEvent.Register(OnGameStateChange);
@@ -50,15 +58,6 @@ public class StartButton : NetworkBehaviour
     public void SelectResetGame()
     {
         ResetGameRpc();
-    }
-    
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!IsServer) return;
-        if (!other.CompareTag("Bullet")) return;
-
-        StartGameRpc();
     }
 
     [Rpc(SendTo.Server)]

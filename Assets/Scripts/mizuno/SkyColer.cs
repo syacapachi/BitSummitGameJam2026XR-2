@@ -6,6 +6,7 @@ public class SkyColer : MonoBehaviour
     [SerializeField]Camera m_camera;
     [SerializeField]Color defaultcolor;
     [SerializeField]Color backgroundcolor;
+    [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
     private void OnEnable()
     {

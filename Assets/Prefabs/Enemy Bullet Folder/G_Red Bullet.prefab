@@ -4844,7 +4844,6 @@ GameObject:
   - component: {fileID: 5923859176242764795}
   - component: {fileID: 5378760645762528686}
   - component: {fileID: 5402969836751290967}
-  - component: {fileID: 6368767328415026499}
   m_Layer: 8
   m_Name: AuraGlow
   m_TagString: Untagged
@@ -9676,23 +9675,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &6368767328415026499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5745972224654893556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b308c020f10cb748885d3ca367dfda3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  meshRenderer: {fileID: 5402969836751290967}
-  lookableJob: 1
-  hpCanvas: {fileID: 0}
-  jobChanged: {fileID: 0}
 --- !u!1 &6912148272411766303
 GameObject:
   m_ObjectHideFlags: 0

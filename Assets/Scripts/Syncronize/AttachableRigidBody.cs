@@ -8,12 +8,23 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 public class AttachableRigidBody : AttachableBehaviour
 {
     [SerializeField] Rigidbody body;
-    public void Focus()
+    private XRGrabInteractable xRGrabInteractable;
+    protected override void Awake()
+    {
+        base.Awake();
+        if (TryGetComponent<XRGrabInteractable>(out var interacter))
+        {
+            xRGrabInteractable = interacter;
+            interacter.selectEntered.AddListener(args => OnSelect());
+            interacter.selectExited.AddListener(args => OnSelectExit());
+        }
+    }
+    public void OnSelect()
     {
         NetworkObject owner = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.NetworkObject;
         AttachRpc(owner);
     }
-    public void UnFocus()
+    public void OnSelectExit()
     {
         DetachRpc();
     }
@@ -25,6 +36,7 @@ public class AttachableRigidBody : AttachableBehaviour
             if (netObject.TryGetComponent<NetworkPlayerRoot>(out var root))
             {
                 Attach(root.itemControll.Node);
+                //NetworkObject.ChangeOwnership(netObject.OwnerClientId);
                 this.transform.localPosition = Vector3.zero;
             }
             else
@@ -42,6 +54,7 @@ public class AttachableRigidBody : AttachableBehaviour
     {
         Vector3 pos = transform.position;
         Detach();
+        //NetworkObject.ChangeOwnership(0);
         transform.position = pos;
     }
     protected override void OnAttachStateChanged(AttachState attachState, AttachableNode attachableNode)
@@ -63,11 +76,9 @@ public class AttachableRigidBody : AttachableBehaviour
     }
     private void Reset()
     {
-        var interacter = GetComponent<XRGrabInteractable>();
-        if (interacter != null)
+        if (TryGetComponent<XRGrabInteractable>(out var interacter))
         {
-            interacter.focusEntered.AddListener(args => Focus());
-            interacter.focusExited.AddListener(args => UnFocus());
+            xRGrabInteractable = interacter;
         }
     }
 }

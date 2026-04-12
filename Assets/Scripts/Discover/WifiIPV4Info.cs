@@ -15,11 +15,21 @@ public sealed class WifiIPV4Info
     public IPAddress IPAddress { get; }
     public IPAddress SubnetMask { get; }
     public IPAddress BroadcastAddress { get; }
-    private WifiIPV4Info(IPAddress ip, IPAddress mask, IPAddress broadcast)
+    private WifiIPV4Info(IPAddress ip, IPAddress mask,IPAddress broadcastAddress)
     {
         IPAddress = ip;
         SubnetMask = mask;
-        BroadcastAddress = broadcast;
+        BroadcastAddress = broadcastAddress;
+    }
+    private WifiIPV4Info(IPAddress ip, IPAddress mask)
+    {
+        IPAddress = ip;
+        SubnetMask = mask;
+        BroadcastAddress = CalcBroadcast(ip,mask);
+    }
+    public override string ToString()
+    {
+        return $"IPAddress = {IPAddress}, SubNetMask = {SubnetMask}, BroadCastAddress = {BroadcastAddress}";
     }
     /// <summary>
     /// Retrieves a list of IPv4 address information for all active Wi-Fi network interfaces on the local machine.
@@ -30,17 +40,19 @@ public sealed class WifiIPV4Info
     /// interface. The list is empty if no suitable Wi-Fi interfaces are found.</returns>
     public static IReadOnlyList<WifiIPV4Info> Create(PrivateIPv4Range type = PrivateIPv4Range.Any)
     {
-        List<WifiIPV4Info> list = new List<WifiIPV4Info>();
+        List<WifiIPV4Info> list = new();
 
 #if UNITY_ANDROID && !UNITY_EDITOR
         // Android では Java 側の LinkProperties / DhcpInfo から
         // IPv4 情報を取得して BroadcastAddress を組み立てる。
         if (AndroidIPv4NetworkInfo.TryGet(out var androidInfo))
         {
+            Debug.Log(
+                $"WifiIPV4Info: Android network info resolved. " +
+                $"IP={androidInfo.IPAddress}, Mask={androidInfo.SubnetMask}, Broadcast={androidInfo.BroadcastAddress}, Prefix={androidInfo.PrefixLength}");
             list.Add(new WifiIPV4Info(
                 androidInfo.IPAddress,
-                androidInfo.SubnetMask,
-                androidInfo.BroadcastAddress
+                androidInfo.SubnetMask
             ));
         }
         else
@@ -66,12 +78,9 @@ public sealed class WifiIPV4Info
                 if (ua.Address.AddressFamily != AddressFamily.InterNetwork)
                     continue;
 
-                IPAddress mask = ua.IPv4Mask;
-                IPAddress broadcast = CalcBroadcast(ua.Address, mask);
                 list.Add(new WifiIPV4Info(
                         ua.Address,
-                        mask,
-                        broadcast
+                        ua.IPv4Mask
                     )
                 );
 
