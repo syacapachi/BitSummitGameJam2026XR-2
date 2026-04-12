@@ -57,7 +57,7 @@ public sealed class WifiIPV4Info
         }
         else
         {
-            Debug.LogWarning("Android で IPv4 の BroadcastAddress を取得できませんでした。");
+            Debug.LogWarning("[WifiIPV4Info.Create()]Android IPv4 Address not Found");
         }
 #else
 
