@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
-
-[RequireComponent(typeof(AudioSource))]
 public class NGunAudioObserver : NetworkBehaviour, IShotSound, IReloadSound
 {
     [SerializeField] private AudioClip shotClipAll;
@@ -10,23 +8,16 @@ public class NGunAudioObserver : NetworkBehaviour, IShotSound, IReloadSound
     [SerializeField, Range(0f, 1f)] private float shotVolumeAll = 1f;
     [SerializeField, Range(0f, 1f)] private float reloadVolumeAll = 1f;
 
-    private AudioSource audioSourceAll;
+    [Header("Publish Event")]
+    [SerializeField] GameEffectEvent gameEffectEvent; 
 
-    private void Awake()
-    {
-        audioSourceAll = GetComponent<AudioSource>();
-
-        audioSourceAll.playOnAwake = false;
-        audioSourceAll.loop = false;
-        audioSourceAll.spatialBlend = 1f;
-    }
 
     public void PlayShotSound()
     {
-        audioSourceAll?.PlayOneShot(shotClipAll, shotVolumeAll);
+        gameEffectEvent.Invoke(new GameEffect(shotClipAll, transform.position, volume: shotVolumeAll));
     }
     public void PlayReloadSound()
     {
-        audioSourceAll?.PlayOneShot(reloadClipAll, reloadVolumeAll);
+        gameEffectEvent.Invoke(new GameEffect(reloadClipAll, transform.position, volume: reloadVolumeAll));
     }
 }

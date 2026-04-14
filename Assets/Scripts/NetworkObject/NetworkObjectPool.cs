@@ -131,13 +131,13 @@ namespace Syacapachi.util
 
             void ActionOnRelease(NetworkObject networkObject)
             {
-                networkObject.gameObject.SetActive(false);
                 if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb))
                 {
                     if(rb.isKinematic) return; 
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
                 }
+                networkObject.gameObject.SetActive(false);
             }
 
             void ActionOnDestroy(NetworkObject networkObject)
@@ -148,7 +148,12 @@ namespace Syacapachi.util
             m_Prefabs.Add(prefab);
 
             // Create the pool
-            m_PooledObjects[prefab] = new ObjectPool<NetworkObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
+            m_PooledObjects[prefab] = new ObjectPool<NetworkObject>(
+                CreateFunc,
+                actionOnGet: ActionOnGet, 
+                actionOnRelease: ActionOnRelease,
+                actionOnDestroy: ActionOnDestroy,
+                defaultCapacity: prewarmCount);
 
             // Populate the pool
             var prewarmNetworkObjects = new List<NetworkObject>();

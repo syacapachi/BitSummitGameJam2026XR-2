@@ -7,12 +7,6 @@ public class NGun : GunController
     [SerializeField] PlayerStats playerStats;
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent fireEvent;
-    public int AmmoVal => syncedAmmo.Value;
-
-    protected override ICountDownUI CountDownUI => ammoUI;
-    protected override IProgressUI ProgressUI => ammoUI;
-    protected override IShotSound ShotSound => audioObserver;
-    protected override IReloadSound ReloadSound => audioObserver;
 
     public override void OnNetworkSpawn()
     {
@@ -120,5 +114,21 @@ public class NGun : GunController
     {
         base.OnShootServer();
         playerStats.AddShot();
+    }
+    public override void UpdateProgress(float progress)
+    {
+        ammoUI.UpdateProgress(progress);
+    }
+    public override void UpdateCount(int remainVal, int maxVal)
+    {
+        ammoUI.UpdateCount(remainVal, maxVal);
+    }
+    public override void PlayReloadSound()
+    {
+        audioObserver.PlayReloadSound();
+    }
+    public override void PlayShotSound()
+    {
+        audioObserver.PlayShotSound();
     }
 }

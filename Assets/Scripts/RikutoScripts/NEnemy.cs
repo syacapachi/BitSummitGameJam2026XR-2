@@ -16,8 +16,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     [SerializeField] private Canvas hpCanvas;
     [SerializeField] private Image hpImage; // Filled Image
     [SerializeField] private TextMeshProUGUI hpText;
-
-    private IEnemyBrokenReciever reciver;
+    [Header("Publish Event")]
+    [SerializeField] EnemyKilledEvent enemyKilled;
 
     private Transform targetPlayer;
     public GameObject GameObject => this.gameObject;
@@ -28,11 +28,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public float MaxHealth => enemySO.Hp;
     public PlayerJob enemyJob;
     private ulong lastAttackerId;
-
-    public void Init(IEnemyBrokenReciever s)
-    {
-        reciver = s;
-    }
 
     public override void OnNetworkSpawn()
     {
@@ -120,7 +115,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             }
         }
 
-        reciver.OnEnemyKilled(this);
+        enemyKilled.Invoke(new EnemyKilled() {KilledEnemy = this,positon = transform.position});
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

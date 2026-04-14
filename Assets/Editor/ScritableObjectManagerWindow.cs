@@ -9,7 +9,7 @@ namespace Syacapachi.util
 
     public class ScritableObjectManagerWindow : EditorWindow
     {
-        AsyncReferenceFinder finder = new AsyncReferenceFinder();
+        
         //ScriptableObjectのリスト
         readonly Dictionary<System.Type, List<ScriptableObject>> groupedEvents = new();
         //参照キャッシュ
@@ -38,10 +38,6 @@ namespace Syacapachi.util
         //エディターの処理
         void OnGUI()
         {
-            if (finder != null && finder.IsRunning)
-            {
-                Repaint(); // 進捗更新
-            }
             if (GUILayout.Button("Refresh"))
                 Refresh();
 
@@ -227,15 +223,16 @@ namespace Syacapachi.util
                 return;
 
             isSearching[target] = true;
-
+            AsyncReferenceFinder finder = new();
             finder.StartSearch(target, (result) =>
             {
                 cache[target] = result;
                 isSearching[target] = false;
+                AsyncRefrenceFinderGlobal.Unresister(finder);
                 Repaint();
             });
+            AsyncRefrenceFinderGlobal.Resister(finder);
         }
-
     }
 }
 #endif

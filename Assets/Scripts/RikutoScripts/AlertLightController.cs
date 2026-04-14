@@ -12,6 +12,9 @@ public class AlertLightController : MonoBehaviour
     [SerializeField] float interval = 3f;
     [SerializeField] AudioClip buzzerClip;
 
+    [Header("Publish Event")]
+    [SerializeField] GameEffectEvent gameEffectEvent;
+
     bool isActive = false;
 
     ScoreManager scoreManager;
@@ -57,9 +60,7 @@ public class AlertLightController : MonoBehaviour
 
             if (timer >= interval)
             {
-                ManagerLocator.Instance
-                    .GameAudioManager
-                    .PlayLoopSE(buzzerClip);
+                gameEffectEvent.Invoke(new GameEffect(buzzerClip, alertObject.transform.position));
 
                 timer = 0f;
             }

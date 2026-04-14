@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using Syacapachi.util;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GunController : NetworkBehaviour
+public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotSound, IReloadSound
 {
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform firePoint;
@@ -18,14 +19,6 @@ public class GunController : NetworkBehaviour
     public int CurrentAmmo => syncedAmmo.Value; // AmmoUIが参照できるように
     public int MaxAmmo => weaponSettings.maxAmmo; // AmmoUIが参照できるように
     public float ReloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
-    /// <summary>
-    /// virtualなUIフィールド。GunControllerを継承したクラスで、CountDownUIやProgressUIを実装したクラスを受け入れるためのもの。
-    /// </summary>
-    protected virtual ICountDownUI CountDownUI => null; // CountDownUIを実装したものを受け入れるフィールド
-    protected virtual IProgressUI ProgressUI => null; // IProgressUIを実装したものを受け入れるフィールド
-
-    protected virtual IShotSound ShotSound => null; // IShotSoundを実装したものを受け入れるフィールド
-    protected virtual IReloadSound ReloadSound => null; // IReloadSoundを実装したものを受け入れるフィールド
 
     private static readonly WaitForSeconds wait01 = new WaitForSeconds(0.1f);
     private float nextFire;
@@ -87,7 +80,7 @@ public class GunController : NetworkBehaviour
 
         // ① 弾を生成
         //GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        NetworkObject obj = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(bulletPrefab,firePoint.position,firePoint.rotation);
+        NetworkObject obj = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab,firePoint.position,firePoint.rotation);
 
         // ② 弾のLayerをプレイヤーのJobに合わせる
         GameObject go = obj.gameObject;
@@ -109,19 +102,19 @@ public class GunController : NetworkBehaviour
             {
                 allReloadSoundSource.Play();
             }
-            ReloadSound?.PlayReloadSound();
+            PlayReloadSound();
         }
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         for (float t = 0; t < ReloadTime; t += 0.1f)
         {
-            ProgressUI?.UpdateProgress(t / ReloadTime);
+            UpdateProgress(t / ReloadTime);
             yield return wait01;
         }
-        ProgressUI?.UpdateProgress(0);
+        UpdateProgress(0);
 
         isReloading = false;
-        CountDownUI?.UpdateCount(weaponSettings.maxAmmo, weaponSettings.maxAmmo);
+        UpdateCount(weaponSettings.maxAmmo, weaponSettings.maxAmmo);
 
         if (IsServer)
         {
@@ -138,14 +131,14 @@ public class GunController : NetworkBehaviour
     {
         if(isReloading) return;
         if(oldVal < newVal) return;
-        CountDownUI?.UpdateCount(newVal, MaxAmmo);
+        UpdateCount(newVal, MaxAmmo);
         if (IsClient)
         {
             if (allReloadSoundSource != null)
             {
                 allShootSoundSource.Play();
             }
-            ShotSound?.PlayShotSound();
+            PlayShotSound();
         }
         
         if (newVal <= 0)
@@ -153,4 +146,12 @@ public class GunController : NetworkBehaviour
             StartCoroutine(Reload());
         }
     }
+
+    public virtual void UpdateCount(int remainVal, int maxVal){}
+
+    public virtual void UpdateProgress(float progress){}
+
+    public virtual void PlayShotSound(){}
+
+    public virtual void PlayReloadSound(){} 
 }
