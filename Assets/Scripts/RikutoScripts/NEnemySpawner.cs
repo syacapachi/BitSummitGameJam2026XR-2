@@ -9,7 +9,7 @@ using UnityEngine;
 public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IKillable
 {
     [SerializeField] NetworkObjectPool networkPool;
-    [SerializeField] EnemyDeathReciver reciver;
+
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform protectArea;
     [Header("PublishEvent")]
@@ -136,7 +136,6 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
                rot);
 
         var enemy = networkObject.GetComponent<IEnemy>();
-        enemy.Init(reciver);
         RegisterEnemy(enemy);
         networkObject.Spawn();
         
@@ -198,4 +197,5 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
 public class EnemyKilled 
 {
     public IEnemy KilledEnemy;
+    public Vector3 positon;
 }

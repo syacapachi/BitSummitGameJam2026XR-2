@@ -8,8 +8,12 @@ public class NPhaseAudioObserver : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float phaseVolumeAll = 1f;
     [SerializeField, Range(0f, 1f)] private float clearVolumeAll = 1f;
 
+    [Header("Subscribe Event")]
     [SerializeField] IntEvent OnPhaseChangeEvent;
     [SerializeField] PlayerResultDataArrayEvent OnGameResultRpc;
+
+    [Header("Publish Event")]
+    [SerializeField] GameEffectEvent gameEffectEvent;
 
     private void OnEnable()
     {
@@ -27,12 +31,12 @@ public class NPhaseAudioObserver : MonoBehaviour
     {
         if (newValue >= 0)
         {
-            ManagerLocator.Instance.GameAudioManager?.PlayUI(phaseChangeClipAll, phaseVolumeAll);
+            gameEffectEvent.Invoke(new GameEffect(phaseChangeClipAll,transform.position, phaseVolumeAll));
         }
     }
 
     private void OnGameFinished(PlayerResultData[] data)
     {
-        ManagerLocator.Instance.GameAudioManager?.PlayUI(gameClearClipAll, clearVolumeAll);
+        gameEffectEvent.Invoke(new GameEffect(gameClearClipAll, transform.position, clearVolumeAll));
     }
 }

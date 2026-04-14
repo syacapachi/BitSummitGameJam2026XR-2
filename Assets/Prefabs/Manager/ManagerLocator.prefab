@@ -112,7 +112,7 @@ MonoBehaviour:
   <AllGameManager>k__BackingField: {fileID: 6898520360399316063}
   <AllNetworkObjectPool>k__BackingField: {fileID: 4084111059737820316}
   <LocalObjectPool>k__BackingField: {fileID: 4446207769095747314}
-  <GameAudioManager>k__BackingField: {fileID: 6731689958154144565}
+  <EffectAudioManager>k__BackingField: {fileID: 6731689958154144565}
   <RankingManager>k__BackingField: {fileID: 2563868915211156367}
   <TutorialManager>k__BackingField: {fileID: 8343285116251111980}
 --- !u!114 &4316947998156742355
@@ -262,6 +262,8 @@ MonoBehaviour:
   pooledPrefabsList:
   - Prefab: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
     PrewarmCount: 5
+  - Prefab: {fileID: 8369679245763667583, guid: 48336ae6e56cca440ae3e0237126786e, type: 3}
+    PrewarmCount: 10
 --- !u!1 &2827320418798051780
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,7 +632,7 @@ GameObject:
   - component: {fileID: 4219804600817405800}
   - component: {fileID: 6731689958154144565}
   - component: {fileID: 194056741851315779}
-  - component: {fileID: 8908327882870161611}
+  - component: {fileID: 2769098139247376968}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -665,8 +667,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6941f1a6cf7c874baa43d8cdf5f70d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiSourceAll: {fileID: 8908327882870161611}
+  audioSourcePrefab: {fileID: 8369679245763667583, guid: 48336ae6e56cca440ae3e0237126786e, type: 3}
+  localObjectPool: {fileID: 4446207769095747314}
   masterSfxVolumeAll: 1
+  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!114 &194056741851315779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -679,13 +683,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ef3720fff8783f408504688fb05d091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmSource: {fileID: 8908327882870161611}
+  bgmSource: {fileID: 2769098139247376968}
   waitingBGM: {fileID: 0}
   playingBGM: {fileID: 8300000, guid: fe3de2f1b36a2c44ab6bc1dc901d97a4, type: 3}
   clearBGM: {fileID: 8300000, guid: a1762ede81c1dd843856850bd746c8ea, type: 3}
   gameOverBGM: {fileID: 8300000, guid: f9071797b02d0914abf12510ba5b3899, type: 3}
   OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
---- !u!82 &8908327882870161611
+--- !u!82 &2769098139247376968
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -791,6 +795,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 4908882465109089120}
     m_Modifications:
     - target: {fileID: 1624047670963601631, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: reciver
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624047670963601631, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: EnemyKilled
       value: 
       objectReference: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
@@ -802,6 +810,10 @@ PrefabInstance:
       propertyPath: OnAllEnemyDeadRpcEvent
       value: 
       objectReference: {fileID: 11400000, guid: d48233639feb72e4ba705392d35f3c40, type: 2}
+    - target: {fileID: 1624047670963601631, guid: 742129f94e3254d4983970650df3d114, type: 3}
+      propertyPath: spawnPoints.Array.size
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 2422005359530234837, guid: 742129f94e3254d4983970650df3d114, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -887,7 +899,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3725803282486785523, guid: 742129f94e3254d4983970650df3d114, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 742129f94e3254d4983970650df3d114, type: 3}

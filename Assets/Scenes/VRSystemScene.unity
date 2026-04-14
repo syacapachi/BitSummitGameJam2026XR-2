@@ -367,108 +367,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10527855}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &23884061 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8974977137299023905, guid: 07f51410c6523454580003730b31cfff, type: 3}
-  m_PrefabInstance: {fileID: 4265914712845988598}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &23884070
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 23884061}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: f9071797b02d0914abf12510ba5b3899, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &30932655
 GameObject:
   m_ObjectHideFlags: 0
@@ -11291,6 +11189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reachClipAll: {fileID: 8300000, guid: 50b01190c1d315d40947b882bd06d093, type: 3}
   reachVolumeAll: 1
+  gameEffectEvent: {fileID: 0}
 --- !u!1 &1012584117
 GameObject:
   m_ObjectHideFlags: 0
@@ -14083,6 +13982,7 @@ MonoBehaviour:
   rotateSpeed: 100
   interval: 3
   buzzerClip: {fileID: 8300000, guid: b09fc9b896fbdae44bd5ff26fac6c32d, type: 3}
+  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!4 &1086156053
 Transform:
   m_ObjectHideFlags: 0
@@ -23182,6 +23082,7 @@ MonoBehaviour:
   fontSizeHeader: 28
   fontSizeStats: 22
   fontSizeKill: 20
+  gameStateEvent: {fileID: 0}
   OnGameResultRpc: {fileID: 11400000, guid: b1254d9a30b83b44ca1aa9f037d0a8fc, type: 2}
 --- !u!114 &1898387912
 MonoBehaviour:
@@ -26338,10 +26239,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1552106022}
     - target: {fileID: 819919111548997275, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: spawnPoints.Array.size
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 819919111548997275, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'spawnPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 257093670}
@@ -26413,10 +26310,6 @@ PrefabInstance:
       propertyPath: 'spawnPoints.Array.data[17]'
       value: 
       objectReference: {fileID: 1652795296}
-    - target: {fileID: 819919111548997275, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'spawnPoints.Array.data[18]'
-      value: 
-      objectReference: {fileID: 1652795296}
     - target: {fileID: 1615890855193563394, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_Name
       value: ManagerLocator
@@ -26473,17 +26366,10 @@ PrefabInstance:
       propertyPath: localRoot
       value: 
       objectReference: {fileID: 870850326}
-    - target: {fileID: 8974977137299023905, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8974977137299023905, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 23884070}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07f51410c6523454580003730b31cfff, type: 3}
 --- !u!1001 &4870831369144877344
 PrefabInstance:

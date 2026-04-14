@@ -19,7 +19,10 @@ public class ResultUI : MonoBehaviour
     [SerializeField] int fontSizeKill = 20;
 
     [Header("SubscribeEvent")]
+    [SerializeField] GameStateEvent gameStateEvent;
     [SerializeField] PlayerResultDataArrayEvent OnGameResultRpc;
+
+    private bool isGameOver = false;
     IEnumerator Start()
     {
         // GameManager待機
@@ -44,10 +47,12 @@ public class ResultUI : MonoBehaviour
     {
         // イベント登録
         OnGameResultRpc.Register(OnGameFinished);
+        gameStateEvent.Register(OnGameStateChanged);
     }
     private void OnDisable()
     {
         OnGameResultRpc.Unregister(OnGameFinished);
+        gameStateEvent.Unregister(OnGameStateChanged);
     }
 
     void OnGameFinished(PlayerResultData[] resultData)
@@ -55,15 +60,25 @@ public class ResultUI : MonoBehaviour
         ShowResult();
         ShowDetail(resultData);
     }
+    private void OnGameStateChanged(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.Initializing:
+                InitializeUI(); break;
+            case GameState.GameClear:
+                isGameOver = false; break;
+            case GameState.GameOver:
+                isGameOver = true; break;
 
+        }
+    }
     void ShowResult()
     {
         panel.SetActive(true);
 
         int score = nGameManager.ScoreManager.GetScore();
         int bonus = nGameManager.ScoreManager.totalBonus.Value;
-
-        bool isGameOver = nGameManager.IsGameOver;
 
         // ⭐タイトル分岐
         if (isGameOver)
@@ -86,7 +101,6 @@ public class ResultUI : MonoBehaviour
     {
         panel.SetActive(true);
 
-        bool isGameOver = nGameManager.IsGameOver;
         titleText.text = isGameOver ? "GAME OVER!" : "GAME CLEAR!";
 
         // （必要なら）前回削除

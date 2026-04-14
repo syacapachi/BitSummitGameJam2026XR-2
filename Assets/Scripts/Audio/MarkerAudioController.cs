@@ -9,29 +9,18 @@ public class MarkerAudioController : NetworkBehaviour
     [SerializeField] private AudioClip markerPlacedClipAll;
     [SerializeField, Range(0f, 1f)] private float markerPlacedVolumeAll = 1f;
     [SerializeField] private bool playAsUiAll = false;
-
+    [Header("Publish Event")]
+    [SerializeField] GameEffectEvent gameEffectEvent;
     [Rpc(SendTo.ClientsAndHost)]
     public void OnMarkerSondPlayRpc(Vector3 hitPoint)
     {
-        var audioManager = ManagerLocator.Instance.GameAudioManager;
-        if (audioManager != null)
+        if (playAsUiAll)
         {
-            if (playAsUiAll)
-            {
-                audioManager.PlayUI(markerPlacedClipAll, markerPlacedVolumeAll);
-            }
-            else
-            {
-                audioManager.PlayWorld(markerPlacedClipAll, transform.position, markerPlacedVolumeAll);
-            }
+            gameEffectEvent.Invoke(new GameEffect(markerPlacedClipAll, transform.position, volume:markerPlacedVolumeAll));
         }
         else
         {
-            Vector3 playPositionAll = playAsUiAll
-                ? (Camera.main != null ? Camera.main.transform.position : transform.position)
-                : hitPoint;
-
-            AudioSource.PlayClipAtPoint(markerPlacedClipAll, playPositionAll, markerPlacedVolumeAll);
+            Debug.LogWarning($"[{nameof(MarkerAudioController)}]playAsUiAll is false");
         }
     }
 }

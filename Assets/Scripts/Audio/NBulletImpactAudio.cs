@@ -7,6 +7,8 @@ public class NBulletImpactAudio : MonoBehaviour
 
     [SerializeField, Range(0f, 1f)] private float hitEnemyVolumeAll = 1f;
     [SerializeField, Range(0f, 1f)] private float hitWallVolumeAll = 0.8f;
+    [Header("Publish Event")]
+    [SerializeField] GameEffectEvent gameEffectEvent;
 
     private bool alreadyPlayed = false;
 
@@ -36,11 +38,11 @@ public class NBulletImpactAudio : MonoBehaviour
 
         if (hitEnemy)
         {
-            ManagerLocator.Instance.GameAudioManager?.PlayWorld(hitEnemyClipAll, pointAll, hitEnemyVolumeAll);
+            gameEffectEvent.Invoke(new GameEffect(hitEnemyClipAll, pointAll, hitEnemyVolumeAll));
         }
         else
         {
-            ManagerLocator.Instance.GameAudioManager?.PlayWorld(hitWallClipAll, pointAll, hitWallVolumeAll);
+            gameEffectEvent.Invoke(new GameEffect(hitWallClipAll, pointAll, hitWallVolumeAll));
         }
     }
 }

@@ -21,7 +21,7 @@ public class TutorialManager : MonoBehaviour, ITutorialStart
     {
         KilledEvent.Unregister(t => OnEnemyKilled(t.KilledEnemy));
     }
-    public void OnEnemyKilled(IEnemy enemy)
+    private void OnEnemyKilled(IEnemy enemy)
     {
         Debug.Log("EnemyKilled!");
     }

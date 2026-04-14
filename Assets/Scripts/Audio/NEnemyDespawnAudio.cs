@@ -5,6 +5,8 @@ public class NEnemyDespawnAudio : NetworkBehaviour
 {
     [SerializeField] private AudioClip deathClipAll;
     [SerializeField, Range(0f, 1f)] private float deathVolumeAll = 1f;
+    [Header("Publish Event")]
+    [SerializeField] GameEffectEvent gameEffectEvent;
 
     private bool reachedGoal = false;
 
@@ -22,6 +24,6 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     {
         if (reachedGoal) return;
 
-        ManagerLocator.Instance.GameAudioManager?.PlayWorld(deathClipAll, transform.position, deathVolumeAll);
+        gameEffectEvent.Invoke(new GameEffect(deathClipAll, transform.position, deathVolumeAll));
     }
 }
