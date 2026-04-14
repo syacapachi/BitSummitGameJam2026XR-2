@@ -4468,6 +4468,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 83a06a04cf9a79d4ba256c30bb7648b8, type: 2}
+    - target: {fileID: 2245485218698549867, guid: 4fef004293398ea4cbc979565d177056, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3191382666682681032, guid: 4fef004293398ea4cbc979565d177056, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -4490,15 +4494,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3877455954479088210, guid: 4fef004293398ea4cbc979565d177056, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.608
+      value: 1.353
       objectReference: {fileID: 0}
     - target: {fileID: 3877455954479088210, guid: 4fef004293398ea4cbc979565d177056, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.04799992
+      value: -1.523
       objectReference: {fileID: 0}
     - target: {fileID: 3877455954479088210, guid: 4fef004293398ea4cbc979565d177056, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.576
+      value: 3.633
       objectReference: {fileID: 0}
     - target: {fileID: 3877455954479088210, guid: 4fef004293398ea4cbc979565d177056, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10348,6 +10352,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6583693052620021625, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6613500206482929661, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8983908351709904976, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
@@ -19171,7 +19179,7 @@ MonoBehaviour:
   hitEffectPrefab: {fileID: 1353967989245121026, guid: f9d3b751bff675b418a98863a4bbb94e, type: 3}
   audioSource: {fileID: 1552106025}
   breakSE: {fileID: 8300000, guid: 6242e0ac546c66e48a244523820e7e51, type: 3}
-  hitSE: {fileID: 8300000, guid: 50b01190c1d315d40947b882bd06d093, type: 3}
+  hitSE: {fileID: 0}
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
   GameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
 --- !u!82 &1552106025
@@ -24520,7 +24528,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2982267258493543567, guid: 51223c2bb15dbe24b96db6a53b3afe63, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -27.53
+      value: -30.55
       objectReference: {fileID: 0}
     - target: {fileID: 2982267258493543567, guid: 51223c2bb15dbe24b96db6a53b3afe63, type: 3}
       propertyPath: m_ConstrainProportionsScale
