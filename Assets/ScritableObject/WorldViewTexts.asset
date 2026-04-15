@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e738f9d64c2d54b960159c48581a4c, type: 3}
+  m_Name: WorldViewTexts
+  m_EditorClassIdentifier: 
+  japaneseTexts:
+  - "\u53CC\u5B50\u306E\u970A\u5A92\u5E2B\u306F\u3001\u751F\u307E\u308C\u3064\u304D\u666E\u901A\u306E\u4EBA\u306B\u306F\u898B\u3048\u306A\u3044\u602A\u7570\u3092\u8996\u8A8D\u3067\u304D\u308B\u7279\u5225\u306A\u529B\u3092\u6301\u3063\u3066\u3044\u308B\u3002\r\n\r\n\u4E8C\u4EBA\u304C\u7E8F\u3046\u30AA\u30FC\u30E9\uFF08\u970A\u529B\uFF09\u306E\u5C5E\u6027\u306F\u7570\u306A\u308A\u3001\r\nGhost
+    \u306E\u30AA\u30FC\u30E9 \u2192 \u5E7D\u970A\u3060\u3051\u304C\u898B\u3048\u308B\r\nDemon
+    \u306E\u30AA\u30FC\u30E9 \u2192 \u60AA\u9B54\u3060\u3051\u304C\u898B\u3048\u308B"
+  - "\u970A\u529B\u306F\u540C\u5C5E\u6027\u540C\u58EB\u3067\u5171\u9CF4\u3057\u3001\u653B\u6483\u304C\u62E1\u6563\u3059\u308B\u3002\r\n\r\n\u3064\u307E\u308A\u2014\u2014\r\n\u898B\u3048\u305F\u6575\u306F\u3001\u5012\u305B\u306A\u3044\u3002\r\n\u898B\u3048\u306A\u3044\u6575\u3092\u3001\u5012\u305B\u308B\u3002\r\n\r\n\u76F8\u624B\u306B\u4F1D\u3048\u308D\u2014\u2014\u5354\u529B\u304C\u751F\u5B58\u306E\u9375\u3002"
+  - "\u4F9D\u983C\u5148\uFF1A\u68EE\u306E\u5965\u306B\u4F47\u3080\u6D0B\u9928\r\n\r\n\u9928\u306B\u4FDD\u7BA1\u3055\u308C\u305F\u30AF\u30EA\u30B9\u30BF\u30EB\u306F\u3001\u5C01\u5370\u306E\u6838\u3002\r\n\u591C\u306B\u306A\u308B\u3068\u602A\u7570\u305F\u3061\u304C\u305D\u306E\u7834\u58CA\u3092\u72D9\u3063\u3066\u8972\u6765\u3059\u308B\u3002\r\n\r\n\u30AF\u30EA\u30B9\u30BF\u30EB\u306EHP\u304C0\u306B\u306A\u308C\u3070\u2014\u2014\u5C01\u5370\u5D29\u58CA\u3002\u4EFB\u52D9\u5931\u6557\u3002\r\n\u8FEB\u308A\u6765\u308B\u602A\u7570\u3092\u304F\u3050\u308A\u629C\u3051\u3001\u4E00\u591C\u3092\u4E57\u308A\u8D8A\u3048\u308D\u3002"
+  - "\u64CD\u4F5C\u8AAC\u660E\r\n\r\n\u53F3\u624B\u30C8\u30EA\u30AC\u30FC\u3067\u5C04\u6483\u3059\u308B\r\n\u5F3E\u306F\u30AA\u30FC\u30C8\u30EA\u30ED\u30FC\u30C9"
+  englishTexts:
+  - "The twin spirit mediums were born with the ability\r\nto see supernatural beings
+    invisible to ordinary people.\r\n\r\nTheir aura attributes differ:\r\nGhost aura
+    \u2192 can only see Ghosts\r\nDemon aura \u2192 can only see Demons"
+  - "Spiritual power resonates between same attributes,\r\ncausing attacks to scatter.\r\n\r\nIn
+    other words\u2014\u2014\r\nYou cannot defeat enemies you can see.\r\nYou can
+    defeat enemies you cannot see.\r\n\r\nReport to your partner\u2014\u2014cooperation
+    is the key to survival."
+  - "Destination: A mansion deep in the forest.\r\n\r\nThe crystal stored in the
+    mansion is the core of the seal.\r\nAt night, supernatural beings attack to destroy
+    it.\r\n\r\nIf the crystal's HP reaches 0\u2014\u2014the seal collapses. Mission
+    failed.\r\nSurvive the onslaught and make it through the night."
+  - 'Controls
+
+    
+
+    Pull the right trigger to shoot.
+
+    Bullets auto-reload.'

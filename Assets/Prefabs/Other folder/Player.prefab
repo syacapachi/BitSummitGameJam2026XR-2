@@ -1133,14 +1133,7 @@ MonoBehaviour:
   NetworkAnimatorExpanded: 0
   AuthorityMode: 0
   m_Animator: {fileID: 7512033640335788596}
-  TransitionStateInfoList:
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -2089788878
-    DestinationState: 125937960
-    TransitionDuration: 0.23076922
-    TriggerNameHash: 125937960
-    TransitionIndex: 1
+  TransitionStateInfoList: []
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Speed
@@ -1154,7 +1147,7 @@ MonoBehaviour:
     - name: Jump
       NameHash: 125937960
       Synchronize: 1
-      ParameterType: 9
+      ParameterType: 4
     - name: Rest
       NameHash: 1562808046
       Synchronize: 1
@@ -3922,6 +3915,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   phaseBoard: {fileID: 5557263901663210938}
   phaseText: {fileID: 1066010004184574617}
+  phaseUISettingSO: {fileID: 0}
+  AllEnemyDeadRpcEvent: {fileID: 0}
+  OnPhaseChangeRpcEvent: {fileID: 0}
+  GameStateChangeRpcEvent: {fileID: 0}
 --- !u!1 &4152293001527334597
 GameObject:
   m_ObjectHideFlags: 0
@@ -8411,10 +8408,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2470147098361970074}
-  - component: {fileID: 5506601422682667394}
   - component: {fileID: 665557257924823836}
-  - component: {fileID: 6318645026461716593}
-  - component: {fileID: 7286141763081320128}
   - component: {fileID: 1539998940496726956}
   - component: {fileID: 7250229800022964555}
   m_Layer: 0
@@ -8439,27 +8433,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6666009489213802306}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5506601422682667394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8511196050132363270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0835fe71733853a448fc369c1d0fb102, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  playerPrefab: {fileID: 971797369539823923}
-  playerRoot: {fileID: 6666009489213802306}
-  playerCanvas: {fileID: 0}
-  playerInput: {fileID: 3417897009391509307}
-  characterControll: {fileID: 6318645026461716593}
-  playerHealth: {fileID: 665557257924823836}
-  propaty: {fileID: 7250229800022964555}
-  cameraSetting: {fileID: 7286141763081320128}
 --- !u!114 &665557257924823836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8475,51 +8448,10 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   maxHP: 100
   currentHP:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 100
---- !u!114 &6318645026461716593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8511196050132363270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 473bc3511707ec34cac9db179cb5e275, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  playerRootTransform: {fileID: 6666009489213802306}
-  charactorRigidbody: {fileID: 1341481294548259533}
-  bombPrefab: {fileID: 1644059155779339719, guid: 7f1f45b44fc138e4285f9b3d5c2577c5, type: 3}
-  animator: {fileID: 7512033640335788596}
-  networkAnimator: {fileID: 5535150621068093951}
-  jumpForce: 5
-  moveSpeed: 5
-  jumpCount:
-    m_InternalValue: 0
---- !u!114 &7286141763081320128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8511196050132363270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb709544d24363b468ec5073b28b9dde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  cameraTransform: {fileID: 0}
-  localCamera: {fileID: 9055468224422194133}
-  mainCamera: {fileID: 0}
-  characterControll: {fileID: 6318645026461716593}
-  playerHealth: {fileID: 665557257924823836}
-  propaty: {fileID: 7250229800022964555}
-  mouseSensitivity: 1
-  yMinLimit: -89
-  yMaxLimit: 89
 --- !u!114 &1539998940496726956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8535,15 +8467,19 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   bulletPrefab: {fileID: 4022916156752048900, guid: 87e947bf715886f4d984cdaecf68c937, type: 3}
   firePoint: {fileID: 1896185644797937927}
-  laserLine: {fileID: 7458030537166218599}
   weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
-  itemControll: {fileID: 5198795086104795861}
-  playerMarker: {fileID: 0}
-  node: {fileID: 0}
+  allShootSoundSource: {fileID: 0}
+  allReloadSoundSource: {fileID: 0}
   syncedAmmo:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
-  isReloading:
-    m_InternalValue: 0
+  laserLine: {fileID: 7458030537166218599}
+  audioObserver: {fileID: 0}
+  ammoUI: {fileID: 0}
+  playerStats: {fileID: 0}
+  fireEvent: {fileID: 0}
 --- !u!114 &7250229800022964555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8556,9 +8492,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2d5ebc452a3614597b0c2eb37f2896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  PlayerRoot: {fileID: 971797369539823923}
+  PlayerCollider: {fileID: 0}
+  PlayerCamera: {fileID: 0}
+  JobEvent: {fileID: 0}
+  switchJobEvent: {fileID: 0}
   playerjob: 0
+  IsDebugMode: 1
 --- !u!1 &8813988879381198354
 GameObject:
   m_ObjectHideFlags: 0
