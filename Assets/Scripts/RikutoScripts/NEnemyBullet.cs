@@ -7,44 +7,55 @@ public class NEnemyBullet : BulletBaseController
     public PlayerJob enemyJob; // Human / Ghost
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
     {
-        var protectArea = ManagerLocator.Instance.AllGameManager.ProtectArea;
+        var gameManager = ManagerLocator.Instance.AllGameManager;
 
-        // ① ProtectAreaがある場合
-        if (protectArea != null)
+        switch (gameManager.CurrentGameMode)
         {
-            if (reciever.GameObject == protectArea)
-            {
-                ApplyDamage();
-            }
-            return;
-        }
+            case GameMode.Protect:
+                {
+                    var protectArea = gameManager.ProtectArea;
 
-        // ② プレイヤー判定
-        var players = ManagerLocator.Instance.AllPlayerManager.AllPlayers;
+                    // ProtectAreaに当たったときだけダメージ
+                    if (protectArea != null && reciever.GameObject == protectArea)
+                    {
+                        ApplyDamage();
+                    }
 
-        foreach (var player in players)
-        {
-            if (player == null) continue;
+                    return;
+                }
 
-            // ★ 当たった相手かチェック
-            if (reciever.GameObject != player.gameObject) continue;
+            case GameMode.Survival:
+            default:
+                {
+                    // プレイヤー判定
+                    var players = ManagerLocator.Instance.AllPlayerManager.AllPlayers;
 
-            var prop = player.propaty;
-            if (prop == null) return;
+                    foreach (var player in players)
+                    {
+                        if (player == null) continue;
 
-            var playerJob = prop.Job;
+                        if (reciever.GameObject != player.gameObject) continue;
 
-            // ★ フィルタ
-            bool canTarget = (enemyJob & playerJob) != 0;
-            if (!canTarget) return;
+                        var prop = player.propaty;
+                        if (prop == null) return;
 
-            ApplyDamage();
-            return; // ← 処理終わり（ここ重要）
+                        var playerJob = prop.Job;
+
+                        // フィルタ
+                        bool canTarget = (enemyJob & playerJob) != 0;
+                        if (!canTarget) return;
+
+                        ApplyDamage();
+                        return;
+                    }
+
+                    return;
+                }
         }
 
         void ApplyDamage()
         {
-            ManagerLocator.Instance.AllGameManager.BulletHitProtectArea((int)-Damage);
+            gameManager.BulletHitProtectArea((int)-Damage);
 
             if (NetworkObject.IsSpawned)
                 NetworkObject.Despawn(true);
