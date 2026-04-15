@@ -10,6 +10,9 @@ public class NGameManager : NetworkBehaviour
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseManager phaseManager;
 
+    [SerializeField] GameMode gameMode = GameMode.Protect;
+    public GameMode CurrentGameMode => gameMode;
+
     SkyColer skybox;
 
     public ScoreManager ScoreManager => scoreManager;
@@ -17,6 +20,8 @@ public class NGameManager : NetworkBehaviour
     public GameObject ProtectArea => protectArea;
     public bool IsGamePlaying => CurrentGameState == GameState.Playing;
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
+
+    
 
     [SerializeField] NetworkVariable<GameState> gameState = new(
         GameState.Initializing,
@@ -159,4 +164,10 @@ public enum GameState
     Playing,     // プレイ中
     GameClear,   // クリア
     GameOver     // ゲームオーバー
+}
+
+public enum GameMode
+{
+    Protect,   // 拠点防衛あり
+    Survival   // 拠点なし（耐久）
 }

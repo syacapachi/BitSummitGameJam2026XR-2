@@ -18,8 +18,6 @@ public class NEnemyShoot : GunController
         base.OnNetworkSpawn();
 
         if (!IsServer) return;
-
-        if(ManagerLocator.Instance.AllGameManager.ProtectArea!= null) target = ManagerLocator.Instance.AllGameManager.ProtectArea.transform;
         weaponSO = enemySO.EnemyWeapon;
         weaponSO ??= base.WeaponSettings as EnemyWeaponSettingsSO;
         shootCorutine = StartCoroutine(ShootCorutine());
@@ -63,14 +61,28 @@ public class NEnemyShoot : GunController
 
     Transform GetTarget()
     {
-        // ProtectAreaが存在すれば優先
-        var protectArea = ManagerLocator.Instance.AllGameManager.ProtectArea;
+        var gameManager = ManagerLocator.Instance.AllGameManager;
 
-        if (protectArea != null)
-            return protectArea.transform;
+        switch (gameManager.CurrentGameMode)
+        {
+            case GameMode.Protect:
+                {
+                    // ProtectAreaを優先
+                    var protectArea = gameManager.ProtectArea;
+                    if (protectArea != null)
+                        return protectArea.transform;
 
-        // 無ければプレイヤーを狙う
-        return GetNearestPlayer();
+                    // 念のためフォールバック
+                    return GetNearestPlayer();
+                }
+
+            case GameMode.Survival:
+            default:
+                {
+                    // 常にプレイヤーのみ
+                    return GetNearestPlayer();
+                }
+        }
     }
 
     Transform GetNearestPlayer()
