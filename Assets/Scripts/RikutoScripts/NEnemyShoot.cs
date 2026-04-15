@@ -27,7 +27,6 @@ public class NEnemyShoot : GunController
     protected override void OnShootServer()
     {
         Vector3 direction = (target.position - transform.position).normalized;
-
         NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(
             BulletPrefab, 
             FirePoint.position, 

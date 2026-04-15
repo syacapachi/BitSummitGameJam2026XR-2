@@ -21,6 +21,10 @@ public class LookStateChange : NetworkBehaviour
     }
     private void OnDisable()
     {
+        if(jobChanged == null)
+        {
+            Debug.Log($"{gameObject.name}/{gameObject.transform.parent.name}");
+        }
         jobChanged.Unregister(OnJobChangedHandle);
     }
 

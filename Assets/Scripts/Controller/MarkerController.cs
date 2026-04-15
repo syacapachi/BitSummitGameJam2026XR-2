@@ -14,7 +14,7 @@ public class MarkerController : NetworkBehaviour
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent markerEvent;
     AttachableBehaviour attach;
-    bool isMarkAttached = true;
+    bool isMarkAttachedServerOnly = false;
     Coroutine markerCoroutine;
     
     public override void OnNetworkSpawn()
@@ -31,7 +31,7 @@ public class MarkerController : NetworkBehaviour
             var networkObject = marker.GetComponent<NetworkObject>();
             attach = marker.GetComponentInChildren<AttachableBehaviour>();
             networkObject.SpawnWithOwnership(OwnerClientId);
-            isMarkAttached = false;
+            isMarkAttachedServerOnly = false;
         }
     }
     public override void OnNetworkDespawn()
@@ -73,7 +73,7 @@ public class MarkerController : NetworkBehaviour
             Debug.LogWarning("Player marker not found. Cannot place marker.");
             return;
         }
-        if (isMarkAttached)
+        if (isMarkAttachedServerOnly)
         {
             attach.Detach();
         }
@@ -99,12 +99,12 @@ public class MarkerController : NetworkBehaviour
         {
             attach.Attach(node);
             attach.gameObject.transform.localPosition = Vector3.zero;
-            isMarkAttached = true;
+            isMarkAttachedServerOnly = true;
         }
         else
         {
             Debug.LogError($"[{gameObject.name}]AttachableBehaviour is null");
-            isMarkAttached = false;
+            isMarkAttachedServerOnly = false;
         }
         
     }

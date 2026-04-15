@@ -10156,6 +10156,10 @@ PrefabInstance:
       propertyPath: GameStateChangeRpcEvent
       value: 
       objectReference: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
+    - target: {fileID: 2221360176024460560, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2540187537776868700, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -10254,7 +10258,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6613500206482929661, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8983908351709904976, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: OnbulletComeRpcEvent
@@ -23082,7 +23086,7 @@ MonoBehaviour:
   fontSizeHeader: 28
   fontSizeStats: 22
   fontSizeKill: 20
-  gameStateEvent: {fileID: 0}
+  gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   OnGameResultRpc: {fileID: 11400000, guid: b1254d9a30b83b44ca1aa9f037d0a8fc, type: 2}
 --- !u!114 &1898387912
 MonoBehaviour:
