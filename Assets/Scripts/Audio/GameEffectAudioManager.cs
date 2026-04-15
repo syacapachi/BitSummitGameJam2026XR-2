@@ -30,6 +30,7 @@ public class GameEffectAudioManager : MonoBehaviour
         audioSource.transform.position = effect.Position;
         audioSource.volume = effect.Volume * masterSfxVolumeAll;
         audioSource.pitch = effect.Pitch;
+        audioSource.loop = effect.Loop;
         if(effect.Delay == 0f)
         {
             audioSource.Play();
@@ -62,18 +63,25 @@ public readonly struct GameEffect
     /// 遅れ
     /// </summary>
     public readonly float Delay;
+    /// <summary>
+    /// ループさせるか
+    /// </summary>
+    public readonly bool Loop;
 
     public GameEffect(
         AudioClip clip,
         Vector3 positon,
         float volume = 1.0f,
         float pitch = 1.0f,
-        float delay = 0.0f)
+        float delay = 0.0f,
+        bool loop = false
+        )
     {
         this.Clip = clip;
         this.Position = positon;
         this.Volume = volume;
         this.Pitch = pitch;
         this.Delay = delay;
+        this.Loop = loop;
     }
 }

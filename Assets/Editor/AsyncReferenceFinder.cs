@@ -26,15 +26,16 @@ namespace Syacapachi.util
         ".xml",
         ".bytes"
        };
-        private readonly Dictionary<UnityEngine.Object,List<UnityEngine.Object>> cache = new();
-        private UnityEngine.Object target;
+        private Object target;
         private string[] guids;
         private int guidsIndex;
         private int objectIndex;
-        private UnityEngine.GameObject[] sceneObjects;
-        private readonly List<UnityEngine.Object> results = new();
-
-        private Action<List<UnityEngine.Object>> onComplete;
+        private GameObject[] sceneObjects;
+        //埋め込まれている
+        private readonly List<Object> assginedResults = new();
+        //埋め込められる
+        private readonly List<Object> assignableResult = new();
+        private Action<List<Object>, List<Object>> onComplete;
 
         private string currentSearchName = "";
         public float Progress { 
@@ -47,16 +48,11 @@ namespace Syacapachi.util
         }
         public bool IsRunning { get; private set; }
 
-        public void StartSearch(Object target, Action<List<Object>> onComplete, bool forceRefresh = false)
+        public void StartSearchRefernce(Object target, Action<List<Object>,List<Object>> onComplete)
         {
             if (IsRunning)
             {
                 EditorUtility.DisplayDialog("Search Progress", "Search Progress","ok");
-                return;
-            }
-            if (!forceRefresh && cache.TryGetValue(target, out var cached))
-            {
-                onComplete?.Invoke(cached);
                 return;
             }
             this.target = target;
@@ -68,7 +64,7 @@ namespace Syacapachi.util
             sceneObjects = currentScene.GetRootGameObjects();
             guidsIndex = 0;
             objectIndex = 0;
-            results.Clear();
+            assginedResults.Clear();
 
             IsRunning = true;
             //Editorの更新と共に非同期的に実行
@@ -118,10 +114,14 @@ namespace Syacapachi.util
                     //参照を上から順に調べる。
                     while (prop.NextVisible(true))
                     {
+                        if (IsAssignableField(prop, target))
+                        {
+                            assignableResult.Add(obj);
+                        }
                         if (prop.propertyType == SerializedPropertyType.ObjectReference
                             && prop.objectReferenceValue == target)
                         {
-                            results.Add(obj);
+                            assginedResults.Add(obj);
                             break;
                         }
                     }
@@ -151,19 +151,60 @@ namespace Syacapachi.util
             {
                 if (comp == null) continue;
 
-                var so = new UnityEditor.SerializedObject(comp);
+                var so = new SerializedObject(comp);
                 var prop = so.GetIterator();
 
                 while (prop.NextVisible(true))
                 {
-                    if (prop.propertyType == UnityEditor.SerializedPropertyType.ObjectReference &&
+                    if (IsAssignableField(prop, target))
+                    {
+                        assignableResult.Add(comp);
+                    }
+                    if (prop.propertyType == SerializedPropertyType.ObjectReference &&
                         prop.objectReferenceValue == target)
                     {
-                        results.Add(comp.gameObject);
+                        assginedResults.Add(comp);
                         break;
                     }
                 }
             }
+        }
+        private Type GetFieldType(SerializedProperty prop)
+        {
+            //対象のオブジェクトを取得する
+            var targetObject = prop.serializedObject.targetObject;
+            //そのタイプを得る。
+            var type = targetObject.GetType();
+
+            //そのオブジェクトに記述されているpropと同じ名前のフィールドを取得する
+            var field = type.GetField(prop.name,
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance);
+
+            return field?.FieldType;
+        }
+        bool IsAssignableField(SerializedProperty prop, Object target)
+        {
+            //[System.Serializeable]か、
+            //UnityEngine.Obejctを継承してないと、ScriptableObjectを埋め込めない
+            if (prop.propertyType != SerializedPropertyType.ObjectReference)
+                return false;
+
+            // 既にアサインされてる場合（従来）
+            if (prop.objectReferenceValue == target)
+                return true;
+
+            // nullなら型チェック
+            if (prop.objectReferenceValue == null)
+            {
+                var fieldType = GetFieldType(prop);
+                if (fieldType == null) return false;
+
+                return fieldType.IsAssignableFrom(target.GetType());
+            }
+
+            return false;
         }
         /// <summary>
         /// GameObejct ScriptableObjectを埋め込めるか
@@ -180,12 +221,11 @@ namespace Syacapachi.util
         {
             EditorUtility.ClearProgressBar();
             EditorApplication.update -= SearchReference;
-            //キャッシュ更新
-            var distinct = results.Distinct().ToList();
-            cache[target] = distinct;
-
+            //重複解除
+            var distinct = assginedResults.Distinct().ToList();
+            var distinct2 = assignableResult.Distinct().ToList();
             IsRunning = false;
-            onComplete?.Invoke(distinct);
+            onComplete?.Invoke(distinct,distinct2);
         }
         //とりあえず完了と同じに
         public void StopSearch()
@@ -193,13 +233,6 @@ namespace Syacapachi.util
             if(!IsRunning) return;
             Complete();
             Debug.Log($"Search canceled: {target.name} ({Progress}%)");
-        }
-        public void ClearCache(UnityEngine.Object target = null)
-        {
-            if (target == null)
-                cache.Clear();
-            else
-                cache.Remove(target);
         }
     }
 }

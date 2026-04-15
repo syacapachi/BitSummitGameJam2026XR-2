@@ -27,10 +27,22 @@ public class LocalObjectPoolManager : MonoBehaviour
     }
     private void ResisterPrefab(GameObject prefab,int PrewarmCount)
     {
+        static void OnRelease(GameObject obj)
+        {
+            obj.SetActive(false);
+            if(obj.TryGetComponent<Rigidbody>(out var rb))
+            {
+                bool preKinematic = rb.isKinematic;
+                rb.isKinematic = true;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = rb.isKinematic;
+            }
+        }
         var pool = new ObjectPool<GameObject>(
                 createFunc: () => Instantiate(prefab),
                 actionOnGet: obj => obj.SetActive(true),
-                actionOnRelease: obj => obj.SetActive(false),
+                actionOnRelease: OnRelease,
                 actionOnDestroy: obj => Destroy(obj),
                 collectionCheck: false,
                 defaultCapacity: PrewarmCount,

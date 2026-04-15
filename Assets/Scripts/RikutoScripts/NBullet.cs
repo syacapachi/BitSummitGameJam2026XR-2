@@ -6,9 +6,15 @@ using UnityEngine.Pool;
 
 public class NBullet : BulletBaseController
 {
+    [SerializeField] TrailRenderer trailRenderer;
     [SerializeField] GameObject hitFxPrefab;
     [SerializeField] GameObject shieldFxPrefab;
     [SerializeField] float hitFxLife = 2f;
+
+    private void OnDisable()
+    {
+        trailRenderer.Clear();
+    }
 
     [Rpc(SendTo.ClientsAndHost)]
     void SpawnHitFxClientRpc(Vector3 pos)

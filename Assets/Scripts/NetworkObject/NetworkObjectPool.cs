@@ -133,9 +133,11 @@ namespace Syacapachi.util
             {
                 if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb))
                 {
-                    if(rb.isKinematic) return; 
+                    bool preKinematic = rb.isKinematic;
+                    rb.isKinematic = true;
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
+                    rb.isKinematic = rb.isKinematic;
                 }
                 networkObject.gameObject.SetActive(false);
             }

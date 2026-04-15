@@ -13,7 +13,8 @@ namespace Syacapachi.util
         //ScriptableObjectのリスト
         readonly Dictionary<System.Type, List<ScriptableObject>> groupedEvents = new();
         //参照キャッシュ
-        readonly Dictionary<ScriptableObject, List<UnityEngine.Object>> cache = new();
+        readonly Dictionary<ScriptableObject, List<UnityEngine.Object>> objectCache = new();
+        readonly Dictionary<Type, List<UnityEngine.Object>> assginCache = new();
         //折りたたみ状態
         readonly Dictionary<System.Type, bool> typeFoldouts = new();
         readonly Dictionary<ScriptableObject, bool> contentFoldouts = new();
@@ -70,8 +71,15 @@ namespace Syacapachi.util
 
         void DrawGroup(System.Type type, List<ScriptableObject> list)
         {
-            if (!typeFoldouts.ContainsKey(type)) typeFoldouts[type] = false;
-            typeFoldouts[type] = EditorGUILayout.Foldout(typeFoldouts[type], type.Name, true);
+            using (new GUILayout.HorizontalScope())
+            {
+                if (!typeFoldouts.ContainsKey(type)) typeFoldouts[type] = false;
+                typeFoldouts[type] = EditorGUILayout.Foldout(typeFoldouts[type], type.Name, true);
+                if (GUILayout.Button("Find Assginable", GUILayout.Width(150)))
+                {
+                    Debug.Log("hey");
+                }
+            }
             // ▼ 展開時のみ結果表示
             if (!typeFoldouts[type]) return;
 
@@ -113,10 +121,10 @@ namespace Syacapachi.util
                     }
 
                     // ▼ 展開時に結果表示
-                    if (contentFoldouts[e] && cache.ContainsKey(e))
+                    if (contentFoldouts[e] && objectCache.ContainsKey(e))
                     {
                         GUILayout.Space(3);
-                        foreach (var r in cache[e])
+                        foreach (var r in objectCache[e])
                         {
                             if(r == null) continue;
                             using (new GUILayout.HorizontalScope())
@@ -133,10 +141,6 @@ namespace Syacapachi.util
                     }
                 }
             }
-        }
-        void DrawRefrence(List<UnityEngine.Object> refrenceObjects)
-        {
-
         }
         void DrawToolbar()
         {
@@ -219,14 +223,15 @@ namespace Syacapachi.util
         }
         void StartSearch(ScriptableObject target, bool force)
         {
-            if (!force && cache.ContainsKey(target))
+            if (!force && objectCache.ContainsKey(target))
                 return;
 
             isSearching[target] = true;
             AsyncReferenceFinder finder = new();
-            finder.StartSearch(target, (result) =>
+            finder.StartSearchRefernce(target, (result1,result2) =>
             {
-                cache[target] = result;
+                objectCache[target] = result1;
+                CreateWindow<AssginableReferenceEditorWindow>().Init(result2);
                 isSearching[target] = false;
                 AsyncRefrenceFinderGlobal.Unresister(finder);
                 Repaint();

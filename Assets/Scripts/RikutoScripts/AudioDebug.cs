@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AudioDebug : MonoBehaviour
 {
     void Update()
     {
-        var sources = FindObjectsOfType<AudioSource>();
+        var sources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
 
         foreach (var s in sources)
         {
