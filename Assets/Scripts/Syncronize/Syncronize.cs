@@ -38,8 +38,9 @@ public class Syncronize : NetworkBehaviour
     }
     /// <summary>
     /// アニメーションを計算するタイミングで更新
+    /// Animatorと同じGameObjectにないと呼ばれない。
     /// </summary>
-    private void OnAnimatorIK(int layerIndex)
+    private void OnAnimatorIK()
     {
         if (IsOwner)
         {
@@ -51,47 +52,51 @@ public class Syncronize : NetworkBehaviour
 
             avatorRootTransfrom.position = playerPos;
 
-            if(xrOrigin.transform.localRotation.eulerAngles.y - lastOrigonRotation >  0.1f)
+            if (xrOrigin.transform.localRotation.eulerAngles.y - lastOrigonRotation > 0.1f)
             {
                 avatorRootTransfrom.rotation = xrOrigin.transform.rotation;
                 lastOrigonRotation = avatorRootTransfrom.rotation.eulerAngles.y;
             }
             //頭の角度
             Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
-            Quaternion headQuaternion = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
-            if (animator != null)
-            {
-                //頭
-                animator.SetLookAtPosition(ownerCamera.transform.position + ownerCamera.transform.forward * 2);
-                //左手
-                animator.SetIKPosition(AvatarIKGoal.LeftHand, leftController.position);
-                animator.SetIKRotation(AvatarIKGoal.LeftHand, leftController.rotation);
-                //右手
-                animator.SetIKPosition(AvatarIKGoal.RightHand, rightController.position);
-                animator.SetIKRotation(AvatarIKGoal.RightHand, rightController.rotation);
-            }
-            else
-            {
-                
-                networkHead.localRotation = headQuaternion;
+            networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
 
-                //手・コントローラー
-                networkLeftHand.SetPositionAndRotation(leftHand.position, leftHand.rotation);
-                networkRightHand.SetPositionAndRotation(rightHand.position, rightHand.rotation);
-                networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
-                networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
-            }
+            //手・コントローラー
+            networkLeftHand.SetPositionAndRotation(leftHand.position, leftHand.rotation);
+            networkRightHand.SetPositionAndRotation(rightHand.position, rightHand.rotation);
+            networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
+            networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
+        }
+        if (animator == null) return;
+        if (IsOwner)
+        {
+            //頭の角度
+            Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
+            Quaternion headQuaternion = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
+
+            //頭
+            animator.SetLookAtPosition(ownerCamera.transform.position + ownerCamera.transform.forward * 2);
+            //左手
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1.0f);// 重みを設定
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, leftController.position);
+            animator.SetIKRotation(AvatarIKGoal.LeftHand, leftController.rotation);
+            //右手
+            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);//重みを設定
+            animator.SetIKPosition(AvatarIKGoal.RightHand, rightController.position);
+            animator.SetIKRotation(AvatarIKGoal.RightHand, rightController.rotation);
+
         }
         //非オーナーは、同期されているアバターの位置をAnimatorに反映させる
         else
         {
-            if (animator == null) return;
             //頭
             animator.SetLookAtPosition(networkHead.position + networkHead.forward * 2);
             //左手
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1.0f);// 重みを設定
             animator.SetIKPosition(AvatarIKGoal.LeftHand, networkLeftController.position);
             animator.SetIKRotation(AvatarIKGoal.LeftHand, networkLeftController.rotation);
             //右手
+            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);//重みを設定
             animator.SetIKPosition(AvatarIKGoal.RightHand, networkRightController.position);
             animator.SetIKRotation(AvatarIKGoal.RightHand, networkRightController.rotation);
         }

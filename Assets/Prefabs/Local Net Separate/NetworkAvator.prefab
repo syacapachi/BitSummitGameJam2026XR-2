@@ -2710,7 +2710,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2847752362134598257}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84a340a3aa632774ab9bcffe05129959, type: 3}
   m_Name: 
@@ -5573,7 +5573,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 8d5a0e0d58f4e4176a844a1a03976c19, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -8641,6 +8641,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 88c2f082f4c510f4da9bb93465d8c44c, type: 2}
+    - target: {fileID: 8154055293566599829, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6110038813433990548, guid: 53b00b183da483d479a12093f8b6685c, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0
@@ -8675,6 +8679,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
       insertIndex: -1
       addedObject: {fileID: 644507580902073845}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3513759523329437185}
   m_SourcePrefab: {fileID: 100100000, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
 --- !u!4 &502935949545263117 stripped
 Transform:
@@ -8730,6 +8737,26 @@ MonoBehaviour:
   - {fileID: 8720901179799283811}
   - {fileID: 5486813636354212466}
   - {fileID: 1046714690795431310}
+--- !u!114 &3513759523329437185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3588660993758789046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a340a3aa632774ab9bcffe05129959, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  avatorRootTransfrom: {fileID: 1358144342988845292}
+  animator: {fileID: 7811071689496165750}
+  networkHead: {fileID: 3348932590027094906}
+  networkLeftHand: {fileID: 8562024122213999516}
+  networkRightHand: {fileID: 728814604505585515}
+  networkLeftController: {fileID: 2711660553692858157}
+  networkRightController: {fileID: 502935949545263117}
 --- !u!4 &4217247790775576332 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}

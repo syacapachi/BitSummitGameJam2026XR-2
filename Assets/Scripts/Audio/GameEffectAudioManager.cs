@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class GameEffectAudioManager : MonoBehaviour
 {
@@ -31,14 +32,30 @@ public class GameEffectAudioManager : MonoBehaviour
         audioSource.volume = effect.Volume * masterSfxVolumeAll;
         audioSource.pitch = effect.Pitch;
         audioSource.loop = effect.Loop;
-        if(effect.Delay == 0f)
+        //浮動小数点は、== が難しいので比較で行う
+        if(effect.Delay < 0.1f)
         {
-            audioSource.Play();
+            StartCoroutine(PlayAndRelease(audioSource));
+
         }
         else
         {
-            audioSource.PlayDelayed(effect.Delay);
+            StartCoroutine(PlayDelayedAndRelease(audioSource, effect.Delay));
         }
+    }
+    private IEnumerator PlayAndRelease(AudioSource audioSource)
+    {
+        audioSource.Play();
+        yield return new WaitForSeconds(audioSource.clip.length);
+        localObjectPool.Release(audioSource.gameObject);
+    }
+    private IEnumerator PlayDelayedAndRelease(AudioSource source,float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        source.Play();
+        yield return new WaitForSeconds(source.clip.length);
+        localObjectPool.Release(source.gameObject);
+        
     }
 }
 public readonly struct GameEffect

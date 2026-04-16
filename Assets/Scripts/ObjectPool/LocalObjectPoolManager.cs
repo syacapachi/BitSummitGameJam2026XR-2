@@ -17,6 +17,7 @@ public class LocalObjectPoolManager : MonoBehaviour
     /// インスタンスIDをキー、オブジェクトプールを値とする辞書。インスタンスIDはプレハブの識別に使用される。
     /// </summary>
     readonly Dictionary<int, ObjectPool<GameObject>> objectPoolDic = new();
+    readonly Dictionary<int,int> instanceToPrefabDic = new();
 
     private void Start()
     {
@@ -27,33 +28,50 @@ public class LocalObjectPoolManager : MonoBehaviour
     }
     private void ResisterPrefab(GameObject prefab,int PrewarmCount)
     {
+        GameObject OnCreate()
+        {
+            GameObject instance = Instantiate(prefab);
+            instanceToPrefabDic[instance.GetInstanceID()] = prefab.GetInstanceID();
+            return instance;
+        }
         static void OnRelease(GameObject obj)
         {
             obj.SetActive(false);
             if(obj.TryGetComponent<Rigidbody>(out var rb))
             {
-                bool preKinematic = rb.isKinematic;
-                rb.isKinematic = true;// 物理演算リセット
-                rb.isKinematic = preKinematic;
+                if (rb.isKinematic) return;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
             }
         }
-        var pool = new ObjectPool<GameObject>(
-                createFunc: () => Instantiate(prefab),
+        objectPoolDic[prefab.GetInstanceID()] = new ObjectPool<GameObject>(
+                createFunc: OnCreate,
                 actionOnGet: obj => obj.SetActive(true),
                 actionOnRelease: OnRelease,
                 actionOnDestroy: obj => Destroy(obj),
                 collectionCheck: false,
-                defaultCapacity: PrewarmCount,
+                defaultCapacity: PrewarmCount * 10,
                 maxSize: 100
             );
-        objectPoolDic.Add(prefab.GetInstanceID(), pool);
+        
+        List<GameObject> list = new ();
+        for(int i=0; i < PrewarmCount; i++)
+        {
+            list.Add(objectPoolDic[prefab.GetInstanceID()].Get());
+        }
+        foreach(GameObject obj in list)
+        {
+            objectPoolDic[prefab.GetInstanceID()].Release(obj);
+        }
+
+
     }
     public GameObject Get(GameObject prefab)
     {
         if(!objectPoolDic.ContainsKey(prefab.GetInstanceID()))
         {
             Debug.LogWarning($"Prefab {prefab.name} is not registered in the pool. Registering it now.");
-             ResisterPrefab(prefab, 0);
+            ResisterPrefab(prefab, 0);
         }
         if (objectPoolDic.TryGetValue(prefab.GetInstanceID(), out var pool))
         {
@@ -62,21 +80,17 @@ public class LocalObjectPoolManager : MonoBehaviour
         Debug.LogError($"Prefab {prefab.name} not found in pool and failed to register.");
         return null;
     }
-    public void Release(GameObject prefab)
+    public void Release(GameObject gameObject)
     {
-        if (!objectPoolDic.ContainsKey(prefab.GetInstanceID()))
+        if (!instanceToPrefabDic.TryGetValue(gameObject.GetInstanceID(),out int prefabId))
         {
-            Debug.LogWarning($"Prefab {prefab.name} is not registered in the pool. Registering it now.");
-            ResisterPrefab(prefab, 0);
+            Debug.LogWarning($"Prefab {gameObject.name},{gameObject.GetInstanceID()} is not registered in the pool. Destroying object instead.");
+            Destroy(gameObject);
+            return;
         }
-        if (objectPoolDic.TryGetValue(prefab.GetInstanceID(), out var pool))
+        if (objectPoolDic.TryGetValue(prefabId, out var pool))
         {
-            pool.Release(prefab);
-        }
-        else
-        {
-            Debug.LogWarning($"Prefab {prefab.name} is not registered in the pool. Destroying object instead.");
-            Destroy(prefab);
+            pool.Release(gameObject);
         }
     }
     /// <summary>
