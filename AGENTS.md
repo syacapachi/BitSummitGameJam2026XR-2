@@ -6,9 +6,9 @@
   - Tags:
     - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, Anchor, Bullet, QDSUIBackplateGradient, QDSUIToggleBorderlessButton, QDSUIToggleButton, QDSUIToggleSwitch, QDSUITooltip, QDSUISharedThemeColor, QDSUIAccentColor, QDSUIBorderlessButton, QDSUISecondaryButton, QDSUIIcon, QDSUITextSecondaryColor, QDSUISection, Locomotion, PassThroughButton, LocoButton, LocoText, PassThrough, SamplesInfoPanel, QDSUIPrimaryButton, QDSUITextInvertedColor, QDSUITextSecondaryInvertedColor, QDSUIDestructiveButton, QDSUIToggleCheckboxRadio, QDSUIBackplate, QDSUITextInputField
   - Layers:
-    - Default, TransparentFX, Ignore Raycast, Overlay UI, Water, UI, Human, Ghost, Both
+    - Default, TransparentFX, Ignore Raycast, Water, UI
 - Active game object:
-  - Name: Camera Offset
+  - Name: GameManager
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
