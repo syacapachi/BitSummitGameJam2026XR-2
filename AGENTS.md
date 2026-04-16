@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Overlay UI, Water, UI, Human, Ghost, Both
 - Active game object:
-  - Name: GameManager
+  - Name: GameClearEffectManager
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

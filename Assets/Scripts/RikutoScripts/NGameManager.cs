@@ -13,7 +13,6 @@ public class NGameManager : NetworkBehaviour
     [SerializeField] GameMode gameMode = GameMode.Protect;
     public GameMode CurrentGameMode => gameMode;
 
-    SkyColer skybox;
 
     public ScoreManager ScoreManager => scoreManager;
     public PhaseManager PhaseManager => phaseManager;
