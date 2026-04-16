@@ -215,7 +215,6 @@ GameObject:
   - component: {fileID: 4842514609335542819}
   - component: {fileID: 8626847694839352521}
   - component: {fileID: 2094355762983484997}
-  - component: {fileID: 7040231756483127582}
   - component: {fileID: -7834844113276369265}
   - component: {fileID: 984271367505881240}
   - component: {fileID: 2665810015714780327}
@@ -333,7 +332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 521833891
+  GlobalObjectIdHash: 1186786798
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -426,23 +425,7 @@ MonoBehaviour:
   hpCanvas: {fileID: 8115059269520921985}
   hpImage: {fileID: 6392055257079718664}
   hpText: {fileID: 7872890923030782825}
-  enemyType: 1
---- !u!114 &7040231756483127582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2515483553086041883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b308c020f10cb748885d3ca367dfda3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  meshRenderer: {fileID: 7055824040725011868}
-  lookableJob: 2
-  hpCanvas: {fileID: 8115059269520921985}
+  enemyJob: 0
 --- !u!114 &-7834844113276369265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,14 +441,16 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   bulletPrefab: {fileID: 4022916156752048900, guid: bab683d334cc24943aa54f5fcfbc3e4b, type: 3}
   firePoint: {fileID: 1351349512919116466}
-  laserLine: {fileID: 984271367505881240}
   weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
   allShootSoundSource: {fileID: 0}
   allReloadSoundSource: {fileID: 0}
   syncedAmmo:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
-  enemyType: 1
+  enemyJob: 0
 --- !u!120 &984271367505881240
 LineRenderer:
   serializedVersion: 2
@@ -624,6 +609,11 @@ MonoBehaviour:
   deathSfxAll: {fileID: 8300000, guid: 28110385e59aa2a48aac031f73088dc4, type: 3}
   deathFxLifeTimeAll: 2
   deathVolumeAll: 1
+  reachedProtectArea:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
 --- !u!82 &-4752889112109069225
 AudioSource:
   m_ObjectHideFlags: 0

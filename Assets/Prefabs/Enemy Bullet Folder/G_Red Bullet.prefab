@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 277987252240903377}
   - component: {fileID: 2915560310091057160}
   - component: {fileID: 4895259463034640707}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.4883254, y: -0.21901488, z: -0.8245344, w: -0.18361323}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.2000008, y: 2.200001, z: 2.2}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6107457814022217919}
@@ -4844,8 +4844,7 @@ GameObject:
   - component: {fileID: 5923859176242764795}
   - component: {fileID: 5378760645762528686}
   - component: {fileID: 5402969836751290967}
-  - component: {fileID: 6368767328415026499}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: AuraGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4862,8 +4861,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6107457814022217919}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
@@ -9676,22 +9675,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &6368767328415026499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5745972224654893556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b308c020f10cb748885d3ca367dfda3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  meshRenderer: {fileID: 5402969836751290967}
-  lookableJob: 1
-  hpCanvas: {fileID: 0}
 --- !u!1 &6912148272411766303
 GameObject:
   m_ObjectHideFlags: 0
@@ -9709,7 +9692,7 @@ GameObject:
   - component: {fileID: 1808916243272969063}
   - component: {fileID: 2852131888510272425}
   - component: {fileID: 5976123196702261469}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: G_Red Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9726,8 +9709,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 277987252240903377}
   - {fileID: 5923859176242764795}
@@ -9935,7 +9918,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  gunSO: {fileID: 11400000, guid: 18cf6d010be7d7f4796103ae0820aa3e, type: 2}
   lifeTime: 5
   rb: {fileID: 7725814623509018697}
-  enemySO: {fileID: 11400000, guid: 6b6089d75f0b0e948aa95150ecc1b657, type: 2}
+  enemyJob: 2
