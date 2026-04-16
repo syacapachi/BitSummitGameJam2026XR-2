@@ -7,6 +7,7 @@ public class NGun : GunController
     [SerializeField] PlayerStats playerStats;
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent fireEvent;
+    [SerializeField] GameEffectDataEvent networkEvent;
 
     public override void OnNetworkSpawn()
     {
