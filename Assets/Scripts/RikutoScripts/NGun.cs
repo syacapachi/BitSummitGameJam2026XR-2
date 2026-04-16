@@ -13,7 +13,6 @@ public class NGun : GunController
     {
         if (IsOwner)
         {
-            //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed += base.Activate;
             fireEvent.Register(base.Activate);
         }
     }
@@ -21,7 +20,6 @@ public class NGun : GunController
     {
         if (IsOwner) 
         {
-            //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed -= base.Activate;
             fireEvent.Unregister(base.Activate);
         }
     }

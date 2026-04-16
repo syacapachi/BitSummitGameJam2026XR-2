@@ -1,7 +1,7 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
-public class RGameEffectAudioManager : NetworkBehaviour
+public class RpcGameEffectAudioManager : NetworkBehaviour
 {
     [Header("Reference")]
     [SerializeField] private GameObject audioSourcePrefab;

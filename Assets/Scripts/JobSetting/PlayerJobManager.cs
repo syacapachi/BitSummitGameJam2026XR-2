@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerJobManager : MonoBehaviour
 {
     [SerializeField] JobSettingSO jobSettingSO;
-    private  Dictionary<PlayerJob, PlayerLayerSettings> JobToLayerMaskDic = new();
+    private readonly Dictionary<PlayerJob, PlayerLayerSettings> JobToLayerMaskDic = new();
     public IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> JobLayerMaskDic => JobToLayerMaskDic;
 
     void Awake()

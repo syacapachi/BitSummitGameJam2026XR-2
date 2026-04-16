@@ -8,6 +8,8 @@ public class Syncronize : NetworkBehaviour
     Camera ownerCamera;
     [Header("Root")]
     [SerializeField] Transform avatorRootTransfrom;
+    [Header("Avator Animator")]
+    [SerializeField] Animator animator;
     [Header("Avator Head")]
     [SerializeField] private Transform networkHead;
     [Header("Avator Hands")]
@@ -35,9 +37,9 @@ public class Syncronize : NetworkBehaviour
         }
     }
     /// <summary>
-    /// アニメーションがある場合は、全ての適応後に更新
+    /// アニメーションを計算するタイミングで更新
     /// </summary>
-    private void LateUpdate()
+    private void OnAnimatorIK(int layerIndex)
     {
         if (IsOwner)
         {
@@ -56,13 +58,73 @@ public class Syncronize : NetworkBehaviour
             }
             //頭の角度
             Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
-            networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
+            Quaternion headQuaternion = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
+            if (animator != null)
+            {
+                //頭
+                animator.SetLookAtPosition(ownerCamera.transform.position + ownerCamera.transform.forward * 2);
+                //左手
+                animator.SetIKPosition(AvatarIKGoal.LeftHand, leftController.position);
+                animator.SetIKRotation(AvatarIKGoal.LeftHand, leftController.rotation);
+                //右手
+                animator.SetIKPosition(AvatarIKGoal.RightHand, rightController.position);
+                animator.SetIKRotation(AvatarIKGoal.RightHand, rightController.rotation);
+            }
+            else
+            {
+                
+                networkHead.localRotation = headQuaternion;
 
-            //手・コントローラー
-            networkLeftHand.SetPositionAndRotation(leftHand.position, leftHand.rotation);
-            networkRightHand.SetPositionAndRotation(rightHand.position, rightHand.rotation);
-            networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
-            networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
+                //手・コントローラー
+                networkLeftHand.SetPositionAndRotation(leftHand.position, leftHand.rotation);
+                networkRightHand.SetPositionAndRotation(rightHand.position, rightHand.rotation);
+                networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
+                networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
+            }
+        }
+        //非オーナーは、同期されているアバターの位置をAnimatorに反映させる
+        else
+        {
+            if (animator == null) return;
+            //頭
+            animator.SetLookAtPosition(networkHead.position + networkHead.forward * 2);
+            //左手
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, networkLeftController.position);
+            animator.SetIKRotation(AvatarIKGoal.LeftHand, networkLeftController.rotation);
+            //右手
+            animator.SetIKPosition(AvatarIKGoal.RightHand, networkRightController.position);
+            animator.SetIKRotation(AvatarIKGoal.RightHand, networkRightController.rotation);
         }
     }
+    /// <summary>
+    /// アニメーションがある場合は、全ての適応後に更新
+    /// </summary>
+    //private void LateUpdate()
+    //{
+    //    if (IsOwner)
+    //    {
+    //        Vector3 playerPos = xrOrigin.Camera.transform.position;
+    //        //ルートの移動（重要）
+    //        float offset = xrOrigin.transform.position.y - playerPos.y;
+
+    //        playerPos.y += offset;
+
+    //        avatorRootTransfrom.position = playerPos;
+
+    //        if (xrOrigin.transform.localRotation.eulerAngles.y - lastOrigonRotation > 0.1f)
+    //        {
+    //            avatorRootTransfrom.rotation = xrOrigin.transform.rotation;
+    //            lastOrigonRotation = avatorRootTransfrom.rotation.eulerAngles.y;
+    //        }
+    //        //頭の角度
+    //        Vector3 headrotation = ownerCamera.transform.localRotation.eulerAngles;
+    //        networkHead.localRotation = Quaternion.Euler(-headrotation.y, headrotation.z, -headrotation.x);
+
+    //        //手・コントローラー
+    //        networkLeftHand.SetPositionAndRotation(leftHand.position, leftHand.rotation);
+    //        networkRightHand.SetPositionAndRotation(rightHand.position, rightHand.rotation);
+    //        networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
+    //        networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
+    //    }
+    //}
 }
