@@ -47,7 +47,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   networkPool: {fileID: 0}
-  reciver: {fileID: 3236578938828554086}
   spawnPoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -69,6 +68,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   protectArea: {fileID: 0}
+  OnAllEnemyDeadRpcEvent: {fileID: 0}
+  EnemyKilled: {fileID: 0}
 --- !u!1 &2422005359530234837
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,7 +120,15 @@ MonoBehaviour:
   scoreManager: {fileID: 0}
   phaseManager: {fileID: 0}
   gameState:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  OnbulletComeRpcEvent: {fileID: 0}
+  OnGameStateChangeRpcEvent: {fileID: 0}
+  RecieveResultRpcEvent: {fileID: 0}
+  OnScoreReachZeroServerEvent: {fileID: 0}
+  OnAllPhaseEndedServerEvent: {fileID: 0}
 --- !u!1 &3725803282486785523
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,7 +138,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7632427241287898132}
-  - component: {fileID: 3236578938828554086}
   m_Layer: 0
   m_Name: DethReciver
   m_TagString: Untagged
@@ -152,17 +160,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2582536890160753421}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3236578938828554086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3725803282486785523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3084222d1587ca64c98d83a4ad311868, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawner: {fileID: 1624047670963601631}
-  tutorialManager: {fileID: 0}
