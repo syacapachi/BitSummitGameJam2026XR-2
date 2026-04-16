@@ -3,55 +3,64 @@ using UnityEngine;
 public class GameClearEffectManager : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] NGameManager gameManager; // Inspectorで入れる（無ければ自動取得）
+    [SerializeField] NGameManager gameManager; // Inspectorで入れるの推奨（無ければ自動検索）
 
     [Header("Debug")]
     [SerializeField] bool logStateChange = false;
 
-    // 状態監視
+    // State監視
     GameState lastState;
     bool initialized;
-
-    // 「GameClear演出を一度だけ実行」用
     bool clearApplied;
 
-    // --- ここから先は演出用の参照を増やしていく ---
+    // ========== ここから「GameClearでやりたいこと」を詰めていく ==========
     [Header("Effect Targets")]
-    [SerializeField] GameObject moonQuad;        // 窓の月(Quad)
-    [SerializeField] Light[] roomLights;         // 部屋ライト
+    [SerializeField] GameObject moonQuad;        // 窓の月(Quad)を消す
+    [SerializeField] Light[] roomLights;         // 部屋の光を強くする
     [SerializeField] float clearLightIntensity = 2.0f;
 
-    // Sky / Ambient をいったん簡易に（必要なら差し替え）
-    [Header("Sky/Ambient (optional)")]
-    [SerializeField] bool useAmbient = true;
-    [SerializeField] Color clearAmbientColor = new(0.75f, 0.8f, 0.9f, 1f);
-    [SerializeField] float clearAmbientIntensity = 1.2f;
+    [Header("Sky Option A: Camera Solid Color")]
+    [SerializeField] bool useCameraSolidColor = false;
+    [SerializeField] Camera[] targetCameras;     // 外が「背景色」ならここにMainCamera等を入れる
+    [SerializeField] Color clearBackgroundColor = new Color(0.70f, 0.80f, 1.00f, 1f);
+    [SerializeField] bool forceSolidColorClearFlags = true; // SkyboxならSolidColorに変える
 
-    // --- デフォルト復元用 ---
+    [Header("Sky Option B: RenderSettings Skybox")]
+    [SerializeField] bool useRenderSettingsSkybox = true;
+    [SerializeField] float clearSkyboxExposure = 1.3f;      // 明るさ
+    [SerializeField] Color clearSkyboxTint = Color.white;   // 色味（白でOK）
+    // ===============================================================
+
+    // --- デフォルト保持（リトライ用に戻す） ---
     bool defaultsCached;
     bool defaultMoonActive;
     float[] defaultLightIntensities;
-    Color defaultAmbientColor;
-    float defaultAmbientIntensity;
 
-    void Awake()
-    {
-        CacheDefaults();
-    }
+    // Camera defaults
+    Color[] defaultCamBg;
+    CameraClearFlags[] defaultCamFlags;
+
+    // Skybox defaults
+    Material originalSkyboxMat;
+    Material runtimeSkyboxMat;
 
     void Start()
     {
         ResolveRefs();
+        CacheDefaults();
         InitState();
     }
 
     void Update()
     {
-        if (gameManager == null) return;
+        if (gameManager == null)
+        {
+            ResolveRefs();
+            return;
+        }
 
         var current = gameManager.CurrentGameState;
 
-        // 初回
         if (!initialized)
         {
             lastState = current;
@@ -59,16 +68,12 @@ public class GameClearEffectManager : MonoBehaviour
             return;
         }
 
-        // 変化検知
         if (current != lastState)
         {
-            if (logStateChange) Debug.Log($"[GameClearEffectManager] State: {lastState} -> {current}");
+            if (logStateChange) Debug.Log($"[GameClearEffectManager] {lastState} -> {current}");
             OnStateChanged(lastState, current);
             lastState = current;
         }
-
-        // 変化検知を使わず「常に監視したい」場合はここに追記も可能
-        // 例：Playing中は徐々に暗くする…など
     }
 
     void ResolveRefs()
@@ -86,21 +91,17 @@ public class GameClearEffectManager : MonoBehaviour
 
     void OnStateChanged(GameState oldState, GameState newState)
     {
-        // ゲームクリアに入った瞬間
         if (newState == GameState.GameClear)
         {
             ApplyGameClearOnce();
             return;
         }
 
-        // 初期化/プレイに戻ったら演出を戻す（リトライ想定）
+        // リトライで戻す想定
         if (newState == GameState.Initializing || newState == GameState.Playing)
         {
             RestoreDefaults();
         }
-
-        // GameOver用演出を足したくなったらここに
-        // if (newState == GameState.GameOver) ApplyGameOverOnce();
     }
 
     void ApplyGameClearOnce()
@@ -110,34 +111,41 @@ public class GameClearEffectManager : MonoBehaviour
 
         CacheDefaults();
 
-        // ===== ここに「GameClear時にしたいこと」をどんどん足していく =====
-
-        // 1) 窓の月(Quad)を消す
+        // 1) 月Quadを消す
         if (moonQuad != null) moonQuad.SetActive(false);
 
-        // 2) 部屋の光を強くする
+        // 2) 部屋ライトを強くする
         if (roomLights != null)
         {
             foreach (var l in roomLights)
                 if (l != null) l.intensity = clearLightIntensity;
         }
 
-        // 3) Sky / Ambient を明るくする（簡易版）
-        if (useAmbient)
+        // 3-A) 背景色で空を明るくする（Solid Color用）
+        if (useCameraSolidColor && targetCameras != null)
         {
-            RenderSettings.ambientLight = clearAmbientColor;
-            RenderSettings.ambientIntensity = clearAmbientIntensity;
+            for (int i = 0; i < targetCameras.Length; i++)
+            {
+                var cam = targetCameras[i];
+                if (cam == null) continue;
+
+                if (forceSolidColorClearFlags)
+                    cam.clearFlags = CameraClearFlags.SolidColor;
+
+                cam.backgroundColor = clearBackgroundColor;
+            }
         }
 
-        // 例：BGM切り替え、ポストプロセス、UI表示、フェード等もここに追加
-        // ================================================================
+        // 3-B) Skybox（RenderSettings）を明るくする（Skybox用）
+        if (useRenderSettingsSkybox && runtimeSkyboxMat != null)
+        {
+            SetSkyboxBrightness(runtimeSkyboxMat, clearSkyboxExposure, clearSkyboxTint);
+        }
     }
 
     void RestoreDefaults()
     {
-        // 「次のプレイのために戻す」
         clearApplied = false;
-
         CacheDefaults();
 
         if (moonQuad != null) moonQuad.SetActive(defaultMoonActive);
@@ -148,10 +156,24 @@ public class GameClearEffectManager : MonoBehaviour
                 if (roomLights[i] != null) roomLights[i].intensity = defaultLightIntensities[i];
         }
 
-        if (useAmbient)
+        // Camera restore
+        if (useCameraSolidColor && targetCameras != null && defaultCamBg != null && defaultCamFlags != null)
         {
-            RenderSettings.ambientLight = defaultAmbientColor;
-            RenderSettings.ambientIntensity = defaultAmbientIntensity;
+            for (int i = 0; i < targetCameras.Length; i++)
+            {
+                var cam = targetCameras[i];
+                if (cam == null) continue;
+                cam.clearFlags = defaultCamFlags[i];
+                cam.backgroundColor = defaultCamBg[i];
+            }
+        }
+
+        // Skybox restore
+        if (useRenderSettingsSkybox)
+        {
+            // 元のマテリアルに戻す
+            if (originalSkyboxMat != null)
+                RenderSettings.skybox = originalSkyboxMat;
         }
     }
 
@@ -169,7 +191,39 @@ public class GameClearEffectManager : MonoBehaviour
                 defaultLightIntensities[i] = roomLights[i] ? roomLights[i].intensity : 1f;
         }
 
-        defaultAmbientColor = RenderSettings.ambientLight;
-        defaultAmbientIntensity = RenderSettings.ambientIntensity;
+        // Camera defaults
+        if (targetCameras != null)
+        {
+            defaultCamBg = new Color[targetCameras.Length];
+            defaultCamFlags = new CameraClearFlags[targetCameras.Length];
+            for (int i = 0; i < targetCameras.Length; i++)
+            {
+                var cam = targetCameras[i];
+                defaultCamBg[i] = cam ? cam.backgroundColor : Color.black;
+                defaultCamFlags[i] = cam ? cam.clearFlags : CameraClearFlags.Skybox;
+            }
+        }
+
+        // Skybox defaults（アセットを直接いじらないよう、ランタイム複製を使う）
+        originalSkyboxMat = RenderSettings.skybox;
+        if (originalSkyboxMat != null)
+        {
+            runtimeSkyboxMat = new Material(originalSkyboxMat);
+            RenderSettings.skybox = runtimeSkyboxMat;
+        }
+    }
+
+    static void SetSkyboxBrightness(Material sky, float exposure, Color tint)
+    {
+        // Skyboxシェーダによってプロパティ名が違うので「存在チェックして書く」
+        if (sky == null) return;
+
+        // Procedural Skybox でよくある
+        if (sky.HasProperty("_Exposure")) sky.SetFloat("_Exposure", exposure);
+        if (sky.HasProperty("_Tint")) sky.SetColor("_Tint", tint);
+
+        // たまにある別名
+        if (sky.HasProperty("_SkyTint")) sky.SetColor("_SkyTint", tint);
+        if (sky.HasProperty("_GroundColor")) sky.SetColor("_GroundColor", tint);
     }
 }
