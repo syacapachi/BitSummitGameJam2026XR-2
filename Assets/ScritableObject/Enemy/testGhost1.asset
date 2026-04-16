@@ -17,9 +17,10 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: aa1e07d3e3ba968489f3cba3bbe76b41, type: 3}
   HP: 100
   Damage: 100
-  Speed: 0.1
   BulletSpeed: 5
   FirstShootDelay: 10
   shootInterval: 5
   scoreValue: 100
+  Speed: 0
   prefab: {fileID: 2515483553086041883, guid: e48a1caf11da14b40b25a3b397db6803, type: 3}
+  enemyWeapon: {fileID: 11400000, guid: c26a60b458e18e148a462121f31fcd89, type: 2}

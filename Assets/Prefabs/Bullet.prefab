@@ -219,10 +219,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  gunSO: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
   lifeTime: 5
   rb: {fileID: 1573959926225779258}
-  target: 0
+  trailRenderer: {fileID: 3976810285319044239}
   hitFxPrefab: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
   shieldFxPrefab: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
   hitFxLife: 2
@@ -306,8 +305,8 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.3766104
-        value: 0.06636047
+        time: 0.3793341
+        value: 0.027145386
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -397,6 +396,7 @@ MonoBehaviour:
   hitWallClipAll: {fileID: 0}
   hitEnemyVolumeAll: 1
   hitWallVolumeAll: 0.8
+  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!33 &-6786372206499814153
 MeshFilter:
   m_ObjectHideFlags: 0
