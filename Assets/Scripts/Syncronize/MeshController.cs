@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Syacapachi.Attribute;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
@@ -16,9 +17,16 @@ public class MeshController : NetworkBehaviour
             }
         }
     }
+#if UNITY_EDITOR
     private void Reset()
+    {
+        FindAndApply();
+    }
+    [OnInspectorButton]
+    private void FindAndApply()
     {
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         m_Renderer = renderers.ToList();
     }
+#endif
 }

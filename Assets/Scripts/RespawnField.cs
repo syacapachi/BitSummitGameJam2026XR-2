@@ -34,11 +34,15 @@ public class RespawnField : MonoBehaviour
     {
         obj.transform.position = respawnPositon;
         obj.transform.rotation = Quaternion.Euler(Vector3.zero);
-        Rigidbody rb = obj.GetComponent<Rigidbody>();
-        if (rb != null)
+        if(obj.TryGetComponent<Rigidbody>(out Rigidbody rb))
         {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            if (!rb.isKinematic)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
         }
+
+        
     }
 }

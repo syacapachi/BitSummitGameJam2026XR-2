@@ -133,11 +133,9 @@ namespace Syacapachi.util
             {
                 if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb))
                 {
-                    bool preKinematic = rb.isKinematic;
-                    rb.isKinematic = true;
+                    if (rb.isKinematic) return;
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
-                    rb.isKinematic = rb.isKinematic;
                 }
                 networkObject.gameObject.SetActive(false);
             }
@@ -155,7 +153,7 @@ namespace Syacapachi.util
                 actionOnGet: ActionOnGet, 
                 actionOnRelease: ActionOnRelease,
                 actionOnDestroy: ActionOnDestroy,
-                defaultCapacity: prewarmCount);
+                defaultCapacity: prewarmCount * 10);
 
             // Populate the pool
             var prewarmNetworkObjects = new List<NetworkObject>();
