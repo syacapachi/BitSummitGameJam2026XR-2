@@ -34,7 +34,7 @@ public class LocalObjectPoolManager : MonoBehaviour
             {
                 bool preKinematic = rb.isKinematic;
                 rb.isKinematic = true;// 物理演算リセット
-                rb.isKinematic = rb.isKinematic;
+                rb.isKinematic = preKinematic;
             }
         }
         var pool = new ObjectPool<GameObject>(
