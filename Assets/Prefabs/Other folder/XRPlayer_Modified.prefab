@@ -3662,12 +3662,16 @@ MonoBehaviour:
   allShootSoundSource: {fileID: 0}
   allReloadSoundSource: {fileID: 0}
   syncedAmmo:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   laserLine: {fileID: 6764051551716108040}
   audioObserver: {fileID: 1840299474899798204}
   ammoUI: {fileID: 0}
   playerStats: {fileID: 0}
   fireEvent: {fileID: 0}
+  networkEvent: {fileID: 0}
 --- !u!114 &4021316936165528260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3682,6 +3686,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerCollider: {fileID: 0}
   PlayerCamera: {fileID: 0}
+  setting: {fileID: 0}
   JobEvent: {fileID: 0}
   switchJobEvent: {fileID: 0}
   playerjob: 1
@@ -3716,6 +3721,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   maxHP: 100
   currentHP:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 100
 --- !u!114 &1840299474899798204
 MonoBehaviour:
@@ -3734,6 +3742,7 @@ MonoBehaviour:
   reloadClipAll: {fileID: 8300000, guid: 340af5487fd48654a9df6a5eeeb0e4f0, type: 3}
   shotVolumeAll: 1
   reloadVolumeAll: 1
+  gameEffectEvent: {fileID: 0}
 --- !u!82 &2859907203708093746
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3863,7 +3872,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  firePoint: {fileID: 4019957464198675819}
+  firePoint: {fileID: 0}
   lineRenderer: {fileID: 6764051551716108040}
   playerMarker: {fileID: 8123762091118261607, guid: 66b64047264b0fb408e7d6a2ebe746d9, type: 3}
   node: {fileID: 0}
@@ -3884,8 +3893,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   markerPlacedClipAll: {fileID: 8300000, guid: 84de006a9c69e05469e8e7402c58543f, type: 3}
+  markerFxPrefabAll: {fileID: 0}
   markerPlacedVolumeAll: 1
   playAsUiAll: 0
+  gameEffectEvent: {fileID: 0}
 --- !u!1 &4474157034096068673
 GameObject:
   m_ObjectHideFlags: 0
@@ -5999,7 +6010,7 @@ Transform:
   m_Children:
   - {fileID: 4520498069701977938}
   - {fileID: 4220665355201594683}
-  - {fileID: 2314468204341838933}
+  - {fileID: 4484587041082522257}
   - {fileID: 2997919579142271587}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8065,7 +8076,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 4019957463602969994}
+    m_TransformParent: {fileID: 4484587041082522257}
     m_Modifications:
     - target: {fileID: 4583174484010891489, guid: c4abf1207e2a3dd488ef0285fcc38280, type: 3}
       propertyPath: m_LocalScale.x
@@ -8970,23 +8981,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6559630063493027968, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 5980159000183742363, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1643433529512495475}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
---- !u!4 &2314468204341838933 stripped
+--- !u!4 &4484587041082522257 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5539175048557814111, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
-  m_PrefabInstance: {fileID: 7836754603109885194}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &4019957463602969994 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6559630063493027968, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
-  m_PrefabInstance: {fileID: 7836754603109885194}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &4019957464198675819 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6559630063216121953, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5980159000183742363, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
   m_PrefabInstance: {fileID: 7836754603109885194}
   m_PrefabAsset: {fileID: 0}

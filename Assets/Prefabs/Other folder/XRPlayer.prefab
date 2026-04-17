@@ -2380,6 +2380,7 @@ MonoBehaviour:
   AllEnemyDeadRpcEvent: {fileID: 0}
   OnPhaseChangeRpcEvent: {fileID: 0}
   GameStateChangeRpcEvent: {fileID: 0}
+  nGameManager: {fileID: 0}
 --- !u!1 &1841430830600990577
 GameObject:
   m_ObjectHideFlags: 0
@@ -10640,6 +10641,7 @@ MonoBehaviour:
   ammoUI: {fileID: 0}
   playerStats: {fileID: 0}
   fireEvent: {fileID: 0}
+  networkEvent: {fileID: 0}
 --- !u!114 &8392041462461411779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10654,6 +10656,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerCollider: {fileID: 0}
   PlayerCamera: {fileID: 0}
+  setting: {fileID: 0}
   JobEvent: {fileID: 0}
   switchJobEvent: {fileID: 0}
   playerjob: 0
