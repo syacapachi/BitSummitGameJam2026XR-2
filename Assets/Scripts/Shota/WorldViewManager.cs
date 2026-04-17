@@ -2,47 +2,48 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 public class WorldViewManager : MonoBehaviour
 {
-    [Header("ŠÅ”Â‚ÌƒeƒLƒXƒg•\¦—“")]
+    [Header("")]
     public TextMeshProUGUI boardText;
 
-    [Header("ƒ^ƒCƒgƒ‹ƒeƒLƒXƒg")]
+    [Header("")]
     public TextMeshProUGUI titleText;
 
-    [Header("Ÿ‚Öƒ{ƒ^ƒ“")]
+    [Header("")]
     public Button nextButton;
 
-    [Header("ƒ{ƒ^ƒ“‚ÌƒeƒLƒXƒg")]
+    [Header("")]
     public TextMeshProUGUI buttonText;
 
-    [Header("ƒ[ƒJƒ‰ƒCƒYƒeƒLƒXƒg")]
+    [Header("")]
     public LocalizedText localizedText;
 
     [Header("BGM")]
     public AudioSource bgmSource;
     public AudioClip bgmClip;
 
-    [Header("ŠÂ‹«‰¹")]
+    [Header("")]
     public AudioSource ambientSource;
     public AudioClip ambientClip;
 
-    // Œ»İ‰½–‡–Ú‚ÌŠÅ”Â‚ğ•\¦‚µ‚Ä‚¢‚é‚©
+    // ï¿½ï¿½ï¿½İ‰ï¿½ï¿½ï¿½ï¿½Ú‚ÌŠÅ”Â‚ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©
     private int currentIndex = 0;
 
-    // ŠÅ”Â‚Í‘S•”‚Å4–‡i¢ŠEŠÏ3–‡{‘€ìà–¾1–‡j
+    // ï¿½Å”Â‚Í‘Sï¿½ï¿½ï¿½ï¿½4ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½Eï¿½ï¿½3ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½j
     private int totalBoards = 4;
 
-    // ŠeŠÅ”Â‚Ìƒ^ƒCƒgƒ‹i“ú–{Œêj
+    // ï¿½eï¿½Å”Â‚Ìƒ^ï¿½Cï¿½gï¿½ï¿½ï¿½iï¿½ï¿½ï¿½{ï¿½ï¿½j
     private string[] japaneseTitles = {
-        "‘oq‚Ì—ì”}t",
-        "—ì—Í‚Ì–@‘¥",
-        "¡‰ñ‚ÌˆË—Š",
-        "‘€ìà–¾"
+        "ï¿½oï¿½qï¿½Ì—ï¿½}ï¿½t",
+        "ï¿½ï¿½Í‚Ì–@ï¿½ï¿½",
+        "ï¿½ï¿½ï¿½ï¿½ÌˆË—ï¿½",
+        "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
     };
 
-    // ŠeŠÅ”Â‚Ìƒ^ƒCƒgƒ‹i‰pŒêj
+    // ï¿½eï¿½Å”Â‚Ìƒ^ï¿½Cï¿½gï¿½ï¿½ï¿½iï¿½pï¿½ï¿½j
     private string[] englishTitles = {
         "Twin Mediums",
         "Law of Spiritual Power",
@@ -52,7 +53,7 @@ public class WorldViewManager : MonoBehaviour
 
     void Start()
     {
-        // BGM‚ğÄ¶‚·‚é
+        // BGMï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½
         if (bgmSource != null && bgmClip != null)
         {
             bgmSource.clip = bgmClip;
@@ -60,7 +61,7 @@ public class WorldViewManager : MonoBehaviour
             bgmSource.Play();
         }
 
-        // ŠÂ‹«‰¹‚ğÄ¶‚·‚é
+        // ï¿½Â‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½
         if (ambientSource != null && ambientClip != null)
         {
             ambientSource.clip = ambientClip;
@@ -68,22 +69,22 @@ public class WorldViewManager : MonoBehaviour
             ambientSource.Play();
         }
 
-        // Å‰‚ÌŠÅ”Â‚ğ•\¦‚·‚é
+        // ï¿½Åï¿½ï¿½ÌŠÅ”Â‚ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         ShowBoard(currentIndex);
     }
 
-    // ŠÅ”Â‚ğ•\¦‚·‚éƒƒ\ƒbƒh
+    // ï¿½Å”Â‚ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½éƒï¿½\ï¿½bï¿½h
     void ShowBoard(int index)
     {
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
 
-        // –{•¶ƒeƒLƒXƒg‚ğXV‚·‚é
+        // ï¿½{ï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½gï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½
         if (localizedText != null && boardText != null)
         {
             boardText.text = localizedText.Get(index);
         }
 
-        // ƒ^ƒCƒgƒ‹ƒeƒLƒXƒg‚ğXV‚·‚é
+        // ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½gï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½
         if (titleText != null)
         {
             if (isJapanese)
@@ -96,34 +97,35 @@ public class WorldViewManager : MonoBehaviour
             }
         }
 
-        // ÅŒã‚ÌŠÅ”Â‚È‚çƒ{ƒ^ƒ“‚ÌƒeƒLƒXƒg‚ğu•Â‚¶‚év‚É•Ï‚¦‚é
+        // ï¿½ÅŒï¿½ÌŠÅ”Â‚È‚ï¿½{ï¿½^ï¿½ï¿½ï¿½Ìƒeï¿½Lï¿½Xï¿½gï¿½ï¿½ï¿½uï¿½Â‚ï¿½ï¿½ï¿½vï¿½É•Ï‚ï¿½ï¿½ï¿½
         if (buttonText != null)
         {
             if (index >= totalBoards - 1)
             {
-                buttonText.text = isJapanese ? "•Â‚¶‚é" : "Close";
+                buttonText.text = isJapanese ? "ï¿½Â‚ï¿½ï¿½ï¿½" : "Close";
             }
             else
             {
-                buttonText.text = isJapanese ? "Ÿ‚Ö" : "Next";
+                buttonText.text = isJapanese ? "ï¿½ï¿½ï¿½ï¿½" : "Next";
             }
         }
     }
 
-    // ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚éƒƒ\ƒbƒh
+    // ï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ÉŒÄ‚Î‚ï¿½éƒï¿½\ï¿½bï¿½h
     public void OnNextButtonClicked()
     {
         currentIndex++;
 
-        // ‚Ü‚¾ŠÅ”Â‚ªc‚Á‚Ä‚¢‚é‚È‚çŸ‚ÌŠÅ”Â‚ğ•\¦
+        // ï¿½Ü‚ï¿½ï¿½Å”Â‚ï¿½ï¿½cï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½È‚çŸï¿½ÌŠÅ”Â‚ï¿½\ï¿½ï¿½
         if (currentIndex < totalBoards)
         {
             ShowBoard(currentIndex);
         }
         else
         {
-            // ‘S•”‚ÌŠÅ”Â‚ğŒ©I‚í‚Á‚½‚çTutorialScene‚ÖˆÚ“®
+            // ï¿½Sï¿½ï¿½ï¿½ÌŠÅ”Â‚ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½TutorialSceneï¿½ÖˆÚ“ï¿½
             SceneManager.LoadScene("TutorialScene");
+            //NetworkSceneManager.
         }
     }
 }

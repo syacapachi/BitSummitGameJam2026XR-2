@@ -15,7 +15,7 @@ public class PlayerPropaty : MonoBehaviour
 
     private void Start()
     {
-        var jobManager = ManagerLocator.Instance.JobManager;
+        var jobManager = ManagerLocator.Instance?.JobManager;
         if (jobManager == null)
         {
             Debug.LogError("PlayerJobManager not found in the scene.");

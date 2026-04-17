@@ -11,7 +11,7 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] VoidEvent AllEnemyDeadRpcEvent;
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] GameStateEvent GameStateChangeRpcEvent;
-    private NGameManager nGameManager;
+    [SerializeField] private NGameManager nGameManager;
 
     private Coroutine currentRoutine;
 
@@ -27,14 +27,8 @@ public class PhaseUI : MonoBehaviour
 
     private UIState currentState = UIState.Idle;
 
-    IEnumerator Start()
+    void Start()
     {
-        while (ManagerLocator.Instance.AllGameManager == null)
-        {
-            yield return null;
-        }
-
-        nGameManager = ManagerLocator.Instance.AllGameManager;
         InitializeUI();
     }
 

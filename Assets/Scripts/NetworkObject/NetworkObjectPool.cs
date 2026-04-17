@@ -23,7 +23,11 @@ namespace Syacapachi.util
 
         HashSet<GameObject> m_Prefabs = new HashSet<GameObject>();
 
-        Dictionary<GameObject, ObjectPool<NetworkObject>> m_PooledObjects = new Dictionary<GameObject, ObjectPool<NetworkObject>>();
+        Dictionary<GameObject, ObjectPool<NetworkObject>> m_PooledObjects = new ();
+        /// <summary>
+        /// Prefabを参照させる辞書
+        /// </summary>
+        readonly Dictionary<NetworkObject,GameObject> objectToPrefabDic = new();
 
         public void Awake()
         {
@@ -109,9 +113,14 @@ namespace Syacapachi.util
         /// <summary>
         /// Return an object to the pool (reset objects before returning).
         /// </summary>
-        public void ReturnNetworkObject(NetworkObject networkObject, GameObject prefab)
+        public void ReturnNetworkObject(NetworkObject networkObject, GameObject gameObject)
         {
-            m_PooledObjects[prefab].Release(networkObject);
+            if(!objectToPrefabDic.TryGetValue(networkObject, out var prefabObject))
+            {
+                Debug.LogError($"[{prefabObject.name}] is not assgined pool");
+                return;
+            }
+            m_PooledObjects[prefabObject].Release(networkObject);
         }
 
         /// <summary>
@@ -121,15 +130,17 @@ namespace Syacapachi.util
         {
             NetworkObject CreateFunc()
             {
-                return Instantiate(prefab).GetComponent<NetworkObject>();
+                var networkObject = Instantiate(prefab).GetComponent<NetworkObject>();
+                objectToPrefabDic[networkObject] = prefab;
+                return networkObject;
             }
 
-            void ActionOnGet(NetworkObject networkObject)
+            static void ActionOnGet(NetworkObject networkObject)
             {
                 networkObject.gameObject.SetActive(true);
             }
 
-            void ActionOnRelease(NetworkObject networkObject)
+            static void ActionOnRelease(NetworkObject networkObject)
             {
                 if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb))
                 {
@@ -140,7 +151,7 @@ namespace Syacapachi.util
                 networkObject.gameObject.SetActive(false);
             }
 
-            void ActionOnDestroy(NetworkObject networkObject)
+            static void ActionOnDestroy(NetworkObject networkObject)
             {
                 Destroy(networkObject.gameObject);
             }
@@ -153,6 +164,7 @@ namespace Syacapachi.util
                 actionOnGet: ActionOnGet, 
                 actionOnRelease: ActionOnRelease,
                 actionOnDestroy: ActionOnDestroy,
+                collectionCheck: false,
                 defaultCapacity: prewarmCount * 10);
 
             // Populate the pool

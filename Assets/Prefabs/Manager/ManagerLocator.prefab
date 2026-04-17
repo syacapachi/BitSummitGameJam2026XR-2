@@ -92,8 +92,8 @@ Transform:
   - {fileID: 4411501771318302359}
   - {fileID: 5418814566632101354}
   - {fileID: 4322182251488153399}
-  - {fileID: 3849798436365709849}
   - {fileID: 4746944526076724239}
+  - {fileID: 8180314942974675238}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &577900837676337283
@@ -312,63 +312,6 @@ MonoBehaviour:
   jobChangeEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
   IsJobOverride: 1
   JobOverride: 2
---- !u!1 &3017437718912638691
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3849798436365709849}
-  - component: {fileID: 5303856544972294843}
-  m_Layer: 0
-  m_Name: GameClearEffectManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3849798436365709849
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3017437718912638691}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4908882465109089120}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5303856544972294843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3017437718912638691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad650680f13b3b3468b9dded6cb4d4d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameStateRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
-  logStateChange: 0
-  moonQuad: {fileID: 0}
-  roomLights:
-  - {fileID: 0}
-  clearLightIntensity: 4
-  useCameraSolidColor: 0
-  targetCameras: []
-  clearBackgroundColor: {r: 0.7, g: 0.8, b: 1, a: 1}
-  forceSolidColorClearFlags: 1
-  useRenderSettingsSkybox: 1
-  clearSkyboxExposure: 1.3
-  clearSkyboxTint: {r: 0.9559748, g: 0.93653965, b: 0.71848416, a: 1}
 --- !u!1 &5382503739911564800
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,6 +627,94 @@ MonoBehaviour:
   useRenderSettingsSkybox: 1
   clearSkyboxExposure: 1.3
   clearSkyboxTint: {r: 0.9559748, g: 0.93653965, b: 0.71848416, a: 1}
+--- !u!1 &7513993489619834028
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8180314942974675238}
+  - component: {fileID: 2796378616358460872}
+  m_Layer: 0
+  m_Name: InputReciever
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8180314942974675238
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7513993489619834028}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4908882465109089120}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2796378616358460872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7513993489619834028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8285d2828b5f3d349bf6d8522a30f2c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerInput: {fileID: 0}
+  vector2EventList:
+  - action: {fileID: -1680190386980627800, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: 5fc02d6a0c59226468d706cf6757d428, type: 2}
+    setting: -1
+  - action: {fileID: -7471211009204490832, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: d29c8359e156b404296e840942685e66, type: 2}
+    setting: -1
+  boolEventList:
+  - action: {fileID: -7471211009204490832, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: cc0dabacbfea2cb4ebe216ae03444663, type: 2}
+    setting: -1
+  voidEventList:
+  - action: {fileID: -2099379676528639254, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
+    setting: 1
+  - action: {fileID: 1781555164194001046, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: 853b9aefc75e5a445b94dc0097bec931, type: 2}
+    setting: 1
+  - action: {fileID: 1784955804284052851, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: 4cbe807c5f2ef6d47b2440ff35bb0265, type: 2}
+    setting: 1
+  - action: {fileID: -932780676673065530, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: 146e83d8d5f1d4041aaf212501131a73, type: 2}
+    setting: 1
+  - action: {fileID: 5746621223023547563, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: f9e23ca27358a3f419041719b45bce40, type: 2}
+    setting: 1
+  - action: {fileID: -3800612907701892205, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: 4f90a0dcf15ac3346a5d4dc1ef33d19a, type: 2}
+    setting: 1
+  - action: {fileID: 1218294735510755974, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
+    setting: 1
+  moveEvent: {fileID: 0}
+  lookEvent: {fileID: 0}
+  jumpEvent: {fileID: 0}
+  setEvent: {fileID: 0}
+  dashEvent: {fileID: 0}
+  fireEvent: {fileID: 0}
+  cameraSwitchEvent: {fileID: 0}
+  switchJobEvent: {fileID: 0}
+  markerEvent: {fileID: 0}
+  uiEvent: {fileID: 0}
 --- !u!1 &8596286252487718755
 GameObject:
   m_ObjectHideFlags: 0
