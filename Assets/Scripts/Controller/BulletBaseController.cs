@@ -16,11 +16,15 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     public PlayerJob ShooterJob => shooterJob;
 
     public float Damage => gunSO.Damage;
+
+    void Start()
+    {
+        rb ??= GetComponent<Rigidbody>();
+    }
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
+        if (IsServer && gunSO != null)
         {
-            rb = GetComponent<Rigidbody>();
             rb.linearVelocity = transform.forward * gunSO.speed;
             despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
         }

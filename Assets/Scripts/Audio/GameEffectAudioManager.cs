@@ -43,19 +43,40 @@ public class GameEffectAudioManager : MonoBehaviour
             StartCoroutine(PlayDelayedAndRelease(audioSource, effect.Delay));
         }
     }
-    private IEnumerator PlayAndRelease(AudioSource audioSource)
+    private IEnumerator PlayAndRelease(AudioSource source)
     {
-        audioSource.Play();
-        yield return new WaitForSeconds(audioSource.clip.length);
-        localObjectPool.Release(audioSource.gameObject);
+        // ループなら自動解放しない
+        if (source.loop)
+            yield break;
+
+        //停止を待つ。
+        yield return new WaitWhile(() => source != null && source.isPlaying);
+
+        if (source != null)
+        {
+            ReturnPool(source);
+        }
     }
     private IEnumerator PlayDelayedAndRelease(AudioSource source,float delay)
     {
         yield return new WaitForSeconds(delay);
-        source.Play();
-        yield return new WaitForSeconds(source.clip.length);
+        // ループなら自動解放しない
+        if (source.loop)
+            yield break;
+
+        //停止を待つ。
+        yield return new WaitWhile(() => source != null && source.isPlaying);
+
+        if (source != null)
+        {
+            ReturnPool(source);
+        }
+    }
+    private void ReturnPool(AudioSource source)
+    {
+        source.Stop();
+        source.clip = null;
         localObjectPool.Release(source.gameObject);
-        
     }
 }
 public readonly struct GameEffect

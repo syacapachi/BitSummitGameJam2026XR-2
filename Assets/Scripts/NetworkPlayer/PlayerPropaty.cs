@@ -6,6 +6,7 @@ public class PlayerPropaty : MonoBehaviour
 {
     [SerializeField] GameObject PlayerCollider;
     [SerializeField] Camera PlayerCamera;
+    [SerializeField] JobSetting setting;
     [Header("Publish Event")]
     [SerializeField] PlayerJobEvent JobEvent;
     [Header("Subscribe Event")]
@@ -15,13 +16,7 @@ public class PlayerPropaty : MonoBehaviour
 
     private void Start()
     {
-        var jobManager = ManagerLocator.Instance?.JobManager;
-        if (jobManager == null)
-        {
-            Debug.LogError("PlayerJobManager not found in the scene.");
-            return;
-        }
-        jobToLayerMaskDic = jobManager.JobLayerMaskDic;
+        jobToLayerMaskDic = setting.JobLayerMaskDic;
         
         // 初期レイヤー設定
         if (jobToLayerMaskDic.TryGetValue(playerjob, out var initialSettings))
