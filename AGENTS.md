@@ -10,5 +10,5 @@
 - Active game object:
   - Name: NetworkObjectPool
   - Tag: Untagged
-  - Layer: Default
+  - Layer: Ghost
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

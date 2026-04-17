@@ -65,6 +65,10 @@ public readonly struct GameEffect
     /// </summary>
     public readonly AudioClip Clip;
     /// <summary>
+    /// particle
+    /// </summary>
+    public readonly GameObject FxPrefab;
+    /// <summary>
     /// 発生位置
     /// </summary>
     public readonly Vector3 Position;
@@ -87,6 +91,7 @@ public readonly struct GameEffect
 
     public GameEffect(
         AudioClip clip,
+        GameObject fxPrefab,
         Vector3 positon,
         float volume = 1.0f,
         float pitch = 1.0f,
@@ -95,6 +100,7 @@ public readonly struct GameEffect
         )
     {
         this.Clip = clip;
+        this.FxPrefab = fxPrefab;
         this.Position = positon;
         this.Volume = volume;
         this.Pitch = pitch;

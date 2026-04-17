@@ -757,6 +757,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3351809664319698288}
+    - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5903348280613425245}
   m_SourcePrefab: {fileID: 100100000, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
 --- !u!4 &1124331973230440938 stripped
 Transform:
@@ -1255,3 +1258,20 @@ MonoBehaviour:
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
   enemyJob: 1
+--- !u!114 &-5903348280613425245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124331973230472586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f23e62a3c5a654fa04485428881603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  spawnFxPrefabAll: {fileID: 4637477889121937913, guid: 8341f291808030a4c9c3d4709878ef8f, type: 3}
+  spawnSfxAll: {fileID: 8300000, guid: 755277c4df6a1704b91570f49b062caa, type: 3}
+  spawnFxLifeTimeAll: 2
+  spawnVolumeAll: 1
