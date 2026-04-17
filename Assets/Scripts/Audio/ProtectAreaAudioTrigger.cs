@@ -22,6 +22,6 @@ public class ProtectAreaAudioTrigger : MonoBehaviour
             despawnAudioAll.MarkReachedGoalServer();
         }
 
-        gameEffectEvent.Invoke(new GameEffect(reachClipAll, pointAll, reachVolumeAll));
+        gameEffectEvent.Invoke(new GameEffect(reachClipAll, null, pointAll, reachVolumeAll));
     }
 }

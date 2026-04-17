@@ -220,6 +220,7 @@ GameObject:
   - component: {fileID: -4752889112109069225}
   - component: {fileID: -7986057631169363681}
   - component: {fileID: 4970832313522535071}
+  - component: {fileID: -7078213573299036743}
   m_Layer: 8
   m_Name: testBlackghost
   m_TagString: Untagged
@@ -682,6 +683,23 @@ MonoBehaviour:
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
   enemyJob: 2
+--- !u!114 &-7078213573299036743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2515483553086041883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f23e62a3c5a654fa04485428881603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  spawnFxPrefabAll: {fileID: 2424596171460707547, guid: c2928ca8c149c5040a6db6668e597ad5, type: 3}
+  spawnSfxAll: {fileID: 8300000, guid: 755277c4df6a1704b91570f49b062caa, type: 3}
+  spawnFxLifeTimeAll: 2
+  spawnVolumeAll: 1
 --- !u!1 &2789469182908074600
 GameObject:
   m_ObjectHideFlags: 0

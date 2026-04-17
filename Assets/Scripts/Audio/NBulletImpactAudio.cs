@@ -38,11 +38,11 @@ public class NBulletImpactAudio : MonoBehaviour
 
         if (hitEnemy)
         {
-            gameEffectEvent.Invoke(new GameEffect(hitEnemyClipAll, pointAll, hitEnemyVolumeAll));
+            gameEffectEvent.Invoke(new GameEffect(hitEnemyClipAll, null, pointAll, hitEnemyVolumeAll));
         }
         else
         {
-            gameEffectEvent.Invoke(new GameEffect(hitWallClipAll, pointAll, hitWallVolumeAll));
+            gameEffectEvent.Invoke(new GameEffect(hitWallClipAll, null, pointAll, hitWallVolumeAll));
         }
     }
 }
