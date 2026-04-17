@@ -862,6 +862,8 @@ MonoBehaviour:
   fontSizeHeader: 28
   fontSizeStats: 22
   fontSizeKill: 20
+  gameStateEvent: {fileID: 0}
+  OnGameResultRpc: {fileID: 0}
 --- !u!1 &1493670098258745465
 GameObject:
   m_ObjectHideFlags: 0
@@ -1853,7 +1855,7 @@ MonoBehaviour:
   phaseBarPrefab: {fileID: 3726993551735620307, guid: 0bf3ca9b243f5b442b094758a364551a, type: 3}
   separatorPrefab: {fileID: 7588150835802480204, guid: ecb63a1604d8a1044be16b3669b27af3, type: 3}
   container: {fileID: 669713274472240747}
-  maxWidth: 300
+  rect: {fileID: 0}
 --- !u!114 &4782263247683993900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2814,6 +2816,7 @@ MonoBehaviour:
   damageBorders:
   - {fileID: 558181927812149541}
   flashTime: 0.3
+  OnbulletComeRpcEvent: {fileID: 0}
 --- !u!1 &6355494128053973299
 GameObject:
   m_ObjectHideFlags: 0
@@ -3565,6 +3568,10 @@ MonoBehaviour:
   phaseBoard: {fileID: 4031949893931291295}
   phaseText: {fileID: 7462624418355517586}
   phaseUISettingSO: {fileID: 0}
+  AllEnemyDeadRpcEvent: {fileID: 0}
+  OnPhaseChangeRpcEvent: {fileID: 0}
+  GameStateChangeRpcEvent: {fileID: 0}
+  nGameManager: {fileID: 0}
 --- !u!1 &8166779040729396302
 GameObject:
   m_ObjectHideFlags: 0
