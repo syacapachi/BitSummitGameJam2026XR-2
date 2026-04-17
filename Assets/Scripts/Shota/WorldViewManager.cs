@@ -2,48 +2,48 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
-using Unity.Netcode;
 
 public class WorldViewManager : MonoBehaviour
 {
-    [Header("")]
+    [Header("看板のテキスト表示欄")]
     public TextMeshProUGUI boardText;
 
-    [Header("")]
+    [Header("タイトルテキスト")]
     public TextMeshProUGUI titleText;
 
-    [Header("")]
+    [Header("次へボタン")]
     public Button nextButton;
 
-    [Header("")]
+    [Header("ボタンのテキスト")]
     public TextMeshProUGUI buttonText;
 
-    [Header("")]
+    [Header("戻るボタン")]
+    public Button backButton;
+
+    [Header("戻るボタンのテキスト")]
+    public TextMeshProUGUI backButtonText;
+
+    [Header("ローカライズテキスト")]
     public LocalizedText localizedText;
 
     [Header("BGM")]
     public AudioSource bgmSource;
     public AudioClip bgmClip;
 
-    [Header("")]
+    [Header("環境音")]
     public AudioSource ambientSource;
     public AudioClip ambientClip;
 
-    // ���݉����ڂ̊Ŕ�\�����Ă��邩
     private int currentIndex = 0;
-
-    // �Ŕ͑S����4���i���E��3���{�������1���j
     private int totalBoards = 4;
 
-    // �e�Ŕ̃^�C�g���i���{��j
     private string[] japaneseTitles = {
-        "�o�q�̗�}�t",
-        "��̖͂@��",
-        "����̈˗�",
-        "�������"
+        "双子の霊媒師",
+        "霊力の法則",
+        "今回の依頼",
+        "操作説明"
     };
 
-    // �e�Ŕ̃^�C�g���i�p��j
     private string[] englishTitles = {
         "Twin Mediums",
         "Law of Spiritual Power",
@@ -53,7 +53,6 @@ public class WorldViewManager : MonoBehaviour
 
     void Start()
     {
-        // BGM���Đ�����
         if (bgmSource != null && bgmClip != null)
         {
             bgmSource.clip = bgmClip;
@@ -61,7 +60,6 @@ public class WorldViewManager : MonoBehaviour
             bgmSource.Play();
         }
 
-        // �������Đ�����
         if (ambientSource != null && ambientClip != null)
         {
             ambientSource.clip = ambientClip;
@@ -69,63 +67,54 @@ public class WorldViewManager : MonoBehaviour
             ambientSource.Play();
         }
 
-        // �ŏ��̊Ŕ�\������
         ShowBoard(currentIndex);
     }
 
-    // �Ŕ�\�����郁�\�b�h
     void ShowBoard(int index)
     {
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
 
-        // �{���e�L�X�g���X�V����
         if (localizedText != null && boardText != null)
-        {
             boardText.text = localizedText.Get(index);
-        }
 
-        // �^�C�g���e�L�X�g���X�V����
         if (titleText != null)
-        {
-            if (isJapanese)
-            {
-                titleText.text = japaneseTitles[index];
-            }
-            else
-            {
-                titleText.text = englishTitles[index];
-            }
-        }
+            titleText.text = isJapanese ? japaneseTitles[index] : englishTitles[index];
 
-        // �Ō�̊ŔȂ�{�^���̃e�L�X�g���u����v�ɕς���
+        // 次へボタンのテキスト
         if (buttonText != null)
         {
             if (index >= totalBoards - 1)
-            {
-                buttonText.text = isJapanese ? "����" : "Close";
-            }
+                buttonText.text = isJapanese ? "閉じる" : "Close";
             else
-            {
-                buttonText.text = isJapanese ? "����" : "Next";
-            }
+                buttonText.text = isJapanese ? "次へ" : "Next";
         }
+
+        // 戻るボタンのテキスト
+        if (backButtonText != null)
+            backButtonText.text = isJapanese ? "戻る" : "Back";
+
+        // 1枚目は戻るボタンを非表示
+        if (backButton != null)
+            backButton.gameObject.SetActive(index > 0);
     }
 
-    // �{�^�����������Ƃ��ɌĂ΂�郁�\�b�h
+    // 次へボタン
     public void OnNextButtonClicked()
     {
         currentIndex++;
-
-        // �܂��Ŕ��c���Ă���Ȃ玟�̊Ŕ�\��
         if (currentIndex < totalBoards)
-        {
             ShowBoard(currentIndex);
-        }
         else
-        {
-            // �S���̊Ŕ����I�������TutorialScene�ֈړ�
             SceneManager.LoadScene("TutorialScene");
-            //NetworkSceneManager.
+    }
+
+    // 戻るボタン
+    public void OnBackButtonClicked()
+    {
+        if (currentIndex > 0)
+        {
+            currentIndex--;
+            ShowBoard(currentIndex);
         }
     }
 }
