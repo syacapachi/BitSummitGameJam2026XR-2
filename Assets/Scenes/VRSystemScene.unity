@@ -11401,6 +11401,10 @@ PrefabInstance:
       propertyPath: nGameManager
       value: 
       objectReference: {fileID: 804852262}
+    - target: {fileID: 7622474398900844521, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: setting
+      value: 
+      objectReference: {fileID: 11400000, guid: 3bff306e073a81c4f9ee896511ef4a57, type: 2}
     - target: {fileID: 8792094514040781207, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -27180,7 +27184,7 @@ PrefabInstance:
     - target: {fileID: 6343137247611443566, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1479436516}
     - target: {fileID: 6811614544963947594, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       propertyPath: m_Name
       value: worldCanvas
@@ -28352,6 +28356,10 @@ PrefabInstance:
       propertyPath: 'roomLights.Array.data[0]'
       value: 
       objectReference: {fileID: 1701501018}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: setting
+      value: 
+      objectReference: {fileID: 11400000, guid: 3bff306e073a81c4f9ee896511ef4a57, type: 2}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

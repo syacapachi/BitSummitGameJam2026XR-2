@@ -8,7 +8,7 @@ public class NBullet : BulletBaseController
     [SerializeField] GameObject hitFxPrefab;
     [SerializeField] GameObject shieldFxPrefab;
     [SerializeField] float hitFxLife = 2f;
-
+    [SerializeField] JobSetting setting;
     private void OnDisable()
     {
         trailRenderer.Clear();
@@ -45,7 +45,7 @@ public class NBullet : BulletBaseController
 
         if (enemy != null)
         {
-            if(!ManagerLocator.Instance.JobManager.JobLayerMaskDic.TryGetValue(ShooterJob, out var layerMaskSetting))
+            if(!setting.JobLayerMaskDic.TryGetValue(ShooterJob, out var layerMaskSetting))
             {
                 Debug.LogError($"LayerMask setting not found for job: {ShooterJob}");
                 return;

@@ -5,6 +5,7 @@ using UnityEngine;
 public class SyncroPropaty : NetworkBehaviour
 {
     [SerializeField] GameObject avatorCollider;
+    [SerializeField] JobSetting setting;
     private int PlayerLayer = 0;
     [SerializeField] NetworkVariable<PlayerJob> syncroJob = new(
         PlayerJob.Both,
@@ -37,15 +38,14 @@ public class SyncroPropaty : NetworkBehaviour
             Debug.LogError("PlayerJobManager not found in the scene.");
             return;
         }
-        jobToLayerMaskDic = jobManager.JobLayerMaskDic;
+        jobToLayerMaskDic = setting.JobLayerMaskDic;
     }
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
         {
-            PlayerPropaty playerPropaty = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty;
             jobEvent.Register(OnJobChangeHandle);
-            syncroJob.Value = playerPropaty.Job;
+            syncroJob.Value = jobEvent.CurrentValue;
         }
     }
 

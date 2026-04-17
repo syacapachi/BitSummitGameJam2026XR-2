@@ -148,6 +148,11 @@ namespace Syacapachi.util
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
                 }
+                if (networkObject.IsSpawned)
+                {
+                    //破壊しないで、Despawn()
+                    networkObject.Despawn(false);
+                }
                 networkObject.gameObject.SetActive(false);
             }
 
@@ -175,6 +180,9 @@ namespace Syacapachi.util
             }
             foreach (var networkObject in prewarmNetworkObjects)
             {
+                //NetCodeには、SpawnedObject,SceneObjectがある。
+                //Spawn()しないと、エラーの原因となる。
+                networkObject.Spawn();
                 m_PooledObjects[prefab].Release(networkObject);
             }
 
