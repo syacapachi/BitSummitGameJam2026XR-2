@@ -7,6 +7,7 @@ public class NEnemySpawnFxEmitter : NetworkBehaviour
     [SerializeField] private AudioClip spawnSfxAll;
     [SerializeField] private float spawnFxLifeTimeAll = 2f;
     [SerializeField, Range(0f, 1f)] private float spawnVolumeAll = 1f;
+    [SerializeField] private GameEffectEvent gameEffectEvent;
 
     public override void OnNetworkSpawn()
     {
@@ -19,12 +20,26 @@ public class NEnemySpawnFxEmitter : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     private void PlaySpawnFxClientRpc(Vector3 position)
     {
+        // FX
         NetFxSpawnUtility.Spawn(
             spawnFxPrefabAll,
             spawnSfxAll,
             position,
             Quaternion.identity,
-            spawnFxLifeTimeAll,
-            spawnVolumeAll);
+            spawnFxLifeTimeAll
+        );
+
+        // 音
+        if (spawnSfxAll != null)
+        {
+            gameEffectEvent.Invoke(
+                new GameEffect(
+                    spawnSfxAll,
+                    null,
+                    position,
+                    volume: spawnVolumeAll
+                )
+            );
+        }
     }
 }
