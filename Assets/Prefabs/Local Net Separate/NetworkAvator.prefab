@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  meshEnsble: 0
   m_Renderer:
   - {fileID: 3586039225926179217}
   - {fileID: 5432640361929983673}
@@ -818,7 +819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  firePoint: {fileID: 0}
+  firePoint: {fileID: 2711660553692858157}
   lineRenderer: {fileID: 7394096815455282567}
   playerMarker: {fileID: 8123762091118261607, guid: 66b64047264b0fb408e7d6a2ebe746d9, type: 3}
   node: {fileID: 8728330705531562455}
@@ -7071,6 +7072,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  meshEnsble: 0
   m_Renderer:
   - {fileID: 4281159005728926349}
   - {fileID: 1316376018937414345}
@@ -8684,6 +8686,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3513759523329437185}
+    - targetCorrespondingSourceObject: {fileID: 5368949237039013932, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4377345816364985541}
+    - targetCorrespondingSourceObject: {fileID: -859096113717258511, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2880452015387616391}
+    - targetCorrespondingSourceObject: {fileID: -3760603318866523286, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5787889838034393730}
   m_SourcePrefab: {fileID: 100100000, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
 --- !u!4 &502935949545263117 stripped
 Transform:
@@ -8715,6 +8726,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -7821105988696736867, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
   m_PrefabInstance: {fileID: 4398915094894330087}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &3565329610315713468 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 898060880859302747, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+  m_PrefabInstance: {fileID: 4398915094894330087}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3588660993758789046 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
@@ -8727,12 +8743,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3588660993758789046}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: be45b286bce2c6043944e7c9d905976c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  meshEnsble: 1
   m_Renderer:
   - {fileID: 2231564332198363345}
   - {fileID: 1524732636062697415}
@@ -8754,7 +8771,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   avatorRootTransfrom: {fileID: 1358144342988845292}
   animator: {fileID: 7811071689496165750}
-  networkHead: {fileID: 3348932590027094906}
+  networkHead: {fileID: 3565329610315713468}
   networkLeftHand: {fileID: 8562024122213999516}
   networkRightHand: {fileID: 728814604505585515}
   networkLeftController: {fileID: 2711660553692858157}
@@ -8764,6 +8781,57 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
   m_PrefabInstance: {fileID: 4398915094894330087}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5269199856172340758 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -859096113717258511, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+  m_PrefabInstance: {fileID: 4398915094894330087}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2880452015387616391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5269199856172340758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 1
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!137 &5486813636354212466 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8154055293566599829, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
@@ -8774,6 +8842,108 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
   m_PrefabInstance: {fileID: 4398915094894330087}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8557880307545115533 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -3760603318866523286, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+  m_PrefabInstance: {fileID: 4398915094894330087}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5787889838034393730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8557880307545115533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 1
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
+--- !u!1 &8614896918144180427 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5368949237039013932, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+  m_PrefabInstance: {fileID: 4398915094894330087}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4377345816364985541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8614896918144180427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 1
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 0
+  SyncPositionY: 0
+  SyncPositionZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 1
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 1
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!137 &8720901179799283811 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -4320420363059107708, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}

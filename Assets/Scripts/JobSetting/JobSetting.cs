@@ -4,12 +4,18 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "JobSetting", menuName = "Scriptable Objects/JobSetting")]
 public class JobSetting : ScriptableObject
 {
+    /// <summary>
+    /// [SerializeField],publicはシーンをまたいでも値が残る。
+    /// </summary>
     [SerializeField] JobSettingSO jobSettingSO;
+    /// <summary>
+    /// シリアライズできないクラスは、参照が消える(そのシーンにこのScriptableObjectを使うScriptがない) -> 値が初期化される。
+    /// </summary>
     private readonly Dictionary<PlayerJob, PlayerLayerSettings> JobToLayerMaskDic = new();
     public IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> JobLayerMaskDic => JobToLayerMaskDic;
 
     /// <summary>
-    /// Scriptable のAwakeはこれ
+    /// Scriptable のAwakeはこれ、シーン開始時に辞書を初期化
     /// </summary>
     void OnEnable()
     {
