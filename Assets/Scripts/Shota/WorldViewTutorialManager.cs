@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using Unity.Netcode;
 
-public class WorldTutorialManager : MonoBehaviour
+public class WorldTutorialManager : NetworkBehaviour
 {
     [Header("テキスト表示欄")]
     public TextMeshProUGUI boardText;
@@ -82,6 +83,7 @@ public class WorldTutorialManager : MonoBehaviour
             backButton.gameObject.SetActive(index > 0);
     }
 
+    /*
     public void OnNextButtonClicked()
     {
         currentIndex++;
@@ -89,6 +91,43 @@ public class WorldTutorialManager : MonoBehaviour
             ShowPage(currentIndex);
         else
             SceneManager.LoadScene("VRSystemScene");
+    }
+    */
+
+    public void OnNextButtonClicked()
+    {
+        currentIndex++;
+
+        if (currentIndex < totalPages)
+        {
+            ShowPage(currentIndex);
+        }
+        else
+        {
+            // サーバー or クライアントどちらでも押せるようにする
+            if (NetworkManager.Singleton.IsServer)
+            {
+                MoveScene();
+            }
+            else
+            {
+                RequestMoveSceneRpc();
+            }
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    void RequestMoveSceneRpc()
+    {
+        MoveScene();
+    }
+
+    void MoveScene()
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(
+            "VRSystemScene",
+            LoadSceneMode.Single
+        );
     }
 
     public void OnBackButtonClicked()

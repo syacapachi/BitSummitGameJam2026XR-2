@@ -7,14 +7,19 @@ public class StartButton : NetworkBehaviour
     [SerializeField] GameObject resetUI;
 
     [SerializeField] GameStateEvent gameStateEvent;
+
+    /*
+     シーン遷移でUIの状態をリセットするため、StartからOnNetworkSpawnに移動
     private void Start()
     {
         startUI.SetActive(false);
         resetUI.SetActive(false);
     }
+    */
     public override void OnNetworkSpawn()
     {
         startUI.SetActive(true);
+        resetUI.SetActive(false);
     }
     private void OnEnable()
     {

@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using Unity.Netcode;
 
-public class WorldViewManager : MonoBehaviour
+public class WorldViewManager : NetworkBehaviour
 {
     [Header("看板のテキスト表示欄")]
     public TextMeshProUGUI boardText;
@@ -99,6 +100,7 @@ public class WorldViewManager : MonoBehaviour
     }
 
     // 次へボタン
+    /*
     public void OnNextButtonClicked()
     {
         currentIndex++;
@@ -106,6 +108,42 @@ public class WorldViewManager : MonoBehaviour
             ShowBoard(currentIndex);
         else
             SceneManager.LoadScene("TutorialScene");
+    }
+    */
+
+    public void OnNextButtonClicked()
+    {
+        currentIndex++;
+
+        if (currentIndex < totalBoards)
+        {
+            ShowBoard(currentIndex);
+        }
+        else
+        {
+            if (NetworkManager.Singleton.IsServer)
+            {
+                MoveScene();
+            }
+            else
+            {
+                RequestMoveSceneRpc();
+            }
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    void RequestMoveSceneRpc()
+    {
+        MoveScene();
+    }
+
+    void MoveScene()
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(
+            "TutorialScene",
+            LoadSceneMode.Single
+        );
     }
 
     // 戻るボタン
