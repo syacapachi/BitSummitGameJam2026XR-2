@@ -140,7 +140,7 @@ namespace Syacapachi.util
                 networkObject.gameObject.SetActive(true);
             }
 
-            static void ActionOnRelease(NetworkObject networkObject)
+            void ActionOnRelease(NetworkObject networkObject)
             {
                 if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb))
                 {
@@ -148,7 +148,7 @@ namespace Syacapachi.util
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
                 }
-                if (networkObject.IsSpawned)
+                if (networkObject.IsSpawned && IsServer)
                 {
                     //破壊しないで、Despawn()
                     networkObject.Despawn(false);
@@ -172,22 +172,14 @@ namespace Syacapachi.util
                 collectionCheck: false,
                 defaultCapacity: prewarmCount * 10);
 
-            // Populate the pool
-            var prewarmNetworkObjects = new List<NetworkObject>();
-            for (var i = 0; i < prewarmCount; i++)
-            {
-                prewarmNetworkObjects.Add(m_PooledObjects[prefab].Get());
-            }
-            foreach (var networkObject in prewarmNetworkObjects)
-            {
-                //NetCodeには、SpawnedObject,SceneObjectがある。
-                //Spawn()しないと、エラーの原因となる。
-                networkObject.Spawn();
-                m_PooledObjects[prefab].Release(networkObject);
-            }
-
             // Register Netcode Spawn handlers
             NetworkManager.Singleton.PrefabHandler.AddHandler(prefab, new PooledPrefabInstanceHandler(prefab, this));
+
+            //NetworkObjectには、元からあるやつとSpawn()したやつの２つがある。
+            // 前もって作ると、元からあるやつだと思われる。
+            //その状態はよろしくないらしいので作らない
+
+
         }
     }
 
