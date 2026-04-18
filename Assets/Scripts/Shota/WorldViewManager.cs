@@ -1,3 +1,4 @@
+/*
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -109,7 +110,8 @@ public class WorldViewManager : NetworkBehaviour
         else
             SceneManager.LoadScene("TutorialScene");
     }
-    */
+*/
+/*    
 
     public void OnNextButtonClicked()
     {
@@ -154,5 +156,201 @@ public class WorldViewManager : NetworkBehaviour
             currentIndex--;
             ShowBoard(currentIndex);
         }
+    }
+}
+*/
+
+
+using TMPro;
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public class WorldViewManager : NetworkBehaviour
+{
+    private NetworkVariable<int> pageIndex = new(
+        0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    [Header("UI")]
+    [SerializeField] TextMeshProUGUI boardText;
+    [SerializeField] TextMeshProUGUI titleText;
+    [SerializeField] TextMeshProUGUI buttonText;
+    [SerializeField] TextMeshProUGUI backButtonText;
+    [SerializeField] Button backButton;
+    public LocalizedText localizedText;
+
+    [Header("Data")]
+    private int totalBoards = 4;
+
+    private string[] japaneseTitles =
+    {
+        "双子の霊媒師",
+        "霊力の法則",
+        "今回の依頼",
+        "操作説明"
+    };
+
+    private string[] englishTitles =
+    {
+        "Twin Mediums",
+        "Law of Spiritual Power",
+        "The Mission",
+        "Controls"
+    };
+
+    public override void OnNetworkSpawn()
+    {
+        Debug.Log($"[WorldView] Spawned clientId={NetworkManager.LocalClientId}");
+
+        pageIndex.OnValueChanged += OnPageChanged;
+
+        ShowBoard(pageIndex.Value);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        pageIndex.OnValueChanged -= OnPageChanged;
+    }
+
+    // =========================
+    // NEXT
+    // =========================
+    public void OnNextButtonClicked()
+    {
+        RequestNextPageRpc();
+    }
+
+    [Rpc(SendTo.Server)]
+    void RequestNextPageRpc()
+    {
+        if (pageIndex.Value >= totalBoards - 1)
+        {
+            MoveScene();
+            return;
+        }
+
+        pageIndex.Value++;
+    }
+
+    // =========================
+    // BACK
+    // =========================
+    public void OnBackButtonClicked()
+    {
+        RequestBackPageRpc();
+    }
+
+    [Rpc(SendTo.Server)]
+    void RequestBackPageRpc()
+    {
+        if (pageIndex.Value <= 0) return;
+
+        pageIndex.Value--;
+    }
+
+    // =========================
+    // SYNC UPDATE
+    // =========================
+    void OnPageChanged(int oldValue, int newValue)
+    {
+        ShowBoard(newValue);
+    }
+
+    void ShowBoard(int index)
+    {
+        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+
+        // =========================
+        // ローカライズ本文
+        // =========================
+        if (localizedText != null && boardText != null)
+        {
+            string text = localizedText.Get(index);
+
+            if (string.IsNullOrEmpty(text))
+            {
+                Debug.LogWarning($"[WorldView] LocalizedText missing index={index}");
+                text = $"Missing Text ({index})";
+            }
+
+            boardText.text = text;
+        }
+
+        // =========================
+        // タイトル
+        // =========================
+        if (titleText != null)
+            titleText.text = isJapanese ? japaneseTitles[index] : englishTitles[index];
+
+        // =========================
+        // 次へボタン
+        // =========================
+        if (buttonText != null)
+        {
+            if (index >= totalBoards - 1)
+                buttonText.text = isJapanese ? "閉じる" : "Close";
+            else
+                buttonText.text = isJapanese ? "次へ" : "Next";
+        }
+
+        // =========================
+        // 戻るボタン
+        // =========================
+        if (backButtonText != null)
+            backButtonText.text = isJapanese ? "戻る" : "Back";
+
+        if (backButton != null)
+            backButton.gameObject.SetActive(index > 0);
+    }
+
+    // =========================
+    // UI UPDATE
+    // =========================
+    void ShowPage(int index)
+    {
+        bool isJP = PlayerPrefs.GetString("Language", "JP") == "JP";
+
+        // ---- 本文 ----
+        if (boardText != null)
+            boardText.text = $"Page {index + 1}";
+
+        // ---- タイトル ----
+        if (titleText != null)
+            titleText.text = isJP ? japaneseTitles[index] : englishTitles[index];
+
+        // ---- 次へボタン ----
+        if (buttonText != null)
+        {
+            if (index >= totalBoards - 1)
+                buttonText.text = isJP ? "閉じる" : "Close";
+            else
+                buttonText.text = isJP ? "次へ" : "Next";
+        }
+
+        // ---- 戻るボタン ----
+        if (backButtonText != null)
+            backButtonText.text = isJP ? "戻る" : "Back";
+
+        if (backButton != null)
+            backButton.gameObject.SetActive(index > 0);
+    }
+
+    // =========================
+    // SCENE MOVE
+    // =========================
+    void MoveScene()
+    {
+        if (!IsServer) return;
+
+        Debug.Log("[WorldView] Loading TutorialScene");
+
+        NetworkManager.Singleton.SceneManager.LoadScene(
+            "TutorialScene",
+            LoadSceneMode.Single
+        );
     }
 }
