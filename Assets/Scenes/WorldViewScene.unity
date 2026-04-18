@@ -1696,6 +1696,7 @@ GameObject:
   - component: {fileID: 1625551507}
   - component: {fileID: 1625551506}
   - component: {fileID: 1625551505}
+  - component: {fileID: 1625551512}
   - component: {fileID: 1625551509}
   - component: {fileID: 1625551511}
   m_Layer: 5
@@ -1807,15 +1808,10 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   boardText: {fileID: 662799942}
   titleText: {fileID: 1364335408}
-  nextButton: {fileID: 1711719780}
   buttonText: {fileID: 1900272926}
-  backButton: {fileID: 1720230557}
   backButtonText: {fileID: 1718701367}
+  backButton: {fileID: 1720230557}
   localizedText: {fileID: 11400000, guid: 5d9ea9250145a6442940bd870a2df0d5, type: 2}
-  bgmSource: {fileID: 0}
-  bgmClip: {fileID: 0}
-  ambientSource: {fileID: 0}
-  ambientClip: {fileID: 0}
 --- !u!114 &1625551511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1835,6 +1831,31 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
+--- !u!114 &1625551512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1625551504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 975760584
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &1711719778
 GameObject:
   m_ObjectHideFlags: 0
