@@ -25,6 +25,7 @@ public class GameEffectAudioManager : MonoBehaviour
     }
     public void PlayGameEffect(GameEffect effect)
     {
+        Debug.Log("PlayGameEffect called");
         GameObject obj = localObjectPool.Get(audioSourcePrefab);
         AudioSource audioSource = obj.GetComponent<AudioSource>();
         audioSource.clip = effect.Clip;
@@ -35,6 +36,7 @@ public class GameEffectAudioManager : MonoBehaviour
         //浮動小数点は、== が難しいので比較で行う
         if(effect.Delay < 0.1f)
         {
+            audioSource.Play();
             StartCoroutine(PlayAndRelease(audioSource));
 
         }
@@ -60,6 +62,7 @@ public class GameEffectAudioManager : MonoBehaviour
     private IEnumerator PlayDelayedAndRelease(AudioSource source,float delay)
     {
         yield return new WaitForSeconds(delay);
+        source.Play();
         // ループなら自動解放しない
         if (source.loop)
             yield break;

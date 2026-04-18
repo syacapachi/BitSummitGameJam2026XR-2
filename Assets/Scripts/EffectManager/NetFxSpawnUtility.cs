@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public static class NetFxSpawnUtility
 {
     public static void Spawn(

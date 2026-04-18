@@ -16,6 +16,8 @@ public class ManagerLocator : MonoBehaviour
     [field:SerializeField] public GameEffectAudioManager EffectAudioManager { get; private set; }
     [field:SerializeField] public RankingManager RankingManager { get; private set; }
     [field:SerializeField] public TutorialManager TutorialManager { get; private set; }
+    [field: SerializeField] public GameEffectParticleManager GameEffectParticleManager { get; private set; }
+
     void Awake()
     {
         if(Instance == null)
