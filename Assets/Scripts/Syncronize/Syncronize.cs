@@ -20,35 +20,46 @@ public class Syncronize : NetworkBehaviour
     [SerializeField] private Transform networkRightHand;
     [SerializeField] private Transform networkLeftController;
     [SerializeField] private Transform networkRightController;
-    public readonly NetworkVariable<int> JumpCount = new(0,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Owner);
+    public readonly NetworkVariable<int> JumpCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private LocalPlayerRoot playerRoot;
-    protected override void OnNetworkPostSpawn()
+    private bool isInitialized = false;
+    public override void OnNetworkSpawn()
     {
-        if(IsOwner && playerRoot == null)
+        if (IsOwner)
         {
-            ResistLocalPlayer();
+            StartCoroutine(WaitForEnable());
         }
     }
-    protected override void OnInSceneObjectsSpawned()
+    private IEnumerator WaitForEnable()
     {
-        if (IsOwner && playerRoot == null)
+        while (true)
         {
-            ResistLocalPlayer();
+            if (   ManagerLocator.Instance != null
+                && ManagerLocator.Instance.AllPlayerManager != null
+                && ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot != null)
+            {
+                ResistLocalPlayer();
+                yield break;
+            }
+            yield return null;
         }
     }
     private void ResistLocalPlayer()
     {
-        if (IsOwner)
-        {
-            playerRoot = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot;
-            xrOrigin = playerRoot.XROrigin;
-            playerRootTransfrom = playerRoot.transform;
-            leftHand = playerRoot.LeftHand;
-            rightHand = playerRoot.RightHand;
-            leftController = playerRoot.LeftController;
-            rightController = playerRoot.RightController;
-            ownerCamera = xrOrigin.Camera;
-        }
+        playerRoot = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot;
+        xrOrigin = playerRoot.XROrigin;
+        playerRootTransfrom = playerRoot.transform;
+        leftHand = playerRoot.LeftHand;
+        rightHand = playerRoot.RightHand;
+        leftController = playerRoot.LeftController;
+        rightController = playerRoot.RightController;
+        ownerCamera = xrOrigin.Camera;
+
+        isInitialized = true;
+    }
+    public override void OnNetworkDespawn()
+    {
+        isInitialized = false;
     }
     /// <summary>
     /// アニメーションを計算するタイミングで更新
@@ -56,6 +67,7 @@ public class Syncronize : NetworkBehaviour
     /// </summary>
     private void OnAnimatorIK()
     {
+        if (!isInitialized) return;
         if (animator == null) return;
         if (IsOwner)
         {
@@ -100,6 +112,7 @@ public class Syncronize : NetworkBehaviour
     /// </summary>
     private void LateUpdate()
     {
+        if (!isInitialized) return;
         if (IsOwner)
         {
             //avatorRootTransfromからみた、networkHeadの相対座標
@@ -115,4 +128,5 @@ public class Syncronize : NetworkBehaviour
             networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
         }
     }
+
 }
