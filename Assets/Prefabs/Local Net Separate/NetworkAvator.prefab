@@ -8677,6 +8677,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 88c2f082f4c510f4da9bb93465d8c44c, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8154055293566599829, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -8804,7 +8808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  meshEnsble: 0
+  meshEnsble: 1
   m_Renderer:
   - {fileID: 2231564332198363345}
   - {fileID: 1524732636062697415}
