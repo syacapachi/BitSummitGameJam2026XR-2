@@ -1,6 +1,7 @@
 using System.Globalization;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AvatarFollower : NetworkBehaviour
 {
@@ -8,14 +9,30 @@ public class AvatarFollower : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-
         if (!IsOwner) return;
 
-        var pm = ManagerLocator.Instance?.AllPlayerManager;
-    
+        FindTarget();
 
+        // ÉVÅ[ÉìëJà⁄éûÇ…çƒéÊìæ
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Scene Loaded Å® targetçƒéÊìæ");
+        target = null;
+        FindTarget();
+    }
+
+    void FindTarget()
+    {
+        var pm = ManagerLocator.Instance?.AllPlayerManager;
         var local = pm?.LocalPlayerRoot;
-       
 
         if (local != null)
         {
@@ -30,18 +47,10 @@ public class AvatarFollower : NetworkBehaviour
 
         if (target == null)
         {
-            var local = ManagerLocator.Instance?.AllPlayerManager?.LocalPlayerRoot;
-            if (local != null)
-            {
-                target = local.PlayerRoot;
-                Debug.Log("Target re-acquired");
-            }
-            else
-            {
-                return;
-            }
+            FindTarget();
+            if (target == null) return;
         }
-        
+
         transform.position = target.position;
         transform.rotation = target.rotation;
     }

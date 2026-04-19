@@ -28,6 +28,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public float MaxHealth => enemySO.Hp;
     public PlayerJob enemyJob;
     private ulong lastAttackerId;
+    public ulong LastAttackerId => lastAttackerId;
 
     public override void OnNetworkSpawn()
     {
