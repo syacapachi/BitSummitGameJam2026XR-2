@@ -12,6 +12,13 @@ public class UIViewSetting : MonoBehaviour
     [Header("Subsctibe Event")]
     [SerializeField] VoidEvent uiEvent;
     private bool isShowing = false;
+    private void Awake()
+    {
+        if (canvas.worldCamera == null)
+        {
+            canvas.worldCamera = playerCamera;
+        }
+    }
     private void OnEnable()
     {
         uiEvent.Register(UIEventCallback);

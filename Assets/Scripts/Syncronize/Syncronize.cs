@@ -22,7 +22,21 @@ public class Syncronize : NetworkBehaviour
     [SerializeField] private Transform networkRightController;
     public readonly NetworkVariable<int> JumpCount = new(0,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Owner);
     private LocalPlayerRoot playerRoot;
-    public override void OnNetworkSpawn()
+    protected override void OnNetworkPostSpawn()
+    {
+        if(IsOwner && playerRoot == null)
+        {
+            ResistLocalPlayer();
+        }
+    }
+    protected override void OnInSceneObjectsSpawned()
+    {
+        if (IsOwner && playerRoot == null)
+        {
+            ResistLocalPlayer();
+        }
+    }
+    private void ResistLocalPlayer()
     {
         if (IsOwner)
         {

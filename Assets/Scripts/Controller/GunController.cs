@@ -26,15 +26,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     private bool isReloading = false;
     private SyncroPropaty Propaty;
 
-    private void Start()
-    {
-        var jobManager = ManagerLocator.Instance.JobManager;
-        if (jobManager == null)
-        {
-            Debug.LogError("PlayerJobManager not found in the scene.");
-            return;
-        }
-    }
     private void OnEnable()
     {
         syncedAmmo.OnValueChanged += OnAmmoChanged;

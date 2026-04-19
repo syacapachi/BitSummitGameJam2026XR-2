@@ -1,4 +1,4 @@
-/*
+﻿/*
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -183,24 +183,6 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] Button backButton;
     public LocalizedText localizedText;
 
-    [Header("Data")]
-    private int totalBoards = 4;
-
-    private string[] japaneseTitles =
-    {
-        "双子の霊媒師",
-        "霊力の法則",
-        "今回の依頼",
-        "操作説明"
-    };
-
-    private string[] englishTitles =
-    {
-        "Twin Mediums",
-        "Law of Spiritual Power",
-        "The Mission",
-        "Controls"
-    };
 
     public override void OnNetworkSpawn()
     {
@@ -227,7 +209,7 @@ public class WorldViewManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     void RequestNextPageRpc()
     {
-        if (pageIndex.Value >= totalBoards - 1)
+        if (pageIndex.Value >= localizedText.Length)
         {
             MoveScene();
             return;
@@ -264,34 +246,33 @@ public class WorldViewManager : NetworkBehaviour
     {
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
 
+
         // =========================
         // ローカライズ本文
         // =========================
-        if (localizedText != null && boardText != null)
+        TitileAndText titleAndText = localizedText.Get(index);
+        if (boardText != null)
         {
-            string text = localizedText.Get(index);
-
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(titleAndText.DescriptionText))
             {
                 Debug.LogWarning($"[WorldView] LocalizedText missing index={index}");
-                text = $"Missing Text ({index})";
             }
 
-            boardText.text = text;
+            boardText.text = titleAndText.DescriptionText;
         }
 
         // =========================
         // タイトル
         // =========================
         if (titleText != null)
-            titleText.text = isJapanese ? japaneseTitles[index] : englishTitles[index];
+            titleText.text = titleAndText.Title;
 
         // =========================
         // 次へボタン
         // =========================
         if (buttonText != null)
         {
-            if (index >= totalBoards - 1)
+            if (index >= localizedText.Length)
                 buttonText.text = isJapanese ? "閉じる" : "Close";
             else
                 buttonText.text = isJapanese ? "次へ" : "Next";
@@ -313,19 +294,19 @@ public class WorldViewManager : NetworkBehaviour
     void ShowPage(int index)
     {
         bool isJP = PlayerPrefs.GetString("Language", "JP") == "JP";
-
+        TitileAndText titleAndText = localizedText.Get(index);
         // ---- 本文 ----
         if (boardText != null)
             boardText.text = $"Page {index + 1}";
 
         // ---- タイトル ----
         if (titleText != null)
-            titleText.text = isJP ? japaneseTitles[index] : englishTitles[index];
+            titleText.text = titleAndText.Title;
 
         // ---- 次へボタン ----
         if (buttonText != null)
         {
-            if (index >= totalBoards - 1)
+            if (index >= localizedText.Length)
                 buttonText.text = isJP ? "閉じる" : "Close";
             else
                 buttonText.text = isJP ? "次へ" : "Next";

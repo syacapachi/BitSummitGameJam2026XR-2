@@ -2,7 +2,7 @@
 - Project name: BitSummitGameJam2026XR-2
 - Unity version: Unity 6000.0.61f1
 - Active game object:
-  - Name: NetworkScript
+  - Name: XR Origin Hands (XR Rig) (LocalPlayer) Variant
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

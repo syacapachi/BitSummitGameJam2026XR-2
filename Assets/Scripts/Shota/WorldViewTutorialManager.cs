@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
@@ -8,31 +8,31 @@ public class WorldTutorialManager : NetworkBehaviour
 {
     [SerializeField] TutorialManager tutorialManager;
 
-    [Header("ƒeƒLƒXƒg•\¦—“")]
+    [Header("ãƒ†ã‚­ã‚¹ãƒˆè¡¨ç¤ºæ¬„")]
     public TextMeshProUGUI boardText;
 
-    [Header("ƒ^ƒCƒgƒ‹ƒeƒLƒXƒg")]
+    [Header("ã‚¿ã‚¤ãƒˆãƒ«ãƒ†ã‚­ã‚¹ãƒˆ")]
     public TextMeshProUGUI titleText;
 
-    [Header("Ÿ‚Öƒ{ƒ^ƒ“")]
+    [Header("æ¬¡ã¸ãƒœã‚¿ãƒ³")]
     public Button nextButton;
 
-    [Header("ƒ{ƒ^ƒ“‚ÌƒeƒLƒXƒg")]
+    [Header("ãƒœã‚¿ãƒ³ã®ãƒ†ã‚­ã‚¹ãƒˆ")]
     public TextMeshProUGUI buttonText;
 
-    [Header("–ß‚éƒ{ƒ^ƒ“")]
+    [Header("æˆ»ã‚‹ãƒœã‚¿ãƒ³")]
     public Button backButton;
 
-    [Header("–ß‚éƒ{ƒ^ƒ“‚ÌƒeƒLƒXƒg")]
+    [Header("æˆ»ã‚‹ãƒœã‚¿ãƒ³ã®ãƒ†ã‚­ã‚¹ãƒˆ")]
     public TextMeshProUGUI backButtonText;
 
     private int currentIndex = 0;
 
     private string[] japaneseTitles = {
-        "ƒ`ƒ…[ƒgƒŠƒAƒ‹1",
-        "ƒ`ƒ…[ƒgƒŠƒAƒ‹2",
-        "ƒ`ƒ…[ƒgƒŠƒAƒ‹3",
-        "ƒ`ƒ…[ƒgƒŠƒAƒ‹4"
+        "ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«1",
+        "ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«2",
+        "ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«3",
+        "ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«4"
     };
 
     private string[] englishTitles = {
@@ -43,10 +43,10 @@ public class WorldTutorialManager : NetworkBehaviour
     };
 
     private string[] japaneseTexts = {
-        "‰EƒRƒ“ƒgƒ[ƒ‰[‚ÌƒgƒŠƒK[‚ğˆø‚­‚Æ\n’e‚ğ”­Ë‚Å‚«‚Ü‚·B\n“I‚É“–‚Ä‚Ä—ûK‚µ‚Ü‚µ‚å‚¤I",
-        "ƒNƒŠƒXƒ^ƒ‹‚É“G‚ªG‚ê‚é‚Æ\nƒNƒŠƒXƒ^ƒ‹‚ªƒ_ƒ[ƒW‚ğó‚¯‚Ü‚·B\n“G‚ğ“|‚µ‚ÄƒNƒŠƒXƒ^ƒ‹‚ğç‚è‚Ü‚µ‚å‚¤I",
-        "Œ©‚¦‚Ä‚¢‚é“G‚Í“|‚¹‚Ü‚¹‚ñB\n—ì—Í‚ğg‚Á‚Ä“G‚ğŒ©‚¦‚È‚­‚µ‚Ä‚©‚ç\nUŒ‚‚µ‚Ü‚µ‚å‚¤I",
-        "’‡ŠÔ‚Æ‹¦—Í‚µ‚Ä\nƒNƒŠƒXƒ^ƒ‹‚ğç‚è‚Ü‚µ‚å‚¤I\nƒQ[ƒ€ƒXƒ^[ƒg‚Å‚·I"
+        "å³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®ãƒˆãƒªã‚¬ãƒ¼ã‚’å¼•ãã¨\nå¼¾ã‚’ç™ºå°„ã§ãã¾ã™ã€‚\nçš„ã«å½“ã¦ã¦ç·´ç¿’ã—ã¾ã—ã‚‡ã†ï¼",
+        "ã‚¯ãƒªã‚¹ã‚¿ãƒ«ã«æ•µãŒè§¦ã‚Œã‚‹ã¨\nã‚¯ãƒªã‚¹ã‚¿ãƒ«ãŒãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¾ã™ã€‚\næ•µã‚’å€’ã—ã¦ã‚¯ãƒªã‚¹ã‚¿ãƒ«ã‚’å®ˆã‚Šã¾ã—ã‚‡ã†ï¼",
+        "è¦‹ãˆã¦ã„ã‚‹æ•µã¯å€’ã›ã¾ã›ã‚“ã€‚\néœŠåŠ›ã‚’ä½¿ã£ã¦æ•µã‚’è¦‹ãˆãªãã—ã¦ã‹ã‚‰\næ”»æ’ƒã—ã¾ã—ã‚‡ã†ï¼",
+        "ä»²é–“ã¨å”åŠ›ã—ã¦\nã‚¯ãƒªã‚¹ã‚¿ãƒ«ã‚’å®ˆã‚Šã¾ã—ã‚‡ã†ï¼\nã‚²ãƒ¼ãƒ ã‚¹ã‚¿ãƒ¼ãƒˆã§ã™ï¼"
     };
 
     private string[] englishTexts = {
@@ -72,7 +72,7 @@ public class WorldTutorialManager : NetworkBehaviour
         {
             tutorialManager.CurrentStep.OnValueChanged += OnStepChanged;
 
-            // ‰Šú•\¦
+            // åˆæœŸè¡¨ç¤º
             OnStepChanged(default, tutorialManager.CurrentStep.Value);
         }
     }
@@ -86,14 +86,14 @@ public class WorldTutorialManager : NetworkBehaviour
 
         ShowPage(index);
 
-        // ÅŒã‚ÌƒXƒeƒbƒv‚È‚çƒ{ƒ^ƒ“‚ğuŠJnv‚É
+        // æœ€å¾Œã®ã‚¹ãƒ†ãƒƒãƒ—ãªã‚‰ãƒœã‚¿ãƒ³ã‚’ã€Œé–‹å§‹ã€ã«
         if (buttonText != null)
         {
             bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
 
             buttonText.text = newStep == TutorialStep.Step4
-                ? (isJapanese ? "ƒQ[ƒ€ƒXƒ^[ƒg" : "Game Start")
-                : (isJapanese ? "Ÿ‚Ö" : "Next");
+                ? (isJapanese ? "ã‚²ãƒ¼ãƒ ã‚¹ã‚¿ãƒ¼ãƒˆ" : "Game Start")
+                : (isJapanese ? "æ¬¡ã¸" : "Next");
         }
     }
     
@@ -110,11 +110,11 @@ public class WorldTutorialManager : NetworkBehaviour
 
         if (buttonText != null)
             buttonText.text = index >= totalPages - 1
-                ? (isJapanese ? "ƒQ[ƒ€ƒXƒ^[ƒg" : "Game Start")
-                : (isJapanese ? "Ÿ‚Ö" : "Next");
+                ? (isJapanese ? "ã‚²ãƒ¼ãƒ ã‚¹ã‚¿ãƒ¼ãƒˆ" : "Game Start")
+                : (isJapanese ? "æ¬¡ã¸" : "Next");
 
         if (backButtonText != null)
-            backButtonText.text = isJapanese ? "–ß‚é" : "Back";
+            backButtonText.text = isJapanese ? "æˆ»ã‚‹" : "Back";
 
         if (backButton != null)
             backButton.gameObject.SetActive(index > 0);
@@ -141,7 +141,7 @@ public class WorldTutorialManager : NetworkBehaviour
         }
         else
         {
-            // ƒT[ƒo[ or ƒNƒ‰ƒCƒAƒ“ƒg‚Ç‚¿‚ç‚Å‚à‰Ÿ‚¹‚é‚æ‚¤‚É‚·‚é
+            // ã‚µãƒ¼ãƒãƒ¼ or ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã©ã¡ã‚‰ã§ã‚‚æŠ¼ã›ã‚‹ã‚ˆã†ã«ã™ã‚‹
             if (NetworkManager.Singleton.IsServer)
             {
                 MoveScene();

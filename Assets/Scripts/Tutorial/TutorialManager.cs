@@ -28,7 +28,7 @@ public class TutorialManager : NetworkBehaviour
         CurrentStep.OnValueChanged += OnStepChanged;
     }
 
-    void OnDestroy()
+    public override void OnNetworkDespawn()
     {
         CurrentStep.OnValueChanged -= OnStepChanged;
     }

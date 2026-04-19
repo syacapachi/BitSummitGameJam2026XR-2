@@ -17,9 +17,30 @@ public class NetworkPlayerRoot : NetworkBehaviour
     private bool isXREnabled = false;
     private PlayerManager playerManager;
     public bool IsXREnabled => isXREnabled;
-    public override void OnNetworkSpawn()
+    /// <summary>
+    /// OnNetworkSpawn()の後
+    /// </summary>
+    protected override void OnNetworkPostSpawn()
+    {
+        if(playerManager == null)
+        {
+            ResistPlayerManager();
+        }
+    }
+    /// <summary>
+    /// シーン上のすべてのNetworkOnbjectがSpawnした後
+    /// </summary>
+    protected override void OnInSceneObjectsSpawned()
+    {
+        if (playerManager == null)
+        {
+            ResistPlayerManager();
+        }
+    }
+    private void ResistPlayerManager()
     {
         playerManager = ManagerLocator.Instance.AllPlayerManager;
+        if (playerManager == null) return;
         playerManager.ResistPlayer(this);
         if (IsOwner)
         {
