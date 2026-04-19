@@ -25,6 +25,8 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     {
         if (IsServer && gunSO != null)
         {
+            rb ??= GetComponent<Rigidbody>();
+            rb.isKinematic = false;
             rb.linearVelocity = transform.forward * gunSO.speed;
             despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
         }

@@ -1,7 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameEffectParticleManager : MonoBehaviour
 {
+    [Header("Subscribe Event")]
     [SerializeField] private GameEffectEvent gameEffectEvent;
 
     private void OnEnable()
@@ -19,12 +20,11 @@ public class GameEffectParticleManager : MonoBehaviour
         if (e.FxPrefab == null) return;
 
         GameObject fx = Instantiate(e.FxPrefab, e.Position, Quaternion.identity);
-        var ps = fx.GetComponent<ParticleSystem>();
-
-        if (ps != null)
+        
+        if (fx.TryGetComponent<ParticleSystem>(out var ps))
         {
-            var main = ps.main;
-            float lifetime = main.duration + main.startLifetime.constantMax;
+            var mainModule = ps.main;
+            float lifetime = mainModule.duration + mainModule.startLifetime.constantMax;
             Destroy(fx, lifetime);
         }
         else

@@ -24,10 +24,6 @@ namespace Syacapachi.util
         HashSet<GameObject> m_Prefabs = new HashSet<GameObject>();
 
         Dictionary<GameObject, ObjectPool<NetworkObject>> m_PooledObjects = new ();
-        /// <summary>
-        /// Prefabを参照させる辞書
-        /// </summary>
-        readonly Dictionary<NetworkObject,GameObject> objectToPrefabDic = new();
 
         public void Awake()
         {
@@ -113,13 +109,8 @@ namespace Syacapachi.util
         /// <summary>
         /// Return an object to the pool (reset objects before returning).
         /// </summary>
-        public void ReturnNetworkObject(NetworkObject networkObject, GameObject gameObject)
+        public void ReturnNetworkObject(NetworkObject networkObject, GameObject prefabObject)
         {
-            if(!objectToPrefabDic.TryGetValue(networkObject, out var prefabObject))
-            {
-                Debug.LogError($"[{prefabObject.name}] is not assgined pool");
-                return;
-            }
             m_PooledObjects[prefabObject].Release(networkObject);
         }
 
@@ -131,7 +122,6 @@ namespace Syacapachi.util
             NetworkObject CreateFunc()
             {
                 var networkObject = Instantiate(prefab).GetComponent<NetworkObject>();
-                objectToPrefabDic[networkObject] = prefab;
                 return networkObject;
             }
 
@@ -140,15 +130,14 @@ namespace Syacapachi.util
                 networkObject.gameObject.SetActive(true);
             }
 
-            static void ActionOnRelease(NetworkObject networkObject)
+            void ActionOnRelease(NetworkObject networkObject)
             {
-                if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb))
+                if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb) && !rb.isKinematic)
                 {
-                    if (rb.isKinematic) return;
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
                 }
-                if (networkObject.IsSpawned)
+                if (networkObject.IsSpawned && IsServer)
                 {
                     //破壊しないで、Despawn()
                     networkObject.Despawn(false);
@@ -172,22 +161,14 @@ namespace Syacapachi.util
                 collectionCheck: false,
                 defaultCapacity: prewarmCount * 10);
 
-            // Populate the pool
-            var prewarmNetworkObjects = new List<NetworkObject>();
-            for (var i = 0; i < prewarmCount; i++)
-            {
-                prewarmNetworkObjects.Add(m_PooledObjects[prefab].Get());
-            }
-            foreach (var networkObject in prewarmNetworkObjects)
-            {
-                //NetCodeには、SpawnedObject,SceneObjectがある。
-                //Spawn()しないと、エラーの原因となる。
-                networkObject.Spawn();
-                m_PooledObjects[prefab].Release(networkObject);
-            }
-
             // Register Netcode Spawn handlers
             NetworkManager.Singleton.PrefabHandler.AddHandler(prefab, new PooledPrefabInstanceHandler(prefab, this));
+
+            //NetworkObjectには、元からあるやつとSpawn()したやつの２つがある。
+            // 前もって作ると、元からあるやつだと思われる。
+            //その状態はよろしくないらしいので作らない
+
+
         }
     }
 
@@ -200,8 +181,8 @@ namespace Syacapachi.util
 
     class PooledPrefabInstanceHandler : INetworkPrefabInstanceHandler
     {
-        GameObject m_Prefab;
-        NetworkObjectPool m_Pool;
+        readonly GameObject m_Prefab;
+        readonly NetworkObjectPool m_Pool;
 
         public PooledPrefabInstanceHandler(GameObject prefab, NetworkObjectPool pool)
         {

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class GameEffectAudioManager : MonoBehaviour
 {
@@ -36,32 +37,15 @@ public class GameEffectAudioManager : MonoBehaviour
         //浮動小数点は、== が難しいので比較で行う
         if(effect.Delay < 0.1f)
         {
-            audioSource.Play();
             StartCoroutine(PlayAndRelease(audioSource));
-
         }
         else
         {
-            StartCoroutine(PlayDelayedAndRelease(audioSource, effect.Delay));
+            StartCoroutine(PlayAfterDelay(audioSource, effect.Delay));
         }
     }
     private IEnumerator PlayAndRelease(AudioSource source)
     {
-        // ループなら自動解放しない
-        if (source.loop)
-            yield break;
-
-        //停止を待つ。
-        yield return new WaitWhile(() => source != null && source.isPlaying);
-
-        if (source != null)
-        {
-            ReturnPool(source);
-        }
-    }
-    private IEnumerator PlayDelayedAndRelease(AudioSource source,float delay)
-    {
-        yield return new WaitForSeconds(delay);
         source.Play();
         // ループなら自動解放しない
         if (source.loop)
@@ -74,6 +58,11 @@ public class GameEffectAudioManager : MonoBehaviour
         {
             ReturnPool(source);
         }
+    }
+    private IEnumerator PlayAfterDelay(AudioSource source,float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        yield return PlayAndRelease(source);
     }
     private void ReturnPool(AudioSource source)
     {

@@ -41,6 +41,7 @@ public class GrabableLazyFollowHelper : MonoBehaviour
     }
     public void SetTargetOffset()
     {
+        //カメラに対する相対座標を計算する。Vector3同士の引き算ではScaleが考慮されないので注意
         Vector3 point = Camera.transform.InverseTransformPoint(this.transform.position);
         if(point.z < 0f) point.z = -point.z;
         m_LazyFollow.targetOffset = point;
