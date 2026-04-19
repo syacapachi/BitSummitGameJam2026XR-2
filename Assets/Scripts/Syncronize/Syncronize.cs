@@ -1,5 +1,7 @@
 ﻿using Oculus.Interaction;
+using System.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 public class Syncronize : NetworkBehaviour
@@ -20,7 +22,6 @@ public class Syncronize : NetworkBehaviour
     [SerializeField] private Transform networkRightController;
     public readonly NetworkVariable<int> JumpCount = new(0,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Owner);
     private LocalPlayerRoot playerRoot;
-
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -61,6 +62,8 @@ public class Syncronize : NetworkBehaviour
 
         }
         //非オーナーは、同期されているアバターの位置をAnimatorに反映させる
+        //注意 AvatorにNetworkTransform付きオブジェクトを付けるとAnimationが狂う
+        //NetworkTransform付きTransformをIKに使うな 同期できなくなる
         else
         {
             //頭
@@ -85,7 +88,7 @@ public class Syncronize : NetworkBehaviour
     {
         if (IsOwner)
         {
-            //現状は、rootが(0.0.0)なのでpositonと同じだが一応
+            //avatorRootTransfromからみた、networkHeadの相対座標
             Vector3 headOffsetLocal = avatorRootTransfrom.InverseTransformPoint(networkHead.position);
             //カメラのY座標は、地面からの距離
             //Avatorの頭を動かす不自然になる。->rootを調整
