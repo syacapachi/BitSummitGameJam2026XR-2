@@ -112,14 +112,17 @@ public class NGun : GunController
     protected override void OnShootServer()
     {
         base.OnShootServer();
-        playerStats.AddShot();
+        if (playerStats != null)
+            playerStats.AddShot();
     }
     public override void UpdateProgress(float progress)
     {
+        if (ammoUI == null) return;
         ammoUI.UpdateProgress(progress);
     }
     public override void UpdateCount(int remainVal, int maxVal)
     {
+        if (ammoUI == null) return;
         ammoUI.UpdateCount(remainVal, maxVal);
     }
     public override void PlayReloadSound()

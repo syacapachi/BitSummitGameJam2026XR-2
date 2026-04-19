@@ -7,14 +7,19 @@ public class StartButton : NetworkBehaviour
     [SerializeField] GameObject resetUI;
 
     [SerializeField] GameStateEvent gameStateEvent;
+
+    /*
+     シーン遷移でUIの状態をリセットするため、StartからOnNetworkSpawnに移動
     private void Start()
     {
         startUI.SetActive(false);
         resetUI.SetActive(false);
     }
+    */
     public override void OnNetworkSpawn()
     {
         startUI.SetActive(true);
+        resetUI.SetActive(false);
     }
     private void OnEnable()
     {
@@ -43,7 +48,8 @@ public class StartButton : NetworkBehaviour
         {
             case GameState.Initializing:
                 OnGameInitialize(); break;
-
+            case GameState.Playing:
+                startUI.SetActive(false); break;
             case GameState.GameClear:
                 GameEndHandle();break;
             case GameState.GameOver:
@@ -65,7 +71,8 @@ public class StartButton : NetworkBehaviour
     {
         Debug.Log("[Start Game Rpc]");
         ManagerLocator.Instance.AllGameManager.StartGameServerOnly();
-        startUI.SetActive(false);
+        //クライアントで消えてない
+        //startUI.SetActive(false);
     }
     [Rpc(SendTo.Server)]
     void ResetGameRpc()

@@ -57,6 +57,13 @@ public class ResultUI : MonoBehaviour
 
     void OnGameFinished(PlayerResultData[] resultData)
     {
+        Debug.Log("Result Received!");
+        Debug.Log("Result length: " + resultData.Length);
+
+        foreach (var r in resultData)
+        {
+            Debug.Log($"Player {r.clientId} Score:{r.score} Kills:{string.Join(",", r.killCounts)}");
+        }
         ShowResult();
         ShowDetail(resultData);
     }

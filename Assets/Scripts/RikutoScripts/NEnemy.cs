@@ -28,6 +28,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public float MaxHealth => enemySO.Hp;
     public PlayerJob enemyJob;
     private ulong lastAttackerId;
+    public ulong LastAttackerId => lastAttackerId;
 
     public override void OnNetworkSpawn()
     {
@@ -56,26 +57,28 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     private IEnumerator SetupPlayerCoroutine()
     {
-        // OwnerPlayer が null でなくなるまで待機
-        yield return new WaitUntil(() => ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer != null);
+        yield return new WaitUntil(() =>
+            ManagerLocator.Instance != null &&
+            ManagerLocator.Instance.AllPlayerManager != null &&
+            ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer != null &&
+            ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.transform != null
+        );
 
-        var localPlayer = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer;
-
-        // Transform が存在するかチェック（通常は必ずある）
-        if (localPlayer != null)
-        {
-            targetPlayer = localPlayer.transform;
-        }
+        targetPlayer = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.transform;
     }
 
     void LateUpdate()
     {
-        if (hpCanvas != null)
-        {
-            // プレイヤー方向を向く
-            hpCanvas.transform.LookAt(targetPlayer);
-            hpCanvas.transform.Rotate(0, 180f, 0);  // Imageが正面向きになるように回転
-        }
+        if (hpCanvas == null) return;
+
+        var player = ManagerLocator.Instance?.AllPlayerManager?.NetworkOwnerPlayer;
+
+        if (player == null) return;
+
+        var target = player.transform;
+
+        hpCanvas.transform.LookAt(target);
+        hpCanvas.transform.Rotate(0, 180f, 0);
     }
 
     public void TakeDamage(IDamageSender sender, float damage)
