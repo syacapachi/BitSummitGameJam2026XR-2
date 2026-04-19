@@ -59,7 +59,7 @@ public class JobSetting : ScriptableObject
                     AttackableJob = attackableJob,
                     AttackableLayer = attackableLayer,
                 };
-                Debug.LogWarning($"[JobManager]Job {playerJob} is not defined in JobSettingSO. ColliderLayer set to 0, CullingMask set to intersection of all defined jobs.");
+                Debug.LogWarning($"[{nameof(JobSetting)}]Job {playerJob} is not defined in JobSettingSO. ColliderLayer set to {colliderLayer}, CullingMask set to {cullingMask} (intersection of all defined jobs).");
             }
         }
     }

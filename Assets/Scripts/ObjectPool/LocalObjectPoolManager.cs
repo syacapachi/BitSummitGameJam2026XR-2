@@ -37,9 +37,8 @@ public class LocalObjectPoolManager : MonoBehaviour
         static void OnRelease(GameObject obj)
         {
             obj.SetActive(false);
-            if(obj.TryGetComponent<Rigidbody>(out var rb))
+            if(obj.TryGetComponent<Rigidbody>(out var rb) && !rb.isKinematic)
             {
-                if (rb.isKinematic) return;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
             }

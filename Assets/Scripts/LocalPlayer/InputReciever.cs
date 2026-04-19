@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class InputReciever : MonoBehaviour
 {
     [Flags]
-    public enum InvokeSetting
+    enum InvokeSetting
     {
         Nothing = 0,
         Performed = 1,
@@ -19,7 +19,7 @@ public class InputReciever : MonoBehaviour
     /// <param name="inputConfig"></param>
     /// <param name="enable"></param>
     [Serializable]
-    public class InputEventConfig<T> where T : struct
+    class InputEventConfig<T> where T : struct
     {
         static readonly Type thisType = typeof(T);
         static readonly Type boolType = typeof(bool);
@@ -78,7 +78,7 @@ public class InputReciever : MonoBehaviour
         }
     }
     [Serializable]
-    public class InputEventConfig
+    class InputEventConfig
     {
         [Header("Input Action")]
         [SerializeField] InputActionReference action;
