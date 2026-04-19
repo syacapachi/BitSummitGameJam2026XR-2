@@ -52,7 +52,6 @@ public class MarkerController : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void PlaceMarkerRpc()
     {
-        if(!ManagerLocator.Instance.AllGameManager.IsGamePlaying) return;
         if (firePoint == null) return;
 
         RaycastHit hit;

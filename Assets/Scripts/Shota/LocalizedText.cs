@@ -1,15 +1,15 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "LocalizedText", menuName = "Game/LocalizedText")]
 public class LocalizedText : ScriptableObject
 {
-    [TextArea(3, 10)]
-    public string[] japaneseTexts;
+    [SerializeField] TitileAndText[] japaneseTexts;
 
-    [TextArea(3, 10)]
-    public string[] englishTexts;
+    [SerializeField] TitileAndText[] englishTexts;
 
-    public string Get(int index)
+    public int Length => Mathf.Min(japaneseTexts.Length, englishTexts.Length);
+
+    public TitileAndText Get(int index)
     {
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
 
@@ -24,6 +24,6 @@ public class LocalizedText : ScriptableObject
                 return englishTexts[index];
         }
 
-        return "";
+        return new TitileAndText();
     }
 }

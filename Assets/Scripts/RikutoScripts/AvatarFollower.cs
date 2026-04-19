@@ -1,4 +1,4 @@
-using System.Globalization;
+ï»¿using System.Globalization;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,18 +13,18 @@ public class AvatarFollower : NetworkBehaviour
 
         FindTarget();
 
-        // ƒV[ƒ“‘JˆÚ‚ÉÄæ“¾
+        // ã‚·ãƒ¼ãƒ³é·ç§»æ™‚ã«å†å–å¾—
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    void OnDestroy()
+    public override void OnNetworkDespawn()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Scene Loaded ¨ targetÄæ“¾");
+        Debug.Log("Scene Loaded â†’ targetå†å–å¾—");
         target = null;
         FindTarget();
     }

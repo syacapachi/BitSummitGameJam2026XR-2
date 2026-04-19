@@ -32,12 +32,6 @@ public class SyncroPropaty : NetworkBehaviour
     }
     private void ResistJobDic()
     {
-        var jobManager = ManagerLocator.Instance.JobManager;
-        if (jobManager == null)
-        {
-            Debug.LogError("PlayerJobManager not found in the scene.");
-            return;
-        }
         jobToLayerMaskDic = setting.JobLayerMaskDic;
     }
     public override void OnNetworkSpawn()
