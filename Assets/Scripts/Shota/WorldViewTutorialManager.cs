@@ -6,6 +6,8 @@ using Unity.Netcode;
 
 public class WorldTutorialManager : NetworkBehaviour
 {
+    [SerializeField] TutorialManager tutorialManager;
+
     [Header("テキスト表示欄")]
     public TextMeshProUGUI boardText;
 
@@ -56,10 +58,45 @@ public class WorldTutorialManager : NetworkBehaviour
 
     private int totalPages = 4;
 
+    /*
+
     void Start()
     {
         ShowPage(currentIndex);
     }
+    */
+
+    public override void OnNetworkSpawn()
+    {
+        if (tutorialManager != null)
+        {
+            tutorialManager.CurrentStep.OnValueChanged += OnStepChanged;
+
+            // 初期表示
+            OnStepChanged(default, tutorialManager.CurrentStep.Value);
+        }
+    }
+
+    void OnStepChanged(TutorialStep oldStep, TutorialStep newStep)
+    {
+        int index = (int)newStep;
+
+        if (index >= totalPages)
+            index = totalPages - 1;
+
+        ShowPage(index);
+
+        // 最後のステップならボタンを「開始」に
+        if (buttonText != null)
+        {
+            bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+
+            buttonText.text = newStep == TutorialStep.Step4
+                ? (isJapanese ? "ゲームスタート" : "Game Start")
+                : (isJapanese ? "次へ" : "Next");
+        }
+    }
+    
 
     void ShowPage(int index)
     {
@@ -93,7 +130,7 @@ public class WorldTutorialManager : NetworkBehaviour
             SceneManager.LoadScene("VRSystemScene");
     }
     */
-
+    /*
     public void OnNextButtonClicked()
     {
         currentIndex++;
@@ -138,4 +175,5 @@ public class WorldTutorialManager : NetworkBehaviour
             ShowPage(currentIndex);
         }
     }
+    */
 }
