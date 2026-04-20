@@ -13,8 +13,13 @@ public class Step3_Coop : ITutorialStep
 
     public void OnStart()
     {
-        spawner.SpawnEnemiesForCoop();
         spawner.OnAllEnemyDead += HandleAllDead;
+
+        // ★すでに全滅していた場合
+        if (spawner.IsAllDead)
+        {
+            HandleAllDead();
+        }
     }
 
     public void OnEnd()

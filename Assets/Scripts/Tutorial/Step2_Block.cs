@@ -8,21 +8,29 @@ public class Step2_Block : ITutorialStep
     Action onComplete;
     TutorialSpawner spawner;
 
-    public Step2_Block(int playerCount, TutorialSpawner spawner, Action onComplete)
+    List<EnemySO> step2Enemies;
+
+    public Step2_Block(int playerCount, TutorialSpawner spawner, Action onComplete, List<EnemySO> step2Enemies)
     {
         this.playerCount = playerCount;
         this.spawner = spawner;
         this.onComplete = onComplete;
+        this.step2Enemies = step2Enemies;
     }
 
     public void OnStart()
     {
         counts.Clear();
-        spawner.SpawnEnemiesForBlock();
+
+        // 敵をスポーン
+        spawner.SpawnTargetsForEachPlayer(playerCount, step2Enemies);
     }
 
-    public void OnEnd() { }
+    public void OnEnd()
+    {
+    }
 
+    // ★ここがメインロジック
     public void OnAttackBlocked(ulong playerId)
     {
         if (!counts.ContainsKey(playerId))
@@ -30,15 +38,25 @@ public class Step2_Block : ITutorialStep
 
         counts[playerId]++;
 
+        // デバッグ（おすすめ）
+        UnityEngine.Debug.Log($"Player {playerId} Block Count: {counts[playerId]}");
+
         bool allDone = counts.Count >= playerCount;
 
         foreach (var c in counts.Values)
         {
-            if (c < 3) allDone = false;
+            if (c < 3)
+            {
+                allDone = false;
+                break;
+            }
         }
 
         if (allDone)
+        {
+            UnityEngine.Debug.Log("Step2 Complete!");
             onComplete?.Invoke();
+        }
     }
 
     public void OnTargetDestroyed(ulong playerId) { }
