@@ -1,5 +1,8 @@
 ﻿using Oculus.Interaction;
+using System;
 using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.XR.CoreUtils;
@@ -28,7 +31,19 @@ public class Syncronize : NetworkBehaviour
         if (IsOwner)
         {
             StartCoroutine(WaitForEnable());
+            NetworkManager.SceneManager.OnLoadComplete += OnSceneLoaded;
+            NetworkManager.SceneManager.OnUnload += OnSceneUnLoad;
         }
+    }
+
+    private void OnSceneUnLoad(ulong clientId, string sceneName, AsyncOperation asyncOperation)
+    {
+        isInitialized = false;
+    }
+
+    private void OnSceneLoaded(ulong clientId,string name,UnityEngine.SceneManagement.LoadSceneMode loadMode)
+    {
+        StartCoroutine(WaitForEnable());
     }
     private IEnumerator WaitForEnable()
     {
@@ -55,11 +70,15 @@ public class Syncronize : NetworkBehaviour
         rightController = playerRoot.RightController;
         ownerCamera = xrOrigin.Camera;
 
+        Debug.Log($"xrOrigin {xrOrigin != null}");
+        Debug.Log($"Camera {xrOrigin.Camera != null}");
         isInitialized = true;
     }
     public override void OnNetworkDespawn()
     {
         isInitialized = false;
+        NetworkManager.SceneManager.OnLoadComplete -= OnSceneLoaded;
+        Debug.Log("Avator Despawn");
     }
     /// <summary>
     /// アニメーションを計算するタイミングで更新

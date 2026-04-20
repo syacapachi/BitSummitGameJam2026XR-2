@@ -2038,7 +2038,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   animator: {fileID: 4287199880766945624}
   NetworkAnimator: {fileID: 7881706449808830731}
-  syncronizeSetting: {fileID: 4030435899186503764}
+  syncronizeSetting: {fileID: 0}
   jumpEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
   moveEvent: {fileID: 11400000, guid: 5fc02d6a0c59226468d706cf6757d428, type: 2}
 --- !u!1 &1837569029998118850
@@ -2862,58 +2862,6 @@ Transform:
   - {fileID: 8726717620857137539}
   m_Father: {fileID: 4697384273831141353}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2847752362134598257
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1146618866328642912}
-  - component: {fileID: 4030435899186503764}
-  m_Layer: 0
-  m_Name: SyncronizeScript
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1146618866328642912
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2847752362134598257}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1358144342988845292}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4030435899186503764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2847752362134598257}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84a340a3aa632774ab9bcffe05129959, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  avatorRootTransfrom: {fileID: 1358144342988845292}
-  animator: {fileID: 7811071689496165750}
-  networkHead: {fileID: 3348932590027094906}
-  networkLeftHand: {fileID: 8562024122213999516}
-  networkRightHand: {fileID: 728814604505585515}
-  networkLeftController: {fileID: 2711660553692858157}
-  networkRightController: {fileID: 502935949545263117}
 --- !u!1 &2871443666667529190
 GameObject:
   m_ObjectHideFlags: 0
@@ -5666,7 +5614,6 @@ Transform:
   m_Children:
   - {fileID: 730973643892223438}
   - {fileID: 576923628704286524}
-  - {fileID: 1146618866328642912}
   - {fileID: 8542342938949535956}
   - {fileID: 669341337691739909}
   - {fileID: 2041269855817382624}
@@ -8835,11 +8782,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4377345816364985541}
   m_SourcePrefab: {fileID: 100100000, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
---- !u!4 &502935949545263117 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4320883249815261418, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
-  m_PrefabInstance: {fileID: 4398915094894330087}
-  m_PrefabAsset: {fileID: 0}
 --- !u!137 &1046714690795431310 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3713983770300032361, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
@@ -8853,16 +8795,6 @@ SkinnedMeshRenderer:
 --- !u!137 &2231564332198363345 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2590711178638016566, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
-  m_PrefabInstance: {fileID: 4398915094894330087}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &2711660553692858157 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -7445060340082374710, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
-  m_PrefabInstance: {fileID: 4398915094894330087}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &3348932590027094906 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -7821105988696736867, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
   m_PrefabInstance: {fileID: 4398915094894330087}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &3565329610315713468 stripped

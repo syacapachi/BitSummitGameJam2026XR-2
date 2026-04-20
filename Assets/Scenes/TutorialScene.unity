@@ -586,7 +586,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 798631059}
-    PlayerPrefab: {fileID: 3323779575331495796, guid: d350dfbaed8c82548b297997031d6213, type: 3}
+    PlayerPrefab: {fileID: 6125224147537168939, guid: 031551ab1c474034d9d2805d6a183249, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 9e30410611228d94780d79e328c501ed, type: 2}
@@ -699,7 +699,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 1493192081}
+  m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -1036,7 +1036,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1367694067}
     - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: attackBlockedEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 29e4db13b8933e44b8dfd9df362fd1d2, type: 2}
+    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: step1Enemies.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: step2Enemies.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
@@ -1047,6 +1055,14 @@ PrefabInstance:
       propertyPath: 'step1Enemies.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: eef6fe2fc1d95ac46ae381ae53e3288a, type: 2}
+    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'step2Enemies.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: e46a108a5137e2840b992565f1659bcf, type: 2}
+    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'step2Enemies.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f594e91d59269df42abf37e34d18e45f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1266559103897700638, guid: 07f51410c6523454580003730b31cfff, type: 3}
@@ -1534,7 +1550,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5980159000183742360, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_Name
-      value: XR Origin Hands (XR Rig) (LocalPlayer) Variant
+      value: XR Tutorial
       objectReference: {fileID: 0}
     - target: {fileID: 5980159000183742363, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_LocalPosition.x

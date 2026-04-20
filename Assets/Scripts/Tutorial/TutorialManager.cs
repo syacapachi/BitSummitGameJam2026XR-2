@@ -22,19 +22,22 @@ public class TutorialManager : NetworkBehaviour
     [SerializeField] List<EnemySO> step1Enemies;
     [SerializeField] List<EnemySO> step2Enemies;
 
+    [SerializeField] AttackBlockedEvent attackBlockedEvent;
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
             StartStep(TutorialStep.Step1);
+            attackBlockedEvent.Register(OnAttackBlocked);
         }
 
         CurrentStep.OnValueChanged += OnStepChanged;
     }
-
     public override void OnNetworkDespawn()
     {
         CurrentStep.OnValueChanged -= OnStepChanged;
+        attackBlockedEvent.Unregister(OnAttackBlocked);
     }
 
     void OnStepChanged(TutorialStep oldStep, TutorialStep newStep)
@@ -63,6 +66,10 @@ public class TutorialManager : NetworkBehaviour
             case TutorialStep.Step4:
                 StartMainSimulation();
                 return;
+            case TutorialStep.End:
+                return;
+            default:
+                return;
         }
 
         currentStepLogic?.OnStart();
@@ -88,10 +95,10 @@ public class TutorialManager : NetworkBehaviour
         currentStepLogic?.OnTargetDestroyed(id);
     }
 
-    public void OnAttackBlocked(ulong id)
+    public void OnAttackBlocked(AttackBlocked blocked)
     {
         if (!IsServer) return;
-        currentStepLogic?.OnAttackBlocked(id);
+        currentStepLogic?.OnAttackBlocked(blocked.PlayerId);
     }
 
     public void OnEnemyKilled(EnemyKilled e)
@@ -105,6 +112,7 @@ public class TutorialManager : NetworkBehaviour
         Debug.Log("Main Simulation Start");
     }
 
+    [OnInspectorButton]
     void MoveScene()
     {
         if (!IsServer) return;
@@ -113,5 +121,6 @@ public class TutorialManager : NetworkBehaviour
             "VRSystemScene",
             LoadSceneMode.Single
         );
+        Debug.Log("Move To VRSystemScene");
     }
 }
