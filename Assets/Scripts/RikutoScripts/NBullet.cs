@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NBullet : BulletBaseController
 {
+    [SerializeField] AttackBlockedEvent attackBlockedEvent;
     [SerializeField] TrailRenderer trailRenderer;
     [SerializeField] GameObject hitFxPrefab;
     [SerializeField] GameObject shieldFxPrefab;
@@ -66,6 +67,12 @@ public class NBullet : BulletBaseController
                 // シールド
                 Debug.Log("Shield");
                 root.stats.AddShield();
+
+                attackBlockedEvent.Invoke(new AttackBlocked()
+                {
+                    PlayerId = ShooterId,
+                    Enemy = enemy
+                });
 
                 SpawnShieldFxClientRpc(transform.position);
             }

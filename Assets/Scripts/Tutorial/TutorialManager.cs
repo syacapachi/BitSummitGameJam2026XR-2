@@ -2,6 +2,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public enum TutorialStep
 {
@@ -17,6 +18,9 @@ public class TutorialManager : NetworkBehaviour
     [SerializeField] TutorialSpawner spawner;
 
     ITutorialStep currentStepLogic;
+
+    [SerializeField] List<EnemySO> step1Enemies;
+    [SerializeField] List<EnemySO> step2Enemies;
 
     public override void OnNetworkSpawn()
     {
@@ -45,11 +49,11 @@ public class TutorialManager : NetworkBehaviour
         switch (step)
         {
             case TutorialStep.Step1:
-                currentStepLogic = new Step1_Target(playerCount, spawner, NextStep);
+                currentStepLogic = new Step1_Target(playerCount, spawner, NextStep, step1Enemies);
                 break;
 
             case TutorialStep.Step2:
-                currentStepLogic = new Step2_Block(playerCount, spawner, NextStep);
+                currentStepLogic = new Step2_Block(playerCount, spawner, NextStep, step2Enemies);
                 break;
 
             case TutorialStep.Step3:

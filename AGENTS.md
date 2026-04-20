@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Overlay UI, Water, UI, Human, Ghost, Both
 - Active game object:
-  - Name: Tooltip Text
+  - Name: SpawnPoint0
   - Tag: Untagged
   - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using TMPro; // ← 追加
 using System.Collections;
+using Syacapachi.Attribute;
 
 public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 {
@@ -103,7 +104,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
     }
 
+    [OnInspectorButton("Die")]
+
     [Rpc(SendTo.Server,InvokePermission = RpcInvokePermission.Server)]
+    
     void DieRpc()
     {
         Debug.Log("Die");
