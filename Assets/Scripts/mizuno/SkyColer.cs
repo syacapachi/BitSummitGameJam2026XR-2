@@ -1,4 +1,4 @@
-﻿// using Syacapachi.Attribute;
+// using Syacapachi.Attribute;
 // using UnityEngine;
 
 // public class SkyColer : MonoBehaviour
