@@ -13,7 +13,6 @@ public class TutorialSpawner : NetworkBehaviour
     int remain;
     bool isSpawnFinished;
     [SerializeField] EnemyKilledEvent EnemyKilled;
-    [SerializeField] AttackBlockedEvent attackBlockedEvent;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] NetworkObjectPool networkPool;
     public bool IsAllDead => remain <= 0 && isSpawnFinished;
@@ -23,7 +22,6 @@ public class TutorialSpawner : NetworkBehaviour
         if (IsServer)
         {
             EnemyKilled.Register(OnEnemyKilledEvent);
-            attackBlockedEvent.Register(OnAttackBlockedEvent);
         }
     }
 
@@ -32,18 +30,12 @@ public class TutorialSpawner : NetworkBehaviour
         if (IsServer)
         {
             EnemyKilled.Unregister(OnEnemyKilledEvent);
-            attackBlockedEvent.Unregister(OnAttackBlockedEvent);
         }
     }
 
     void OnEnemyKilledEvent(EnemyKilled e)
     {
         OnEnemyKilled();
-    }
-
-    void OnAttackBlockedEvent(AttackBlocked e)
-    {
-    ManagerLocator.Instance.TutorialManager.OnAttackBlocked(e.PlayerId);
     }
 
     public void SpawnTargetsForEachPlayer(int playerCount, List<EnemySO> enemyList)
@@ -83,7 +75,7 @@ public class TutorialSpawner : NetworkBehaviour
             Quaternion.identity
         );
 
-        obj.Spawn();
+        obj.Spawn(true);
     }
 
     public void OnEnemyKilled()
