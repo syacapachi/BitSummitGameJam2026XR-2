@@ -4,33 +4,35 @@ using System.Collections.Generic;
 public class Step1_Target : ITutorialStep
 {
     int playerCount;
-    HashSet<ulong> cleared = new();
     Action onComplete;
     TutorialSpawner spawner;
+    List<EnemySO> step1Enemies;
 
-    public Step1_Target(int playerCount, TutorialSpawner spawner, Action onComplete)
+    public Step1_Target(int playerCount, TutorialSpawner spawner, Action onComplete, List<EnemySO> step1Enemies)
     {
         this.playerCount = playerCount;
         this.spawner = spawner;
         this.onComplete = onComplete;
+        this.step1Enemies = step1Enemies;
     }
 
     public void OnStart()
     {
-        cleared.Clear();
-        spawner.SpawnTargetsForEachPlayer();
+        spawner.OnAllEnemyDead += HandleAllDead;
+        spawner.SpawnTargetsForEachPlayer(playerCount, step1Enemies);
     }
 
-    public void OnEnd() { }
-
-    public void OnTargetDestroyed(ulong playerId)
+    void HandleAllDead()
     {
-        cleared.Add(playerId);
-
-        if (cleared.Count >= playerCount)
-            onComplete?.Invoke();
+        onComplete?.Invoke();
     }
 
+    public void OnEnd()
+    {
+        spawner.OnAllEnemyDead -= HandleAllDead;
+    }
+
+    public void OnTargetDestroyed(ulong playerId) { }
     public void OnAttackBlocked(ulong playerId) { }
     public void OnEnemyKilled(EnemyKilled e) { }
 }
