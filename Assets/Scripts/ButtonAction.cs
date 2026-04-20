@@ -45,9 +45,9 @@ public class Scripts : MonoBehaviour
 
     private void Start()
     {
-        ServerButton.onClick.AddListener(OnStartServer);
+        //ServerButton.onClick.AddListener(OnStartServer);
         HostButton.onClick.AddListener(OnStartHost);
-        ClientButton.onClick.AddListener(OnStartClient);
+        //ClientButton.onClick.AddListener(OnStartClient);
         ExitButton.onClick.AddListener(OnExitNetwork);
         DiscoveryButton.onClick.AddListener(StartDiscover);
         discovertext = DiscoveryButton.GetComponentInChildren<TextMeshProUGUI>();
