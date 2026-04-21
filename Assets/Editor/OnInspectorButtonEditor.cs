@@ -397,12 +397,12 @@ namespace Syacapachi.Editor
             while (prop.NextVisible(enterChildren))
             {
                 enterChildren = false; //最初の1回だけは展開しておく
-                                       //[SerializeReference]が有る場合は描画
+                                       //UnityEngine.Objectの参照が有る場合は描画
                 if (prop.propertyType == SerializedPropertyType.ObjectReference)
                 {
                     DrawSOReference(prop, depth, visited);
                 }
-                if (prop.isArray && prop.propertyType != SerializedPropertyType.String)
+                else if(prop.isArray && prop.propertyType != SerializedPropertyType.String)
                 {
                     //配列の中身もチェックする
                     for (int i = 0; i < prop.arraySize; i++)
@@ -425,13 +425,16 @@ namespace Syacapachi.Editor
             {
                 return;
             }
+            //非永続オブジェクト(一時オブジェクト)を拒否
+            if (!EditorUtility.IsPersistent(nestedSO))
+                return;
 
             if (!foldoutStates.ContainsKey(nestedSO))
             {
                 foldoutStates[nestedSO] = false; // 初期状態は折りたたみ
             }
             string label = overrideLabel ?? prop.displayName;
-            label = $"{label} ▶ {nestedSO.name} ({nestedSO.GetType().Name}";
+            label = $"{label} ▶ {nestedSO.name} ({nestedSO.GetType().Name})";
 
             EditorGUILayout.Space(3);
 

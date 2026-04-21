@@ -9,10 +9,11 @@ public class SampleScript : MonoBehaviour
     [ShowInspector, SerializeField] Vector3 vec;
     [ShowInspector, SerializeField] Color color;
     [ShowInspector, SerializeField] GameObject obj;
-    [ShowInspector, SerializeField] InlineClass clazz;
+    [SerializeField] InlineClass clazz;
     [ShowInspector, SerializeField] List<float> list = new List<float>();
     [ShowInspector, SerializeField] List<InlineClass> classList = new List<InlineClass>();
     [ShowInspector, SerializeField] Dictionary<int,string> adic = new Dictionary<int,string>();
+    [Serializable]
     public class InlineClass
     {
         public string name;
