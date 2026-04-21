@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Complete XR Origin Set Up Hands Variant Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2343379106812324147, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3906783108503061448, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -251,6 +255,18 @@ PrefabInstance:
     - target: {fileID: 8434361012897615114, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -23
+      objectReference: {fileID: 0}
+    - target: {fileID: 8585343899417292560, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 8585343899417292560, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
+      propertyPath: m_ActionEvents.Array.data[23].m_ActionId
+      value: c94b32bb-fc85-4d40-835d-8444c230fc53
+      objectReference: {fileID: 0}
+    - target: {fileID: 8585343899417292560, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
+      propertyPath: m_ActionEvents.Array.data[23].m_ActionName
+      value: 'Player/ShowUI[/Keyboard/u]'
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4193059408743804234, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}

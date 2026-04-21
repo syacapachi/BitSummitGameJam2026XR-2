@@ -144,7 +144,6 @@ public class Scripts : MonoBehaviour
         m_Discovery.StopDiscovery();
         RefreshList();
         StopDiscoveryButton.gameObject.SetActive(false);
-
     }
     private void RefreshList()
     {
