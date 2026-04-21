@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-[CreateAssetMenu(fileName = "JobSetting", menuName = "Scriptable Objects/JobSetting")]
+[CreateAssetMenu(fileName = "JobSetting", menuName = "ScriptableObjects/JobSetting")]
 public class JobSetting : ScriptableObject
 {
     /// <summary>

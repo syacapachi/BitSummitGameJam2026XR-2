@@ -2689,13 +2689,13 @@ PrefabInstance:
       addedObject: {fileID: 5114117993183840635}
     - targetCorrespondingSourceObject: {fileID: 5488102526084281363, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7622474398900844521}
-    - targetCorrespondingSourceObject: {fileID: 5488102526084281363, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 503938141448502116}
     - targetCorrespondingSourceObject: {fileID: 5488102526084281363, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9181767689576202282}
+    - targetCorrespondingSourceObject: {fileID: 5488102526084281363, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4065784351689631493}
   m_SourcePrefab: {fileID: 100100000, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
 --- !u!4 &1991152800155532100 stripped
 Transform:
@@ -2767,10 +2767,9 @@ MonoBehaviour:
   leftController: {fileID: 4983985600312387237}
   rightController: {fileID: 4983985599767242308}
   xrOrigin: {fileID: 6156777943441006105}
-  playerCanvas: {fileID: 2453401802407056660}
   characterControll: {fileID: 503938141448502116}
   cameraSetting: {fileID: 9181767689576202282}
-  propaty: {fileID: 7622474398900844521}
+  propaty: {fileID: 0}
 --- !u!4 &5980159000183742363 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7211544049521143122, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
@@ -2792,25 +2791,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5488102526084281363, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
   m_PrefabInstance: {fileID: 3956772877621310153}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7622474398900844521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8845333398301558490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d2d5ebc452a3614597b0c2eb37f2896, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerCollider: {fileID: 5980159000183742360}
-  PlayerCamera: {fileID: 4983985599855904450}
-  setting: {fileID: 11400000, guid: 3bff306e073a81c4f9ee896511ef4a57, type: 2}
-  JobEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
-  switchJobEvent: {fileID: 11400000, guid: f9e23ca27358a3f419041719b45bce40, type: 2}
-  playerjob: 3
-  IsDebugMode: 1
 --- !u!114 &503938141448502116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2851,6 +2831,22 @@ MonoBehaviour:
   yMinLimit: -89
   yMaxLimit: 89
   look: {fileID: 11400000, guid: d29c8359e156b404296e840942685e66, type: 2}
+--- !u!114 &4065784351689631493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8845333398301558490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e6a1ad06bbea96458d76b3835271c37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerCollider: {fileID: 5980159000183742360}
+  PlayerCamera: {fileID: 4983985599855904450}
+  setting: {fileID: 11400000, guid: 3bff306e073a81c4f9ee896511ef4a57, type: 2}
+  jobEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
 --- !u!1001 &8369193075443270658
 PrefabInstance:
   m_ObjectHideFlags: 0

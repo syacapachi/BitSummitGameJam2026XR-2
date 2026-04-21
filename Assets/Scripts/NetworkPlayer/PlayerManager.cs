@@ -34,7 +34,7 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("Resist owner");
         if (IsJobOverride)
         {
-            LocalPlayerRoot.Propaty.Job = JobOverride;
+            //playerRoot.Propaty.Job = JobOverride;
         }
     }
     public void UnResistOwner(NetworkPlayerRoot playerRoot)

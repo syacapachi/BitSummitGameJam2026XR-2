@@ -75,7 +75,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
 
         if (client.PlayerObject == null) return PlayerJob.Nothing;
 
-        PlayerPropaty propaty = client.PlayerObject.GetComponentInChildren<PlayerPropaty>();
+        SyncroPropaty propaty = client.PlayerObject.GetComponentInChildren<SyncroPropaty>();
         if (propaty == null) return PlayerJob.Nothing;
 
         return propaty.Job;
@@ -92,7 +92,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             NetworkObject playerObject = pair.Value.PlayerObject;
             if (playerObject == null) continue;
 
-            PlayerPropaty propaty = playerObject.GetComponentInChildren<PlayerPropaty>();
+            SyncroPropaty propaty = playerObject.GetComponentInChildren<SyncroPropaty>();
             if (propaty == null) continue;
 
             if (fxRuleServer.IsVisibleTo(propaty.Job))
