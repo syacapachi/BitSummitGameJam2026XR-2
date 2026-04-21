@@ -7,7 +7,8 @@ public class SyncroPropaty : NetworkBehaviour
     [SerializeField] GameObject avatorCollider;
     [SerializeField] JobSetting setting;
     private int PlayerLayer = 0;
-    [SerializeField] NetworkVariable<PlayerJob> syncroJob = new(
+    [SerializeField]
+    NetworkVariable<PlayerJob> syncroJob = new(
         PlayerJob.Both,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
@@ -20,7 +21,7 @@ public class SyncroPropaty : NetworkBehaviour
 
     private void OnEnable()
     {
-        if(jobToLayerMaskDic == null)
+        if (jobToLayerMaskDic == null)
         {
             ResistJobDic();
         }
@@ -39,7 +40,11 @@ public class SyncroPropaty : NetworkBehaviour
         if (IsOwner)
         {
             jobEvent.Register(OnJobChangeHandle);
-            syncroJob.Value = jobEvent.CurrentValue;
+
+            // ホストならHuman、クライアントならGhost
+            PlayerJob initialJob = IsHost ? PlayerJob.Human : PlayerJob.Ghost;
+            syncroJob.Value = initialJob;
+            jobEvent.Invoke(initialJob);
         }
     }
 
