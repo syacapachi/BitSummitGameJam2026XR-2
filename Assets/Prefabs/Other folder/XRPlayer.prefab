@@ -10568,7 +10568,6 @@ GameObject:
   - component: {fileID: 3651505721358349586}
   - component: {fileID: 1862221289608414100}
   - component: {fileID: 411046139425735460}
-  - component: {fileID: 8392041462461411779}
   - component: {fileID: 3776205676469635159}
   - component: {fileID: 2455431010937829706}
   - component: {fileID: 8539884231483984961}
@@ -10642,25 +10641,6 @@ MonoBehaviour:
   playerStats: {fileID: 0}
   fireEvent: {fileID: 0}
   networkEvent: {fileID: 0}
---- !u!114 &8392041462461411779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7419309984385966222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d2d5ebc452a3614597b0c2eb37f2896, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerCollider: {fileID: 0}
-  PlayerCamera: {fileID: 0}
-  setting: {fileID: 0}
-  JobEvent: {fileID: 0}
-  switchJobEvent: {fileID: 0}
-  playerjob: 0
-  IsDebugMode: 1
 --- !u!114 &3776205676469635159
 MonoBehaviour:
   m_ObjectHideFlags: 0

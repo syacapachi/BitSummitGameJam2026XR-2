@@ -106,6 +106,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2468839802231415938}
     m_Modifications:
+    - target: {fileID: 245275777368308507, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
+      propertyPath: playerJobEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
     - target: {fileID: 2228705776034226099, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.24316055
@@ -158,11 +162,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4987593252431869254, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 535228920
+      value: 1909735985
       objectReference: {fileID: 0}
     - target: {fileID: 5798914578468130185, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
       propertyPath: m_Name
       value: ResetUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 5809865909231160189, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SelectResetGame
       objectReference: {fileID: 0}
     - target: {fileID: 7636268764105319344, guid: 16a6114f230e7f848af2d9e36da80c9e, type: 3}
       propertyPath: m_AnchoredPosition.x

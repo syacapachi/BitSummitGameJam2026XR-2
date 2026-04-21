@@ -5,8 +5,10 @@ public class StartButton : NetworkBehaviour
 {
     [SerializeField] GameObject startUI;
     [SerializeField] GameObject resetUI;
-
+    [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
+    [Header("Publich Event")]
+    [SerializeField] PlayerJobEvent playerJobEvent;
 
     /*
      シーン遷移でUIの状態をリセットするため、StartからOnNetworkSpawnに移動
@@ -32,14 +34,14 @@ public class StartButton : NetworkBehaviour
     public void SelectHuman()
     {
         if(IsServer) return;
-        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.Job = PlayerJob.Human;
+        playerJobEvent.Invoke(PlayerJob.Human);
         Debug.Log("Human");
     }
 
     public void SelectGhost()
     {
         if (IsServer) return;
-        ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.Propaty.Job = PlayerJob.Ghost;
+        playerJobEvent.Invoke(PlayerJob.Ghost);
         Debug.Log("Ghost");
     }
     private void OnGameStateChange(GameState state)

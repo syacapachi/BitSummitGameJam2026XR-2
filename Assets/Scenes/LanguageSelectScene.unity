@@ -11483,30 +11483,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 227128032}
     m_Modifications:
-    - target: {fileID: 237634703599532481, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 237634703599532481, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1033424359}
-    - target: {fileID: 237634703599532481, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SelectResetGame
-      objectReference: {fileID: 0}
-    - target: {fileID: 237634703599532481, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: StartButton, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 237634703599532481, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 1253806547745058562, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1647060038682724346, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1909735985
@@ -11591,10 +11567,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6343137247611443566, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 6811614544963947594, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       propertyPath: m_Name
       value: worldCanvas
@@ -11615,17 +11587,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2468839802231415938, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
   m_PrefabInstance: {fileID: 1033424357}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1033424359 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5803891728367831463, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
-  m_PrefabInstance: {fileID: 1033424357}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c64beac8cf630e44ba7983efded407d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1034255787
 GameObject:
   m_ObjectHideFlags: 0

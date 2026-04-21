@@ -4,15 +4,15 @@ using UnityEngine;
 menuName = "Game/WorldViewData")]
 public class WorldViewData : ScriptableObject
 {
-    [Header("“ú–{Œêƒ^ƒCƒgƒ‹")]
+    [Header("æ—¥æœ¬èªžã‚¿ã‚¤ãƒˆãƒ«")]
     public string[] japaneseTitles;
 
-    [Header("‰pŒêƒ^ƒCƒgƒ‹")]
+    [Header("è‹±èªžã‚¿ã‚¤ãƒˆãƒ«")]
     public string[] englishTitles;
 
-    [Header("“ú–{ŒêƒeƒLƒXƒg")]
+    [Header("æ—¥æœ¬èªžãƒ†ã‚­ã‚¹ãƒˆ")]
     public string[] japaneseTexts;
 
-    [Header("‰pŒêƒeƒLƒXƒg")]
+    [Header("è‹±èªžãƒ†ã‚­ã‚¹ãƒˆ")]
     public string[] englishTexts;
 }

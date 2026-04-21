@@ -15,10 +15,8 @@ public class LocalPlayerRoot : MonoBehaviour
     [SerializeField] Transform leftController;
     [SerializeField] Transform rightController;
     [SerializeField] XROrigin xrOrigin;
-    [SerializeField] Canvas playerCanvas;
     [SerializeField] LocalCharactorControll characterControll;
     [SerializeField] LocalCameraSetting cameraSetting;
-    [SerializeField] PlayerPropaty propaty;
     private PlayerManager playerManager;
     public Transform PlayerRoot => playerRoot;
     public Transform LeftHand => leftHand;
@@ -26,8 +24,6 @@ public class LocalPlayerRoot : MonoBehaviour
     public Transform LeftController => leftController;
     public Transform RightController => rightController;
     public XROrigin XROrigin => xrOrigin;
-    public Canvas PlayerCanvas => playerCanvas;
-    public PlayerPropaty Propaty => propaty;
 
     private void Start()
     {

@@ -22,25 +22,34 @@ public class NetworkPlayerRoot : NetworkBehaviour
     /// </summary>
     protected override void OnNetworkPostSpawn()
     {
-        if(playerManager == null)
-        {
-            ResistPlayerManager();
-        }
+        ResistPlayerManager();
+        NetworkManager.SceneManager.OnLoadComplete += OnSceneLoad;
+        NetworkManager.SceneManager.OnUnloadComplete += OnUnloadComplete;
     }
-    /// <summary>
-    /// シーン上のすべてのNetworkOnbjectがSpawnした後
-    /// </summary>
-    protected override void OnInSceneObjectsSpawned()
+
+    private void OnUnloadComplete(ulong clientId, string sceneName)
     {
-        if (playerManager == null)
-        {
-            ResistPlayerManager();
-        }
+        
+    }
+
+    private void OnSceneLoad(ulong clientId, string SceneName, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        ResistPlayerManager();
     }
     private void ResistPlayerManager()
     {
-        playerManager = ManagerLocator.Instance.AllPlayerManager;
-        if (playerManager == null) return;
+        var Locator = ManagerLocator.Instance;
+        if(Locator == null )
+        {
+            Debug.LogError("ManagerLocator is null");
+            return;
+        }
+        playerManager = Locator.AllPlayerManager;
+        if (playerManager == null)
+        {
+            Debug.LogError("Player Manager is null");
+            return;
+        }
         playerManager.ResistPlayer(this);
         if (IsOwner)
         {
@@ -61,5 +70,7 @@ public class NetworkPlayerRoot : NetworkBehaviour
         {
             playerManager.UnResistOwner(this);
         }
+        NetworkManager.SceneManager.OnLoadComplete -= OnSceneLoad;
+        NetworkManager.SceneManager.OnUnloadComplete -= OnUnloadComplete;
     }
 }

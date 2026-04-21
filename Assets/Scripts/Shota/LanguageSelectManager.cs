@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LanguageSelectManager : MonoBehaviour
 {
-    // “ú–{Œêƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«
+    // æ—¥æœ¬èªãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ã
     public void OnJapaneseButtonClicked()
     {
         PlayerPrefs.SetString("Language", "JP");
@@ -11,7 +11,7 @@ public class LanguageSelectManager : MonoBehaviour
         SceneManager.LoadScene("WorldViewScene");
     }
 
-    // ‰pŒêƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«
+    // è‹±èªãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ã
     public void OnEnglishButtonClicked()
     {
         PlayerPrefs.SetString("Language", "EN");
