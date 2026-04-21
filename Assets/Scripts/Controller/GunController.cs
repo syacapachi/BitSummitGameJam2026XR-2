@@ -1,6 +1,4 @@
-﻿using Syacapachi.util;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -35,10 +33,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         syncedAmmo.OnValueChanged -= OnAmmoChanged;
     }
 
-    
-    public override void OnNetworkSpawn()
-    {
-    }
     protected override void OnNetworkPostSpawn()
     {
         if (IsServer)
@@ -71,7 +65,7 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
 
         // ① 弾を生成
         //GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        NetworkObject obj = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab,firePoint.position,firePoint.rotation);
+        NetworkObject obj = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(bulletPrefab,firePoint.position,firePoint.rotation);
 
         // ② 弾のLayerをプレイヤーのJobに合わせる
         GameObject go = obj.gameObject;

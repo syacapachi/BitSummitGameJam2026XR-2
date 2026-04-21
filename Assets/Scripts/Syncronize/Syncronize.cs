@@ -1,11 +1,5 @@
-﻿using NUnit.Framework.Constraints;
-using Oculus.Interaction;
-using System;
-using System.Collections;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 public class Syncronize : NetworkBehaviour
@@ -24,8 +18,12 @@ public class Syncronize : NetworkBehaviour
     [SerializeField] private Transform networkRightHand;
     [SerializeField] private Transform networkLeftController;
     [SerializeField] private Transform networkRightController;
+    [SerializeField] float footOffset = 0.1f;
     public readonly NetworkVariable<int> JumpCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private LocalPlayerRoot playerRoot;
+    /// <summary>
+    /// 更新が可能かのフラグ、オーナーがわで、ローカルプレイヤーを取得したかのために使う
+    /// </summary>
     private bool isInitialized = false;
     public override void OnNetworkSpawn()
     {
@@ -34,6 +32,11 @@ public class Syncronize : NetworkBehaviour
             StartCoroutine(WaitForEnable());
             NetworkManager.SceneManager.OnLoadComplete += OnSceneLoaded;
             NetworkManager.SceneManager.OnUnload += OnSceneUnLoad;
+        }
+        else
+        {
+            //非オーナー側ではオッケー
+            isInitialized = true;
         }
     }
 
@@ -95,16 +98,12 @@ public class Syncronize : NetworkBehaviour
             //Weight は、IK優先度 0.0f->IK反映なし、1.0f->IK完全反映
             animator.SetLookAtWeight(1.0f);
             animator.SetLookAtPosition(ownerCamera.transform.position + ownerCamera.transform.forward * 2);
+
             //左手
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1.0f);// 重みを設定
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1.0f);
-            animator.SetIKPosition(AvatarIKGoal.LeftHand, leftController.position);
-            animator.SetIKRotation(AvatarIKGoal.LeftHand, leftController.rotation);
+            SetIKPositonAndRotation(AvatarIKGoal.LeftHand, leftController);
+
             //右手
-            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);//重みを設定
-            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1.0f);
-            animator.SetIKPosition(AvatarIKGoal.RightHand, rightController.position);
-            animator.SetIKRotation(AvatarIKGoal.RightHand, rightController.rotation);
+            SetIKPositonAndRotation(AvatarIKGoal.RightHand, rightController);
 
         }
         //非オーナーは、同期されているアバターの位置をAnimatorに反映させる
@@ -116,38 +115,41 @@ public class Syncronize : NetworkBehaviour
             animator.SetLookAtWeight(1.0f);
             animator.SetLookAtPosition(networkHead.position + networkHead.forward * 2);
             //左手
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1.0f);// 重みを設定
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1.0f);
-            animator.SetIKPosition(AvatarIKGoal.LeftHand, networkLeftController.position);
-            animator.SetIKRotation(AvatarIKGoal.LeftHand, networkLeftController.rotation);
+            SetIKPositonAndRotation(AvatarIKGoal.LeftHand, networkLeftController);
+
             //右手
-            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);//重みを設定
-            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1.0f);
-            animator.SetIKPosition(AvatarIKGoal.RightHand, networkRightController.position);
-            animator.SetIKRotation(AvatarIKGoal.RightHand, networkRightController.rotation);
+            SetIKPositonAndRotation(AvatarIKGoal.RightHand, networkRightController);
         }
         //足は共通
-        Vector3 leftFootPos = animator.GetIKPosition(AvatarIKGoal.LeftFoot);
-        Vector3 rightFootPos = animator.GetIKPosition(AvatarIKGoal.RightFoot);
-        
-
-        if (Physics.Raycast(leftFootPos, Vector3.down, out RaycastHit leftHit))
+        AdjustIKToPlane(AvatarIKGoal.LeftFoot);
+        AdjustIKToPlane(AvatarIKGoal.RightFoot);
+    }
+    private void AdjustIKToPlane(AvatarIKGoal goal, float weight = 1.0f)
+    {
+        Vector3 ikPos = animator.GetIKPosition(goal);
+        //真下にRayを飛ばす。
+        if (Physics.Raycast(ikPos, Vector3.down, out RaycastHit hit))
         {
-            Quaternion leftRotation = Quaternion.FromToRotation(leftFootPos, leftHit.normal);
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1.0f);
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1.0f);
-            animator.SetIKPosition(AvatarIKGoal.LeftFoot, leftHit.point);
-            animator.SetIKRotation(AvatarIKGoal.LeftFoot, leftRotation);
+            //ぶつかったオブジェクトの傾きを
+            Quaternion rotation = Quaternion.LookRotation(
+                //アバターの正面を床に投影(アバターの床と平行な成分をとる)
+                Vector3.ProjectOnPlane(transform.forward, hit.normal),
+                hit.normal
+            );
+            SetIKPositonAndRotation(goal, hit.point + hit.normal * footOffset, rotation, weight);
         }
-        if (Physics.Raycast(rightFootPos, Vector3.down, out RaycastHit rightHit))
-        {
-            Quaternion rightRotation = Quaternion.FromToRotation(rightFootPos, rightHit.normal);
-            animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1.0f);
-            animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 1.0f);
-            animator.SetIKPosition(AvatarIKGoal.RightFoot, rightHit.point);
-            animator.SetIKRotation(AvatarIKGoal.RightFoot, rightRotation);
-
-        }
+    }
+    private void SetIKPositonAndRotation(AvatarIKGoal goal, Transform targetTransform, float weight = 1.0f)
+    {
+        SetIKPositonAndRotation(goal, targetTransform.position, targetTransform.rotation, weight);
+    }
+    private void SetIKPositonAndRotation(AvatarIKGoal goal, Vector3 targetPos, Quaternion rotation, float weight = 1.0f)
+    {
+        //Weight は、IK優先度 0.0f->IK反映なし、1.0f->IK完全反映
+        animator.SetIKPositionWeight(goal, weight);
+        animator.SetIKRotationWeight(goal, weight);
+        animator.SetIKPosition(goal, targetPos);
+        animator.SetIKRotation(goal, rotation);
     }
     /// <summary>
     /// アニメーションがある場合は、全ての適応後に更新

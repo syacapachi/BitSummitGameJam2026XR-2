@@ -38,29 +38,44 @@ public class Scripts : MonoBehaviour
     }
     void Awake()
     {
-        m_NetworkManager ??= ManagerLocator.Instance.NetworkManager;
+        m_NetworkManager ??= NetworkManager.Singleton;
         m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);
     }
 
     private void Start()
     {
-        //ServerButton.onClick.AddListener(OnStartServer);
-        HostButton.onClick.AddListener(OnStartHost);
-        //ClientButton.onClick.AddListener(OnStartClient);
-        ExitButton.onClick.AddListener(OnExitNetwork);
-        DiscoveryButton.onClick.AddListener(StartDiscover);
-        discovertext = DiscoveryButton.GetComponentInChildren<TextMeshProUGUI>();
-
-        StopDiscoveryButton.onClick.AddListener(StopDiscovery);
-
-        ServerButton.gameObject.SetActive(true);
-        HostButton.gameObject.SetActive(true);
-        ClientButton.gameObject.SetActive(true);
-        DiscoveryButton.gameObject.SetActive(true);
-
-        ExitButton.gameObject.SetActive(false);
-        StopDiscoveryButton.gameObject.SetActive(false);
+        if (ServerButton != null)
+        {
+            ServerButton.onClick.AddListener(OnStartServer);
+            ServerButton.gameObject.SetActive(true);
+        }
+        if (HostButton != null)
+        {
+            HostButton.onClick.AddListener(OnStartHost);
+            HostButton.gameObject.SetActive(true);
+        }
+        if (ClientButton != null)
+        {
+            ClientButton.onClick.AddListener(OnStartClient);
+            ClientButton.gameObject.SetActive(true);
+        }
+        if (ExitButton != null)
+        {
+            ExitButton.onClick.AddListener(OnExitNetwork);
+            ExitButton.gameObject.SetActive(false);
+        }
+        if (DiscoveryButton != null)
+        {
+            DiscoveryButton.onClick.AddListener(StartDiscover);
+            discovertext = DiscoveryButton.GetComponentInChildren<TextMeshProUGUI>();
+            DiscoveryButton.gameObject.SetActive(true);
+        }
+        if (StopDiscoveryButton != null)
+        {
+            StopDiscoveryButton.onClick.AddListener(StopDiscovery);
+            StopDiscoveryButton.gameObject.SetActive(false);
+        }
     }
     
     private void OnStartServer()
