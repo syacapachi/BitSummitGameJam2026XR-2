@@ -2326,13 +2326,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6752754359177759359, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 4597446155573577808, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
 --- !u!224 &301674038 stripped
 RectTransform:
@@ -5201,7 +5195,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &513862570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21620,12 +21614,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9391b9ddd683fd446a5362cb0df5dbd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   boardText: {fileID: 662799942}
   titleText: {fileID: 1364335408}
-  nextButton: {fileID: 1711719780}
   buttonText: {fileID: 1900272926}
-  backButton: {fileID: 1720230557}
   backButtonText: {fileID: 1718701367}
+  backButton: {fileID: 1720230557}
   worldViewData: {fileID: 11400000, guid: 481f88afe0368e34795a397d8d115d0e, type: 2}
 --- !u!114 &1625551511
 MonoBehaviour:
