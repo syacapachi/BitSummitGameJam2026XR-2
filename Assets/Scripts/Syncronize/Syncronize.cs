@@ -1,4 +1,5 @@
-﻿using Oculus.Interaction;
+﻿using NUnit.Framework.Constraints;
+using Oculus.Interaction;
 using System;
 using System.Collections;
 using System.Threading;
@@ -125,6 +126,28 @@ public class Syncronize : NetworkBehaviour
             animator.SetIKPosition(AvatarIKGoal.RightHand, networkRightController.position);
             animator.SetIKRotation(AvatarIKGoal.RightHand, networkRightController.rotation);
         }
+        //足は共通
+        Vector3 leftFootPos = animator.GetIKPosition(AvatarIKGoal.LeftFoot);
+        Vector3 rightFootPos = animator.GetIKPosition(AvatarIKGoal.RightFoot);
+        
+
+        if (Physics.Raycast(leftFootPos, Vector3.down, out RaycastHit leftHit))
+        {
+            Quaternion leftRotation = Quaternion.FromToRotation(leftFootPos, leftHit.normal);
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1.0f);
+            animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1.0f);
+            animator.SetIKPosition(AvatarIKGoal.LeftFoot, leftHit.point);
+            animator.SetIKRotation(AvatarIKGoal.LeftFoot, leftRotation);
+        }
+        if (Physics.Raycast(rightFootPos, Vector3.down, out RaycastHit rightHit))
+        {
+            Quaternion rightRotation = Quaternion.FromToRotation(rightFootPos, rightHit.normal);
+            animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1.0f);
+            animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 1.0f);
+            animator.SetIKPosition(AvatarIKGoal.RightFoot, rightHit.point);
+            animator.SetIKRotation(AvatarIKGoal.RightFoot, rightRotation);
+
+        }
     }
     /// <summary>
     /// アニメーションがある場合は、全ての適応後に更新
@@ -138,7 +161,7 @@ public class Syncronize : NetworkBehaviour
             Vector3 headOffsetLocal = avatorRootTransfrom.InverseTransformPoint(networkHead.position);
             //カメラのY座標は、地面からの距離
             //Avatorの頭を動かす不自然になる。->rootを調整
-            Vector3 cameraPos = xrOrigin.Camera.transform.position;
+            Vector3 cameraPos = xrOrigin.Camera.transform.position + xrOrigin.Camera.transform.forward * 2f;
             // rootを補正
             avatorRootTransfrom.SetPositionAndRotation(cameraPos - headOffsetLocal, xrOrigin.transform.rotation);
 

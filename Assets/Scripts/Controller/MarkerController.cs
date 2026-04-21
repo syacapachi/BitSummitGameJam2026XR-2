@@ -54,10 +54,9 @@ public class MarkerController : NetworkBehaviour
     {
         if (firePoint == null) return;
 
-        RaycastHit hit;
         Vector3 forward = firePoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out hit, laserDistance))
+        if (Physics.Raycast(firePoint.position, forward, out RaycastHit hit, laserDistance))
         {
             MoveMarkerClientRpc(hit.point);
             markerAudioController.OnMarkerSondPlayRpc(hit.point);
