@@ -4658,7 +4658,7 @@ PrefabInstance:
       objectReference: {fileID: 344181356}
     - target: {fileID: 1733519295838676587, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000011444092
+      value: 0.0000076293945
       objectReference: {fileID: 0}
     - target: {fileID: 1950176514478968983, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_AnchorMax.y
@@ -8319,7 +8319,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -172}
-  m_SizeDelta: {x: 1400, y: 600}
+  m_SizeDelta: {x: 1100, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &662799942
 MonoBehaviour:
@@ -18365,8 +18365,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 90
+  m_fontSizeBase: 90
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -21620,13 +21620,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9391b9ddd683fd446a5362cb0df5dbd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   boardText: {fileID: 662799942}
   titleText: {fileID: 1364335408}
+  nextButton: {fileID: 1711719780}
   buttonText: {fileID: 1900272926}
-  backButtonText: {fileID: 1718701367}
   backButton: {fileID: 1720230557}
-  localizedText: {fileID: 11400000, guid: 5d9ea9250145a6442940bd870a2df0d5, type: 2}
+  backButtonText: {fileID: 1718701367}
+  worldViewData: {fileID: 11400000, guid: 481f88afe0368e34795a397d8d115d0e, type: 2}
 --- !u!114 &1625551511
 MonoBehaviour:
   m_ObjectHideFlags: 0
