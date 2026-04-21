@@ -2326,7 +2326,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6752754359177759359, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 4597446155573577808, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
 --- !u!224 &301674038 stripped
 RectTransform:
@@ -4652,7 +4658,7 @@ PrefabInstance:
       objectReference: {fileID: 344181356}
     - target: {fileID: 1733519295838676587, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000076293945
+      value: -0.000011444092
       objectReference: {fileID: 0}
     - target: {fileID: 1950176514478968983, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_AnchorMax.y
@@ -5195,7 +5201,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &513862570
 MonoBehaviour:
   m_ObjectHideFlags: 0
