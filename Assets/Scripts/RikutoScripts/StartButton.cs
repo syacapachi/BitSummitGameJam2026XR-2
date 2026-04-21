@@ -34,7 +34,7 @@ public class StartButton : NetworkBehaviour
     public void SelectHuman()
     {
         if(IsServer) return;
-        playerJobEvent.Invoke(PlayerJob.Human);
+        playerJobEvent.Invoke(PlayerJob.Demon);
         Debug.Log("Human");
     }
 

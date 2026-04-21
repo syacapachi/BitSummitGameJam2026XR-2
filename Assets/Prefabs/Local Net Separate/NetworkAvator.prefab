@@ -5833,12 +5833,15 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   avatorCollider: {fileID: 6125224147537168939}
   setting: {fileID: 11400000, guid: 3bff306e073a81c4f9ee896511ef4a57, type: 2}
+  playerjob: 3
   syncroJob:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 3
-  jobEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
+  jobChangeLocalEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
+  IsDebugMode: 1
+  switchJobEvent: {fileID: 11400000, guid: f9e23ca27358a3f419041719b45bce40, type: 2}
 --- !u!1 &6205789068384561375
 GameObject:
   m_ObjectHideFlags: 0

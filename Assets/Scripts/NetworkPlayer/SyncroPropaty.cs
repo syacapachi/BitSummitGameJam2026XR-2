@@ -19,19 +19,17 @@ public class SyncroPropaty : NetworkBehaviour
     [Header("Debug")]
     [SerializeField] bool IsDebugMode = false;
     [SerializeField,EnableIf(nameof(IsDebugMode))] VoidEvent switchJobEvent;
-
-    private IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> jobToLayerMaskDic;
     public PlayerJob Job
     {
         get => syncroJob.Value;
         set
         {
-            if (playerjob != value)
+            if (syncroJob.Value != value)
             {
+                syncroJob.Value = playerjob;
                 playerjob = value;
                 if (IsOwner)
-                {
-                    syncroJob.Value = playerjob;
+                {   
                     jobChangeLocalEvent.Invoke(playerjob);
                 }   
             }
@@ -40,19 +38,11 @@ public class SyncroPropaty : NetworkBehaviour
 
     private void OnEnable()
     {
-        if (jobToLayerMaskDic == null)
-        {
-            ResistJobDic();
-        }
         syncroJob.OnValueChanged += OnJobChanged;
     }
     private void OnDisable()
     {
         syncroJob.OnValueChanged -= OnJobChanged;
-    }
-    private void ResistJobDic()
-    {
-        jobToLayerMaskDic = setting.JobLayerMaskDic;
     }
     public override void OnNetworkSpawn()
     {
@@ -61,13 +51,16 @@ public class SyncroPropaty : NetworkBehaviour
             if (IsDebugMode)
             {
                 switchJobEvent.Register(OnJobChangeHandle);
+                NetworkManager.SceneManager.OnLoadComplete += OnSceneLoaded;
             }
-
-            // ホストならHuman、クライアントならGhost
-            PlayerJob initialJob = IsHost ? PlayerJob.Human : PlayerJob.Ghost;
-            syncroJob.Value = initialJob;
-            jobChangeLocalEvent.Invoke(initialJob);
         }
+    }
+    private void OnSceneLoaded(ulong clientId,string SceneName,UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        // ホストならHuman、クライアントならGhost
+        PlayerJob initialJob = IsHost ? PlayerJob.Demon : PlayerJob.Ghost;
+        Job = initialJob;
+        jobChangeLocalEvent.Invoke(initialJob);
     }
 
     public override void OnNetworkDespawn()
@@ -75,14 +68,15 @@ public class SyncroPropaty : NetworkBehaviour
         if (IsOwner && IsDebugMode)
         {
             switchJobEvent.Unregister(OnJobChangeHandle);
+            NetworkManager.SceneManager.OnLoadComplete -= OnSceneLoaded;
         }
     }
     private void OnJobChanged(PlayerJob previousJob, PlayerJob newJob)
     {
         if (previousJob != newJob)
         {
-            PlayerLayerSettings setting = jobToLayerMaskDic[newJob];
-            avatorCollider.layer = setting.Layer;
+            PlayerLayerSettings settings = setting.JobLayerMaskDic[newJob];
+            avatorCollider.layer = settings.Layer;
         }
     }
     private void OnJobChangeHandle()
@@ -90,8 +84,8 @@ public class SyncroPropaty : NetworkBehaviour
         Debug.Log("SwitchJob action performed! Current job: " + Job);
         Job = Job switch
         {
-            PlayerJob.Nothing => PlayerJob.Human,
-            PlayerJob.Human => PlayerJob.Ghost,
+            PlayerJob.Nothing => PlayerJob.Demon,
+            PlayerJob.Demon => PlayerJob.Ghost,
             PlayerJob.Ghost => PlayerJob.Both,
             PlayerJob.Both => PlayerJob.Nothing,
             _ => throw new System.NotImplementedException(),

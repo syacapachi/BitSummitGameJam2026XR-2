@@ -42,7 +42,7 @@ public class RoleButton : NetworkBehaviour
         if (role == RoleType.Human)
         {
             Debug.Log("Setting Human");
-            player.Job = PlayerJob.Human;
+            player.Job = PlayerJob.Demon;
             startButton.SelectHuman();
         }
         else
