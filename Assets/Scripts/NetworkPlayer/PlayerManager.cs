@@ -39,6 +39,9 @@ public class PlayerManager : MonoBehaviour
     }
     public void UnResistOwner(NetworkPlayerRoot playerRoot)
     {
-        NetworkOwnerPlayer = null;
+        if (NetworkOwnerPlayer == playerRoot)
+        {
+            NetworkOwnerPlayer = null;
+        }
     }
 }

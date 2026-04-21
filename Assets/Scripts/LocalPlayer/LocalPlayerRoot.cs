@@ -9,12 +9,14 @@ public class LocalPlayerRoot : MonoBehaviour
     /// <summary>
     /// オブジェクトの参照
     /// </summary>
+    [Header("同期用")]
     [SerializeField] Transform playerRoot;
     [SerializeField] Transform leftHand;
     [SerializeField] Transform rightHand;
     [SerializeField] Transform leftController;
     [SerializeField] Transform rightController;
     [SerializeField] XROrigin xrOrigin;
+    [Header("それ以外")]
     [SerializeField] LocalCharactorControll characterControll;
     [SerializeField] LocalCameraSetting cameraSetting;
     private PlayerManager playerManager;
