@@ -19,12 +19,13 @@ public class Syncronize : NetworkBehaviour
     [SerializeField] private Transform networkLeftController;
     [SerializeField] private Transform networkRightController;
     [SerializeField] float footOffset = 0.1f;
+    [SerializeField] float kneeWight = 0.2f;
     public readonly NetworkVariable<int> JumpCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    private LocalPlayerRoot playerRoot;
+    
     /// <summary>
     /// 更新が可能かのフラグ、オーナーがわで、ローカルプレイヤーを取得したかのために使う
     /// </summary>
-    private bool isInitialized = false;
+    private bool isfoundLocalPlayer = false;
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -36,13 +37,13 @@ public class Syncronize : NetworkBehaviour
         else
         {
             //非オーナー側ではオッケー
-            isInitialized = true;
+            isfoundLocalPlayer = true;
         }
     }
 
     private void OnSceneUnLoad(ulong clientId, string sceneName, AsyncOperation asyncOperation)
     {
-        isInitialized = false;
+        isfoundLocalPlayer = false;
     }
 
     private void OnSceneLoaded(ulong clientId,string name,UnityEngine.SceneManagement.LoadSceneMode loadMode)
@@ -53,9 +54,10 @@ public class Syncronize : NetworkBehaviour
     {
         while (true)
         {
-            if (   ManagerLocator.Instance != null
-                && ManagerLocator.Instance.AllPlayerManager != null
-                && ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot != null)
+            var Locator = ManagerLocator.Instance;
+            if (   Locator != null
+                && Locator.AllPlayerManager != null
+                && Locator.AllPlayerManager.LocalPlayerRoot != null)
             {
                 ResistLocalPlayer();
                 yield break;
@@ -65,7 +67,7 @@ public class Syncronize : NetworkBehaviour
     }
     private void ResistLocalPlayer()
     {
-        playerRoot = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot;
+        var playerRoot = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot;
         xrOrigin = playerRoot.XROrigin;
         playerRootTransfrom = playerRoot.transform;
         leftHand = playerRoot.LeftHand;
@@ -74,15 +76,13 @@ public class Syncronize : NetworkBehaviour
         rightController = playerRoot.RightController;
         ownerCamera = xrOrigin.Camera;
 
-        Debug.Log($"xrOrigin {xrOrigin != null}");
-        Debug.Log($"Camera {xrOrigin.Camera != null}");
-        isInitialized = true;
+        isfoundLocalPlayer = true;
     }
     public override void OnNetworkDespawn()
     {
-        isInitialized = false;
+        isfoundLocalPlayer = false;
         NetworkManager.SceneManager.OnLoadComplete -= OnSceneLoaded;
-        Debug.Log("Avator Despawn");
+        NetworkManager.SceneManager.OnUnload -= OnSceneUnLoad;
     }
     /// <summary>
     /// アニメーションを計算するタイミングで更新
@@ -90,10 +90,10 @@ public class Syncronize : NetworkBehaviour
     /// </summary>
     private void OnAnimatorIK()
     {
-        if (!isInitialized) return;
         if (animator == null) return;
         if (IsOwner)
         {
+            if (!isfoundLocalPlayer) return;
             //頭
             //Weight は、IK優先度 0.0f->IK反映なし、1.0f->IK完全反映
             animator.SetLookAtWeight(1.0f);
@@ -114,6 +114,7 @@ public class Syncronize : NetworkBehaviour
             //頭
             animator.SetLookAtWeight(1.0f);
             animator.SetLookAtPosition(networkHead.position + networkHead.forward * 2);
+
             //左手
             SetIKPositonAndRotation(AvatarIKGoal.LeftHand, networkLeftController);
 
@@ -121,22 +122,33 @@ public class Syncronize : NetworkBehaviour
             SetIKPositonAndRotation(AvatarIKGoal.RightHand, networkRightController);
         }
         //足は共通
-        AdjustIKToPlane(AvatarIKGoal.LeftFoot);
-        AdjustIKToPlane(AvatarIKGoal.RightFoot);
+        AdjustIKToPlane(AvatarIKGoal.LeftFoot, AvatarIKHint.LeftKnee);
+        AdjustIKToPlane(AvatarIKGoal.RightFoot, AvatarIKHint.RightKnee);
     }
-    private void AdjustIKToPlane(AvatarIKGoal goal, float weight = 1.0f)
+    private void AdjustIKToPlane(AvatarIKGoal goal,AvatarIKHint hint, float weight = 1.0f)
     {
+        
         Vector3 ikPos = animator.GetIKPosition(goal);
-        //真下にRayを飛ばす。
-        if (Physics.Raycast(ikPos, Vector3.down, out RaycastHit hit))
+        //プレイヤーの真下にRayを飛ばす。
+        if (Physics.Raycast(ikPos, -transform.up, out RaycastHit hit))
         {
+            Vector3 footPos = hit.point + hit.normal * footOffset;
             //ぶつかったオブジェクトの傾きを
-            Quaternion rotation = Quaternion.LookRotation(
+            Quaternion footRot = Quaternion.LookRotation(
                 //アバターの正面を床に投影(アバターの床と平行な成分をとる)
                 Vector3.ProjectOnPlane(transform.forward, hit.normal),
                 hit.normal
             );
-            SetIKPositonAndRotation(goal, hit.point + hit.normal * footOffset, rotation, weight);
+            SetIKPositonAndRotation(goal, footPos, footRot, weight);
+            
+            //Vector3 hintPos = animator.GetIKHintPosition(hint);
+            // 🔥 Knee Hint
+            Vector3 hintPos =
+                footPos
+                + transform.forward * 0.4f
+                + transform.right * (goal == AvatarIKGoal.LeftFoot || goal == AvatarIKGoal.LeftHand ? -kneeWight : kneeWight)
+                + Vector3.up * 0.3f;
+            SetIKHintPosition(hint,hintPos);
         }
     }
     private void SetIKPositonAndRotation(AvatarIKGoal goal, Transform targetTransform, float weight = 1.0f)
@@ -151,14 +163,19 @@ public class Syncronize : NetworkBehaviour
         animator.SetIKPosition(goal, targetPos);
         animator.SetIKRotation(goal, rotation);
     }
+    private void SetIKHintPosition(AvatarIKHint hint, Vector3 targetPos, float weight = 1.0f)
+    {
+        animator.SetIKHintPositionWeight(hint ,weight);
+        animator.SetIKHintPosition(hint, targetPos);
+    }
     /// <summary>
     /// アニメーションがある場合は、全ての適応後に更新
     /// </summary>
     private void LateUpdate()
     {
-        if (!isInitialized) return;
         if (IsOwner)
         {
+            if (!isfoundLocalPlayer) return;
             //avatorRootTransfromからみた、networkHeadの相対座標
             Vector3 headOffsetLocal = avatorRootTransfrom.InverseTransformPoint(networkHead.position);
             //カメラのY座標は、地面からの距離
@@ -172,5 +189,4 @@ public class Syncronize : NetworkBehaviour
             networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
         }
     }
-
 }
