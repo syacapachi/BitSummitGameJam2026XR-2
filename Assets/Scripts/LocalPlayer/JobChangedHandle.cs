@@ -1,5 +1,4 @@
-﻿using Syacapachi.Attribute;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class JobChangedHandle : MonoBehaviour
 {

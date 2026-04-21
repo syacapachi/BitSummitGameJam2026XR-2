@@ -43,10 +43,9 @@ public class NGun : GunController
         laserLine.SetPosition(0, FirePoint.position);
 
         // Raycast �Œ��e�_�𔻒�
-        RaycastHit hit;
         Vector3 forward = FirePoint.forward;
 
-        if (Physics.Raycast(FirePoint.position, forward, out hit, WeaponSettings.laserDistance))
+        if (Physics.Raycast(FirePoint.position, forward, out RaycastHit hit, WeaponSettings.laserDistance))
         {
             // ���������ꍇ
             laserLine.SetPosition(1, hit.point);

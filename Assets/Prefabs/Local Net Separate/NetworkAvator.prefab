@@ -8787,13 +8787,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_red
       objectReference: {fileID: 0}
+    - target: {fileID: 5199518982874273797, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.73006797
+      objectReference: {fileID: 0}
+    - target: {fileID: 5199518982874273797, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.680738
+      objectReference: {fileID: 0}
+    - target: {fileID: 5199518982874273797, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.047688823
+      objectReference: {fileID: 0}
+    - target: {fileID: 5199518982874273797, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.0363631
+      objectReference: {fileID: 0}
+    - target: {fileID: 5199518982874273797, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -85.898
+      objectReference: {fileID: 0}
+    - target: {fileID: 5199518982874273797, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 16.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 5199518982874273797, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -9.521
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 88c2f082f4c510f4da9bb93465d8c44c, type: 2}
     - target: {fileID: 5866666021909216657, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
       propertyPath: m_UpdateMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
       propertyPath: m_CullingMode
@@ -8801,7 +8829,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
       propertyPath: m_AnimatePhysics
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
       propertyPath: m_ApplyRootMotion
@@ -8940,6 +8968,8 @@ MonoBehaviour:
   networkRightHand: {fileID: 728814604505585515}
   networkLeftController: {fileID: 669341337691739909}
   networkRightController: {fileID: 2041269855817382624}
+  footOffset: 0.1
+  kneeWight: 0.2
 --- !u!4 &4217247790775576332 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}

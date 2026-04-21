@@ -1,7 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using Unity.Netcode;
-using System.Collections;
-using Syacapachi.util;
+using UnityEngine;
 
 public class NEnemyShoot : GunController
 {
@@ -32,7 +31,7 @@ public class NEnemyShoot : GunController
 
         Vector3 direction = (target.position - transform.position).normalized;
 
-        NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(
+        NetworkObject networkObject = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(
             BulletPrefab,
             FirePoint.position,
             Quaternion.LookRotation(direction)
