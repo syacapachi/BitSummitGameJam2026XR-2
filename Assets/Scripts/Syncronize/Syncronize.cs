@@ -18,8 +18,11 @@ public class Syncronize : NetworkBehaviour
     [SerializeField] private Transform networkRightHand;
     [SerializeField] private Transform networkLeftController;
     [SerializeField] private Transform networkRightController;
+    [Header("Setting")]
     [SerializeField] float footOffset = 0.1f;
     [SerializeField] float kneeWight = 0.2f;
+    [Header("Debug")]
+    [SerializeField] bool isDebugMode = false;
     public readonly NetworkVariable<int> JumpCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     
     /// <summary>
@@ -180,7 +183,11 @@ public class Syncronize : NetworkBehaviour
             Vector3 headOffsetLocal = avatorRootTransfrom.InverseTransformPoint(networkHead.position);
             //カメラのY座標は、地面からの距離
             //Avatorの頭を動かす不自然になる。->rootを調整
-            Vector3 cameraPos = xrOrigin.Camera.transform.position + xrOrigin.Camera.transform.forward * 2f;
+            Vector3 cameraPos = xrOrigin.Camera.transform.position;
+            if (isDebugMode)
+            {
+                cameraPos += xrOrigin.Camera.transform.forward * 2f;
+            }
             // rootを補正
             avatorRootTransfrom.SetPositionAndRotation(cameraPos - headOffsetLocal, xrOrigin.transform.rotation);
 
