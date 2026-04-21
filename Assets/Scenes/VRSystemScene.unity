@@ -665,7 +665,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1479436516}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -9364,7 +9364,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &630487663
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9482,7 +9482,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1479436516}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -11791,7 +11791,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6251211324531544301, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+    - {fileID: 2324685228820330940, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+    - {fileID: 8782506847492484047, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+    - {fileID: 9034304666725012821, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+    - {fileID: 8988871812206775098, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+    - {fileID: 9159097343888091101, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8631255629606796773, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
@@ -21844,7 +21850,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1643689035
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21958,7 +21964,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1479436516}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -25217,7 +25223,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1479436516}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
