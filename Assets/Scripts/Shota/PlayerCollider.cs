@@ -1,27 +1,24 @@
 using UnityEngine;
 
-public class PlayerCollider : MonoBehaviour,IDamageReciever
+public class PlayerCollider : MonoBehaviour, IDamageReciever
 {
+    [SerializeField] PlayerHealth playerHealth;
+
     public GameObject GameObject => this.gameObject;
 
-    public float CurrentHealth => throw new System.NotImplementedException();
+    public float CurrentHealth => playerHealth != null ? playerHealth.CurrentHealth : 0f;
 
-    public float MaxHealth => throw new System.NotImplementedException();
+    public float MaxHealth => playerHealth != null ? playerHealth.MaxHealth : 0f;
 
     public void TakeDamage(IDamageSender sender, float damage)
     {
-        throw new System.NotImplementedException();
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(sender, damage);
+        }
+        else
+        {
+            Debug.LogError("PlayerHealth Ç™ PlayerCollider Ç…ê›íËÇ≥ÇÍÇƒÇ¢Ç‹ÇπÇÒÅI");
+        }
     }
 }
