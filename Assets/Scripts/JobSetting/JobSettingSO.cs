@@ -12,10 +12,22 @@ public class JobSettingSO : ScriptableObject
 [Flags]
 public enum PlayerJob
 {
-    Nothing = 0,//両方見えない。両方あたる。
-    Human = 1,//人間だけ見える。おばけだけ当たる。
-    Ghost = 1 << 1,//おばけだけ見える。人間だけ当たる。
-    Both = Human | Ghost,//両方見える。両方当たらない。
+    /// <summary>
+    ///両方見えない。両方あたる。
+    /// </summary>
+    Nothing = 0,
+    /// <summary>
+    /// 悪魔だけ見えない。悪魔だけ当たる。
+    /// </summary>
+    Demon = 1,
+    /// <summary>
+    /// おばけだけ見えない。おばけだけ当たる。
+    /// </summary>
+    Ghost = 1 << 1,
+    /// <summary>
+    /// 両方見える。両方当たらない
+    /// </summary>
+    Both = Demon | Ghost,
 }
 [Serializable]
 public struct PlayerLayerSettings
