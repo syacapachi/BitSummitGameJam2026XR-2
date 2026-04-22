@@ -20886,6 +20886,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 194056741851315779, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 577900837676337283, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: <JobManager>k__BackingField
       value: 
@@ -20909,7 +20913,7 @@ PrefabInstance:
     - target: {fileID: 577900837676337283, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: <EffectAudioManager>k__BackingField
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1577609284}
     - target: {fileID: 577900837676337283, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: <AllNetworkObjectPool>k__BackingField
       value: 
@@ -20973,7 +20977,7 @@ PrefabInstance:
     - target: {fileID: 6731689958154144565, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: localObjectPool
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1577609282}
     - target: {fileID: 8012348177458703508, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: localRoot
       value: 
@@ -20981,7 +20985,6 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4356537594463182225, guid: 07f51410c6523454580003730b31cfff, type: 3}
-    - {fileID: 8974977137299023905, guid: 07f51410c6523454580003730b31cfff, type: 3}
     - {fileID: 1266559103897700638, guid: 07f51410c6523454580003730b31cfff, type: 3}
     - {fileID: 6159796624332967230, guid: 07f51410c6523454580003730b31cfff, type: 3}
     - {fileID: 2109035453968692558, guid: 07f51410c6523454580003730b31cfff, type: 3}
@@ -21013,6 +21016,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dd2a9087da350741b6177b60c32495f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1577609284 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6731689958154144565, guid: 07f51410c6523454580003730b31cfff, type: 3}
+  m_PrefabInstance: {fileID: 1577609281}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6941f1a6cf7c874baa43d8cdf5f70d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1592629895
