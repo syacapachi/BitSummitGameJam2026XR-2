@@ -221,6 +221,7 @@ GameObject:
   - component: {fileID: -7986057631169363681}
   - component: {fileID: 4970832313522535071}
   - component: {fileID: -7078213573299036743}
+  - component: {fileID: -8042781159036193555}
   m_Layer: 8
   m_Name: testBlackghost
   m_TagString: Untagged
@@ -701,6 +702,33 @@ MonoBehaviour:
   spawnFxLifeTimeAll: 2
   spawnVolumeAll: 1
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+--- !u!54 &-8042781159036193555
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2515483553086041883}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2789469182908074600
 GameObject:
   m_ObjectHideFlags: 0

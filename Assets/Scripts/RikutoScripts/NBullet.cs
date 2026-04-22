@@ -33,12 +33,17 @@ public class NBullet : BulletBaseController
 
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
     {
-        var enemy = other.GetComponent<IEnemy>();
+        // [変更前] other.GetComponent<IEnemy>() のみ
+        // [変更後] 親オブジェクトも検索するように修正
+        var enemy = other.GetComponent<IEnemy>()
+                    ?? other.GetComponentInParent<IEnemy>();
+
         var nm = NetworkManager.Singleton;
 
         if (!nm.ConnectedClients.TryGetValue(ShooterId, out var client))
         {
             Debug.LogWarning($"Shooter not found: {ShooterId}");
+            NetworkObject.Despawn(true);
             return;
         }
 
@@ -46,36 +51,39 @@ public class NBullet : BulletBaseController
 
         if (enemy != null)
         {
-            if(!setting.JobLayerMaskDic.TryGetValue(ShooterJob, out var layerMaskSetting))
+            if (!setting.JobLayerMaskDic.TryGetValue(ShooterJob, out var layerMaskSetting))
             {
                 Debug.LogError($"LayerMask setting not found for job: {ShooterJob}");
+                NetworkObject.Despawn(true);
                 return;
             }
-            // ★弾のstateと敵のtypeを比較
-            //見えない敵なら当たる。
+
             if (!layerMaskSetting.IsVisibleLayer(enemy.Layer))
             {
-                // ダメージが通る
+                // [既存] 見えない敵 → ダメージが通る
                 Debug.Log("Damage");
                 root.stats.AddHit();
                 root.stats.AddDamage(Damage);
-                reciever.TakeDamage(this,Damage);
+                reciever.TakeDamage(this, Damage);
                 SpawnHitFxClientRpc(transform.position);
             }
             else
             {
-                // シールド
+                // [既存] 見える敵 → シールド
                 Debug.Log("Shield");
                 root.stats.AddShield();
-
                 attackBlockedEvent.Invoke(new AttackBlocked()
                 {
                     PlayerId = ShooterId,
                     Enemy = enemy
                 });
-
                 SpawnShieldFxClientRpc(transform.position);
             }
+        }
+        else
+        {
+            // [追加] IEnemy が見つからない場合のデバッグログ
+            Debug.LogWarning($"IEnemy not found on {other.name} or its parents");
         }
 
         if (NetworkObject.IsSpawned)
