@@ -7,6 +7,9 @@ public class NEnemyShoot : GunController
     public EnemySO enemySO;
     
     private EnemyWeaponSettingsSO weaponSO;
+    [SerializeField] AudioClip shotClip;
+    [Header("Publish Event")]
+    [SerializeField] GameEffectEvent gameEffect;
 
     Transform target;
     Coroutine shootCorutine;
@@ -112,5 +115,9 @@ public class NEnemyShoot : GunController
         }
 
         return nearest;
+    }
+    public override void PlayShotSound()
+    {
+        gameEffect.Invoke(new GameEffect(shotClip,null,transform.position));
     }
 }

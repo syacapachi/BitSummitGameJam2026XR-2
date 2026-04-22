@@ -7,8 +7,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform firePoint;
     [SerializeField] WeaponSettingsSO weaponSettings;
-    [SerializeField] AudioSource allShootSoundSource;
-    [SerializeField] AudioSource allReloadSoundSource;
     public GameObject BulletPrefab => bulletPrefab; // NBulletから参照できるように
     public Transform FirePoint => firePoint; // NBulletから参照できるように
     public WeaponSettingsSO WeaponSettings => weaponSettings; // NBulletから参照できるように
@@ -83,10 +81,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         isReloading = true;
         if (IsClient)
         {
-            if (allReloadSoundSource != null)
-            {
-                allReloadSoundSource.Play();
-            }
             PlayReloadSound();
         }
         // ここでリロードのアニメーションやエフェクトを再生することができます。
@@ -119,10 +113,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         UpdateCount(newVal, MaxAmmo);
         if (IsClient)
         {
-            if (allReloadSoundSource != null)
-            {
-                allShootSoundSource.Play();
-            }
             PlayShotSound();
         }
         

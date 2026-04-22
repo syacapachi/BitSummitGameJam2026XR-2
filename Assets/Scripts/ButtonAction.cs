@@ -36,15 +36,13 @@ public class Scripts : MonoBehaviour
         m_Discovery ??= m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);
     }
-    void Awake()
+
+    private void Start()
     {
         m_NetworkManager ??= NetworkManager.Singleton;
         m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);
-    }
-
-    private void Start()
-    {
+        
         if (ServerButton != null)
         {
             ServerButton.onClick.AddListener(OnStartServer);
