@@ -5041,8 +5041,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 32161907}
-  - {fileID: 630487663}
-  - {fileID: 1643689035}
   - {fileID: 2012774837}
   - {fileID: 1899399093}
   - {fileID: 1898387909}
@@ -9357,7 +9355,6 @@ GameObject:
   - component: {fileID: 630487667}
   - component: {fileID: 630487666}
   - component: {fileID: 630487665}
-  - component: {fileID: 630487664}
   m_Layer: 5
   m_Name: PhaseCanvas
   m_TagString: Untagged
@@ -9372,47 +9369,20 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 630487662}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 401626358}
   - {fileID: 607552743}
-  m_Father: {fileID: 292250910}
+  m_Father: {fileID: 991198762}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.98143995}
   m_SizeDelta: {x: 400, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &630487664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 630487662}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a2d7d89889b4d94fa1f8d6fe49788e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 1479436520}
-  m_TargetOffset: {x: 0, y: 0, z: 0.5}
-  m_FollowInLocalSpace: 0
-  m_ApplyTargetInLocalSpace: 0
-  m_MovementSpeed: 6
-  m_MovementSpeedVariancePercentage: 0.25
-  m_SnapOnEnable: 1
-  m_PositionFollowMode: 1
-  m_MinDistanceAllowed: 0.01
-  m_MaxDistanceAllowed: 0.3
-  m_TimeUntilThresholdReachesMaxDistance: 3
-  m_RotationFollowMode: 1
-  m_MinAngleAllowed: 0.1
-  m_MaxAngleAllowed: 5
-  m_TimeUntilThresholdReachesMaxAngle: 3
 --- !u!114 &630487665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11798,7 +11768,10 @@ PrefabInstance:
     - {fileID: 9034304666725012821, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
     - {fileID: 8988871812206775098, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
     - {fileID: 9159097343888091101, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4983985599855904455, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 991198762}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8631255629606796773, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       insertIndex: -1
@@ -12282,6 +12255,39 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 522891174891829414, guid: cf69d66c55f6ffa4aae97d7a75fa6b10, type: 3}
   m_PrefabInstance: {fileID: 1214879754}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &991198761
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 991198762}
+  m_Layer: 0
+  m_Name: DamageandPhazeUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &991198762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991198761}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 630487663}
+  - {fileID: 1643689035}
+  m_Father: {fileID: 1479436520}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &994920797
 GameObject:
   m_ObjectHideFlags: 0
@@ -21843,7 +21849,6 @@ GameObject:
   - component: {fileID: 1643689039}
   - component: {fileID: 1643689038}
   - component: {fileID: 1643689037}
-  - component: {fileID: 1643689036}
   m_Layer: 5
   m_Name: DamageCanvas
   m_TagString: Untagged
@@ -21864,40 +21869,13 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 105284128}
-  m_Father: {fileID: 292250910}
+  m_Father: {fileID: 991198762}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.038560152}
+  m_AnchoredPosition: {x: 0, y: -0.9428798}
   m_SizeDelta: {x: 1351, y: 761}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1643689036
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1643689034}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a2d7d89889b4d94fa1f8d6fe49788e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 1479436520}
-  m_TargetOffset: {x: 0, y: 0.03856015, z: 0.374}
-  m_FollowInLocalSpace: 0
-  m_ApplyTargetInLocalSpace: 0
-  m_MovementSpeed: 6
-  m_MovementSpeedVariancePercentage: 0.25
-  m_SnapOnEnable: 1
-  m_PositionFollowMode: 1
-  m_MinDistanceAllowed: 0.01
-  m_MaxDistanceAllowed: 0.3
-  m_TimeUntilThresholdReachesMaxDistance: 3
-  m_RotationFollowMode: 1
-  m_MinAngleAllowed: 0.1
-  m_MaxAngleAllowed: 5
-  m_TimeUntilThresholdReachesMaxAngle: 3
 --- !u!114 &1643689037
 MonoBehaviour:
   m_ObjectHideFlags: 0
