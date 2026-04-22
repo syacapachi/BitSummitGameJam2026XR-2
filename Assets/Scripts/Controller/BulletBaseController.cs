@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Unity.Netcode;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
@@ -47,13 +48,23 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     private void OnTriggerEnter(Collider other)
     {
         if (!IsServer) return;
-        
-        //Debug.Log("Hit " + other.name);
 
+        //Debug.Log("Hit " + other.name);
         if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
         {
             OnHitServer(damageReciver, other.gameObject);
         }
+        else
+        {
+            var receiver = other.GetComponentInChildren<IDamageReciever>();
+            receiver ??= other.GetComponentInParent<IDamageReciever>();
+            if (receiver != null)
+            {
+                OnHitServer(receiver, other.gameObject);
+            }
+        }
+        
+        
     }
     /// <summary>
     /// ヒット時の処理を行う。ダメージを与える対象や、与えるダメージ量などはここで決定する。

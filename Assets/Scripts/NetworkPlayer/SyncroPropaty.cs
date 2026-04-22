@@ -25,11 +25,11 @@ public class SyncroPropaty : NetworkBehaviour
         {
             if (syncroJob.Value != value)
             {
-                syncroJob.Value = playerjob;
+                syncroJob.Value = value;
                 playerjob = value;
                 if (IsOwner)
                 {   
-                    jobChangeLocalEvent.Invoke(playerjob);
+                    jobChangeLocalEvent.Invoke(value);
                 }   
             }
         }

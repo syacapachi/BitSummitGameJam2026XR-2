@@ -7,6 +7,7 @@ public class NEnemyBullet : BulletBaseController
     public PlayerJob enemyJob; // Human / Ghost
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
     {
+        Debug.Log($"hit {reciever.GameObject.name}!");
         var gameManager = ManagerLocator.Instance.AllGameManager;
 
         switch (gameManager.CurrentGameMode)
@@ -27,6 +28,7 @@ public class NEnemyBullet : BulletBaseController
             case GameMode.Survival:
             default:
                 {
+                    reciever.TakeDamage(this, 10f);
                     // プレイヤー判定
                     var players = ManagerLocator.Instance.AllPlayerManager.AllPlayers;
 
