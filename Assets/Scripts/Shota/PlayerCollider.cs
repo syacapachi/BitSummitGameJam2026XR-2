@@ -12,6 +12,7 @@ public class PlayerCollider : MonoBehaviour, IDamageReciever
 
     public void TakeDamage(IDamageSender sender, float damage)
     {
+        Debug.Log("TakeDamage ");
         if (playerHealth != null)
         {
             playerHealth.TakeDamage(sender, damage);

@@ -26,7 +26,6 @@ public class GameEffectAudioManager : MonoBehaviour
     }
     public void PlayGameEffect(GameEffect effect)
     {
-        Debug.Log("PlayGameEffect called");
         GameObject obj = localObjectPool.Get(audioSourcePrefab);
         AudioSource audioSource = obj.GetComponent<AudioSource>();
         audioSource.clip = effect.Clip;
