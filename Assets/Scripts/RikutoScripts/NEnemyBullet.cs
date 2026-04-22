@@ -1,5 +1,4 @@
-﻿using Syacapachi.util;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 public class NEnemyBullet : BulletBaseController
@@ -8,15 +7,13 @@ public class NEnemyBullet : BulletBaseController
 
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
     {
-        Debug.Log($"[NEnemyBullet] OnHitServer called. hit: {reciever.GameObject.name}");
+        Debug.Log($"[{nameof(NEnemyBullet)}] OnHitServer called. hit: {reciever.GameObject.name}");
 
         // ─── 敵自身への誤ヒットを除外 ───────────────────────────────
-        // 衝突相手が NEnemy を持っている（= 敵オブジェクト）なら無視
-        if (other.GetComponentInParent<NEnemy>() != null)
+        // 衝突相手が IEnemy を持っている（= 敵オブジェクト）なら無視
+        if (other.GetComponentInParent<IEnemy>() != null)
         {
-            Debug.Log($"[NEnemyBullet] Hit enemy object: {other.name}, skipping.");
-            if (NetworkObject.IsSpawned)
-                NetworkObject.Despawn(true);
+            Debug.Log($"[{nameof(NEnemyBullet)}] Hit enemy object: {other.name}, skipping.");
             return;
         }
 
@@ -34,7 +31,7 @@ public class NEnemyBullet : BulletBaseController
                     else
                     {
                         // Protect モードでもプレイヤーに当たった場合はダメージ
-                        TryDamagePlayer(reciever, gameManager);
+                        TryDamagePlayer(reciever);
                     }
                     return;
                 }
@@ -42,7 +39,7 @@ public class NEnemyBullet : BulletBaseController
             case GameMode.Survival:
             default:
                 {
-                    TryDamagePlayer(reciever, gameManager);
+                    TryDamagePlayer(reciever);
                     return;
                 }
         }
@@ -51,7 +48,7 @@ public class NEnemyBullet : BulletBaseController
     /// <summary>
     /// PlayerCollider かどうか確認しジョブフィルタを適用してダメージを与える
     /// </summary>
-    private void TryDamagePlayer(IDamageReciever reciever, NGameManager gameManager)
+    private void TryDamagePlayer(IDamageReciever reciever)
     {
         // PlayerCollider かどうかを確認
         var playerCollider = reciever as PlayerCollider;

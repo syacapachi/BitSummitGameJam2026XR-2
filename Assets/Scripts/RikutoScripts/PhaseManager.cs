@@ -1,9 +1,11 @@
 ﻿using System.Collections;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
-using System;
-using System.Linq;
 
+/// <summary>
+/// 変更お願い、Phaseが変わるごとに夕方->夜->深夜と暗くする by 水野
+/// </summary>
 public class PhaseManager : NetworkBehaviour
 {
     [SerializeField] PhaseSO[] phases;

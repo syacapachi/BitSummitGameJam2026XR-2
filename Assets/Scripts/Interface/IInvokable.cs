@@ -1,4 +1,6 @@
-﻿public interface IInvokable<T>
+﻿using System;
+
+public interface IInvokable<T>
 {
       public void Invoke(T value);
 }

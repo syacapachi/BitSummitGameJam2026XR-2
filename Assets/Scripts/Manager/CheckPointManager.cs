@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// NavMeshを使って、敵を移動させる。
+/// </summary>
 public class CheckPointManager : MonoBehaviour
 {
     [SerializeField] GameObject m_Object;

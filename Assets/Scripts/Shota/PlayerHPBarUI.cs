@@ -1,63 +1,36 @@
-using Unity.Netcode;
+Ôªøusing TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class PlayerHPBarUI : MonoBehaviour
 {
     [SerializeField] private Image hpBarImage;
-    [SerializeField] private TextMeshProUGUI hpText; // í«â¡
+    [SerializeField] private TextMeshProUGUI hpText; // ËøΩÂä†
+    [Header("Subscribe Event")]
+    [SerializeField] HPInfoEvent HpInfoEvent;
 
-    private PlayerHealth playerHealth;
-
-    private void Start()
+    private void OnEnable()
     {
-        StartCoroutine(WaitForPlayerHealth());
+        HpInfoEvent.Register(UpdateHPBar);
+    }
+    private void OnDisable()
+    {
+        HpInfoEvent.Unregister(UpdateHPBar);
     }
 
-    private System.Collections.IEnumerator WaitForPlayerHealth()
-    {
-        while (playerHealth == null)
-        {
-            var roots = FindObjectsByType<NetworkPlayerRoot>(FindObjectsSortMode.None);
-            foreach (var root in roots)
-            {
-                if (root.IsOwner)
-                {
-                    playerHealth = root.playerHealth;
-                    break;
-                }
-            }
-            yield return null;
-        }
-
-        Debug.Log("[PlayerHPBarUI] PlayerHealth found! Subscribing to HP changes.");
-
-        UpdateHPBar(playerHealth.CurrentHealth, playerHealth.MaxHealth);
-        playerHealth.OnHPChanged += UpdateHPBar;
-    }
-
-    private void OnDestroy()
-    {
-        if (playerHealth != null)
-        {
-            playerHealth.OnHPChanged -= UpdateHPBar;
-        }
-    }
-
-    private void UpdateHPBar(float currentHP, float maxHP)
+    private void UpdateHPBar(HPInfo info)
     {
         if (hpBarImage != null)
         {
-            hpBarImage.fillAmount = Mathf.Max(0.01f, Mathf.Clamp01(currentHP / maxHP));
+            hpBarImage.fillAmount = Mathf.Max(0.01f, Mathf.Clamp01(info.CurrentHP / info.MaxHP));
         }
 
-        // ÉeÉLÉXÉgçXêV
+        // „ÉÜ„Ç≠„Çπ„ÉàÊõ¥Êñ∞
         if (hpText != null)
         {
-            hpText.text = $"{(int)currentHP} / {(int)maxHP}";
+            hpText.text = $"{info.CurrentHP} / {info.MaxHP}";
         }
 
-        Debug.Log($"[PlayerHPBarUI] HP updated: {currentHP} / {maxHP}");
+        Debug.Log($"[PlayerHPBarUI] HP updated: {info.CurrentHP} / {info.MaxHP}");
     }
 }

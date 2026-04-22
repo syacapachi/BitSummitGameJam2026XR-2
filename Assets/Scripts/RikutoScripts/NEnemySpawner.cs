@@ -44,11 +44,15 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
 
     public override void OnNetworkSpawn()
     {
-        EnemyKilled.Register(t => OnEnemyKilled(t.KilledEnemy));
+        EnemyKilled.Register(EnemyKilledEventHandle);
     }
     public override void OnNetworkDespawn()
     {
-        EnemyKilled.Unregister(t => OnEnemyKilled(t.KilledEnemy));
+        EnemyKilled.Unregister(EnemyKilledEventHandle);
+    }
+    private void EnemyKilledEventHandle(EnemyKilled killled)
+    {
+        OnEnemyKilled(killled.KilledEnemy);
     }
     public void SpawnFromEvent(List<SpawnEvent> events)
     {
