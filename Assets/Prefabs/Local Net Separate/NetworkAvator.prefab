@@ -722,8 +722,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1439048196768540335, guid: e638558d27e71d64d87307f4fa964cfa, type: 3}
   firePoint: {fileID: 2041269855817382624}
   weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
-  allShootSoundSource: {fileID: 0}
-  allReloadSoundSource: {fileID: 0}
   syncedAmmo:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -763,12 +761,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  maxHP: 100
+  maxHP: 1000
   currentHP:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 100
+    m_InternalValue: 1000
 --- !u!114 &4810429957344545880
 MonoBehaviour:
   m_ObjectHideFlags: 0
