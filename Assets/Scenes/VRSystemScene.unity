@@ -19232,8 +19232,9 @@ GameObject:
   - component: {fileID: 1353121779}
   - component: {fileID: 1353121781}
   - component: {fileID: 1353121780}
+  - component: {fileID: 1353121782}
   m_Layer: 5
-  m_Name: CrystalHPBar
+  m_Name: PlayerHPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19296,6 +19297,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1353121778}
   m_CullTransparentMesh: 1
+--- !u!114 &1353121782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353121778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 907bcac748ea0e147926741bf3cd0ddb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpBarImage: {fileID: 1353121780}
 --- !u!1 &1353709948
 GameObject:
   m_ObjectHideFlags: 0

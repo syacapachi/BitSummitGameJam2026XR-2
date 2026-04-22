@@ -5,7 +5,7 @@ using UnityEngine;
 public class NEnemyShoot : GunController
 {
     public EnemySO enemySO;
-    
+
     private EnemyWeaponSettingsSO weaponSO;
     [SerializeField] AudioClip shotClip;
     [Header("Publish Event")]
@@ -27,9 +27,8 @@ public class NEnemyShoot : GunController
 
     protected override void OnShootServer()
     {
-
         target = GetTarget();
- 
+
         if (target == null) return;
 
         Vector3 direction = (target.position - transform.position).normalized;
@@ -40,7 +39,17 @@ public class NEnemyShoot : GunController
             Quaternion.LookRotation(direction)
         );
 
-        networkObject.gameObject.layer = this.gameObject.layer;
+        //networkObject.gameObject.layer = this.gameObject.layer;
+        int enemyBulletLayer = LayerMask.NameToLayer("EnemyBullet");
+        if (enemyBulletLayer == -1)
+        {
+            Debug.LogWarning("[NEnemyShoot] 'EnemyBullet' layer not found!");
+            networkObject.gameObject.layer = this.gameObject.layer;
+        }
+        else
+        {
+            networkObject.gameObject.layer = enemyBulletLayer;
+        }
 
         var bullet = networkObject.GetComponent<BulletBaseController>();
         bullet.BulletInit(0, PlayerJob.Nothing, weaponSO);
@@ -104,6 +113,9 @@ public class NEnemyShoot : GunController
             // 敵タイプに応じたフィルタ
             bool canTarget = (enemyJob & playerJob) == 0;
 
+            // [追加] デバッグ用：ターゲット判定の状況を出力
+            Debug.Log($"[NEnemyShoot] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {enemyJob}, canTarget: {canTarget}");
+
             if (!canTarget) continue;
 
             float dist = Vector3.Distance(transform.position, player.transform.position);
@@ -114,8 +126,12 @@ public class NEnemyShoot : GunController
             }
         }
 
+        // [追加] デバッグ用：最終的なターゲットを出力
+        Debug.Log($"[NEnemyShoot] nearest target: {(nearest != null ? nearest.name : "null")}");
+
         return nearest;
     }
+}
     public override void PlayShotSound()
     {
         gameEffect.Invoke(new GameEffect(shotClip,null,transform.position));
