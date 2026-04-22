@@ -1,10 +1,12 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerHPBarUI : MonoBehaviour
 {
     [SerializeField] private Image hpBarImage;
+    [SerializeField] private TextMeshProUGUI hpText; // 追加
 
     private PlayerHealth playerHealth;
 
@@ -31,10 +33,7 @@ public class PlayerHPBarUI : MonoBehaviour
 
         Debug.Log("[PlayerHPBarUI] PlayerHealth found! Subscribing to HP changes.");
 
-        // 初期表示
         UpdateHPBar(playerHealth.CurrentHealth, playerHealth.MaxHealth);
-
-        // HP変化を監視
         playerHealth.OnHPChanged += UpdateHPBar;
     }
 
@@ -48,10 +47,17 @@ public class PlayerHPBarUI : MonoBehaviour
 
     private void UpdateHPBar(float currentHP, float maxHP)
     {
-        if (hpBarImage == null) return;
+        if (hpBarImage != null)
+        {
+            hpBarImage.fillAmount = Mathf.Max(0.01f, Mathf.Clamp01(currentHP / maxHP));
+        }
 
-        // ★修正: 最小値0.01を設定してバーが完全に消えないようにする
-        hpBarImage.fillAmount = Mathf.Max(0.01f, Mathf.Clamp01(currentHP / maxHP));
+        // テキスト更新
+        if (hpText != null)
+        {
+            hpText.text = $"{(int)currentHP} / {(int)maxHP}";
+        }
+
         Debug.Log($"[PlayerHPBarUI] HP updated: {currentHP} / {maxHP}");
     }
 }

@@ -3352,7 +3352,7 @@ GameObject:
   - component: {fileID: 174023177}
   - component: {fileID: 174023176}
   m_Layer: 5
-  m_Name: CrystalHPText
+  m_Name: PlayerHPText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11377,22 +11377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec26cde7e4af716439d45a2ee7efea5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  PooledPrefabsList:
-  - Prefab: {fileID: 1439048196768540335, guid: e638558d27e71d64d87307f4fa964cfa, type: 3}
-    PrewarmCount: 10
-  - Prefab: {fileID: 4022916156752048900, guid: 902efd2e55e158b46b527cc46cd7cc68, type: 3}
-    PrewarmCount: 10
-  - Prefab: {fileID: 6912148272411766303, guid: 2037a9ed06a411d44a86d92fa6af4c3b, type: 3}
-    PrewarmCount: 10
-  - Prefab: {fileID: 4022916156752048900, guid: bab683d334cc24943aa54f5fcfbc3e4b, type: 3}
-    PrewarmCount: 10
-  - Prefab: {fileID: 6912148272411766303, guid: 3e5c70c4ce8519842b4a53bb4b374094, type: 3}
-    PrewarmCount: 10
-  - Prefab: {fileID: 4022916156752048900, guid: 4872dc7a8f3d11442be9d1786f6b997e, type: 3}
-    PrewarmCount: 10
-  - Prefab: {fileID: 4022916156752048900, guid: 18254f0b07ec8924d89429cf843b0c78, type: 3}
-    PrewarmCount: 10
 --- !u!1 &821111547
 GameObject:
   m_ObjectHideFlags: 0
@@ -11422,9 +11406,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce7a9a87d797fb14c84592474db11d13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localRoot: {fileID: 110443861}
-  mainCamera: {fileID: 445961547}
-  worldCanvas: {fileID: 698825424}
+  localRoot: {fileID: 0}
+  jobChangeEvent: {fileID: 0}
   IsJobOverride: 1
   JobOverride: 1
 --- !u!4 &821111549
@@ -11440,7 +11423,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 139674650}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &826516645
 GameObject:
@@ -19310,6 +19293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBarImage: {fileID: 1353121780}
+  hpText: {fileID: 174023176}
 --- !u!1 &1353709948
 GameObject:
   m_ObjectHideFlags: 0
@@ -25183,7 +25167,7 @@ GameObject:
   - component: {fileID: 1899399095}
   - component: {fileID: 1899399094}
   m_Layer: 5
-  m_Name: CrystalHPCanvas
+  m_Name: PlayerHPCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25197,7 +25181,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1899399092}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 0, z: 0.636}
+  m_LocalPosition: {x: 0, y: 0, z: 0.685}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -25207,7 +25191,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.02, y: -0.425}
+  m_AnchoredPosition: {x: -0.02, y: -0.34}
   m_SizeDelta: {x: 500, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1899399094
@@ -29379,3 +29363,4 @@ SceneRoots:
   - {fileID: 45859357}
   - {fileID: 1763041386}
   - {fileID: 1917126894}
+  - {fileID: 821111549}

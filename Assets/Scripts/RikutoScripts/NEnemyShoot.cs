@@ -39,7 +39,6 @@ public class NEnemyShoot : GunController
             Quaternion.LookRotation(direction)
         );
 
-        //networkObject.gameObject.layer = this.gameObject.layer;
         int enemyBulletLayer = LayerMask.NameToLayer("EnemyBullet");
         if (enemyBulletLayer == -1)
         {
@@ -59,7 +58,6 @@ public class NEnemyShoot : GunController
 
     private IEnumerator ShootCorutine()
     {
-        // 初弾
         yield return new WaitForSeconds(weaponSO.FirstShootDelayTime);
         OnShootServer();
 
@@ -78,19 +76,15 @@ public class NEnemyShoot : GunController
         {
             case GameMode.Protect:
                 {
-                    // ProtectAreaを優先
                     var protectArea = gameManager.ProtectArea;
                     if (protectArea != null)
                         return protectArea.transform;
-
-                    // 念のためフォールバック
                     return GetNearestPlayer();
                 }
 
             case GameMode.Survival:
             default:
                 {
-                    // 常にプレイヤーのみ
                     return GetNearestPlayer();
                 }
         }
@@ -110,10 +104,8 @@ public class NEnemyShoot : GunController
 
             var playerJob = prop.Job;
 
-            // 敵タイプに応じたフィルタ
             bool canTarget = (enemyJob & playerJob) == 0;
 
-            // [追加] デバッグ用：ターゲット判定の状況を出力
             Debug.Log($"[NEnemyShoot] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {enemyJob}, canTarget: {canTarget}");
 
             if (!canTarget) continue;
@@ -126,14 +118,12 @@ public class NEnemyShoot : GunController
             }
         }
 
-        // [追加] デバッグ用：最終的なターゲットを出力
         Debug.Log($"[NEnemyShoot] nearest target: {(nearest != null ? nearest.name : "null")}");
 
         return nearest;
     }
-}
     public override void PlayShotSound()
     {
-        gameEffect.Invoke(new GameEffect(shotClip,null,transform.position));
+        gameEffect.Invoke(new GameEffect(shotClip, null, transform.position));
     }
 }
