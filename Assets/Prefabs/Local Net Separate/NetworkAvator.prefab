@@ -8787,6 +8787,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_red
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5199518982874273797, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.73006797
@@ -8941,7 +8945,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  meshEnsble: 1
+  meshEnsble: 0
   m_Renderer:
   - {fileID: 2231564332198363345}
   - {fileID: 1524732636062697415}
@@ -8970,6 +8974,7 @@ MonoBehaviour:
   networkRightController: {fileID: 2041269855817382624}
   footOffset: 0.1
   kneeWight: 0.2
+  isDebugMode: 0
 --- !u!4 &4217247790775576332 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
