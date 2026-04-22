@@ -39,15 +39,22 @@ namespace Syacapachi.Editor
 
 
             EditorGUI.BeginProperty(position, label, property);
+            //UnityEngine.Object以外
             if (type == SerializedPropertyType.ManagedReference)
             {
                 DrawField(position, targetType, label.text, fieldInfo.GetValue(target));
             }
+            //UnityEngine.Object
             else if (type == SerializedPropertyType.ObjectReference)
             {
                 DrawField(position, targetType, label.text, fieldInfo.GetValue(target));
             }
-            else 
+            //Scene内の参照
+            else if(type == SerializedPropertyType.ExposedReference)
+            {
+                DrawField(position, targetType, label.text, fieldInfo.GetValue(target));
+            }
+            else
             {
                 DrawField(position, targetType, label.text, fieldInfo.GetValue(target));
             }

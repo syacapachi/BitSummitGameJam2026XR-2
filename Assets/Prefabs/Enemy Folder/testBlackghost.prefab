@@ -220,6 +220,8 @@ GameObject:
   - component: {fileID: -4752889112109069225}
   - component: {fileID: -7986057631169363681}
   - component: {fileID: 4970832313522535071}
+  - component: {fileID: -7078213573299036743}
+  - component: {fileID: -8042781159036193555}
   m_Layer: 8
   m_Name: testBlackghost
   m_TagString: Untagged
@@ -244,6 +246,7 @@ Transform:
   - {fileID: 5323915209134148996}
   - {fileID: 247890662223834481}
   - {fileID: 1595853860632417890}
+  - {fileID: 995227281836908929}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -7.984, z: 0}
 --- !u!95 &1007059325538894477
@@ -379,7 +382,8 @@ MonoBehaviour:
   hpCanvas: {fileID: 8115059269520921985}
   hpImage: {fileID: 6392055257079718664}
   hpText: {fileID: 7872890923030782825}
-  enemyType: 0
+  enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
+  enemyJob: 0
 --- !u!120 &984271367505881240
 LineRenderer:
   serializedVersion: 2
@@ -513,12 +517,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  validHitFxPrefabAll: {fileID: 0}
-  validHitSfxAll: {fileID: 8300000, guid: c337d469678aa0d4fb70415fb29fb25d, type: 3}
+  validHitFxPrefabAll: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
+  validHitSfxAll: {fileID: 0}
   validHitLifeTimeAll: 2
   validHitVolumeAll: 1
   invalidHitFxPrefabAll: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
-  invalidHitSfxAll: {fileID: 8300000, guid: c974731f514a5964780a24ffa7825328, type: 3}
+  invalidHitSfxAll: {fileID: 0}
   invalidHitLifeTimeAll: 2
   invalidHitVolumeAll: 1
 --- !u!114 &-1831760746074150659
@@ -538,6 +542,11 @@ MonoBehaviour:
   deathSfxAll: {fileID: 8300000, guid: 28110385e59aa2a48aac031f73088dc4, type: 3}
   deathFxLifeTimeAll: 2
   deathVolumeAll: 1
+  reachedProtectArea:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
 --- !u!82 &-4752889112109069225
 AudioSource:
   m_ObjectHideFlags: 0
@@ -549,7 +558,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: ed620494acb721c4f9b62ad6241c4889, type: 3}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -649,7 +658,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   loopClipAll: {fileID: 8300000, guid: 935aaa30e3a817b40a0fbd0d6230ed29, type: 3}
-  loopVolumeAll: 0.1
+  loopVolumeAll: 0.3
 --- !u!114 &4970832313522535071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -663,14 +672,63 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  bulletPrefab: {fileID: 4022916156752048900, guid: bab683d334cc24943aa54f5fcfbc3e4b, type: 3}
-  firePoint: {fileID: 1540549378645820342}
-  weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
+  bulletPrefab: {fileID: 4022916156752048900, guid: 902efd2e55e158b46b527cc46cd7cc68, type: 3}
+  firePoint: {fileID: 995227281836908929}
+  weaponSettings: {fileID: 11400000, guid: 66323ddfe1ed57d4c8504254422d2057, type: 2}
   allShootSoundSource: {fileID: -4752889112109069225}
   allReloadSoundSource: {fileID: 0}
   syncedAmmo:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
+  enemyJob: 2
+--- !u!114 &-7078213573299036743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2515483553086041883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f23e62a3c5a654fa04485428881603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  spawnFxPrefabAll: {fileID: 2424596171460707547, guid: c2928ca8c149c5040a6db6668e597ad5, type: 3}
+  spawnSfxAll: {fileID: 8300000, guid: 755277c4df6a1704b91570f49b062caa, type: 3}
+  spawnFxLifeTimeAll: 2
+  spawnVolumeAll: 1
+  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+--- !u!54 &-8042781159036193555
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2515483553086041883}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2789469182908074600
 GameObject:
   m_ObjectHideFlags: 0
@@ -1393,6 +1451,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7080139320372562494
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 995227281836908929}
+  m_Layer: 8
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &995227281836908929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7080139320372562494}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1540549378645820342}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8349145878296252673
 GameObject:
   m_ObjectHideFlags: 0

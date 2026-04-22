@@ -84,7 +84,7 @@
                     "id": "641cd816-40e6-41b4-8c3d-04687c349290",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Hold(duration=0.01,pressPoint=0.7)",
                     "initialStateCheck": false
                 },
                 {
@@ -118,6 +118,15 @@
                     "name": "Marker",
                     "type": "Button",
                     "id": "2bf99e2c-0765-4022-82c3-809fe0181379",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ShowUI",
+                    "type": "Button",
+                    "id": "c94b32bb-fc85-4d40-835d-8444c230fc53",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -469,7 +478,7 @@
                 {
                     "name": "",
                     "id": "603f3daf-40bd-4854-8724-93e8017f59e3",
-                    "path": "<XRController>/secondaryButton",
+                    "path": "<XRController>{RightHand}/{SecondaryButton}",
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
@@ -573,6 +582,28 @@
                     "processors": "",
                     "groups": ";XR",
                     "action": "SwitchJob",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "be6941e0-1ee0-45ff-8dda-3f0a2b4d41ba",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";XR",
+                    "action": "ShowUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9c8b46a2-07b3-4f64-a8e4-739b7e42551f",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ShowUI",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

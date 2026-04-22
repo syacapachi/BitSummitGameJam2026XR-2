@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
+  m_Name: testTutorialZombie1
+  m_EditorClassIdentifier: 
+  ID: 3
+  Name: testZombie
+  icon: {fileID: 21300000, guid: 54baed6400621ff4b8670b6116af054e, type: 3}
+  HP: 100
+  Damage: 100
+  BulletSpeed: 5
+  FirstShootDelay: 10
+  shootInterval: 5
+  scoreValue: 100
+  Speed: 0
+  prefab: {fileID: 1124331973230472586, guid: d4ce9c4e983806540bfc5d2884983457, type: 3}
+  enemyWeapon: {fileID: 11400000, guid: e88d07bc3b1461342987a6559c456bd6, type: 2}
