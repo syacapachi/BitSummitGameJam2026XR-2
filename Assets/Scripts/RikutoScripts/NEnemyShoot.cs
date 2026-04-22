@@ -39,16 +39,7 @@ public class NEnemyShoot : GunController
             Quaternion.LookRotation(direction)
         );
 
-        int enemyBulletLayer = LayerMask.NameToLayer("EnemyBullet");
-        if (enemyBulletLayer == -1)
-        {
-            Debug.LogWarning("[NEnemyShoot] 'EnemyBullet' layer not found!");
-            networkObject.gameObject.layer = this.gameObject.layer;
-        }
-        else
-        {
-            networkObject.gameObject.layer = enemyBulletLayer;
-        }
+        networkObject.gameObject.layer = this.gameObject.layer;
 
         var bullet = networkObject.GetComponent<BulletBaseController>();
         bullet.BulletInit(0, PlayerJob.Nothing, weaponSO);
@@ -106,7 +97,7 @@ public class NEnemyShoot : GunController
 
             bool canTarget = (enemyJob & playerJob) == 0;
 
-            Debug.Log($"[NEnemyShoot] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {enemyJob}, canTarget: {canTarget}");
+            Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {enemyJob}, canTarget: {canTarget}");
 
             if (!canTarget) continue;
 
@@ -118,7 +109,7 @@ public class NEnemyShoot : GunController
             }
         }
 
-        Debug.Log($"[NEnemyShoot] nearest target: {(nearest != null ? nearest.name : "null")}");
+        Debug.Log($"[{nameof(NEnemyShoot)}] nearest target: {(nearest != null ? nearest.name : "null")}");
 
         return nearest;
     }

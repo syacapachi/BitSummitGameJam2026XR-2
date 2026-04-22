@@ -43,7 +43,6 @@ public class NBullet : BulletBaseController
         if (!nm.ConnectedClients.TryGetValue(ShooterId, out var client))
         {
             Debug.LogWarning($"Shooter not found: {ShooterId}");
-            NetworkObject.Despawn(true);
             return;
         }
 

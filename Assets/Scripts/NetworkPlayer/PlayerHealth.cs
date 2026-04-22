@@ -1,18 +1,18 @@
-﻿using Unity.Netcode;
+﻿using Syacapachi.Attribute;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerHealth : NetworkBehaviour, IDamageReciever
 {
     [SerializeField] int maxHP = 100;
     [SerializeField]
-    NetworkVariable<float> currentHP = new NetworkVariable<float>(
+    NetworkVariable<float> currentHP = new(
         100,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-
-    // ★追加: HP変化イベント（UIが購読する）
-    public event System.Action<float, float> OnHPChanged;
+    [Header("Publish Event")]
+    [SerializeField] HPInfoEvent HpInfoRpcEvent;
 
     public GameObject GameObject => this.gameObject;
     public float CurrentHealth => currentHP.Value;
@@ -20,11 +20,11 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
 
     public override void OnNetworkSpawn()
     {
+        currentHP.OnValueChanged += OnServerHPChanged;
         if (IsServer)
         {
             currentHP.Value = maxHP;
         }
-        currentHP.OnValueChanged += OnServerHPChanged;
         Debug.Log($"PlayerHealth spawned. owner:{OwnerClientId}, NetworkId:{NetworkObjectId}");
     }
 
@@ -53,22 +53,34 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
             OnPlayerDead();
         }
     }
-
     private void OnServerHPChanged(float oldHP, float newHP)
     {
         Debug.Log($"Player {OwnerClientId} HP changed from {oldHP} to {newHP}");
 
         // ★追加: UIにHP変化を通知
-        OnHPChanged?.Invoke(newHP, maxHP);
+        HpInfoRpcEvent.Invoke(new HPInfo(newHP, maxHP));
 
         if (newHP <= 0)
         {
             Debug.Log($"Player {OwnerClientId} has died.");
         }
     }
-
     private void OnPlayerDead()
     {
         Debug.Log($"[PlayerHealth] OnPlayerDead called for Player {OwnerClientId}");
+    }
+}
+public readonly struct HPInfo
+{
+    public readonly float CurrentHP;
+    public readonly float MaxHP;
+    public HPInfo(float currentHp, float maxHp)
+    {
+        this.CurrentHP = currentHp;
+        this.MaxHP = maxHp;
+    }
+    public readonly override string ToString()
+    {
+        return $"current:{CurrentHP},Max{MaxHP}";
     }
 }
