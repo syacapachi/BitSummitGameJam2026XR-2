@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class WorldViewManager : NetworkBehaviour
 {
-    public bool isTutorialSkip;
+    [SerializeField] private bool isTutorialSkip;
 
     private NetworkVariable<int> pageIndex = new(
         0,
@@ -22,23 +22,34 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] Button backButton;
     [SerializeField] WorldViewData worldViewData;
 
-    private int totalBoards = 4;
+    [Header("ページ設定")]
+    // private int totalBoards = 4;
+    [SerializeField] private int totalBoards = 5;
 
-    private string[] japaneseTitles =
-    {
-        "双子の霊媒師",
-        "霊力の法則",
-        "今回の依頼",
-        "操作説明"
-    };
+    [Header("ボタンテキスト設定")]
+    // (ハードコードしていた文字列をInspectorで設定可能に)
+    [SerializeField] private string japaneseNextText = "次へ";
+    [SerializeField] private string englishNextText = "Next";
+    [SerializeField] private string japaneseCloseText = "閉じる";
+    [SerializeField] private string englishCloseText = "Close";
+    [SerializeField] private string japaneseBackText = "戻る";
+    [SerializeField] private string englishBackText = "Back";
 
-    private string[] englishTitles =
-    {
-        "Twin Mediums",
-        "Law of Spiritual Power",
-        "The Mission",
-        "Controls"
-    };
+    // private string[] japaneseTitles =
+    // {
+    //     "双子の霊媒師",
+    //     "霊力の法則",
+    //     "今回の依頼",
+    //     "操作説明"
+    // };
+
+    // private string[] englishTitles =
+    // {
+    //     "Twin Mediums",
+    //     "Law of Spiritual Power",
+    //     "The Mission",
+    //     "Controls"
+    // };
 
     public override void OnNetworkSpawn()
     {
@@ -111,22 +122,26 @@ public class WorldViewManager : NetworkBehaviour
                 : worldViewData.englishTexts[index].Replace("\\n", "\n");
 
         if (titleText != null)
+            // ? worldViewData.japaneseTitles[index] はWorldViewDataに一本化したため削除
+            // : worldViewData.englishTitles[index] はWorldViewDataに一本化したため削除
             titleText.text = isJapanese
                 ? worldViewData.japaneseTitles[index]
                 : worldViewData.englishTitles[index];
 
         if (buttonText != null)
+            // ? (isJapanese ? "閉じる" : "Close") をInspector設定に変更
+            // : (isJapanese ? "次へ" : "Next") をInspector設定に変更
             buttonText.text = index >= totalBoards - 1
-                ? (isJapanese ? "閉じる" : "Close")
-                : (isJapanese ? "次へ" : "Next");
+                ? (isJapanese ? japaneseCloseText : englishCloseText)
+                : (isJapanese ? japaneseNextText : englishNextText);
 
         if (backButtonText != null)
-            backButtonText.text = isJapanese ? "戻る" : "Back";
+            // backButtonText.text = isJapanese ? "戻る" : "Back";
+            backButtonText.text = isJapanese ? japaneseBackText : englishBackText;
 
         if (backButton != null)
             backButton.gameObject.SetActive(index > 0);
     }
-
 
     // =========================
     // SCENE MOVE
@@ -143,8 +158,8 @@ public class WorldViewManager : NetworkBehaviour
                 LoadSceneMode.Single
             );
         }
-        else { 
-
+        else
+        {
             Debug.Log("[WorldView] Loading TutorialScene");
 
             NetworkManager.Singleton.SceneManager.LoadScene(
