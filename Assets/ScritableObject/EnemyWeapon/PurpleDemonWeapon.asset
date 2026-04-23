@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
-  m_Name: BaseEnemy
+  m_Script: {fileID: 11500000, guid: 143f561df1144aa42b45f6186789b04a, type: 3}
+  m_Name: PurpleDemonWeapon
   m_EditorClassIdentifier: 
-  ID: 12
-  Name: Enemy
-  icon: {fileID: 0}
-  HP: 100
-  scoreValue: 100
-  MoveSpeed: 100
-  prefab: {fileID: 0}
-  enemyWeapon: {fileID: 0}
+  fireInterval: 0.5
+  maxAmmo: 30
+  reloadTime: 2
+  speed: 10
+  laserDistance: 50
+  damage: 100
+  targetJob: 0
+  FirstShootDelay: 10

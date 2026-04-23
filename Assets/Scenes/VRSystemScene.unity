@@ -29101,7 +29101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: phases.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phases.Array.data[0]'
@@ -29110,7 +29110,11 @@ PrefabInstance:
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phases.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
+      objectReference: {fileID: 11400000, guid: 9130db537808a9a4bbf5f8c246970b30, type: 2}
+    - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'phases.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 09e28c63f7a683f46919a5d21940185b, type: 2}
     - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: PlayerInput
       value: 

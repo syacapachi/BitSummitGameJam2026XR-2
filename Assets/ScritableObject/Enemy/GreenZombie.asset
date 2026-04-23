@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
-  m_Name: BaseEnemy
+  m_Name: GreenZombie
   m_EditorClassIdentifier: 
-  ID: 12
-  Name: Enemy
-  icon: {fileID: 0}
+  ID: 9
+  Name: GreenDemon
+  icon: {fileID: 21300000, guid: 54baed6400621ff4b8670b6116af054e, type: 3}
   HP: 100
   scoreValue: 100
   MoveSpeed: 100
-  prefab: {fileID: 0}
-  enemyWeapon: {fileID: 0}
+  prefab: {fileID: 6621938678420665018, guid: a1b9de09faa343646a90c5d1d8f95591, type: 3}
+  enemyWeapon: {fileID: 11400000, guid: e88d07bc3b1461342987a6559c456bd6, type: 2}

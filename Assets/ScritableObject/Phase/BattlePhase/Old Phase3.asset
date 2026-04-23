@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6df8e7571e05a4468818a61a1effb1a, type: 3}
+  m_Name: Old Phase3
+  m_EditorClassIdentifier: 
+  phaseDisplayName: Phase3
+  phaseTime: 50
+  clearBonus: 5000
+  spawnEvents:
+  - enemyType: {fileID: 11400000, guid: 3091726d86d0589408faa4d6a60512dc, type: 2}
+    spawnPointIndex: 11
+    spawnTime: 8
+  - enemyType: {fileID: 11400000, guid: aa5702eaceb732243a3dff063e4da463, type: 2}
+    spawnPointIndex: 2
+    spawnTime: 18
+  - enemyType: {fileID: 11400000, guid: 3091726d86d0589408faa4d6a60512dc, type: 2}
+    spawnPointIndex: 15
+    spawnTime: 3
+  - enemyType: {fileID: 11400000, guid: aa5702eaceb732243a3dff063e4da463, type: 2}
+    spawnPointIndex: 8
+    spawnTime: 10
+  - enemyType: {fileID: 11400000, guid: 1ac76d065a91f6a468e1b3e1afa074ae, type: 2}
+    spawnPointIndex: 7
+    spawnTime: 1
+  - enemyType: {fileID: 11400000, guid: e6adfb9c1b10996499188b8ab4b73e7d, type: 2}
+    spawnPointIndex: 1
+    spawnTime: 0
+  - enemyType: {fileID: 11400000, guid: 1ac76d065a91f6a468e1b3e1afa074ae, type: 2}
+    spawnPointIndex: 16
+    spawnTime: 23
+  - enemyType: {fileID: 11400000, guid: e6adfb9c1b10996499188b8ab4b73e7d, type: 2}
+    spawnPointIndex: 10
+    spawnTime: 13
+  - enemyType: {fileID: 11400000, guid: 1ac76d065a91f6a468e1b3e1afa074ae, type: 2}
+    spawnPointIndex: 13
+    spawnTime: 33
+  - enemyType: {fileID: 11400000, guid: e6adfb9c1b10996499188b8ab4b73e7d, type: 2}
+    spawnPointIndex: 1
+    spawnTime: 27
+  - enemyType: {fileID: 11400000, guid: 3eadd9e2fa260c943a84c66d9f3fe8b3, type: 2}
+    spawnPointIndex: 4
+    spawnTime: 5
+  - enemyType: {fileID: 11400000, guid: c85df718e0dccb648934762a485dd3c8, type: 2}
+    spawnPointIndex: 3
+    spawnTime: 15
+  - enemyType: {fileID: 11400000, guid: 3eadd9e2fa260c943a84c66d9f3fe8b3, type: 2}
+    spawnPointIndex: 14
+    spawnTime: 20
+  - enemyType: {fileID: 11400000, guid: c85df718e0dccb648934762a485dd3c8, type: 2}
+    spawnPointIndex: 12
+    spawnTime: 30
+  - enemyType: {fileID: 11400000, guid: 3eadd9e2fa260c943a84c66d9f3fe8b3, type: 2}
+    spawnPointIndex: 17
+    spawnTime: 35
+  - enemyType: {fileID: 11400000, guid: c85df718e0dccb648934762a485dd3c8, type: 2}
+    spawnPointIndex: 0
+    spawnTime: 40
