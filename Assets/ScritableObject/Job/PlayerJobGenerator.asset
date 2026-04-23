@@ -9,43 +9,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02a243d4e91a48c4390d474d4e7ed535, type: 3}
-  m_Name: JobSetting
+  m_Script: {fileID: 11500000, guid: 7869a47295f06d04595d17c0039b3784, type: 3}
+  m_Name: PlayerJobGenerator
   m_EditorClassIdentifier: 
   playerLayerSettingsList:
-  - Job: 1
-    AttackableJob: 0
-    ColliderLayerMask:
+  - TargetJob: 1
+    AttackableJob: 5
+    TargetColliderLayer:
       serializedVersion: 2
       m_Bits: 128
     CullingMask:
       serializedVersion: 2
-      m_Bits: 831
-    AttackableLayer:
-      serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 1855
     Layer: 0
-  - Job: 2
-    AttackableJob: 0
-    ColliderLayerMask:
+  - TargetJob: 2
+    AttackableJob: 6
+    TargetColliderLayer:
       serializedVersion: 2
       m_Bits: 256
     CullingMask:
       serializedVersion: 2
-      m_Bits: 703
-    AttackableLayer:
-      serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 1727
     Layer: 0
-  - Job: 0
-    AttackableJob: 0
-    ColliderLayerMask:
+  - TargetJob: 0
+    AttackableJob: -1
+    TargetColliderLayer:
       serializedVersion: 2
       m_Bits: 1
     CullingMask:
       serializedVersion: 2
-      m_Bits: 958
-    AttackableLayer:
+      m_Bits: 1982
+    Layer: 0
+  - TargetJob: 4
+    AttackableJob: -1
+    TargetColliderLayer:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 1024
+    CullingMask:
+      serializedVersion: 2
+      m_Bits: 4294967295
     Layer: 0

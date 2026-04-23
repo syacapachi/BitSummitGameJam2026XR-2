@@ -42,7 +42,7 @@ public class NEnemyShoot : GunController
         networkObject.gameObject.layer = this.gameObject.layer;
 
         var bullet = networkObject.GetComponent<BulletBaseController>();
-        bullet.BulletInit(0, PlayerJob.Nothing, weaponSO);
+        bullet.BulletInit(null, PlayerJob.Nothing, weaponSO);
 
         networkObject.Spawn();
     }

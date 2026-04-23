@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotSound, IReloadSound
 {
@@ -15,6 +16,9 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     public int CurrentAmmo => syncedAmmo.Value; // AmmoUIが参照できるように
     public int MaxAmmo => weaponSettings.maxAmmo; // AmmoUIが参照できるように
     public float ReloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
+
+    protected virtual IResultCollector Collector { get; }
+
 
     private static readonly WaitForSeconds wait01 = new WaitForSeconds(0.1f);
     private float nextFire;
@@ -72,7 +76,7 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
 
         var bullet = obj.GetComponent<BulletBaseController>();
 
-        bullet.BulletInit(OwnerClientId,job,weaponSettings);
+        bullet.BulletInit(Collector, job,weaponSettings);
         // ③ ネットワークでSpawn
         obj.SpawnWithOwnership(OwnerClientId);
     }

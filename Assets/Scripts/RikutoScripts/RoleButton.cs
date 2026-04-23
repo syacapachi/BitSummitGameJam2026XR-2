@@ -23,7 +23,7 @@ public class RoleButton : NetworkBehaviour
 
         if (damageSender is not NBullet bullet) return;
 
-        ulong shooterId = bullet.ShooterId;
+        ulong shooterId = bullet.Shooter.ClientId;
 
         if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(shooterId, out var client))
             return;

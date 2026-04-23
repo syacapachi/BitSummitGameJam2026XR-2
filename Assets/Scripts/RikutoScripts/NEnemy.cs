@@ -1,13 +1,14 @@
-﻿using UnityEngine;
-using Unity.Netcode;
-using UnityEngine.UI;
-using TMPro; // ← 追加
+﻿using Syacapachi.Attribute;
 using System.Collections;
-using Syacapachi.Attribute;
+using TMPro;
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 {
     [SerializeField] EnemySO enemySO;
+    [SerializeField] JobSettingGenerator enemyJobSetting;
     private readonly NetworkVariable<float> currentHP = new(
         0,
         NetworkVariableReadPermission.Everyone,
@@ -17,8 +18,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     [SerializeField] private Canvas hpCanvas;
     [SerializeField] private Image hpImage; // Filled Image
     [SerializeField] private TextMeshProUGUI hpText;
+    [SerializeField] PlayerJob enemyJob;
     [Header("Publish Event")]
     [SerializeField] EnemyKilledEvent enemyKilled;
+    private bool isInitialize = false;
 
     private Transform targetPlayer;
     public GameObject GameObject => this.gameObject;
@@ -27,12 +30,12 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public int Layer => gameObject.layer;
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => enemySO.Hp;
-    public PlayerJob enemyJob;
-    private ulong lastAttackerId;
-    public ulong LastAttackerId => lastAttackerId;
+    
+    public PlayerJob EnemyJob => enemyJob;
 
     public override void OnNetworkSpawn()
     {
+        isInitialize = false;
         if (IsServer)
         {
             currentHP.Value = enemySO.Hp;
@@ -55,7 +58,21 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
         StartCoroutine(SetupPlayerCoroutine());
     }
-
+    private void ApplySettting()
+    {
+        if(enemyJobSetting == null)
+        {
+            Debug.LogError("enemyJonSetting is null!");
+            return;
+        }
+        if(enemyJobSetting.JobLayerMaskDic.TryGetValue(EnemyJob, out var setting)){
+            gameObject.layer = setting.Layer;
+        }
+    }
+    public override void OnNetworkDespawn()
+    {
+        isInitialize = false;
+    }
     private IEnumerator SetupPlayerCoroutine()
     {
         yield return new WaitUntil(() =>
@@ -66,19 +83,15 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         );
 
         targetPlayer = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.transform;
+        isInitialize = true;
     }
 
     void LateUpdate()
     {
         if (hpCanvas == null) return;
+        if (!isInitialize) return;
 
-        var player = ManagerLocator.Instance?.AllPlayerManager?.NetworkOwnerPlayer;
-
-        if (player == null) return;
-
-        var target = player.transform;
-
-        hpCanvas.transform.LookAt(target);
+        hpCanvas.transform.LookAt(targetPlayer);
         hpCanvas.transform.Rotate(0, 180f, 0);
     }
 
@@ -100,26 +113,19 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
         if (currentHP.Value <= 0)
         {
-            DieRpc();
+            DieOnServer(sender.ResultCollector);
         }
     }
 
-    [OnInspectorButton("Die")]
-
-    [Rpc(SendTo.Server,InvokePermission = RpcInvokePermission.Server)]
     
-    void DieRpc()
+
+    void DieOnServer(IResultCollector collector)
     {
         Debug.Log("Die");
-        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(lastAttackerId, out var client))
+        if (collector != null && collector is PlayerStats stats)
         {
-            var root = client.PlayerObject.GetComponent<NetworkPlayerRoot>();
-            Debug.Log("Attacker found: " + lastAttackerId);
-            if (root != null)
-            {
-                Debug.Log("Add kill");
-                root.stats.AddKill(enemySO.Id, enemySO.ScoreValue);
-            }
+            Debug.Log("Add kill");
+            stats.AddKill(enemySO.Id, enemySO.ScoreValue);
         }
 
         enemyKilled.Invoke(new EnemyKilled() {KilledEnemy = this,positon = transform.position});
@@ -127,6 +133,11 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         {
             NetworkObject.Despawn(true);
         }
+    }
+    [OnInspectorButton("Die")]
+    void DieOnspector()
+    {
+        DieOnServer(null);
     }
 
     void OnHPChanged(float oldValue, float newValue)

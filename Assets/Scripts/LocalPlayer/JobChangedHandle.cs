@@ -4,7 +4,7 @@ public class JobChangedHandle : MonoBehaviour
 {
     [SerializeField] GameObject PlayerCollider;
     [SerializeField] Camera PlayerCamera;
-    [SerializeField] JobSetting setting;
+    [SerializeField] JobSettingGenerator setting;
     [Header("Subsucribe Event")]
     [SerializeField] PlayerJobEvent jobEvent;
 

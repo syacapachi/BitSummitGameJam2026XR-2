@@ -9,7 +9,7 @@ public class NBullet : BulletBaseController
     [SerializeField] GameObject hitFxPrefab;
     [SerializeField] GameObject shieldFxPrefab;
     [SerializeField] float hitFxLife = 2f;
-    [SerializeField] JobSetting setting;
+    [SerializeField] JobSettingGenerator setting;
     private void OnDisable()
     {
         trailRenderer.Clear();
@@ -38,16 +38,6 @@ public class NBullet : BulletBaseController
         var enemy = other.GetComponent<IEnemy>()
                     ?? other.GetComponentInParent<IEnemy>();
 
-        var nm = NetworkManager.Singleton;
-
-        if (!nm.ConnectedClients.TryGetValue(ShooterId, out var client))
-        {
-            Debug.LogWarning($"Shooter not found: {ShooterId}");
-            return;
-        }
-
-        var root = client.PlayerObject.GetComponent<NetworkPlayerRoot>();
-
         if (enemy != null)
         {
             if (!setting.JobLayerMaskDic.TryGetValue(ShooterJob, out var layerMaskSetting))
@@ -56,13 +46,18 @@ public class NBullet : BulletBaseController
                 NetworkObject.Despawn(true);
                 return;
             }
+            if(ResultCollector == null || ResultCollector is not PlayerStats stats)
+            {
+                Debug.Log($"ResultCollector is not {nameof(PlayerStats)}");
+                return;
+            }
 
-            if (!layerMaskSetting.IsVisibleLayer(enemy.Layer))
+            if (!layerMaskSetting.IsAttackableJob(enemy.EnemyJob))
             {
                 // [既存] 見えない敵 → ダメージが通る
                 Debug.Log("Damage");
-                root.stats.AddHit();
-                root.stats.AddDamage(Damage);
+                stats.AddHit();
+                stats.AddDamage(Damage);
                 reciever.TakeDamage(this, Damage);
                 SpawnHitFxClientRpc(transform.position);
             }
@@ -70,10 +65,10 @@ public class NBullet : BulletBaseController
             {
                 // [既存] 見える敵 → シールド
                 Debug.Log("Shield");
-                root.stats.AddShield();
+                stats.AddShield();
                 attackBlockedEvent.Invoke(new AttackBlocked()
                 {
-                    PlayerId = ShooterId,
+                    Collector = Shooter,
                     Enemy = enemy
                 });
                 SpawnShieldFxClientRpc(transform.position);
@@ -83,6 +78,7 @@ public class NBullet : BulletBaseController
         {
             // [追加] IEnemy が見つからない場合のデバッグログ
             Debug.LogWarning($"IEnemy not found on {other.name} or its parents");
+            return;
         }
 
         if (NetworkObject.IsSpawned)

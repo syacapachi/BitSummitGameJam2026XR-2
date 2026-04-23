@@ -9,6 +9,8 @@ public class NGun : GunController
     [SerializeField] VoidEvent fireEvent;
     [SerializeField] GameEffectDataEvent networkEvent;
 
+    protected override IResultCollector Collector => playerStats;
+
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
