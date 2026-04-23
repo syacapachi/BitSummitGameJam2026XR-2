@@ -6,6 +6,7 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
 {
     [SerializeField] float lifeTime = 5f;
     [SerializeField] Rigidbody rb;
+    [SerializeField] protected JobSettingGenerator setting;
     WeaponSettingsSO gunSO;
     private PlayerJob shooterJob = PlayerJob.Both;
     private IResultCollector shooterId;
@@ -78,4 +79,10 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     {
         reciever.TakeDamage(this,damage);
     }
+#if UNITY_EDITOR
+    void Reset()
+    {
+        rb ??= GetComponent<Rigidbody>();
+    }
+#endif
 }

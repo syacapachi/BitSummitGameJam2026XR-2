@@ -9,7 +9,6 @@ public class NBullet : BulletBaseController
     [SerializeField] GameObject hitFxPrefab;
     [SerializeField] GameObject shieldFxPrefab;
     [SerializeField] float hitFxLife = 2f;
-    [SerializeField] JobSettingGenerator setting;
     private void OnDisable()
     {
         trailRenderer.Clear();

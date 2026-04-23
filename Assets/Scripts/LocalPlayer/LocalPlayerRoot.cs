@@ -34,7 +34,6 @@ public class LocalPlayerRoot : MonoBehaviour
         {
             cameraSetting.enabled = false;
             characterControll.enabled = false;
-            Debug.Log("XR is Active");
         }
     }
 

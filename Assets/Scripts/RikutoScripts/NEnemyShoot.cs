@@ -26,9 +26,8 @@ public class NEnemyShoot : GunController
 
     protected override void OnShootServer()
     {
-        target = GetTarget();
 
-        if (target == null) return;
+        if (!TryGetTarget(out var target)) return;
 
         Vector3 direction = (target.position - transform.position).normalized;
 
@@ -58,10 +57,11 @@ public class NEnemyShoot : GunController
         }
     }
 
-    Transform GetTarget()
+    bool TryGetTarget(out Transform target)
     {
+        target = null;
         var gameManager = ManagerLocator.Instance.AllGameManager;
-        if(gameManager == null) return transform;
+        if(gameManager == null) return false;
 
         switch (gameManager.CurrentGameMode)
         {
@@ -69,23 +69,26 @@ public class NEnemyShoot : GunController
                 {
                     var protectArea = gameManager.ProtectArea;
                     if (protectArea != null)
-                        return protectArea.transform;
-                    return GetNearestPlayer();
+                    {
+                        target = protectArea.transform;
+                        return true;
+                    }
+                    return TryGetNearestPlayer(out target);
                 }
 
             case GameMode.Survival:
             default:
                 {
-                    return GetNearestPlayer();
+                    return TryGetNearestPlayer(out target);
                 }
         }
     }
 
-    Transform GetNearestPlayer()
+    bool TryGetNearestPlayer(out Transform nearest)
     {
         var players = ManagerLocator.Instance.AllPlayerManager.AllPlayers;
 
-        Transform nearest = null;
+        nearest = null;
         float minDist = float.MaxValue;
 
         foreach (var player in players)
@@ -97,7 +100,7 @@ public class NEnemyShoot : GunController
 
             bool canTarget = (nEnemy.EnemyJob & playerJob) == 0;
 
-            Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {nEnemy.EnemyJob}, canTarget: {canTarget}");
+            //Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {nEnemy.EnemyJob}, canTarget: {canTarget}");
 
             if (!canTarget) continue;
 
@@ -110,9 +113,9 @@ public class NEnemyShoot : GunController
             break;
         }
 
-        Debug.Log($"[{nameof(NEnemyShoot)}] nearest target: {(nearest != null ? nearest.name : "null")}");
+        Debug.Log($"[{nameof(NEnemyShoot)},{nEnemy.EnemyJob}] nearest target: {(nearest != null ? nearest.name : "null")}");
 
-        return nearest;
+        return nearest != null;
     }
     public override void PlayShotSound()
     {

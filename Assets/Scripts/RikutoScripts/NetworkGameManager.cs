@@ -1,11 +1,10 @@
 ﻿using Syacapachi.Attribute;
-using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class NGameManager : NetworkBehaviour
+public class NetworkGameManager : NetworkBehaviour
 {
     [SerializeField] GameObject protectArea;
     [SerializeField] ScoreManager scoreManager;

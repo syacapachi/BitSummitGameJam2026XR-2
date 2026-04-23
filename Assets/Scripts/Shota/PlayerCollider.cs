@@ -1,8 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerCollider : MonoBehaviour, IDamageReciever
 {
+    [SerializeField] SyncroPropaty playerProp;
     [SerializeField] PlayerHealth playerHealth;
+
+    public SyncroPropaty PlayerProp => playerProp;
 
     public GameObject GameObject => this.gameObject;
 
@@ -19,7 +22,7 @@ public class PlayerCollider : MonoBehaviour, IDamageReciever
         }
         else
         {
-            Debug.LogError("PlayerHealth ‚ª PlayerCollider ‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñI");
+            Debug.LogError("PlayerHealth ãŒ PlayerCollider ã«è¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ï¼");
         }
     }
 }

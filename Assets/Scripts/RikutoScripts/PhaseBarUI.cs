@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PhaseBarUI : MonoBehaviour
 {
+    [Header("depend on")]
+    [SerializeField] PhaseManager phaseManager;
     [Header("UI")]
     [SerializeField] GameObject phaseBarPrefab;
     [SerializeField] GameObject separatorPrefab;
@@ -17,22 +19,10 @@ public class PhaseBarUI : MonoBehaviour
     private readonly List<Image> phaseBars = new List<Image>();
     private readonly List<Image> separators = new List<Image>();
 
-
-    private PhaseManager phaseManager;
-
     private Color defaultColor;
 
     void Start()
     {
-        // GameManager取得
-        phaseManager = ManagerLocator.Instance.AllGameManager.PhaseManager;
-
-        if (phaseManager == null)
-        {
-            Debug.LogError("PhaseManager not found");
-            return;
-        }
-
         CreateBars();
         SetupBarLength();
     }

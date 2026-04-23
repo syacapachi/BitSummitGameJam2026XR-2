@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -6,9 +7,19 @@ using UnityEngine;
 /// </summary>
 public class CheckPointManager : MonoBehaviour
 {
-    [SerializeField] GameObject m_Object;
-    [SerializeField] List<Transform> checkPointList = new();
+#if UNITY_EDITOR
+    [SerializeField] GameObject m_CheckPointParent;
+#endif
+    [SerializeField] Transform[] checkPoints;
     readonly Dictionary<Transform, int> transformToIndexDic = new();
+    private void Awake()
+    {
+        transformToIndexDic.Clear();
+        for(int i = 0; i < checkPoints.Length; i++)
+        {
+            transformToIndexDic[checkPoints[i]] = i;
+        }
+    }
 #if UNITY_EDITOR
     private void Reset()
     {
@@ -16,17 +27,12 @@ public class CheckPointManager : MonoBehaviour
     }
     private void OnValidate()
     {
-        if(m_Object != null)
+        if(m_CheckPointParent != null)
         {
-            foreach(Transform child in m_Object.GetComponentsInChildren<Transform>())
+            var childs = m_CheckPointParent.GetComponentsInChildren<Transform>();
+            if (childs != null)
             {
-                checkPointList.Add(child);
-            }
-            m_Object = null;
-            transformToIndexDic.Clear();
-            for(int i=0;i<checkPointList.Count;i++)
-            {
-                transformToIndexDic.Add(checkPointList[i], i);
+                checkPoints = childs.Skip(1).ToArray();
             }
         }
     }
@@ -42,11 +48,11 @@ public class CheckPointManager : MonoBehaviour
     }
     public Transform GetNextPoint(int index)
     {
-        if(index < 0 || index >= checkPointList.Count)
+        if(index < 0 || index >= checkPoints.Length)
         {
             Debug.LogError("List out Range");
             return null;
         }
-        return (index == checkPointList.Count-1) ? checkPointList[0] : checkPointList[index+1];
+        return (index == checkPoints.Length - 1) ? checkPoints[0] : checkPoints[index+1];
     }
 }

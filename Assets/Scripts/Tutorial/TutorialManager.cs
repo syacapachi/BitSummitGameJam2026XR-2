@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using UnityEngine.XR;
 
 public enum TutorialStep
 {
@@ -48,6 +49,10 @@ public class TutorialManager : NetworkBehaviour
 
     void StartStep(TutorialStep step)
     {
+        if (!XRSettings.isDeviceActive)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
         currentStepLogic?.OnEnd();
 
         switch (step)

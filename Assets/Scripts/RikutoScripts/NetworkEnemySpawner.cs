@@ -2,14 +2,17 @@
 using Syacapachi.util;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
 
-public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IKillable
+public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IKillable
 {
     [SerializeField] NetworkObjectPool networkPool;
-
+#if UNITY_EDITOR
+    [SerializeField] Transform spawnPointParent;
+#endif
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform protectArea;
     [Header("PublishEvent")]
@@ -196,6 +199,18 @@ public class NEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IK
         remain = 0;
         isSpawnFinished = false;
     }
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (spawnPointParent == null) return; 
+        var childs = spawnPointParent.GetComponentsInChildren<Transform>();
+        if(childs != null)
+        {
+            spawnPoints = childs.Skip(1).ToArray();
+        }
+        
+    }
+#endif
 }
 [GenerateEvent(typeof(GameEventSOBase<>))]
 public class EnemyKilled 
