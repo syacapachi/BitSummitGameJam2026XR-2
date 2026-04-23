@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  meshEnsble: 0
+  meshEnable: 0
   m_Renderer:
   - {fileID: 3586039225926179217}
   - {fileID: 5432640361929983673}
@@ -767,7 +767,7 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 1000
-  HpInfoRpcEvent: {fileID: 0}
+  HpInfoRpcEvent: {fileID: 11400000, guid: 4dc65a2fed759be4795b3a96e4d604c8, type: 2}
 --- !u!114 &4810429957344545880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3425,6 +3425,84 @@ Transform:
   - {fileID: 4103094999793661109}
   m_Father: {fileID: 6586157020893273864}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3405532119560973332
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4004500094854023113}
+  - component: {fileID: 2322489626705269213}
+  m_Layer: 0
+  m_Name: HeadPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4004500094854023113
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3405532119560973332}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1358144342988845292}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2322489626705269213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3405532119560973332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 1
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &3426921165349231922
 GameObject:
   m_ObjectHideFlags: 0
@@ -5619,6 +5697,7 @@ Transform:
   - {fileID: 2041269855817382624}
   - {fileID: 8562024122213999516}
   - {fileID: 728814604505585515}
+  - {fileID: 4004500094854023113}
   - {fileID: 4217247790775576332}
   - {fileID: 8928491125407436489}
   m_Father: {fileID: 0}
@@ -5834,12 +5913,12 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   avatorCollider: {fileID: 6125224147537168939}
   setting: {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
-  playerjob: 3
+  playerjob: 0
   syncroJob:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 3
+    m_InternalValue: 0
   jobChangeLocalEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
   IsDebugMode: 1
   switchJobEvent: {fileID: 11400000, guid: f9e23ca27358a3f419041719b45bce40, type: 2}
@@ -7102,7 +7181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  meshEnsble: 0
+  meshEnable: 0
   m_Renderer:
   - {fileID: 4281159005728926349}
   - {fileID: 1316376018937414345}
@@ -8882,10 +8961,7 @@ PrefabInstance:
       addedObject: {fileID: 644507580902073845}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3513759523329437185}
-    - targetCorrespondingSourceObject: {fileID: 5368949237039013932, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4377345816364985541}
+      addedObject: {fileID: 2265956154499770828}
   m_SourcePrefab: {fileID: 100100000, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
 --- !u!137 &1046714690795431310 stripped
 SkinnedMeshRenderer:
@@ -8900,11 +8976,6 @@ SkinnedMeshRenderer:
 --- !u!137 &2231564332198363345 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2590711178638016566, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
-  m_PrefabInstance: {fileID: 4398915094894330087}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &3565329610315713468 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 898060880859302747, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
   m_PrefabInstance: {fileID: 4398915094894330087}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &3588660993758789046 stripped
@@ -8945,14 +9016,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  meshEnsble: 0
+  meshEnable: 0
   m_Renderer:
   - {fileID: 2231564332198363345}
   - {fileID: 1524732636062697415}
   - {fileID: 8720901179799283811}
   - {fileID: 5486813636354212466}
   - {fileID: 1046714690795431310}
---- !u!114 &3513759523329437185
+--- !u!114 &2265956154499770828
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8961,13 +9032,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3588660993758789046}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84a340a3aa632774ab9bcffe05129959, type: 3}
+  m_Script: {fileID: 11500000, guid: a88a551fac236b941a4e4012c7c9e040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   avatorRootTransfrom: {fileID: 1358144342988845292}
   animator: {fileID: 7811071689496165750}
-  networkHead: {fileID: 3565329610315713468}
+  networkHead: {fileID: 4004500094854023113}
   networkLeftHand: {fileID: 8562024122213999516}
   networkRightHand: {fileID: 728814604505585515}
   networkLeftController: {fileID: 669341337691739909}
@@ -8990,57 +9061,6 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
   m_PrefabInstance: {fileID: 4398915094894330087}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8614896918144180427 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5368949237039013932, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
-  m_PrefabInstance: {fileID: 4398915094894330087}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4377345816364985541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8614896918144180427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 0
-  AutoOwnerAuthorityTickOffset: 1
-  PositionInterpolationType: 0
-  RotationInterpolationType: 0
-  ScaleInterpolationType: 0
-  PositionLerpSmoothing: 1
-  PositionMaxInterpolationTime: 0.1
-  RotationLerpSmoothing: 1
-  RotationMaxInterpolationTime: 0.1
-  ScaleLerpSmoothing: 1
-  ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 1
-  TickSyncChildren: 0
-  UseUnreliableDeltas: 0
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 1
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 1
-  InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!137 &8720901179799283811 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -4320420363059107708, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
@@ -9104,7 +9124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4283425761326543017, guid: 9f3369e30fbd31f4bb596b1a99babe83, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2983433689305697426, guid: 9f3369e30fbd31f4bb596b1a99babe83, type: 3}
@@ -9176,6 +9196,10 @@ PrefabInstance:
     - target: {fileID: 8758423527188247893, guid: 1392f805216c47742996d4742c80721c, type: 3}
       propertyPath: m_Name
       value: Left Controller Visual
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758423527188247893, guid: 1392f805216c47742996d4742c80721c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3718224901187835141, guid: 1392f805216c47742996d4742c80721c, type: 3}

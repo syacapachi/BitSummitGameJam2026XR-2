@@ -27,12 +27,14 @@ public class LocalPlayerRoot : MonoBehaviour
     public Transform RightController => rightController;
     public XROrigin XROrigin => xrOrigin;
 
+    //Fpsモード
     private void Start()
     {
         if(XRSettings.isDeviceActive)
         {
             cameraSetting.enabled = false;
             characterControll.enabled = false;
+            Debug.Log("XR is Active");
         }
     }
 

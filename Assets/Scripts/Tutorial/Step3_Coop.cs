@@ -1,19 +1,14 @@
-using System;
+﻿using System;
 
-public class Step3_Coop : ITutorialStep
+public class Step3_Coop : TutorialBase
 {
-    Action onComplete;
-    TutorialSpawner spawner;
-
-    public Step3_Coop(TutorialSpawner spawner, Action onComplete)
+    public Step3_Coop(TutorialSpawner spawner, Action onComplete) :base(spawner, onComplete)
     {
-        this.spawner = spawner;
-        this.onComplete = onComplete;
     }
 
-    public void OnStart()
+    public override void OnStart()
     {
-        spawner.OnAllEnemyDead += HandleAllDead;
+        spawner.OnAllEnemyDead += base.HandleAllDead;
 
         // ★すでに全滅していた場合
         if (spawner.IsAllDead)
@@ -23,17 +18,8 @@ public class Step3_Coop : ITutorialStep
         spawner.ApplyAttackableAfterSpawn(true);
     }
 
-    public void OnEnd()
+    public override void OnEnd()
     {
-        spawner.OnAllEnemyDead -= HandleAllDead;
+        spawner.OnAllEnemyDead -= base.HandleAllDead;
     }
-
-    void HandleAllDead()
-    {
-        onComplete?.Invoke();
-    }
-
-    public void OnTargetDestroyed(ulong playerId) { }
-    public void OnAttackBlocked(ulong playerId) { }
-    public void OnEnemyKilled(EnemyKilled e) { }
 }

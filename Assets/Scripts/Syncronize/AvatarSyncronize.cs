@@ -2,7 +2,9 @@
 using Unity.Netcode;
 using Unity.XR.CoreUtils;
 using UnityEngine;
-public class Syncronize : NetworkBehaviour
+using UnityEngine.XR;
+[RequireComponent(typeof(Animator))]
+public class AvatarSyncronize : NetworkBehaviour
 {
     XROrigin xrOrigin;
     Transform playerRootTransfrom, leftHand, rightHand, leftController, rightController;
@@ -191,9 +193,27 @@ public class Syncronize : NetworkBehaviour
             // rootを補正
             avatorRootTransfrom.SetPositionAndRotation(cameraPos - headOffsetLocal, xrOrigin.transform.rotation);
 
-            // ★手
-            networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
-            networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
+            //Head
+            networkHead.SetLocalPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
+
+            if (XRSettings.isDeviceActive)
+            {
+                // ★手
+                networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
+                networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
+            }
+            else
+            {
+                // ★手　XRが無効の時は、頭に付けることで疑似的FPS
+                networkLeftController.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
+                networkRightController.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
+            }
         }
     }
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        animator = GetComponent<Animator>();
+    }
+#endif
 }

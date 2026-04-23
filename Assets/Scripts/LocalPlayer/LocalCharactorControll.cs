@@ -11,7 +11,6 @@ public class LocalCharactorControll : MonoBehaviour
      */
     [SerializeField] protected Transform playerRootTransform;
     [SerializeField] LocalCameraSetting cameraSetting;
-    [SerializeField] protected GameObject bombPrefab;
     [SerializeField] protected float jumpForce = 5f;
     [SerializeField] protected float normalSpeed = 5f;
     [SerializeField] protected float dashSpeed = 10f;
@@ -42,18 +41,6 @@ public class LocalCharactorControll : MonoBehaviour
         //reciever.OnDashChanged -= OnDashChanged;
         //reciever.OnFireed -= OnUIChanged;
         //reciever.OnJumped -= OnJunp;
-    }
-    //サーバーで実行される関数(名前にServerRpcを付ける) 呼び出せるのはオーナー のみ
-    //オブジェクト生成はサーバーで行う必要がある。生成したオブジェクトをクライアントに同期するためには、生成したオブジェクトのNetworkObjectコンポーネントのSpawn()メソッドを呼び出す必要がある。
-    private void SpawnBomn()
-    {
-        if (bombPrefab == null)
-        {
-            Debug.LogError("Bomb prefab is not assigned.");
-            return;
-        }
-        GameObject bomb = Instantiate(bombPrefab, playerRootTransform.position + playerRootTransform.forward * 2, Quaternion.identity);
-        bomb.GetComponent<NetworkObject>().Spawn();
     }
     private void Update()
     {

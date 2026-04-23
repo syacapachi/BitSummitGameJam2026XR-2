@@ -85,6 +85,10 @@ PrefabInstance:
       value: 2238223131
       objectReference: {fileID: 0}
     - target: {fileID: 8861873488086297152, guid: a1b9de09faa343646a90c5d1d8f95591, type: 3}
+      propertyPath: nEnemy
+      value: 
+      objectReference: {fileID: 7460317855711413352}
+    - target: {fileID: 8861873488086297152, guid: a1b9de09faa343646a90c5d1d8f95591, type: 3}
       propertyPath: gameEffect
       value: 
       objectReference: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
@@ -101,6 +105,17 @@ PrefabInstance:
       addedObject: {fileID: 4036539501967142589}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1b9de09faa343646a90c5d1d8f95591, type: 3}
+--- !u!114 &7460317855711413352 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4966616456255313907, guid: a1b9de09faa343646a90c5d1d8f95591, type: 3}
+  m_PrefabInstance: {fileID: 2550348876676322203}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0524e63ef5ed9c147a5ee84c8312ae66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8683347926366469441 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6621938678420303578, guid: a1b9de09faa343646a90c5d1d8f95591, type: 3}

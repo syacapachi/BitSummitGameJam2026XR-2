@@ -6,7 +6,7 @@ public class StatusViewer : NetworkBehaviour
 {
     [SerializeField] Transform playerRootTransform;
     [SerializeField] PlayerHealth playerHealth;
-    [SerializeField] Syncronize syncro;
+    [SerializeField] AvatarSyncronize syncro;
     [SerializeField] Camera mainCamera;
     public override void OnNetworkSpawn()
     {

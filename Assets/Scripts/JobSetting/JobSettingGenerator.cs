@@ -69,10 +69,13 @@ public class JobSettingGenerator : ScriptableObject
             }
         }
     }
-    private void OnEnable()
-    {
-        InitDic();
-    }
+    /// <summary>
+    /// ScriptableObjectのAwake()
+    /// </summary>
+    //private void OnEnable()
+    //{
+    //    InitDic();
+    //}
 #if UNITY_EDITOR
     private void OnValidate()
     {

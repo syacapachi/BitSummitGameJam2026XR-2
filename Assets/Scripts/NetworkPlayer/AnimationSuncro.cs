@@ -6,7 +6,7 @@ public class AnimationSuncro : NetworkBehaviour
 {
     [SerializeField] Animator animator;
     [SerializeField] NetworkAnimator NetworkAnimator;
-    [SerializeField] Syncronize syncronizeSetting;
+    [SerializeField] AvatarSyncronize syncronizeSetting;
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent jumpEvent;
     [SerializeField] Vector2Event moveEvent;

@@ -12,12 +12,12 @@ public enum TutorialStep
 public class TutorialManager : NetworkBehaviour
 {
     public NetworkVariable<TutorialStep> CurrentStep =
-        new NetworkVariable<TutorialStep>(TutorialStep.Step1);
+        new(TutorialStep.Step1);
 
     [SerializeField] int playerCount = 2;
     [SerializeField] TutorialSpawner spawner;
 
-    ITutorialStep currentStepLogic;
+    TutorialBase currentStepLogic;
 
     [SerializeField] List<EnemySO> step1Enemies;
     [SerializeField] List<EnemySO> step2Enemies;

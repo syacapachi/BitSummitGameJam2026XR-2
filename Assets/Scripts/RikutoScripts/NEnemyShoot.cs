@@ -5,7 +5,7 @@ using UnityEngine;
 public class NEnemyShoot : GunController
 {
     public EnemySO enemySO;
-
+    [SerializeField] NEnemy nEnemy;
     private EnemyWeaponSettingsSO weaponSO;
     [SerializeField] AudioClip shotClip;
     [Header("Publish Event")]
@@ -13,7 +13,6 @@ public class NEnemyShoot : GunController
 
     Transform target;
     Coroutine shootCorutine;
-    public PlayerJob enemyJob;
 
     public override void OnNetworkSpawn()
     {
@@ -62,6 +61,7 @@ public class NEnemyShoot : GunController
     Transform GetTarget()
     {
         var gameManager = ManagerLocator.Instance.AllGameManager;
+        if(gameManager == null) return transform;
 
         switch (gameManager.CurrentGameMode)
         {
@@ -95,9 +95,9 @@ public class NEnemyShoot : GunController
 
             var playerJob = prop.Job;
 
-            bool canTarget = (enemyJob & playerJob) == 0;
+            bool canTarget = (nEnemy.EnemyJob & playerJob) == 0;
 
-            Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {enemyJob}, canTarget: {canTarget}");
+            Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {nEnemy.EnemyJob}, canTarget: {canTarget}");
 
             if (!canTarget) continue;
 
@@ -107,6 +107,7 @@ public class NEnemyShoot : GunController
                 minDist = dist;
                 nearest = player.transform;
             }
+            break;
         }
 
         Debug.Log($"[{nameof(NEnemyShoot)}] nearest target: {(nearest != null ? nearest.name : "null")}");
@@ -117,4 +118,10 @@ public class NEnemyShoot : GunController
     {
         gameEffect.Invoke(new GameEffect(shotClip, null, transform.position));
     }
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        nEnemy ??= GetComponent<NEnemy>();   
+    }
+#endif
 }
