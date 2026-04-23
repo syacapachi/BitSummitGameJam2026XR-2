@@ -19,7 +19,7 @@ public class Step1_Target : ITutorialStep
     public void OnStart()
     {
         spawner.OnAllEnemyDead += HandleAllDead;
-        spawner.SpawnTargetsForEachPlayer(playerCount, step1Enemies);
+        spawner.SpawnTargetsForEachPlayer(step1Enemies.Count, step1Enemies);
     }
 
     void HandleAllDead()

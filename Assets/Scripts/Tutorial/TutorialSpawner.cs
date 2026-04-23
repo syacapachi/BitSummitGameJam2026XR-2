@@ -60,7 +60,7 @@ public class TutorialSpawner : NetworkBehaviour
 
         for (int i = 0; i < playerCount; i++)
         {
-            EnemySO enemy = enemyList[i % enemyList.Count];
+            EnemySO enemy = enemyList[i];
             SpawnTarget(i, enemy);
         }
         isSpawnFinished = true;
