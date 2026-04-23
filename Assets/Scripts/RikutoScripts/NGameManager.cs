@@ -1,8 +1,9 @@
-﻿using Unity.Netcode;
-using UnityEngine;
+﻿using Syacapachi.Attribute;
 using System;
 using System.Collections.Generic;
-using Syacapachi.Attribute;
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NGameManager : NetworkBehaviour
 {
@@ -94,6 +95,7 @@ public class NGameManager : NetworkBehaviour
         phaseManager.ResetPhase();
         phaseManager.KillableHandle.KillAll();
         scoreManager.ResetScore();
+        MoveScene();
     }
 
     void HandleGameStateChanged(GameState oldState, GameState newState)
@@ -155,6 +157,19 @@ public class NGameManager : NetworkBehaviour
         }
 
         OnSendResultRpc(list.ToArray());
+    }
+
+    void MoveScene()
+    {
+        if (!IsServer) return;
+        {
+            Debug.Log("[VRSystemScene] Loading WorldViewScene");
+
+            NetworkManager.Singleton.SceneManager.LoadScene(
+                "WorldViewScene",
+                LoadSceneMode.Single
+            );
+        }
     }
 }
 public enum GameState
