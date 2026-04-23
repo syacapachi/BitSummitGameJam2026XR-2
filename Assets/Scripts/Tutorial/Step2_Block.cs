@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-using System.Collections;
 
 public class Step2_Block : TutorialBase
 {
@@ -43,9 +41,9 @@ public class Step2_Block : TutorialBase
 
         bool allDone = counts.Count >= playerCount;
 
-        foreach (var c in counts.Values)
+        foreach (int count in counts.Values)
         {
-            if (c < 3)
+            if (count < 3)
             {
                 allDone = false;
                 break;

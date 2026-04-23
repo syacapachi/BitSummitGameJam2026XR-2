@@ -26,7 +26,8 @@ public class WorldTutorialManager : NetworkBehaviour
     [Header("戻るボタンのテキスト")]
     public TextMeshProUGUI backButtonText;
 
-    private int currentIndex = 0;
+    [Header("テキストデータ")]
+    [SerializeField] LocalizedText localizedText;
 
     private string[] japaneseTitles = {
         "チュートリアル1",
@@ -69,6 +70,8 @@ public class WorldTutorialManager : NetworkBehaviour
     };
 
     private int totalPages = 4;
+    private int currentPage;
+    private int maxPage = 0;
 
     /*
 
@@ -93,9 +96,12 @@ public class WorldTutorialManager : NetworkBehaviour
     {
         int index = (int)newStep;
 
-        if (index >= totalPages)
-            index = totalPages - 1;
+        //ページ遷移[0..n),シーン遷移n。故に、[0..n]
+        if (index > totalPages)
+            index = totalPages;
 
+        maxPage = Mathf.Max(maxPage, index);
+        currentPage = index;
         ShowPage(index);
 
         // 最後のステップならボタンを「開始」に
@@ -130,18 +136,26 @@ public class WorldTutorialManager : NetworkBehaviour
 
         if (backButton != null)
             backButton.gameObject.SetActive(index > 0);
+
+        if(nextButton != null)
+        {
+            nextButton.gameObject.SetActive(index < maxPage);
+        }
     }
 
-    /*
     public void OnNextButtonClicked()
     {
-        currentIndex++;
-        if (currentIndex < totalPages)
-            ShowPage(currentIndex);
-        else
-            SceneManager.LoadScene("VRSystemScene");
+        if (currentPage == totalPages - 1)
+        {
+            tutorialManager.NextStepRequretRpc();
+            return;
+        }
+        if(currentPage < totalPages -1)
+        {
+            currentPage++;
+            ShowPage(currentPage);
+        }
     }
-    */
     /*
     public void OnNextButtonClicked()
     {
@@ -178,14 +192,14 @@ public class WorldTutorialManager : NetworkBehaviour
             LoadSceneMode.Single
         );
     }
+    */
 
     public void OnBackButtonClicked()
     {
-        if (currentIndex > 0)
+        if (currentPage > 0)
         {
-            currentIndex--;
-            ShowPage(currentIndex);
+            currentPage--;
+            ShowPage(currentPage);
         }
     }
-    */
 }

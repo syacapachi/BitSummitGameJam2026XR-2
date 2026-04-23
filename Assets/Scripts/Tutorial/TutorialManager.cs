@@ -73,6 +73,7 @@ public class TutorialManager : NetworkBehaviour
                 StartMainSimulation();
                 return;
             case TutorialStep.End:
+                MoveScene();
                 return;
             default:
                 return;
@@ -87,11 +88,12 @@ public class TutorialManager : NetworkBehaviour
         if (!IsServer) return;
 
         CurrentStep.Value++;
-
-        if (CurrentStep.Value == TutorialStep.End)
-        {
-            MoveScene();
-        }
+    }
+    [Rpc(SendTo.Server)]
+    public void NextStepRequretRpc()
+    {
+        if (CurrentStep.Value != TutorialStep.Step4) return;
+        NextStep();
     }
 
     // --- イベント転送 ---
