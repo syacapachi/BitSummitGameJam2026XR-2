@@ -1,4 +1,4 @@
-using Syacapachi.util;
+﻿using Syacapachi.util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ public class TutorialSpawner : NetworkBehaviour
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] NetworkObjectPool networkPool;
     public bool IsAllDead => remain <= 0 && isSpawnFinished;
-    private readonly List<NEnemy> spawnedEnemies = new();
+    private readonly List<IEnemy> spawnedEnemies = new();
 
     public override void OnNetworkSpawn()
     {
@@ -39,11 +39,8 @@ public class TutorialSpawner : NetworkBehaviour
     {
         OnEnemyKilled();
 
-        var enemy = e.KilledEnemy as NEnemy;
-        if (enemy != null)
-        {
-            spawnedEnemies.Remove(enemy);
-        }
+        spawnedEnemies.Remove(e.KilledEnemy);
+
     }
     public void SpawnTargetsForEachPlayer(int playerCount, List<EnemySO> enemyList)
     {
@@ -85,8 +82,7 @@ public class TutorialSpawner : NetworkBehaviour
         );
 
         obj.Spawn(true);
-        var enemy = obj.GetComponent<NEnemy>();
-        if (enemy != null)
+        if (obj.TryGetComponent<IEnemy>(out var enemy))
         {
             spawnedEnemies.Add(enemy);
         }
@@ -130,9 +126,9 @@ public class TutorialSpawner : NetworkBehaviour
 
         foreach (var enemy in spawnedEnemies)
         {
-            if (enemy == null) continue;
+            if (enemy == null || enemy is not NEnemy nenemy) continue;
 
-            enemy.setAttackabe(value);
+            nenemy.SetAttackabe(value);
         }
     }
 }

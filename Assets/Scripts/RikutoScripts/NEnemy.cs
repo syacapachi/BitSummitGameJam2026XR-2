@@ -48,6 +48,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         currentHP.OnValueChanged += OnHPChanged;
 
         UpdateHPUI(currentHP.Value);
+        ApplySettting();
 
         if (!IsClient) return;// クライアントでのみ実行
 
@@ -158,7 +159,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             hpText.text = $"{hp} / {enemySO.Hp}";
     }
 
-    public void setAttackabe(bool value)
+    public void SetAttackabe(bool value)
     {
         isAttackable = value;
     }

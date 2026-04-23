@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using UnityEngine.XR;
 
 public enum TutorialStep
 {
@@ -12,12 +13,12 @@ public enum TutorialStep
 public class TutorialManager : NetworkBehaviour
 {
     public NetworkVariable<TutorialStep> CurrentStep =
-        new NetworkVariable<TutorialStep>(TutorialStep.Step1);
+        new(TutorialStep.Step1);
 
     [SerializeField] int playerCount = 2;
     [SerializeField] TutorialSpawner spawner;
 
-    ITutorialStep currentStepLogic;
+    TutorialBase currentStepLogic;
 
     [SerializeField] List<EnemySO> step1Enemies;
     [SerializeField] List<EnemySO> step2Enemies;
@@ -48,6 +49,10 @@ public class TutorialManager : NetworkBehaviour
 
     void StartStep(TutorialStep step)
     {
+        if (!XRSettings.isDeviceActive)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
         currentStepLogic?.OnEnd();
 
         switch (step)
@@ -68,6 +73,7 @@ public class TutorialManager : NetworkBehaviour
                 StartMainSimulation();
                 return;
             case TutorialStep.End:
+                MoveScene();
                 return;
             default:
                 return;
@@ -82,11 +88,12 @@ public class TutorialManager : NetworkBehaviour
         if (!IsServer) return;
 
         CurrentStep.Value++;
-
-        if (CurrentStep.Value == TutorialStep.End)
-        {
-            MoveScene();
-        }
+    }
+    [Rpc(SendTo.Server)]
+    public void NextStepRequretRpc()
+    {
+        if (CurrentStep.Value != TutorialStep.Step4) return;
+        NextStep();
     }
 
     // --- イベント転送 ---

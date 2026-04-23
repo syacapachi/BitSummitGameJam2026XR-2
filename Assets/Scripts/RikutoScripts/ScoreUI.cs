@@ -5,7 +5,7 @@ public class ScoreUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI scoreText;
 
-    NGameManager gameManager;
+    NetworkGameManager gameManager;
 
     void Start()
     {

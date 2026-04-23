@@ -9,7 +9,7 @@ using UnityEngine;
 public class PhaseManager : NetworkBehaviour
 {
     [SerializeField] PhaseSO[] phases;
-    [SerializeField] NEnemySpawner spawner;
+    [SerializeField] NetworkEnemySpawner spawner;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseCountDownSettingSO uiSettings;
        
@@ -44,7 +44,7 @@ public class PhaseManager : NetworkBehaviour
         if (!IsServer) return;
 
         if (spawner == null)
-            spawner = GetComponentInChildren<NEnemySpawner>();
+            spawner = GetComponentInChildren<NetworkEnemySpawner>();
     }
     private void OnEnable()
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Syacapachi.Attribute;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -162,6 +163,18 @@ public class InputReciever : MonoBehaviour
         foreach (var v in voidEventList)
         {
             v.Disable();
+        }
+    }
+    [OnInspectorButton]
+    private void ChangeCursorMode()
+    {
+        if(Cursor.lockState == CursorLockMode.Locked)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 }

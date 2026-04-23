@@ -27,6 +27,7 @@ public class LocalPlayerRoot : MonoBehaviour
     public Transform RightController => rightController;
     public XROrigin XROrigin => xrOrigin;
 
+    //Fpsモード
     private void Start()
     {
         if(XRSettings.isDeviceActive)

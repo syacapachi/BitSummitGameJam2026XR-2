@@ -14,6 +14,7 @@ public class Scripts : MonoBehaviour
     [SerializeField] Button ClientButton;
     [SerializeField] Button ExitButton;
     [SerializeField] Button DiscoveryButton;
+    [SerializeField] string RefreshText;
     TextMeshProUGUI discovertext;
     [SerializeField] Button StopDiscoveryButton;
     [SerializeField] GameObject connectionButtonPrefab;
@@ -29,6 +30,7 @@ public class Scripts : MonoBehaviour
     public UnityEvent OnClientStart = new UnityEvent();
 
     public Vector2 DrawOffset = new Vector2(10, 210);
+    private string m_discoverText = string.Empty;
 
     private void Reset()
     {
@@ -67,6 +69,7 @@ public class Scripts : MonoBehaviour
         {
             DiscoveryButton.onClick.AddListener(StartDiscover);
             discovertext = DiscoveryButton.GetComponentInChildren<TextMeshProUGUI>();
+            m_discoverText = discovertext.text;
             DiscoveryButton.gameObject.SetActive(true);
         }
         if (StopDiscoveryButton != null)
@@ -130,12 +133,12 @@ public class Scripts : MonoBehaviour
     }
     private void SetActiveButtons(bool active)
     {
-        ServerButton.gameObject.SetActive(active);
-        HostButton.gameObject.SetActive(active);
-        ClientButton.gameObject.SetActive(active);
-        DiscoveryButton.gameObject.SetActive(active);
+        ServerButton?.gameObject.SetActive(active);
+        HostButton?.gameObject.SetActive(active);
+        ClientButton?.gameObject.SetActive(active);
+        DiscoveryButton?.gameObject.SetActive(active);
 
-        ExitButton.gameObject.SetActive(!active);
+        ExitButton?.gameObject.SetActive(!active);
     }
     private void StartDiscover()
     {
@@ -145,7 +148,7 @@ public class Scripts : MonoBehaviour
         }
         else
         {
-            discovertext.text = "Refresh List";
+            discovertext.text = RefreshText;
             StopDiscoveryButton.gameObject.SetActive(true);
             m_Discovery.StartClient();
         }
@@ -153,7 +156,7 @@ public class Scripts : MonoBehaviour
     }
     private void StopDiscovery()
     {
-        discovertext.text = "Discover";
+        discovertext.text = m_discoverText;
         m_Discovery.StopDiscovery();
         RefreshList();
         StopDiscoveryButton.gameObject.SetActive(false);

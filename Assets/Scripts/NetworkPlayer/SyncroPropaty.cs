@@ -1,6 +1,9 @@
 ﻿using Syacapachi.Attribute;
+using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SyncroPropaty : NetworkBehaviour
 {
@@ -23,15 +26,16 @@ public class SyncroPropaty : NetworkBehaviour
         get => syncroJob.Value;
         set
         {
-            if (syncroJob.Value != value)
+            if (IsOwner)
             {
-                syncroJob.Value = value;
+                jobChangeLocalEvent.Invoke(value);
                 playerjob = value;
-                if (IsOwner)
-                {   
-                    jobChangeLocalEvent.Invoke(value);
-                }   
+                if (syncroJob.Value != value)
+                {
+                    syncroJob.Value = value;
+                }
             }
+            
         }
     }
 
@@ -50,25 +54,33 @@ public class SyncroPropaty : NetworkBehaviour
             if (IsDebugMode)
             {
                 switchJobEvent.Register(OnJobChangeHandle);
-                NetworkManager.SceneManager.OnLoadComplete += OnSceneLoaded;
             }
+            NetworkManager.SceneManager.OnLoadEventCompleted += OnSceneLoaded;
+            ApplyInitializeJob();
         }
     }
-    private void OnSceneLoaded(ulong clientId,string SceneName,UnityEngine.SceneManagement.LoadSceneMode mode)
+
+    private void OnSceneLoaded(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+    {
+        ApplyInitializeJob();
+    }
+    private void ApplyInitializeJob()
     {
         // ホストならHuman、クライアントならGhost
         PlayerJob initialJob = IsHost ? PlayerJob.Demon : PlayerJob.Ghost;
         Job = initialJob;
-        jobChangeLocalEvent.Invoke(initialJob);
     }
 
     public override void OnNetworkDespawn()
     {
-        if (IsOwner && IsDebugMode)
+        if (IsOwner)
         {
-            switchJobEvent.Unregister(OnJobChangeHandle);
-            NetworkManager.SceneManager.OnLoadComplete -= OnSceneLoaded;
-        }
+            if (IsDebugMode)
+            {
+                switchJobEvent.Unregister(OnJobChangeHandle);
+            }
+            NetworkManager.SceneManager.OnLoadEventCompleted -= OnSceneLoaded;
+        }   
     }
     private void OnJobChanged(PlayerJob previousJob, PlayerJob newJob)
     {

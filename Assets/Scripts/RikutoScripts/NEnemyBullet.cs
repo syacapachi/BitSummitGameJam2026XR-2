@@ -60,19 +60,10 @@ public class NEnemyBullet : BulletBaseController
             return;
         }
 
-        // NetworkPlayerRoot を取得
-        var playerRoot = playerCollider.GetComponentInParent<NetworkPlayerRoot>();
-        if (playerRoot == null)
-        {
-            Debug.LogWarning("[NEnemyBullet] NetworkPlayerRoot not found on player.");
-            if (NetworkObject.IsSpawned)
-                NetworkObject.Despawn(true);
-            return;
-        }
-
         // SyncroPropaty（ジョブ情報）を取得
-        var prop = playerRoot.propaty;
-        if (prop == null)
+        var playerProp = playerCollider.PlayerProp;
+        
+        if (playerProp == null)
         {
             Debug.LogWarning("[NEnemyBullet] SyncroPropaty not found on player.");
             if (NetworkObject.IsSpawned)
@@ -80,7 +71,7 @@ public class NEnemyBullet : BulletBaseController
             return;
         }
 
-        var playerJob = prop.Job;
+        var playerJob = playerProp.Job;
 
         // ジョブフィルタ: enemyJob と playerJob のビットが重なっている場合のみターゲット
         // 例) enemyJob=Ghost, playerJob=Ghost → (Ghost & Ghost) != 0 → ターゲット
@@ -95,19 +86,19 @@ public class NEnemyBullet : BulletBaseController
         }
 
         // ダメージ適用
-        //reciever.TakeDamage(this, Damage);
+        reciever.TakeDamage(this, Damage);
         var gameManager = ManagerLocator.Instance.AllGameManager;
         ApplyProtectDamage(gameManager);
-        Debug.Log($"[NEnemyBullet] Player {playerRoot.OwnerClientId} took {Damage} damage! (job: {playerJob})");
+        Debug.Log($"[NEnemyBullet] Player {playerProp.OwnerClientId} took {Damage} damage! (job: {playerJob})");
 
         if (NetworkObject.IsSpawned)
             NetworkObject.Despawn(true);
     }
 
     /// <summary>
-    /// Protect モード: ProtectArea へのダメージ処理
+    /// Protect モード: ProtectArea へのダメージ処理,UIの都合でPlayerもこっちにする。
     /// </summary>
-    private void ApplyProtectDamage(NGameManager gameManager)
+    private void ApplyProtectDamage(NetworkGameManager gameManager)
     {
         gameManager.BulletHitProtectArea((int)-Damage);
         Debug.Log($"[NEnemyBullet] ProtectArea took {Damage} damage.");

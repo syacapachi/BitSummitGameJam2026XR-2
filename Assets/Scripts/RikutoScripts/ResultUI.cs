@@ -5,7 +5,7 @@ using System.Collections;
 
 public class ResultUI : MonoBehaviour
 {
-    private NGameManager nGameManager;
+    private NetworkGameManager nGameManager;
 
     [SerializeField] GameObject panel;
     [SerializeField] TextMeshProUGUI resultText;

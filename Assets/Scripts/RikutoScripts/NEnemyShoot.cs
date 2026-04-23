@@ -5,7 +5,7 @@ using UnityEngine;
 public class NEnemyShoot : GunController
 {
     public EnemySO enemySO;
-
+    [SerializeField] NEnemy nEnemy;
     private EnemyWeaponSettingsSO weaponSO;
     [SerializeField] AudioClip shotClip;
     [Header("Publish Event")]
@@ -13,7 +13,6 @@ public class NEnemyShoot : GunController
 
     Transform target;
     Coroutine shootCorutine;
-    public PlayerJob enemyJob;
 
     public override void OnNetworkSpawn()
     {
@@ -27,9 +26,8 @@ public class NEnemyShoot : GunController
 
     protected override void OnShootServer()
     {
-        target = GetTarget();
 
-        if (target == null) return;
+        if (!TryGetTarget(out var target)) return;
 
         Vector3 direction = (target.position - transform.position).normalized;
 
@@ -59,9 +57,11 @@ public class NEnemyShoot : GunController
         }
     }
 
-    Transform GetTarget()
+    bool TryGetTarget(out Transform target)
     {
+        target = null;
         var gameManager = ManagerLocator.Instance.AllGameManager;
+        if(gameManager == null) return false;
 
         switch (gameManager.CurrentGameMode)
         {
@@ -69,23 +69,26 @@ public class NEnemyShoot : GunController
                 {
                     var protectArea = gameManager.ProtectArea;
                     if (protectArea != null)
-                        return protectArea.transform;
-                    return GetNearestPlayer();
+                    {
+                        target = protectArea.transform;
+                        return true;
+                    }
+                    return TryGetNearestPlayer(out target);
                 }
 
             case GameMode.Survival:
             default:
                 {
-                    return GetNearestPlayer();
+                    return TryGetNearestPlayer(out target);
                 }
         }
     }
 
-    Transform GetNearestPlayer()
+    bool TryGetNearestPlayer(out Transform nearest)
     {
         var players = ManagerLocator.Instance.AllPlayerManager.AllPlayers;
 
-        Transform nearest = null;
+        nearest = null;
         float minDist = float.MaxValue;
 
         foreach (var player in players)
@@ -95,9 +98,9 @@ public class NEnemyShoot : GunController
 
             var playerJob = prop.Job;
 
-            bool canTarget = (enemyJob & playerJob) == 0;
+            bool canTarget = (nEnemy.EnemyJob & playerJob) == 0;
 
-            Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {enemyJob}, canTarget: {canTarget}");
+            //Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {nEnemy.EnemyJob}, canTarget: {canTarget}");
 
             if (!canTarget) continue;
 
@@ -107,14 +110,21 @@ public class NEnemyShoot : GunController
                 minDist = dist;
                 nearest = player.transform;
             }
+            break;
         }
 
-        Debug.Log($"[{nameof(NEnemyShoot)}] nearest target: {(nearest != null ? nearest.name : "null")}");
+        Debug.Log($"[{nameof(NEnemyShoot)},{nEnemy.EnemyJob}] nearest target: {(nearest != null ? nearest.name : "null")}");
 
-        return nearest;
+        return nearest != null;
     }
     public override void PlayShotSound()
     {
         gameEffect.Invoke(new GameEffect(shotClip, null, transform.position));
     }
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        nEnemy ??= GetComponent<NEnemy>();   
+    }
+#endif
 }

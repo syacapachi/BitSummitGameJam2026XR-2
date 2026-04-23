@@ -11,7 +11,7 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] VoidEvent AllEnemyDeadRpcEvent;
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] GameStateEvent GameStateChangeRpcEvent;
-    [SerializeField] private NGameManager nGameManager;
+    [SerializeField] private NetworkGameManager nGameManager;
 
     private Coroutine currentRoutine;
 

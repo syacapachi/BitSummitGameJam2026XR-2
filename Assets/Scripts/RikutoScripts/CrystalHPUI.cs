@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CrystalHPUI : MonoBehaviour
 {
-    private NGameManager nGameManager;
+    private NetworkGameManager nGameManager;
 
     [Header("UI")]
     [SerializeField] private Image scoreBar; // Filled Image

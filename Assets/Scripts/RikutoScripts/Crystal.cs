@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Crystal : MonoBehaviour,IDamageReciever
 {
-    private NGameManager nGameManager;
+    private NetworkGameManager nGameManager;
 
     [Header("Target")]
     public GameObject crystal; // ← 操作対象

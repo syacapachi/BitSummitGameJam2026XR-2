@@ -1,26 +1,20 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-using System.Collections;
 
-public class Step2_Block : ITutorialStep
+public class Step2_Block : TutorialBase
 {
-    int playerCount;
-    Dictionary<ulong, int> counts = new();
-    Action onComplete;
-    TutorialSpawner spawner;
+    readonly int playerCount;
+    readonly Dictionary<ulong, int> counts = new();
 
-    List<EnemySO> step2Enemies;
+    private readonly List<EnemySO> step2Enemies;
 
-    public Step2_Block(int playerCount, TutorialSpawner spawner, Action onComplete, List<EnemySO> step2Enemies)
+    public Step2_Block(int playerCount, TutorialSpawner spawner, Action onComplete, List<EnemySO> step2Enemies):base(spawner, onComplete)
     {
         this.playerCount = playerCount;
-        this.spawner = spawner;
-        this.onComplete = onComplete;
         this.step2Enemies = step2Enemies;
     }
 
-    public void OnStart()
+    public override void OnStart()
     {
         counts.Clear();
         spawner.SpawnTargetsForEachPlayer(playerCount, step2Enemies);
@@ -30,12 +24,12 @@ public class Step2_Block : ITutorialStep
     }
 
 
-    public void OnEnd()
+    public override void OnEnd()
     {
     }
 
     // ★ここがメインロジック
-    public void OnAttackBlocked(ulong playerId)
+    public override void OnAttackBlocked(ulong playerId)
     {
         if (!counts.ContainsKey(playerId))
             counts[playerId] = 0;
@@ -47,9 +41,9 @@ public class Step2_Block : ITutorialStep
 
         bool allDone = counts.Count >= playerCount;
 
-        foreach (var c in counts.Values)
+        foreach (int count in counts.Values)
         {
-            if (c < 3)
+            if (count < 3)
             {
                 allDone = false;
                 break;
@@ -62,7 +56,4 @@ public class Step2_Block : ITutorialStep
             onComplete?.Invoke();
         }
     }
-
-    public void OnTargetDestroyed(ulong playerId) { }
-    public void OnEnemyKilled(EnemyKilled e) { }
 }
