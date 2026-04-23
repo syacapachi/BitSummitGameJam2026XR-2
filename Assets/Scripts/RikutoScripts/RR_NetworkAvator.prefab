@@ -369,12 +369,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 597879473415409436}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.161, z: -0.382}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 576923628704286524}
+  m_Father: {fileID: 1358144342988845292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &683379474052084466
 GameObject:
@@ -734,8 +734,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3910045548093153932}
+  m_Children: []
   m_Father: {fileID: 1358144342988845292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3674519587910054667
@@ -830,6 +829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d88728d0a21e5d4599c1181b986406a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   score: 0
   shotsFired: 0
   hits: 0
@@ -5623,6 +5623,7 @@ GameObject:
   - component: {fileID: 7394096815455282567}
   - component: {fileID: 3274049462513833735}
   - component: {fileID: 4493815394021470581}
+  - component: {fileID: 1247893358794053384}
   m_Layer: 0
   m_Name: RR_NetworkAvator
   m_TagString: Untagged
@@ -5652,6 +5653,7 @@ Transform:
   - {fileID: 728814604505585515}
   - {fileID: 4217247790775576332}
   - {fileID: 8928491125407436489}
+  - {fileID: 3910045548093153932}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3778585639964227546
@@ -5864,7 +5866,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   avatorCollider: {fileID: 6125224147537168939}
-  setting: {fileID: 11400000, guid: 3bff306e073a81c4f9ee896511ef4a57, type: 2}
+  setting: {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
   playerjob: 3
   syncroJob:
     UpdateTraits:
@@ -5874,6 +5876,19 @@ MonoBehaviour:
   jobChangeLocalEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
   IsDebugMode: 1
   switchJobEvent: {fileID: 11400000, guid: f9e23ca27358a3f419041719b45bce40, type: 2}
+--- !u!114 &1247893358794053384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6125224147537168939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bec78084fd6e15e42a6f745343fb40e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &6205789068384561375
 GameObject:
   m_ObjectHideFlags: 0
@@ -8990,7 +9005,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3588660993758789046}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84a340a3aa632774ab9bcffe05129959, type: 3}
   m_Name: 

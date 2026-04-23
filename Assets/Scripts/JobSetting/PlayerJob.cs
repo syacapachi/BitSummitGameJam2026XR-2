@@ -26,7 +26,7 @@ public enum PlayerJob
     /// チュートリアル用のジョブ
     /// 全員見えるし、全員当たる
     /// </summary>
-    Titorial = 1<<2
+    Tutorial = 1<<2
 }
 [Serializable]
 public struct PlayerLayerSettings

@@ -8,4 +8,5 @@ public interface IEnemy
 
     public PlayerJob EnemyJob { get; }
 
+    public bool IsAttackable { get; }
 }

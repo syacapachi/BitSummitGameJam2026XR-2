@@ -10790,7 +10790,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 798631059}
-    PlayerPrefab: {fileID: 6125224147537168939, guid: 031551ab1c474034d9d2805d6a183249, type: 3}
+    PlayerPrefab: {fileID: 6125224147537168939, guid: c265405b8a0e64a4789920a92be97be3, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 9e30410611228d94780d79e328c501ed, type: 2}
@@ -15117,11 +15117,11 @@ PrefabInstance:
     - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'step1Enemies.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: eef6fe2fc1d95ac46ae381ae53e3288a, type: 2}
+      objectReference: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
     - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'step1Enemies.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: eef6fe2fc1d95ac46ae381ae53e3288a, type: 2}
+      objectReference: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
     - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'step2Enemies.Array.data[0]'
       value: 
@@ -18139,6 +18139,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4065784351689631493, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: setting
+      value: 
+      objectReference: {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
     - target: {fileID: 4123251402591843720, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0

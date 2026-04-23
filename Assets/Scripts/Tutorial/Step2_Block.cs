@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using System.Collections;
 
 public class Step2_Block : ITutorialStep
 {
@@ -21,10 +23,12 @@ public class Step2_Block : ITutorialStep
     public void OnStart()
     {
         counts.Clear();
-
-        // 敵をスポーン
         spawner.SpawnTargetsForEachPlayer(playerCount, step2Enemies);
+        // 敵をスポーン
+        spawner.ApplyAttackableAfterSpawn(false);
+
     }
+
 
     public void OnEnd()
     {
