@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class WorldViewManager : NetworkBehaviour
 {
+    public bool isTutorialSkip;
+
     private NetworkVariable<int> pageIndex = new(
         0,
         NetworkVariableReadPermission.Everyone,
@@ -132,13 +134,24 @@ public class WorldViewManager : NetworkBehaviour
     void MoveScene()
     {
         if (!IsServer) return;
+        if (isTutorialSkip)
+        {
+            Debug.Log("[WorldView] Loading VRSystemScene");
 
-        Debug.Log("[WorldView] Loading TutorialScene");
+            NetworkManager.Singleton.SceneManager.LoadScene(
+                "VRSystemScene",
+                LoadSceneMode.Single
+            );
+        }
+        else { 
 
-        NetworkManager.Singleton.SceneManager.LoadScene(
-            "TutorialScene",
-            LoadSceneMode.Single
-        );
+            Debug.Log("[WorldView] Loading TutorialScene");
+
+            NetworkManager.Singleton.SceneManager.LoadScene(
+                "TutorialScene",
+                LoadSceneMode.Single
+            );
+        }
     }
 }
 
