@@ -1082,7 +1082,7 @@ Transform:
   m_GameObject: {fileID: 1061640992577289038}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.124, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3433,6 +3433,7 @@ Transform:
   - {fileID: 850358009550743085}
   - {fileID: 7982627067790315196}
   - {fileID: 1704256490501284678}
+  - {fileID: 3402205208861019303}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5132816719464522928
@@ -3715,7 +3716,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   animator: {fileID: 6209043156758885963}
   NetworkAnimator: {fileID: 1331310634001706039}
-  syncronizeSetting: {fileID: 4211238960574034083}
+  syncronizeSetting: {fileID: 0}
   jumpEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
   moveEvent: {fileID: 11400000, guid: 5fc02d6a0c59226468d706cf6757d428, type: 2}
 --- !u!114 &8336255068118903055
@@ -3751,12 +3752,15 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   avatorCollider: {fileID: 3323779575331495796}
   setting: {fileID: 11400000, guid: 3bff306e073a81c4f9ee896511ef4a57, type: 2}
+  playerjob: 3
   syncroJob:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 3
-  jobEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
+  jobChangeLocalEvent: {fileID: 0}
+  IsDebugMode: 0
+  switchJobEvent: {fileID: 0}
 --- !u!114 &3345400634887951672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5286,7 +5290,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 322544695592316311}
-  - component: {fileID: 4211238960574034083}
   m_Layer: 0
   m_Name: SyncronizeScript
   m_TagString: Untagged
@@ -5309,26 +5312,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2321773899404613643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4211238960574034083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5227787020251039390}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84a340a3aa632774ab9bcffe05129959, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  avatorRootTransfrom: {fileID: 2321773899404613643}
-  animator: {fileID: 4703606200481511740}
-  networkHead: {fileID: 241466807897702192}
-  networkLeftHand: {fileID: 850358009550743085}
-  networkRightHand: {fileID: 7982627067790315196}
-  networkLeftController: {fileID: 613000075555914599}
-  networkRightController: {fileID: 3160076884069995591}
 --- !u!1 &5275180994150414035
 GameObject:
   m_ObjectHideFlags: 0
@@ -7268,6 +7251,37 @@ Transform:
   - {fileID: 8789090862423560180}
   m_Father: {fileID: 953152581867241225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8142842662002514027
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3402205208861019303}
+  m_Layer: 0
+  m_Name: Firepoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3402205208861019303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8142842662002514027}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.445, z: -0.439}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2321773899404613643}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8236215515415333511
 GameObject:
   m_ObjectHideFlags: 0
@@ -7634,10 +7648,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   bulletPrefab: {fileID: 1439048196768540335, guid: e638558d27e71d64d87307f4fa964cfa, type: 3}
-  firePoint: {fileID: 6071375525069566627}
+  firePoint: {fileID: 3402205208861019303}
   weaponSettings: {fileID: 11400000, guid: d23d1fbc9082b324891d1a46dbce643b, type: 2}
-  allShootSoundSource: {fileID: 0}
-  allReloadSoundSource: {fileID: 0}
   syncedAmmo:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -7683,6 +7695,7 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 100
+  HpInfoRpcEvent: {fileID: 0}
 --- !u!114 &1351820848561135709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8563,11 +8576,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -7821105988696736867, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
   m_PrefabInstance: {fileID: 1165312188312110253}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &613000075555914599 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -7445060340082374710, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
-  m_PrefabInstance: {fileID: 1165312188312110253}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1704256490501284678 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
@@ -8618,14 +8626,12 @@ MonoBehaviour:
   networkRightHand: {fileID: 7982627067790315196}
   networkLeftController: {fileID: 2031281492200175627}
   networkRightController: {fileID: 6071375525069566627}
+  footOffset: 0.1
+  kneeWight: 0.2
+  isDebugMode: 0
 --- !u!137 &2568949326139777476 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3713983770300032361, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
-  m_PrefabInstance: {fileID: 1165312188312110253}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &3160076884069995591 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4320883249815261418, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
   m_PrefabInstance: {fileID: 1165312188312110253}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &3735748354405860507 stripped
