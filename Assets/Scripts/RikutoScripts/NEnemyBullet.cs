@@ -95,7 +95,9 @@ public class NEnemyBullet : BulletBaseController
         }
 
         // ダメージ適用
-        reciever.TakeDamage(this, Damage);
+        //reciever.TakeDamage(this, Damage);
+        var gameManager = ManagerLocator.Instance.AllGameManager;
+        ApplyProtectDamage(gameManager);
         Debug.Log($"[NEnemyBullet] Player {playerRoot.OwnerClientId} took {Damage} damage! (job: {playerJob})");
 
         if (NetworkObject.IsSpawned)

@@ -5271,7 +5271,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3946420541746103419, guid: 4fef004293398ea4cbc979565d177056, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4305615835418812736, guid: 4fef004293398ea4cbc979565d177056, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -8912,8 +8912,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 82681a00efd9d4145bb542ba9d495f59, type: 2}
+  m_sharedMaterial: {fileID: -8985202386264497135, guid: 82681a00efd9d4145bb542ba9d495f59, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -9380,7 +9380,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: -0.98143995}
+  m_AnchoredPosition: {x: 0, y: -0.046}
   m_SizeDelta: {x: 400, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &630487665
@@ -11560,6 +11560,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4065784351689631493, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: setting
+      value: 
+      objectReference: {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
     - target: {fileID: 4123251402591843720, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -21941,7 +21945,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: -0.9428798}
+  m_AnchoredPosition: {x: -0, y: -0.291}
   m_SizeDelta: {x: 1351, y: 761}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1643689037
@@ -29123,6 +29127,18 @@ PrefabInstance:
       propertyPath: 'roomLights.Array.data[0]'
       value: 
       objectReference: {fileID: 1701501018}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: setting.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'setting.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'setting.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
