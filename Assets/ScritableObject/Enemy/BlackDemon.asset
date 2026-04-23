@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
-  m_Name: BaseEnemy
+  m_Name: BlackDemon
   m_EditorClassIdentifier: 
-  ID: 12
-  Name: Enemy
-  icon: {fileID: 0}
+  ID: 5
+  Name: BlackDemon
+  icon: {fileID: 21300000, guid: 2f8349570a152884fb6cf7ebdc8c18b3, type: 3}
   HP: 100
-  scoreValue: 100
-  MoveSpeed: 100
-  prefab: {fileID: 0}
-  enemyWeapon: {fileID: 0}
+  scoreValue: 1000
+  MoveSpeed: 1000
+  prefab: {fileID: 1124331973230472586, guid: 5d8db1ddb9649ec49b5420e8407d8658, type: 3}
+  enemyWeapon: {fileID: 11400000, guid: 3d2198aaefcab0a42a52aed380bcde14, type: 2}
