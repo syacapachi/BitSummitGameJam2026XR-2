@@ -33,6 +33,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     
     public PlayerJob EnemyJob => enemyJob;
 
+    [SerializeField] private bool isAttackable = true;
+
+    public bool IsAttackable => isAttackable;
+
     public override void OnNetworkSpawn()
     {
         isInitialize = false;
@@ -152,5 +156,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
         if (hpText != null)
             hpText.text = $"{hp} / {enemySO.Hp}";
+    }
+
+    public void setAttackabe(bool value)
+    {
+        isAttackable = value;
     }
 }

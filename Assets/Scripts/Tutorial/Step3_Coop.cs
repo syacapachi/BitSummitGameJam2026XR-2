@@ -20,6 +20,7 @@ public class Step3_Coop : ITutorialStep
         {
             HandleAllDead();
         }
+        spawner.ApplyAttackableAfterSpawn(true);
     }
 
     public void OnEnd()

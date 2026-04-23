@@ -1,8 +1,9 @@
+using Syacapachi.util;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using System;
-using Syacapachi.util;
-using System.Collections.Generic;
 
 
 
@@ -16,6 +17,7 @@ public class TutorialSpawner : NetworkBehaviour
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] NetworkObjectPool networkPool;
     public bool IsAllDead => remain <= 0 && isSpawnFinished;
+    private readonly List<NEnemy> spawnedEnemies = new();
 
     public override void OnNetworkSpawn()
     {
@@ -36,8 +38,13 @@ public class TutorialSpawner : NetworkBehaviour
     void OnEnemyKilledEvent(EnemyKilled e)
     {
         OnEnemyKilled();
-    }
 
+        var enemy = e.KilledEnemy as NEnemy;
+        if (enemy != null)
+        {
+            spawnedEnemies.Remove(enemy);
+        }
+    }
     public void SpawnTargetsForEachPlayer(int playerCount, List<EnemySO> enemyList)
     {
         if (!IsServer) return;
@@ -59,6 +66,8 @@ public class TutorialSpawner : NetworkBehaviour
         isSpawnFinished = true;
     }
 
+
+
     void SpawnTarget(int spawnIndex, EnemySO enemyData)
     {
         if (spawnIndex < 0 || spawnIndex >= spawnPoints.Length)
@@ -76,6 +85,11 @@ public class TutorialSpawner : NetworkBehaviour
         );
 
         obj.Spawn(true);
+        var enemy = obj.GetComponent<NEnemy>();
+        if (enemy != null)
+        {
+            spawnedEnemies.Add(enemy);
+        }
     }
 
     public void OnEnemyKilled()
@@ -87,6 +101,38 @@ public class TutorialSpawner : NetworkBehaviour
         if (remain <= 0 && isSpawnFinished)
         {
             OnAllEnemyDead?.Invoke();
+        }
+    }
+
+    public void KillAll()
+    {
+        foreach (var enemy in spawnedEnemies)
+        {
+            if (enemy != null && enemy.NetworkObject.IsSpawned)
+            {
+                enemy.NetworkObject.Despawn(true);
+            }
+        }
+
+        spawnedEnemies.Clear();
+        remain = 0;
+        isSpawnFinished = false;
+    }
+
+    public void ApplyAttackableAfterSpawn(bool value)
+    {
+        StartCoroutine(CoApplyAttackable(value));
+    }
+
+    private IEnumerator CoApplyAttackable(bool value)
+    {
+        yield return null;
+
+        foreach (var enemy in spawnedEnemies)
+        {
+            if (enemy == null) continue;
+
+            enemy.setAttackabe(value);
         }
     }
 }

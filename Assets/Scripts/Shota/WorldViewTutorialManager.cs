@@ -43,17 +43,29 @@ public class WorldTutorialManager : NetworkBehaviour
     };
 
     private string[] japaneseTexts = {
+        /*
         "右コントローラーのトリガーを引くと\n弾を発射できます。\n的に当てて練習しましょう！",
         "クリスタルに敵が触れると\nクリスタルがダメージを受けます。\n敵を倒してクリスタルを守りましょう！",
         "見えている敵は倒せません。\n霊力を使って敵を見えなくしてから\n攻撃しましょう！",
         "仲間と協力して\nクリスタルを守りましょう！\nゲームスタートです！"
+        */
+        "右コントローラーのトリガーを引くと\n弾を発射できます。\n全ての的を破壊しましょう！",
+        "敵が出現しました。\n見えている敵は倒せません。\n目の前の敵を三回撃って確認しましょう！",
+        "見えない敵は倒すことができます。\nパートナーに敵の居場所を伝えて\n攻撃しましょう！",
+        "仲間と協力して\n生き残りましょう！\nゲームスタートです！"
     };
 
     private string[] englishTexts = {
+        /*
         "Pull the right controller trigger\nto shoot bullets.\nPractice hitting the targets!",
         "If enemies touch the crystal,\nit will take damage.\nDefeat enemies to protect the crystal!",
         "Visible enemies cannot be defeated.\nUse spiritual power to make them invisible\nbefore attacking!",
         "Cooperate with your partner\nto protect the crystal!\nLet the game begin!"
+        */
+        "Pull the right controller trigger\nto shoot bullets.\nDestroy all the targets!",
+        "Enemies have appeared.\nVisible enemies cannot be defeated.\nShoot the enemy in front of you three times to check!",
+        "Invisible enemies can be defeated.\nCommunicate the enemy's location to your partner\nand attack!",
+        "Cooperate with your partner\nand survive!\nThe game starts!"
     };
 
     private int totalPages = 4;

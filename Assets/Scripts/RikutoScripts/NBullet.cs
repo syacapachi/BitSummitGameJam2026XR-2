@@ -46,13 +46,21 @@ public class NBullet : BulletBaseController
                 NetworkObject.Despawn(true);
                 return;
             }
-            if(ResultCollector == null || ResultCollector is not PlayerStats stats)
+
+            Debug.Log(
+                $"ShooterJob={ShooterJob}, " +
+                $"EnemyJob={enemy.EnemyJob}, " +
+                $"AttackableJob={layerMaskSetting.AttackableJob}, " +
+                $"IsAttackable={layerMaskSetting.IsAttackableJob(enemy.EnemyJob)}"
+            );
+
+            if (ResultCollector == null || ResultCollector is not PlayerStats stats)
             {
                 Debug.Log($"ResultCollector is not {nameof(PlayerStats)}");
                 return;
             }
 
-            if (!layerMaskSetting.IsAttackableJob(enemy.EnemyJob))
+            if (layerMaskSetting.IsAttackableJob(enemy.EnemyJob) && enemy.IsAttackable)
             {
                 // [既存] 見えない敵 → ダメージが通る
                 Debug.Log("Damage");
@@ -61,7 +69,7 @@ public class NBullet : BulletBaseController
                 reciever.TakeDamage(this, Damage);
                 SpawnHitFxClientRpc(transform.position);
             }
-            else
+            else if(!layerMaskSetting.IsAttackableJob(enemy.EnemyJob))
             {
                 // [既存] 見える敵 → シールド
                 Debug.Log("Shield");
@@ -72,6 +80,11 @@ public class NBullet : BulletBaseController
                     Enemy = enemy
                 });
                 SpawnShieldFxClientRpc(transform.position);
+            }
+            else
+            {
+                // [追加] 攻撃が無効な敵に当たった場合のデバッグログ
+                Debug.Log($"NotDamage");
             }
         }
         else

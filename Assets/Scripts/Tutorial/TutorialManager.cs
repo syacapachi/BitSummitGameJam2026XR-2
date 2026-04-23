@@ -24,8 +24,6 @@ public class TutorialManager : NetworkBehaviour
 
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
 
-    [SerializeField] JobSettingGenerator normalSetting;
-    [SerializeField] JobSettingGenerator tutorialSetting;
 
     public override void OnNetworkSpawn()
     {
@@ -55,12 +53,10 @@ public class TutorialManager : NetworkBehaviour
         switch (step)
         {
             case TutorialStep.Step1:
-                JobSettingHolder.Current = tutorialSetting;
                 currentStepLogic = new Step1_Target(playerCount, spawner, NextStep, step1Enemies);
                 break;
 
             case TutorialStep.Step2:
-                JobSettingHolder.Current = normalSetting;
                 currentStepLogic = new Step2_Block(playerCount, spawner, NextStep, step2Enemies);
                 break;
 
