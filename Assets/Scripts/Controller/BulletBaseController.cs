@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using Unity.Netcode;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
@@ -9,14 +8,16 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     [SerializeField] Rigidbody rb;
     WeaponSettingsSO gunSO;
     private PlayerJob shooterJob = PlayerJob.Both;
-    private ulong shooterId;
+    private IResultCollector shooterId;
     protected Coroutine despawnTimer;
-    public ulong ShooterId => shooterId;
+    public IResultCollector Shooter => shooterId;
     public GameObject GameObject => gameObject;
 
     public PlayerJob ShooterJob => shooterJob;
 
     public float Damage => gunSO.Damage;
+
+    public IResultCollector ResultCollector => throw new System.NotImplementedException();
 
     void Start()
     {
@@ -32,9 +33,9 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
             despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
         }
     }
-    public void BulletInit(ulong id,PlayerJob shooterJob,WeaponSettingsSO so)
+    public void BulletInit(IResultCollector shooter,PlayerJob shooterJob,WeaponSettingsSO so)
     {
-        shooterId = id;
+        shooterId = shooter;
         this.shooterJob = shooterJob;
         gunSO = so;
     }
@@ -63,8 +64,6 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
                 OnHitServer(receiver, other.gameObject);
             }
         }
-        
-        
     }
     /// <summary>
     /// ヒット時の処理を行う。ダメージを与える対象や、与えるダメージ量などはここで決定する。

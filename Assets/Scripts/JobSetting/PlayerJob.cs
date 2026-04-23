@@ -2,12 +2,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "JobSettingSO", menuName = "ScriptableObjects/JobSettingSO", order = 0)]
-public class JobSettingSO : ScriptableObject
-{
-    [SerializeField] List<PlayerLayerSettings> playerLayerSettingsList = new List<PlayerLayerSettings>();
-    public IReadOnlyList<PlayerLayerSettings> PlayerLayerSettingsList => playerLayerSettingsList;
-}
 //[GenerateEvent(typeof(GameEventSOBase<>),isArray:true)]
 [Flags]
 public enum PlayerJob
@@ -28,6 +22,11 @@ public enum PlayerJob
     /// 両方見える。両方当たらない
     /// </summary>
     Both = Demon | Ghost,
+    /// <summary>
+    /// チュートリアル用のジョブ
+    /// 全員見えるし、全員当たる
+    /// </summary>
+    Titorial = 1<<2
 }
 [Serializable]
 public struct PlayerLayerSettings
@@ -36,11 +35,10 @@ public struct PlayerLayerSettings
     /// 設定対象の職業
     /// </summary>
     [SingleFlagOnly]
-    public PlayerJob Job;
+    public PlayerJob TargetJob;
     /// <summary>
     /// 攻撃が当たる職業。複数選択可能。
     /// </summary>
-    [HideInInspector]
     public PlayerJob AttackableJob;
     /// <summary>
     /// Colliderのレイヤー 1つのレイヤーのみを指定してください。
@@ -48,34 +46,28 @@ public struct PlayerLayerSettings
     /// Layerを指定する際は、Layerを参照してください。
     /// </summary>
     [SingleFlagOnly]
-    public LayerMask ColliderLayerMask;
+    public LayerMask TargetColliderLayer;
     /// <summary>
     /// Cameraのカリングマスク
     /// </summary>
     public LayerMask CullingMask;
-    /// <summary>
-    /// 攻撃が当たるレイヤー。複数指定可能。
-    /// </summary>
-    [HideInInspector]
-    public LayerMask AttackableLayer;
     /// <summary>
     /// コライダーのレイヤー
     /// </summary>
     [HideInInspector]
     public int Layer ;
 
-    public PlayerLayerSettings(int layer, LayerMask playerLayer,LayerMask attackableLayer, PlayerJob job,PlayerJob attackableJob)
+    public PlayerLayerSettings(int layer, LayerMask playerLayer, PlayerJob job,PlayerJob attackableJob)
     {
-        ColliderLayerMask = layer;
+        TargetColliderLayer = layer;
         CullingMask = playerLayer;
-        AttackableLayer = attackableLayer;
-        Job = job;
+        TargetJob = job;
         AttackableJob = attackableJob;
         Layer = 0;
         //最初に見つかったレイヤーを使用する
         for (int i = 0; i < 32; i++)
         {
-            if((ColliderLayerMask.value & (1 << i)) != 0)
+            if((TargetColliderLayer.value & (1 << i)) != 0)
             {
                 Layer = i;
                 break;
@@ -88,7 +80,7 @@ public struct PlayerLayerSettings
         //最初に見つかったレイヤーを使用する
         for (int i = 0; i < 32; i++)
         {
-            if ((ColliderLayerMask.value & (1 << i)) != 0)
+            if ((TargetColliderLayer.value & (1 << i)) != 0)
             {
                 Layer = i;
                 break;
@@ -101,11 +93,11 @@ public struct PlayerLayerSettings
     }
     public readonly bool IsAttackableLayer(int targetLayer)
     {
-        return (AttackableLayer.value & (1 << targetLayer)) != 0;
+        return (CullingMask.value & (1 << targetLayer)) == 0;
     }
     public readonly bool IsAttackableLayer(LayerMask targetLayerMask)
     {
-        return (AttackableLayer.value & targetLayerMask.value) != 0;
+        return (CullingMask.value & targetLayerMask.value) == 0;
     }
     public readonly bool IsVisibleLayer(int targetLayer)
     {
@@ -118,6 +110,6 @@ public struct PlayerLayerSettings
     }
     public override readonly string ToString()
     {
-        return $"Job: {Job}, AttackableJob: {AttackableJob}, ColliderLayerMask: {ColliderLayerMask.value}, CullingMask: {CullingMask.value}, AttackAbleLayer: {AttackableLayer.value}, Layer: {Layer}";
+        return $"Job: {TargetJob}, AttackableJob: {AttackableJob}, ColliderLayerMask: {TargetColliderLayer.value}, CullingMask: {CullingMask.value}, Layer: {Layer}";
     }
 }

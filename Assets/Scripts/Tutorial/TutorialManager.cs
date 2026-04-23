@@ -24,8 +24,8 @@ public class TutorialManager : NetworkBehaviour
 
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
 
-    [SerializeField] JobSetting normalSetting;
-    [SerializeField] JobSetting tutorialSetting;
+    [SerializeField] JobSettingGenerator normalSetting;
+    [SerializeField] JobSettingGenerator tutorialSetting;
 
     public override void OnNetworkSpawn()
     {
@@ -94,16 +94,16 @@ public class TutorialManager : NetworkBehaviour
     }
 
     // --- イベント転送 ---
-    public void OnTargetDestroyed(ulong id)
+    private void OnTargetDestroyed(ulong id)
     {
         if (!IsServer) return;
         currentStepLogic?.OnTargetDestroyed(id);
     }
 
-    public void OnAttackBlocked(AttackBlocked blocked)
+    private void OnAttackBlocked(AttackBlocked blocked)
     {
         if (!IsServer) return;
-        currentStepLogic?.OnAttackBlocked(blocked.PlayerId);
+        currentStepLogic?.OnAttackBlocked(blocked.Collector.ClientId);
     }
 
     public void OnEnemyKilled(EnemyKilled e)
@@ -112,7 +112,7 @@ public class TutorialManager : NetworkBehaviour
         currentStepLogic?.OnEnemyKilled(e);
     }
 
-    void StartMainSimulation()
+    private void StartMainSimulation()
     {
         Debug.Log("Main Simulation Start");
     }

@@ -708,7 +708,7 @@ PrefabInstance:
       addedObject: {fileID: 7535746898428828962}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-      insertIndex: 3
+      insertIndex: 2
       addedObject: {fileID: 845709423057202467}
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
@@ -842,11 +842,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   enemySO: {fileID: 11400000, guid: f4f5d5bc426dc4549ba7f2a186c570f1, type: 2}
+  enemyJobSetting: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   hpCanvas: {fileID: 1696206507279681442}
   hpImage: {fileID: 7028729913468153075}
   hpText: {fileID: 108117791681994854}
-  enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   enemyJob: 0
+  enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
 --- !u!120 &7556053039345494618
 LineRenderer:
   serializedVersion: 2
@@ -988,6 +989,7 @@ MonoBehaviour:
   invalidHitSfxAll: {fileID: 8300000, guid: c974731f514a5964780a24ffa7825328, type: 3}
   invalidHitLifeTimeAll: 2
   invalidHitVolumeAll: 1
+  fxRuleServer: {fileID: 0}
 --- !u!114 &9089704304245272198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1235,14 +1237,14 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6912148272411766303, guid: 3e5c70c4ce8519842b4a53bb4b374094, type: 3}
   firePoint: {fileID: 7535746898428828962}
   weaponSettings: {fileID: 11400000, guid: 66323ddfe1ed57d4c8504254422d2057, type: 2}
-  allShootSoundSource: {fileID: -5080072534731083706}
-  allReloadSoundSource: {fileID: 0}
   syncedAmmo:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: f4f5d5bc426dc4549ba7f2a186c570f1, type: 2}
+  shotClip: {fileID: 0}
+  gameEffect: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
   enemyJob: 1
 --- !u!114 &-3220871110719918202
 MonoBehaviour:
@@ -1261,7 +1263,7 @@ MonoBehaviour:
   spawnSfxAll: {fileID: 8300000, guid: 755277c4df6a1704b91570f49b062caa, type: 3}
   spawnFxLifeTimeAll: 2
   spawnVolumeAll: 1
-  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+  gameEffectEvent: {fileID: 0}
 --- !u!54 &-5514097300981666064
 Rigidbody:
   m_ObjectHideFlags: 0

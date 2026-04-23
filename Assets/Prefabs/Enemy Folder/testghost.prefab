@@ -410,11 +410,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
+  enemyJobSetting: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   hpCanvas: {fileID: 8115059269520921985}
   hpImage: {fileID: 6392055257079718664}
   hpText: {fileID: 7872890923030782825}
-  enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   enemyJob: 0
+  enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
 --- !u!120 &984271367505881240
 LineRenderer:
   serializedVersion: 2
@@ -556,6 +557,7 @@ MonoBehaviour:
   invalidHitSfxAll: {fileID: 8300000, guid: c974731f514a5964780a24ffa7825328, type: 3}
   invalidHitLifeTimeAll: 2
   invalidHitVolumeAll: 1
+  fxRuleServer: {fileID: 0}
 --- !u!114 &-1831760746074150659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,14 +708,14 @@ MonoBehaviour:
   bulletPrefab: {fileID: 4022916156752048900, guid: bab683d334cc24943aa54f5fcfbc3e4b, type: 3}
   firePoint: {fileID: 2361193749056892971}
   weaponSettings: {fileID: 11400000, guid: c26a60b458e18e148a462121f31fcd89, type: 2}
-  allShootSoundSource: {fileID: -4752889112109069225}
-  allReloadSoundSource: {fileID: 0}
   syncedAmmo:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   enemySO: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
+  shotClip: {fileID: 0}
+  gameEffect: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
   enemyJob: 2
 --- !u!114 &-4397552155054666195
 MonoBehaviour:
@@ -732,7 +734,7 @@ MonoBehaviour:
   spawnSfxAll: {fileID: 8300000, guid: 755277c4df6a1704b91570f49b062caa, type: 3}
   spawnFxLifeTimeAll: 2
   spawnVolumeAll: 1
-  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+  gameEffectEvent: {fileID: 0}
 --- !u!54 &-1975952006946695315
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1,11 +1,11 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using static UnityEngine.Rendering.DebugUI;
 
-public class PlayerStats : MonoBehaviour
+public class PlayerStats : NetworkBehaviour,IResultCollector
 {
     public int score = 0;
     public int shotsFired = 0;
@@ -14,37 +14,54 @@ public class PlayerStats : MonoBehaviour
     public float damageDealt = 0;
 
     [SerializeField]
-    private int enemyTypeCount = 10; // “G‚Ìí—Ş”iŒÅ’èj
+    private int enemyTypeCount = 10; // æ•µã®ç¨®é¡æ•°ï¼ˆå›ºå®šï¼‰
     [SerializeField]
     private int[] killCounts;
 
-    public static List<PlayerStats> AllPlayers = new List<PlayerStats>();
+    public ulong ClientId => OwnerClientId;
+
     void Awake()
     {
         killCounts = new int[enemyTypeCount];
     }
 
-    // ”­Ë
+    // ç™ºå°„
     public void AddShot()
     {
+        if (!IsServer)
+        {
+            Debug.Log("Can call only Server");
+        }
         shotsFired++;
     }
 
-    // –½’†
+    // å‘½ä¸­
     public void AddHit()
     {
+        if (!IsServer)
+        {
+            Debug.Log("Can call only Server");
+        }
         hits++;
     }
 
-    // —^ƒ_ƒ[ƒW
+    // ä¸ãƒ€ãƒ¡ãƒ¼ã‚¸
     public void AddDamage(float damage)
     {
+        if (!IsServer)
+        {
+            Debug.Log("Can call only Server");
+        }
         damageDealt += damage;
     }
 
-    // “GŒ‚”jienemyId‚É•ÏXj
+    // æ•µæ’ƒç ´ï¼ˆenemyIdã«å¤‰æ›´ï¼‰
     public void AddKill(int enemyId, int scoreValue)
     {
+        if (!IsServer)
+        {
+            Debug.Log("Can call only Server");
+        }
         score += scoreValue;
 
         if (enemyId < 0 || enemyId >= killCounts.Length)
@@ -58,24 +75,40 @@ public class PlayerStats : MonoBehaviour
 
     public void AddShield()
     {
+        if (!IsServer)
+        {
+            Debug.Log("Can call only Server");
+        }
         shield++;
     }
 
-    // –½’†—¦
+    // å‘½ä¸­ç‡
     public float GetAccuracy()
     {
+        if (!IsServer)
+        {
+            Debug.Log("Can call only Server");
+        }
         if (shotsFired == 0) return 0;
         return (float)hits / shotsFired;
     }
 
-    // ŠO•”‚©‚çæ“¾—pid—vj
+    // å¤–éƒ¨ã‹ã‚‰å–å¾—ç”¨ï¼ˆé‡è¦ï¼‰
     public int[] GetKillCounts()
     {
+        if (!IsServer)
+        {
+            Debug.Log("Can call only Server");
+        }
         return killCounts;
     }
 
     public PlayerResultData CreateResultData()
     {
+        if (!IsServer)
+        {
+            Debug.Log("Can call only Server");
+        }
         return new PlayerResultData
         {
             clientId = GetComponentInParent<NetworkObject>().OwnerClientId,
@@ -84,7 +117,7 @@ public class PlayerStats : MonoBehaviour
             hits = hits,
             shield = shield,
             damageDealt = damageDealt,
-            killCounts = (int[])killCounts.Clone() // d—vFƒRƒs[
+            killCounts = (int[])killCounts.Clone() // é‡è¦ï¼šã‚³ãƒ”ãƒ¼
         };
     }
 }

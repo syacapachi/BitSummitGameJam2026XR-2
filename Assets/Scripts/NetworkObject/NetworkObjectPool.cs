@@ -21,9 +21,9 @@ namespace Syacapachi.util
         [SerializeField]
         List<PoolConfigObject> PooledPrefabsList;
 
-        HashSet<GameObject> m_Prefabs = new HashSet<GameObject>();
+        readonly HashSet<GameObject> m_Prefabs = new HashSet<GameObject>();
 
-        Dictionary<GameObject, ObjectPool<NetworkObject>> m_PooledObjects = new ();
+        readonly Dictionary<GameObject, ObjectPool<NetworkObject>> m_PooledObjects = new ();
 
         public void Awake()
         {
@@ -57,6 +57,7 @@ namespace Syacapachi.util
             }
             m_PooledObjects.Clear();
             m_Prefabs.Clear();
+            Debug.Log($"{nameof(NetworkObjectPool)} is despawn!");
         }
 
         public void OnValidate()

@@ -1,33 +1,41 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-[CreateAssetMenu(fileName = "JobSetting", menuName = "ScriptableObjects/JobSetting")]
-public class JobSetting : ScriptableObject
+[CreateAssetMenu(fileName = "JobSetting", menuName = "ScriptableObjects/JobSettingGenerator")]
+public class JobSettingGenerator : ScriptableObject
 {
     /// <summary>
     /// [SerializeField],publicはシーンをまたいでも値が残る。
     /// </summary>
-    [SerializeField] JobSettingSO jobSettingSO;
+    [SerializeField] List<PlayerLayerSettings> playerLayerSettingsList = new();
     /// <summary>
     /// シリアライズできないクラスは、参照が消える(そのシーンにこのScriptableObjectを使うScriptがない) -> 値が初期化される。
     /// </summary>
     private readonly Dictionary<PlayerJob, PlayerLayerSettings> JobToLayerMaskDic = new();
-    public IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> JobLayerMaskDic => JobToLayerMaskDic;
-
-    /// <summary>
-    /// Scriptable のAwakeはこれ、シーン開始時に辞書を初期化
-    /// </summary>
-    void OnEnable()
+    public IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> JobLayerMaskDic
     {
-        foreach (var settings in jobSettingSO.PlayerLayerSettingsList)
+        get
         {
-            if (JobLayerMaskDic.ContainsKey(settings.Job))
+            //初期化を動的に
+            InitDic();
+            return JobToLayerMaskDic;
+        }
+    }
+    private bool isInitialized = false;
+    private void InitDic()
+    {
+        if (isInitialized) return;
+        isInitialized = true;
+
+        foreach (var settings in playerLayerSettingsList)
+        {
+            if (JobLayerMaskDic.ContainsKey(settings.TargetJob))
             {
-                Debug.LogError($"Job {settings.Job} is duplicated in JobSettingSO.");
+                Debug.LogError($"Job {settings.TargetJob} is duplicated in JobSettingSO.");
                 continue;
             }
             settings.LayerUpdate();
-            JobToLayerMaskDic[settings.Job] = settings;
+            JobToLayerMaskDic[settings.TargetJob] = settings;
         }
         var JobArray = System.Enum.GetValues(typeof(PlayerJob));
         // Enumに定義されているジョブがすべてJobSettingSOに定義されているか確認
@@ -48,19 +56,27 @@ public class JobSetting : ScriptableObject
                     {
                         cullingMask &= JobLayerMaskDic[(PlayerJob)mask].CullingMask;
                         attackableJob |= JobLayerMaskDic[(PlayerJob)mask].AttackableJob;
-                        attackableLayer |= JobLayerMaskDic[(PlayerJob)mask].AttackableLayer;
                     }
                 }
                 JobToLayerMaskDic[playerJob] = new PlayerLayerSettings
                 {
-                    Job = playerJob,
-                    ColliderLayerMask = colliderLayer,
+                    TargetJob = playerJob,
+                    TargetColliderLayer = colliderLayer,
                     CullingMask = cullingMask,
                     AttackableJob = attackableJob,
-                    AttackableLayer = attackableLayer,
                 };
-                Debug.LogWarning($"[{nameof(JobSetting)}]Job {playerJob} is not defined in JobSettingSO. ColliderLayer set to {colliderLayer}, CullingMask set to {cullingMask} (intersection of all defined jobs).");
+                Debug.LogWarning($"[{nameof(JobSettingGenerator)}]Job {playerJob} is not defined in JobSettingSO. ColliderLayer set to {colliderLayer}, CullingMask set to {cullingMask} (intersection of all defined jobs).");
             }
         }
     }
+    private void OnEnable()
+    {
+        InitDic();
+    }
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        isInitialized = false;
+    }
+#endif
 }

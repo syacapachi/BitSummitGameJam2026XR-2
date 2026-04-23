@@ -1,8 +1,8 @@
-public static class JobSettingHolder
+﻿public static class JobSettingHolder
 {
-    public static JobSetting Current;
+    public static JobSettingGenerator Current;
 
-    public static void Set(JobSetting setting)
+    public static void Set(JobSettingGenerator setting)
     {
         Current = setting;
 

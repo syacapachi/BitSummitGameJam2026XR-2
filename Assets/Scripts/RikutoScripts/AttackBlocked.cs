@@ -1,6 +1,6 @@
 ﻿public class AttackBlocked
 {
-    public ulong PlayerId;
+    public IResultCollector Collector;
     public IEnemy Enemy;
 }
 public class AttackBlockedExpand : AttackBlocked

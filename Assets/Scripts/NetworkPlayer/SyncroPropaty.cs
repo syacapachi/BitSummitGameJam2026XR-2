@@ -5,7 +5,7 @@ using UnityEngine;
 public class SyncroPropaty : NetworkBehaviour
 {
     [SerializeField] GameObject avatorCollider;
-    [SerializeField] JobSetting setting;
+    [SerializeField] JobSettingGenerator setting;
     [SerializeField] PlayerJob playerjob = PlayerJob.Both;
     [SerializeField]
     NetworkVariable<PlayerJob> syncroJob = new(

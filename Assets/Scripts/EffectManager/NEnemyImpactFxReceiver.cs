@@ -17,7 +17,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
     [SerializeField] private float invalidHitLifeTimeAll = 2f;
     [SerializeField, Range(0f, 1f)] private float invalidHitVolumeAll = 1f;
 
-    private EnemyFxRule fxRuleServer;
+    [SerializeField] EnemyFxRule fxRuleServer;
 
     private void Awake()
     {
@@ -38,7 +38,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
 
     private void TryHandleBulletHitServer(Collider other)
     {
-        NBullet bullet = other.GetComponent<NBullet>() ?? other.GetComponentInParent<NBullet>();
+        BulletBaseController bullet = other.GetComponent<BulletBaseController>() ?? other.GetComponentInParent<BulletBaseController>();
         if (bullet == null) return;
 
         NBulletFxState bulletFxState = bullet.GetComponent<NBulletFxState>();
@@ -51,7 +51,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             fxPosition = other.transform.position;
         }
 
-        PlayerJob shooterJob = ResolveShooterJobServer(bullet.ShooterId);
+        PlayerJob shooterJob = ResolveShooterJobServer(bullet.Shooter);
         bool isEffective = fxRuleServer == null || fxRuleServer.IsEffectiveFor(shooterJob);
 
         if (isEffective)
@@ -60,17 +60,15 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         }
         else
         {
-            ulong[] targetIds = CollectVisibleClientIdsServer();
-            if (targetIds.Length == 0) return;
-
             PlayInvalidHitClientRpc(fxPosition);
         }
     }
 
-    private PlayerJob ResolveShooterJobServer(ulong shooterId)
+    private PlayerJob ResolveShooterJobServer(IResultCollector shooter)
     {
+        if (shooter == null) return PlayerJob.Nothing;
         if (NetworkManager.Singleton == null) return PlayerJob.Nothing;
-        if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(shooterId, out var client))
+        if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(shooter.ClientId, out var client))
             return PlayerJob.Nothing;
 
         if (client.PlayerObject == null) return PlayerJob.Nothing;
@@ -83,7 +81,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
 
     private ulong[] CollectVisibleClientIdsServer()
     {
-        List<ulong> ids = new List<ulong>();
+        List<ulong> ids = new();
 
         if (NetworkManager.Singleton == null) return ids.ToArray();
 
