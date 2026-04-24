@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 8445028273436770304}
   - component: {fileID: 8039651493273215891}
   - component: {fileID: 941018266727165633}
-  - component: {fileID: -45756330395227655}
   m_Layer: 10
   m_Name: GhostTarget
   m_TagString: Untagged
@@ -149,6 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  rootTransfrom: {fileID: 0}
   enemySO: {fileID: 11400000, guid: 54d1af023da34ff4eb5ae5dedf02b1fd, type: 2}
   enemyJobSetting: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   hpCanvas: {fileID: 0}
@@ -157,16 +157,3 @@ MonoBehaviour:
   enemyJob: 4
   enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   isAttackable: 1
---- !u!114 &-45756330395227655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6771765081132311059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8131e068bca0d75419a6a5986a743dc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visibleToJobsAll: 3

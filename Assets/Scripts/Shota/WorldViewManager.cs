@@ -176,6 +176,8 @@ public class WorldViewManager : NetworkBehaviour
 
         if (backButton != null)
             backButton.gameObject.SetActive(index > 0);
+
+        
     }
 
     // =========================

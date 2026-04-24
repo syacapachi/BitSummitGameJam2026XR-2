@@ -4,33 +4,40 @@ using Unity.Netcode;
 [RequireComponent(typeof(AudioSource))]
 public class NEnemyLoopAudio : NetworkBehaviour
 {
+    [SerializeField] AudioSource m_AudioSource;
     [SerializeField] private AudioClip loopClipAll;
     [SerializeField, Range(0f, 1f)] private float loopVolumeAll = 0.35f;
 
-    private AudioSource audioSourceAll;
+
 
     private void Awake()
     {
-        audioSourceAll = GetComponent<AudioSource>();
-        audioSourceAll.playOnAwake = false;
-        audioSourceAll.loop = true;
-        audioSourceAll.spatialBlend = 1f;
+        m_AudioSource ??= GetComponent<AudioSource>();
+        m_AudioSource.playOnAwake = false;
+        m_AudioSource.loop = true;
+        m_AudioSource.spatialBlend = 1f;
     }
 
     public override void OnNetworkSpawn()
     {
         if (loopClipAll == null) return;
 
-        audioSourceAll.clip = loopClipAll;
-        audioSourceAll.volume = loopVolumeAll;
-        audioSourceAll.Play();
+        m_AudioSource.clip = loopClipAll;
+        m_AudioSource.volume = loopVolumeAll;
+        m_AudioSource.Play();
     }
 
     public override void OnNetworkDespawn()
     {
-        if (audioSourceAll.isPlaying)
+        if (m_AudioSource.isPlaying)
         {
-            audioSourceAll.Stop();
+            m_AudioSource.Stop();
         }
     }
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        m_AudioSource ??= GetComponent<AudioSource>();
+    }
+#endif
 }
