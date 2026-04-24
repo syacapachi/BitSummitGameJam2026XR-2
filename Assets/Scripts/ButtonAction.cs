@@ -14,7 +14,6 @@ public class Scripts : MonoBehaviour
     [SerializeField] Button ClientButton;
     [SerializeField] Button ExitButton;
     [SerializeField] Button DiscoveryButton;
-    [SerializeField] string RefreshText;
     TextMeshProUGUI discovertext;
     [SerializeField] Button StopDiscoveryButton;
     [SerializeField] GameObject connectionButtonPrefab;
@@ -24,18 +23,42 @@ public class Scripts : MonoBehaviour
     [SerializeField] MyNetworkDiscovery m_Discovery;
     [SerializeField] UnityTransport transport;
     private bool isNetworkStarted = false;
-    [SerializeField]NetworkManager m_NetworkManager;
+    [SerializeField] NetworkManager m_NetworkManager;
 
-    readonly Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
+    [Header("日英テキスト設定")]
+    [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private TextMeshProUGUI descriptionText;
+    [SerializeField] private string japaneseTitleText;
+    [SerializeField] private string englishTitleText;
+    [SerializeField] private string japaneseDescriptionText;
+    [SerializeField] private string englishDescriptionText;
+
+    [Header("ボタンテキスト設定")]
+    [SerializeField] private TextMeshProUGUI hostButtonText;
+    [SerializeField] private TextMeshProUGUI stopDiscoverButtonText;
+    [SerializeField] private TextMeshProUGUI exitButtonText;
+
+    [SerializeField] private string japaneseHostText;
+    [SerializeField] private string englishHostText;
+    [SerializeField] private string japaneseDiscoverText;
+    [SerializeField] private string englishDiscoverText;
+    [SerializeField] private string japaneseRefreshText;
+    [SerializeField] private string englishRefreshText;
+    [SerializeField] private string japaneseStopDiscoverText;
+    [SerializeField] private string englishStopDiscoverText;
+    [SerializeField] private string japaneseExitText;
+    [SerializeField] private string englishExitText;
+
+    readonly Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new();
     public UnityEvent OnClientStart = new UnityEvent();
 
-    public Vector2 DrawOffset = new Vector2(10, 210);
     private string m_discoverText = string.Empty;
+    private string m_refreshText = string.Empty;
 
     private void Reset()
     {
         m_NetworkManager ??= NetworkManager.Singleton;
-        m_Discovery ??= m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
+        m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);
     }
 
@@ -44,21 +67,18 @@ public class Scripts : MonoBehaviour
         m_NetworkManager ??= NetworkManager.Singleton;
         m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);
-        
+
+        // ServerButton・ClientButtonは未使用のため非表示
         if (ServerButton != null)
-        {
-            ServerButton.onClick.AddListener(OnStartServer);
-            ServerButton.gameObject.SetActive(true);
-        }
+            ServerButton.gameObject.SetActive(false);
+
+        if (ClientButton != null)
+            ClientButton.gameObject.SetActive(false);
+
         if (HostButton != null)
         {
             HostButton.onClick.AddListener(OnStartHost);
             HostButton.gameObject.SetActive(true);
-        }
-        if (ClientButton != null)
-        {
-            ClientButton.onClick.AddListener(OnStartClient);
-            ClientButton.gameObject.SetActive(true);
         }
         if (ExitButton != null)
         {
@@ -68,8 +88,8 @@ public class Scripts : MonoBehaviour
         if (DiscoveryButton != null)
         {
             DiscoveryButton.onClick.AddListener(StartDiscover);
+            // discovertext を UpdateLanguageText より先に取得する
             discovertext = DiscoveryButton.GetComponentInChildren<TextMeshProUGUI>();
-            m_discoverText = discovertext.text;
             DiscoveryButton.gameObject.SetActive(true);
         }
         if (StopDiscoveryButton != null)
@@ -77,90 +97,132 @@ public class Scripts : MonoBehaviour
             StopDiscoveryButton.onClick.AddListener(StopDiscovery);
             StopDiscoveryButton.gameObject.SetActive(false);
         }
+
+        // discovertext 取得後に UpdateLanguageText を呼ぶ
+        UpdateLanguageText();
     }
-    
+
+    // =========================
+    // 日英テキスト更新
+    // =========================
+    private void UpdateLanguageText()
+    {
+        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+
+        if (titleText != null)
+            titleText.text = isJapanese ? japaneseTitleText : englishTitleText;
+
+        if (descriptionText != null)
+            descriptionText.text = isJapanese ? japaneseDescriptionText : englishDescriptionText;
+
+        if (hostButtonText != null)
+            hostButtonText.text = isJapanese ? japaneseHostText : englishHostText;
+
+        // discovertext 取得後に実行されるため正しく反映される
+        m_discoverText = isJapanese ? japaneseDiscoverText : englishDiscoverText;
+        m_refreshText = isJapanese ? japaneseRefreshText : englishRefreshText;
+
+        if (discovertext != null)
+            discovertext.text = m_discoverText;
+
+        if (stopDiscoverButtonText != null)
+            stopDiscoverButtonText.text = isJapanese ? japaneseStopDiscoverText : englishStopDiscoverText;
+
+        if (exitButtonText != null)
+            exitButtonText.text = isJapanese ? japaneseExitText : englishExitText;
+    }
+
+    // =========================
+    // SERVER / HOST / CLIENT
+    // =========================
     private void OnStartServer()
     {
         NetworkManager.Singleton.StartServer();
         Debug.Log("Server Started");
         OnNetworkStart();
     }
+
     private void OnStartHost()
     {
         NetworkManager.Singleton.StartHost();
         Debug.Log("Host Started");
         OnNetworkStart();
     }
+
     private void OnStartClient()
     {
         NetworkManager.Singleton.StartClient();
         Debug.Log("Client Started");
         OnNetworkStart();
     }
+
+    // =========================
+    // EXIT
+    // =========================
     private void OnExitNetwork()
     {
         if (isNetworkStarted)
         {
-            if (NetworkManager.Singleton.IsServer)
-            {
-                NetworkManager.Singleton.Shutdown();
-                Debug.Log("Server Stopped");
-            }
-            else if (NetworkManager.Singleton.IsHost)
-            {
-                NetworkManager.Singleton.Shutdown();
-                Debug.Log("Host Stopped");
-            }
-            else if (NetworkManager.Singleton.IsClient)
-            {
-                NetworkManager.Singleton.Shutdown();
-                Debug.Log("Client Stopped");
-            }
+            NetworkManager.Singleton.Shutdown();
+            Debug.Log("Network Stopped");
             isNetworkStarted = false;
             SetActiveButtons(true);
             StopDiscovery();
-
         }
         else
         {
             Debug.LogWarning("Network is not started. Cannot exit network.");
         }
     }
+
+    // =========================
+    // NETWORK START
+    // =========================
     public void OnNetworkStart()
     {
         isNetworkStarted = true;
-        SetActiveButtons(false);   
+        SetActiveButtons(false);
     }
+
     private void SetActiveButtons(bool active)
     {
-        ServerButton?.gameObject.SetActive(active);
+        // ServerButton・ClientButtonは常に非表示のため除外
         HostButton?.gameObject.SetActive(active);
-        ClientButton?.gameObject.SetActive(active);
         DiscoveryButton?.gameObject.SetActive(active);
-
         ExitButton?.gameObject.SetActive(!active);
     }
+
+    // =========================
+    // DISCOVERY
+    // =========================
     private void StartDiscover()
     {
         if (m_Discovery.IsRunning)
         {
+            // 探索中 → もう一度探す（リフレッシュ）
             RefreshList();
         }
         else
         {
-            discovertext.text = RefreshText;
+            // 探索開始 → ボタンテキストを「もう一度探す」に変更
+            discovertext.text = m_refreshText;
             StopDiscoveryButton.gameObject.SetActive(true);
             m_Discovery.StartClient();
         }
         m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
     }
+
     private void StopDiscovery()
     {
-        discovertext.text = m_discoverText;
+        // ボタンテキストを「部屋を探す」に戻す
+        if (discovertext != null)
+            discovertext.text = m_discoverText;
+
         m_Discovery.StopDiscovery();
         RefreshList();
         StopDiscoveryButton.gameObject.SetActive(false);
     }
+
     private void RefreshList()
     {
         discoveredServers.Clear();
@@ -172,6 +234,7 @@ public class Scripts : MonoBehaviour
             connectionButtonUnActiveQueue.Enqueue(button);
         }
     }
+
     private void OnServerFound(IPEndPoint sender, DiscoveryResponseData response)
     {
         discoveredServers[sender.Address] = response;
@@ -182,7 +245,7 @@ public class Scripts : MonoBehaviour
         }
         else
         {
-            var obj = GameObject.Instantiate(connectionButtonPrefab, canvasTransfrom);
+            var obj = Instantiate(connectionButtonPrefab, canvasTransfrom);
             button = obj.GetComponent<Button>();
             connectionButtonActiveQueue.Enqueue(button);
         }
@@ -190,7 +253,8 @@ public class Scripts : MonoBehaviour
         button.onClick.AddListener(() => ConnectedToServer(sender.Address.ToString(), response.Port));
         button.gameObject.SetActive(true);
     }
-    private void ConnectedToServer(string address,ushort port)
+
+    private void ConnectedToServer(string address, ushort port)
     {
         transport ??= (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
         transport.SetConnectionData(address, port);
