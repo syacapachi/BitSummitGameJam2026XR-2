@@ -8,7 +8,7 @@ using UnityEngine.XR;
 public class AvatarSyncronize : NetworkBehaviour
 {
     XROrigin xrOrigin;
-    Transform playerRootTransfrom, leftHand, rightHand, leftController, rightController;
+    Transform leftHand, rightHand, leftController, rightController;
     Camera ownerCamera;
     [Header("Root")]
     [SerializeField] Transform avatorRootTransfrom;
@@ -24,18 +24,26 @@ public class AvatarSyncronize : NetworkBehaviour
     [Header("Setting")]
     [SerializeField] float footOffset = 0.1f;
     [SerializeField] float kneeWight = 0.2f;
+    [Header("Calibration"),Tooltip("対象のアバターのスケールを慎重に応じて拡大・縮小します。(元のアバターの身長は1m,スケールは1.1.1にして下さい。)")]
+    [SerializeField] int calibrationCount = 10;
     [Header("Debug")]
     [SerializeField] bool isDebugMode = false;
     public readonly NetworkVariable<int> JumpCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    
+    private readonly NetworkVariable<float> AvatarScale = new(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [SerializeField,ReadOnly] float avatarEyeHeight = 0;
+    [SerializeField, ReadOnly] float avatarScale = 0;
     /// <summary>
     /// 更新が可能かのフラグ、オーナーがわで、ローカルプレイヤーを取得したかのために使う
     /// </summary>
     private bool isfoundLocalPlayer = false;
+    private bool isCalibrationed = false;
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
         {
+            //初期化
+            OnScaleChanged(1, 1);
+            avatarEyeHeight = avatorRootTransfrom.InverseTransformPoint(animator.GetBoneTransform(HumanBodyBones.Head).position).y;
             StartCoroutine(WaitForEnable());
             NetworkManager.SceneManager.OnLoadComplete += OnSceneLoaded;
             NetworkManager.SceneManager.OnUnload += OnSceneUnLoad;
@@ -45,13 +53,19 @@ public class AvatarSyncronize : NetworkBehaviour
             //非オーナー側ではオッケー
             isfoundLocalPlayer = true;
         }
+        AvatarScale.OnValueChanged += OnScaleChanged;
     }
-
     private void OnSceneUnLoad(ulong clientId, string sceneName, AsyncOperation asyncOperation)
     {
         isfoundLocalPlayer = false;
     }
 
+    /// <summary>
+    /// シーンをロードしたタイミングで呼ばれる。
+    /// </summary>
+    /// <param name="clientId"></param>
+    /// <param name="name"></param>
+    /// <param name="loadMode"></param>
     private void OnSceneLoaded(ulong clientId,string name,UnityEngine.SceneManagement.LoadSceneMode loadMode)
     {
         StartCoroutine(WaitForEnable());
@@ -66,6 +80,7 @@ public class AvatarSyncronize : NetworkBehaviour
                 && Locator.AllPlayerManager.LocalPlayerRoot != null)
             {
                 ResistLocalPlayer();
+                yield return CalcHeight();
                 yield break;
             }
             yield return null;
@@ -75,27 +90,45 @@ public class AvatarSyncronize : NetworkBehaviour
     {
         var playerRoot = ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot;
         xrOrigin = playerRoot.XROrigin;
-        playerRootTransfrom = playerRoot.transform;
         leftHand = playerRoot.LeftHand;
         rightHand = playerRoot.RightHand;
         leftController = playerRoot.LeftController;
         rightController = playerRoot.RightController;
         ownerCamera = xrOrigin.Camera;
-
         isfoundLocalPlayer = true;
+    }
+    private IEnumerator CalcHeight()
+    {
+        if(isCalibrationed) yield break;
+        isCalibrationed = true;
+        float eyeHeight = 0;
+        for(int i = 0;i< calibrationCount; i++)
+        {
+            eyeHeight += xrOrigin.Camera.transform.position.y / calibrationCount;
+            yield return null;
+        }
+        AvatarScale.Value = eyeHeight / avatarEyeHeight;
+        Debug.Log($"[{nameof(AvatarSyncronize)}] Scale is {AvatarScale.Value}");
     }
     public override void OnNetworkDespawn()
     {
         isfoundLocalPlayer = false;
+        isCalibrationed = false;
         NetworkManager.SceneManager.OnLoadComplete -= OnSceneLoaded;
         NetworkManager.SceneManager.OnUnload -= OnSceneUnLoad;
+        AvatarScale.OnValueChanged -= OnScaleChanged;
+    }
+    private void OnScaleChanged(float oldScale, float newScale)
+    {
+        avatarScale = newScale;
+        avatorRootTransfrom.localScale = Vector3.one * newScale;
     }
     /// <summary>
     /// アニメーションを計算するタイミングで更新
     /// Animatorと同じGameObjectにないと呼ばれない。
     /// </summary>
     private void OnAnimatorIK()
-    {
+    {   
         if (animator == null) return;
         if (IsOwner)
         {
@@ -183,7 +216,7 @@ public class AvatarSyncronize : NetworkBehaviour
         {
             if (!isfoundLocalPlayer) return;
             //avatorRootTransfromからみた、networkHeadの相対座標
-            Vector3 headOffsetLocalY = avatorRootTransfrom.InverseTransformPoint(networkHead.position);
+            Vector3 headOffsetLocalY = avatorRootTransfrom.InverseTransformPoint(animator.GetBoneTransform(HumanBodyBones.Head).position);
             //カメラのY座標は、地面からの距離
             //Avatorの頭を動かす不自然になる。->rootを調整
             Vector3 cameraPos = xrOrigin.Camera.transform.position;

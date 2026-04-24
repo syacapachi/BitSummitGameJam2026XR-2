@@ -26668,6 +26668,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5824746205502880632, guid: 51223c2bb15dbe24b96db6a53b3afe63, type: 3}
   m_PrefabInstance: {fileID: 2041265497}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2041265499 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1911492671712969100, guid: 51223c2bb15dbe24b96db6a53b3afe63, type: 3}
+  m_PrefabInstance: {fileID: 2041265497}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2045667466
 GameObject:
   m_ObjectHideFlags: 0
@@ -28623,6 +28628,14 @@ PrefabInstance:
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3782534606
+      objectReference: {fileID: 0}
+    - target: {fileID: 4336429192120915332, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: moonQuad
+      value: 
+      objectReference: {fileID: 2041265499}
+    - target: {fileID: 4336429192120915332, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: useCameraSolidColor
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalPosition.x

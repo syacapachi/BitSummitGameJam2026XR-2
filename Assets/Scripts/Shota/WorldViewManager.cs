@@ -66,7 +66,7 @@ public class WorldViewManager : NetworkBehaviour
         // (UIViewSettingのuiEventを発火してConnectCanvasを表示)
         if (connectCanvasEvent != null) connectCanvasEvent.Invoke();
         // (看板は接続完了まで非表示)
-        if (boardCanvas != null) boardCanvas.enabled = false;
+        if (boardCanvas != null) boardCanvas.enabled = IsSpawned;
     }
 
     // =========================
@@ -78,7 +78,7 @@ public class WorldViewManager : NetworkBehaviour
         Debug.Log("WorldViewManager OnNetworkSpawn called");
 
         // ConnectCanvasを非表示にする（VoidEventで切り替え）
-        connectCanvasEvent?.Invoke();
+        connectCanvasEvent.Invoke();
 
         // 看板を表示
         if (boardCanvas != null)

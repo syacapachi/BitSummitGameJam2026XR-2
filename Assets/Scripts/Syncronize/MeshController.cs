@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 public class MeshController : NetworkBehaviour
 {
-    [SerializeField] bool meshEnable = false;
+    [SerializeField] bool ownerMeshEnable = false;
     [SerializeField] List<Renderer> m_Renderer = new();
 
     public override void OnNetworkSpawn()
@@ -14,7 +14,7 @@ public class MeshController : NetworkBehaviour
         {
             foreach (var renderer in m_Renderer)
             {
-                renderer.enabled = meshEnable;
+                renderer.enabled = ownerMeshEnable;
             }
         }
     }

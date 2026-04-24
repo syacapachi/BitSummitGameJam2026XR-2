@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  meshEnable: 0
+  ownerMeshEnable: 0
   m_Renderer:
   - {fileID: 3586039225926179217}
   - {fileID: 5432640361929983673}
@@ -3591,7 +3591,7 @@ Transform:
   m_GameObject: {fileID: 3405532119560973332}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7213,7 +7213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  meshEnable: 0
+  ownerMeshEnable: 0
   m_Renderer:
   - {fileID: 4281159005728926349}
   - {fileID: 1316376018937414345}
@@ -9201,7 +9201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  meshEnable: 0
+  ownerMeshEnable: 1
   m_Renderer:
   - {fileID: 2231564332198363345}
   - {fileID: 1524732636062697415}
@@ -9230,7 +9230,10 @@ MonoBehaviour:
   networkRightController: {fileID: 2041269855817382624}
   footOffset: 0.1
   kneeWight: 0.2
+  calibrationCount: 10
   isDebugMode: 0
+  avatarEyeHeight: 0
+  avatarScale: 0
 --- !u!4 &4217247790775576332 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 28a50b03489b10e49a466dcb0fb89f05, type: 3}
