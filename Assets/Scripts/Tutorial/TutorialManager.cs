@@ -15,7 +15,6 @@ public class TutorialManager : NetworkBehaviour
     public NetworkVariable<TutorialStep> CurrentStep =
         new(TutorialStep.Step1);
 
-    [SerializeField] int playerCount = 2;
     [SerializeField] TutorialSpawner spawner;
 
     TutorialBase currentStepLogic;
@@ -39,7 +38,10 @@ public class TutorialManager : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         CurrentStep.OnValueChanged -= OnStepChanged;
-        attackBlockedEvent.Unregister(OnAttackBlocked);
+        if (IsServer)
+        {
+            attackBlockedEvent.Unregister(OnAttackBlocked);
+        }
     }
 
     void OnStepChanged(TutorialStep oldStep, TutorialStep newStep)
@@ -49,12 +51,8 @@ public class TutorialManager : NetworkBehaviour
 
     void StartStep(TutorialStep step)
     {
-        if (!XRSettings.isDeviceActive)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
         currentStepLogic?.OnEnd();
-        playerCount = NetworkManager.ConnectedClientsIds.Count;
+        int playerCount = NetworkManager.ConnectedClientsIds.Count;
 
         switch (step)
         {

@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class GameClearEffectManager : MonoBehaviour
 {
-    [Header("Refs")]
+    [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateRpcEvent;
+    [SerializeField] IntEvent phaseChangeEvent;
 
     [Header("Debug")]
     [SerializeField] bool logStateChange = false;
@@ -51,10 +52,12 @@ public class GameClearEffectManager : MonoBehaviour
     private void OnEnable()
     {
         gameStateRpcEvent.Register(OnStateChanged);
+        phaseChangeEvent.Register(OnPhaseChanged);
     }
     private void OnDisable()
     {
         gameStateRpcEvent.Unregister(OnStateChanged);
+        phaseChangeEvent.Unregister(OnPhaseChanged);
     }
 
     void OnStateChanged(GameState newState)
@@ -75,6 +78,10 @@ public class GameClearEffectManager : MonoBehaviour
         {
             RestoreDefaults();
         }
+    }
+    void OnPhaseChanged(int phaseIndex)
+    {
+
     }
 
     void ApplyGameClearOnce()

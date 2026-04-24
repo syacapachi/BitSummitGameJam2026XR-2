@@ -14962,7 +14962,7 @@ PrefabInstance:
     - target: {fileID: 577900837676337283, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: <AllGameManager>k__BackingField
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1182821281}
     - target: {fileID: 577900837676337283, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: <RankingManager>k__BackingField
       value: 
@@ -14982,6 +14982,14 @@ PrefabInstance:
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1133631313
+      objectReference: {fileID: 0}
+    - target: {fileID: 4336429192120915332, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: phaseChangeEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
+    - target: {fileID: 4336429192120915332, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: forceSolidColorClearFlags
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: setting
@@ -15038,6 +15046,14 @@ PrefabInstance:
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: phaseManager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: scoreManager
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6898520360399316063, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: phaseManager
@@ -15128,6 +15144,17 @@ PrefabInstance:
       addedObject: {fileID: 1367694066}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07f51410c6523454580003730b31cfff, type: 3}
+--- !u!114 &1182821281 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
+  m_PrefabInstance: {fileID: 1182821280}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804485981a37aa144bd3724b7714fe6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1193802910
 GameObject:
   m_ObjectHideFlags: 0
@@ -18251,6 +18278,26 @@ PrefabInstance:
     - target: {fileID: 4123251404623452489, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983985599855904450, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_ClearFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983985599855904450, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983985599855904450, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983985599855904450, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983985599855904455, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 16.54
       objectReference: {fileID: 0}
     - target: {fileID: 5114117993183840635, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: playerCanvas
