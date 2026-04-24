@@ -70,10 +70,16 @@ public class Scripts : MonoBehaviour
 
         // ServerButton・ClientButtonは未使用のため非表示
         if (ServerButton != null)
+        {
+            ServerButton.onClick.AddListener(OnStartServer);
             ServerButton.gameObject.SetActive(false);
+        }
 
         if (ClientButton != null)
+        {
+            ClientButton.onClick.AddListener(OnStartClient);
             ClientButton.gameObject.SetActive(false);
+        }
 
         if (HostButton != null)
         {
