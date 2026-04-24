@@ -118,6 +118,8 @@ public class TutorialManager : NetworkBehaviour
     private void StartMainSimulation()
     {
         Debug.Log("Main Simulation Start");
+        //応急処置
+        MoveScene();
     }
 
     [OnInspectorButton]
