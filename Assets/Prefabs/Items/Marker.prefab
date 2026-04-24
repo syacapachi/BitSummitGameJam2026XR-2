@@ -99,7 +99,6 @@ GameObject:
   - component: {fileID: 7219940089673531300}
   - component: {fileID: 1103239692597537299}
   - component: {fileID: 6232679789972296265}
-  - component: {fileID: 4769882442164892275}
   m_Layer: 0
   m_Name: Marker-Child
   m_TagString: Untagged
@@ -242,27 +241,6 @@ MonoBehaviour:
     EnableOnAttach: 0
     ComponentController: {fileID: 8060930132235393792}
     HasInitialized: 1
---- !u!135 &4769882442164892275
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2818825565032162250}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 148.42703
-  m_Center: {x: -0.49999353, y: -6.735712, z: 0.7656514}
 --- !u!1 &6642326925801029688
 GameObject:
   m_ObjectHideFlags: 0
@@ -433,7 +411,7 @@ MonoBehaviour:
     InvertEnabled: 0
     EnableDelay: 0
     DisableDelay: 0
-    Component: {fileID: 4769882442164892275}
+    Component: {fileID: 0}
   - name: Corn1 (1) (Mesh Renderer)
     InvertEnabled: 0
     EnableDelay: 0
@@ -461,6 +439,7 @@ MonoBehaviour:
   blinkColor: {r: 0.92853254, g: 0.9748427, b: 0, a: 1}
   blinkSpeed: 8
   useEmission: 1
+  emissionIntensity: 5
   scaleTarget: {fileID: 5570317700273741475}
   scaleSpeed: 3
   scaleMultiplier: 1.2

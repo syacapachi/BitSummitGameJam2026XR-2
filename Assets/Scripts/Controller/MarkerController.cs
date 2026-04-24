@@ -35,12 +35,13 @@ public class MarkerController : NetworkBehaviour
             
             attach = marker.GetComponentInChildren<AttachableBehaviour>();
             networkObject.SpawnWithOwnership(OwnerClientId);
-            GetBlincEffect(networkObject);
+            GetBlincEffectRpc(networkObject);
             isMarkAttachedServerOnly = false;
         }
         
     }
-    private void GetBlincEffect(NetworkObjectReference reference)
+    [Rpc(SendTo.ClientsAndHost)]
+    private void GetBlincEffectRpc(NetworkObjectReference reference)
     {
         if(reference.TryGet(out var networkObject))
         {
