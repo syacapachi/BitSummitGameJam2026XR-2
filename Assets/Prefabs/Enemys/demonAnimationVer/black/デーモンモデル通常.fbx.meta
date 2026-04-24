@@ -1,44 +1,9 @@
 fileFormatVersion: 2
-guid: c2ab74bc21a975c41b213e66794058dc
+guid: ad7fa44e75c114841bcd749cbf06ab66
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Body
-    second: {fileID: 2100000, guid: e3cce83cf02fefc43abc47b1a6e56cfe, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Face
-    second: {fileID: 2100000, guid: 4c27eeacfd01eb04a8c548c4a2bd0622, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: nose
-    second: {fileID: 2100000, guid: 8d6c51d35d544f747abeedba7b9e6096, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: teeth
-    second: {fileID: 2100000, guid: 2deabb1ca7ac1144282b8ba5d1feba75, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: wing
-    second: {fileID: 2100000, guid: d5bae1f639ba54047aeccf24e12c5dab, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: "\u30DE\u30C6\u30EA\u30A2\u30EB.001"
-    second: {fileID: 2100000, guid: 1bb6fe5fb28e42a4082dae8dcb9be3ce, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: "\u30DE\u30C6\u30EA\u30A2\u30EB.005"
-    second: {fileID: 2100000, guid: 2cf258258a6ce7748b5ee7f97d2a931b, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -107,7 +72,7 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
-    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
