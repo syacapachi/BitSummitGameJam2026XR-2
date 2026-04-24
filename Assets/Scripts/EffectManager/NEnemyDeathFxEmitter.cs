@@ -5,9 +5,9 @@ public class NEnemyDeathFxEmitter : NetworkBehaviour
 {
     [SerializeField] private GameObject deathFxPrefabAll;
     [SerializeField] private AudioClip deathSfxAll;
-    [SerializeField] private float deathFxLifeTimeAll = 2f;
     [SerializeField, Range(0f, 1f)] private float deathVolumeAll = 1f;
     [SerializeField] NetworkVariable<bool> reachedProtectArea = new(false,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);
+    [SerializeField] GameEffectEvent gameEffectEvent;
 
     public override void OnNetworkSpawn()
     {
@@ -28,12 +28,11 @@ public class NEnemyDeathFxEmitter : NetworkBehaviour
         if (!IsClient) return;
         if (reachedProtectArea.Value) return;
 
-        NetFxSpawnUtility.Spawn(
-            deathFxPrefabAll,
+        gameEffectEvent.Invoke(new GameEffect(
             deathSfxAll,
+            deathFxPrefabAll,
             transform.position,
-            Quaternion.identity,
-            deathFxLifeTimeAll,
-            deathVolumeAll);
+            deathVolumeAll
+            ));
     }
 }

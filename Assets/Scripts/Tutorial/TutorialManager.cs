@@ -54,6 +54,7 @@ public class TutorialManager : NetworkBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
         currentStepLogic?.OnEnd();
+        playerCount = NetworkManager.ConnectedClientsIds.Count;
 
         switch (step)
         {

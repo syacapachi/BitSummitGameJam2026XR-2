@@ -9,8 +9,6 @@ public class PlayerManager : MonoBehaviour
     /// このデバイスでのオーナーへの参照
     /// </summary>
     [SerializeField] LocalPlayerRoot localRoot;
-    [Header("Subscribe Event")]
-    [SerializeField] PlayerJobEvent jobChangeEvent;
     public NetworkPlayerRoot NetworkOwnerPlayer { get;private set; }
     public LocalPlayerRoot LocalPlayerRoot => localRoot;
     public IReadOnlyList<NetworkPlayerRoot> AllPlayers => playerList;

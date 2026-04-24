@@ -141,6 +141,8 @@ public class WorldViewManager : NetworkBehaviour
 
         if (backButton != null)
             backButton.gameObject.SetActive(index > 0);
+
+        
     }
 
     // =========================
@@ -153,7 +155,7 @@ public class WorldViewManager : NetworkBehaviour
         {
             Debug.Log("[WorldView] Loading VRSystemScene");
 
-            NetworkManager.Singleton.SceneManager.LoadScene(
+            NetworkManager.SceneManager.LoadScene(
                 "VRSystemScene",
                 LoadSceneMode.Single
             );
@@ -162,7 +164,7 @@ public class WorldViewManager : NetworkBehaviour
         {
             Debug.Log("[WorldView] Loading TutorialScene");
 
-            NetworkManager.Singleton.SceneManager.LoadScene(
+            NetworkManager.SceneManager.LoadScene(
                 "TutorialScene",
                 LoadSceneMode.Single
             );

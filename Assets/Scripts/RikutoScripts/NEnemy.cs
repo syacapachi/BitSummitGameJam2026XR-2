@@ -72,7 +72,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             return;
         }
         if(enemyJobSetting.JobLayerMaskDic.TryGetValue(EnemyJob, out var setting)){
-            gameObject.layer = setting.Layer;
+            foreach (Transform childs in transform.GetComponentsInChildren<Transform>())
+            {
+                childs.gameObject.layer = setting.Layer;
+            }
         }
     }
     public override void OnNetworkDespawn()
