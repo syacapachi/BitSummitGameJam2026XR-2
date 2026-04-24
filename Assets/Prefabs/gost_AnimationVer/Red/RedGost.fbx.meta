@@ -1,44 +1,34 @@
 fileFormatVersion: 2
-guid: c2ab74bc21a975c41b213e66794058dc
+guid: 7cfd0597ba0d79a4bb8b03d0b2d89fda
 ModelImporter:
-  serializedVersion: 22200
+  serializedVersion: 24200
   internalIDToNameTable: []
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Body
-    second: {fileID: 2100000, guid: e3d00a34aecd0154da1b2fd94b4c5927, type: 2}
+    second: {fileID: 2100000, guid: d88cef166b0d2794aab577a8ea55e2c4, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Face
-    second: {fileID: 2100000, guid: 4c27eeacfd01eb04a8c548c4a2bd0622, type: 2}
+      name: hand
+    second: {fileID: 2100000, guid: badd4132645046f45abdeccc4c9f64b5, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: nose
-    second: {fileID: 2100000, guid: 8d6c51d35d544f747abeedba7b9e6096, type: 2}
+      name: hat
+    second: {fileID: 2100000, guid: ead4f50f7fc719d4dbf9b73451171854, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: teeth
-    second: {fileID: 2100000, guid: 2deabb1ca7ac1144282b8ba5d1feba75, type: 2}
+      name: "\u30DE\u30C6\u30EA\u30A2\u30EB.006"
+    second: {fileID: 2100000, guid: 81f51e80c00a2604e8500dfb7ebc0ed5, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: wing
-    second: {fileID: 2100000, guid: d5bae1f639ba54047aeccf24e12c5dab, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: "\u30DE\u30C6\u30EA\u30A2\u30EB.001"
-    second: {fileID: 2100000, guid: 1bb6fe5fb28e42a4082dae8dcb9be3ce, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: "\u30DE\u30C6\u30EA\u30A2\u30EB.005"
-    second: {fileID: 2100000, guid: 2cf258258a6ce7748b5ee7f97d2a931b, type: 2}
+      name: "\u30DE\u30C6\u30EA\u30A2\u30EB.007"
+    second: {fileID: 2100000, guid: 69da2fd50e3a8fb42b9bda820d51147f, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -91,6 +81,9 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
