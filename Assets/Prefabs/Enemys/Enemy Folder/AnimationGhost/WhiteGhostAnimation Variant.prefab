@@ -76,16 +76,63 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 7053349681853799008}
+    - target: {fileID: 9142516393628170595, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: networkAnimator
+      value: 
+      objectReference: {fileID: 2855029065647822323}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4717762417172863837, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2855029065647822323}
   m_SourcePrefab: {fileID: 100100000, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
 --- !u!4 &243620934211145127 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1626770062420064645, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
   m_PrefabInstance: {fileID: 1581591617792947234}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6091728580756008831 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4717762417172863837, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+  m_PrefabInstance: {fileID: 1581591617792947234}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2855029065647822323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6091728580756008831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 7053349681853799008}
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 90155753
+    DestinationState: -408737282
+    TransitionDuration: 2.0047526
+    TriggerNameHash: 1080829965
+    TransitionIndex: 0
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Attack
+      NameHash: 1080829965
+      Synchronize: 1
+      ParameterType: 9
+    - name: Speed
+      NameHash: -823668238
+      Synchronize: 1
+      ParameterType: 1
+  AnimatorParametersExpanded: 0
 --- !u!95 &7053349681853799008 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8363317652177432130, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}

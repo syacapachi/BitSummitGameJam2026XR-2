@@ -2,27 +2,24 @@
 using Unity.Netcode;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyFxRule))]
 public class NEnemyImpactFxReceiver : NetworkBehaviour
 {
+    [SerializeField] NEnemy nEnemy;
     [Header("Valid Hit FX / SFX")]
     [SerializeField] private GameObject validHitFxPrefabAll;
     [SerializeField] private AudioClip validHitSfxAll;
-    [SerializeField] private float validHitLifeTimeAll = 2f;
     [SerializeField, Range(0f, 1f)] private float validHitVolumeAll = 1f;
 
     [Header("Invalid Hit FX / SFX")]
     [SerializeField] private GameObject invalidHitFxPrefabAll;
     [SerializeField] private AudioClip invalidHitSfxAll;
-    [SerializeField] private float invalidHitLifeTimeAll = 2f;
     [SerializeField, Range(0f, 1f)] private float invalidHitVolumeAll = 1f;
 
-    [SerializeField] EnemyFxRule fxRuleServer;
+    [Header("Settting")]
+    [SerializeField] JobSettingGenerator JobSetting;
+    [Header("Publish Event")]
+    [SerializeField] GameEffectEvent gameEffectEvent;
 
-    private void Awake()
-    {
-        fxRuleServer = GetComponent<EnemyFxRule>();
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -38,23 +35,21 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
 
     private void TryHandleBulletHitServer(Collider other)
     {
-        BulletBaseController bullet = other.GetComponent<BulletBaseController>() ?? other.GetComponentInParent<BulletBaseController>();
-        if (bullet == null) return;
-
-        NBulletFxState bulletFxState = bullet.GetComponent<NBulletFxState>();
-        if (bulletFxState != null && bulletFxState.ImpactFxPlayed) return;
-        if (bulletFxState != null) bulletFxState.ImpactFxPlayed = true;
-
+        IDamageSender damegeSender = other.GetComponent<IDamageSender>() ?? other.GetComponentInParent<IDamageSender>();
+        if (damegeSender == null) return;
+        if (damegeSender is not BulletBaseController bullet) return;
         Vector3 fxPosition = other.ClosestPoint(transform.position);
         if (fxPosition == Vector3.zero)
         {
             fxPosition = other.transform.position;
         }
+        PlayerJob shooterJob = bullet.ShooterJob;
+        if(!JobSetting.JobLayerMaskDic.TryGetValue(shooterJob,out var playerLayerSettings))
+        {
+            return;
+        }
 
-        PlayerJob shooterJob = ResolveShooterJobServer(bullet.Shooter);
-        bool isEffective = fxRuleServer == null || fxRuleServer.IsEffectiveFor(shooterJob);
-
-        if (isEffective)
+        if (playerLayerSettings.IsAttackableJob(nEnemy.EnemyJob))
         {
             PlayValidHitClientRpc(fxPosition);
         }
@@ -64,26 +59,24 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         }
     }
 
-    private PlayerJob ResolveShooterJobServer(IResultCollector shooter)
+    private bool TryGetShooterJobServer(IResultCollector shooter, out PlayerJob playerJob)
     {
-        if (shooter == null) return PlayerJob.Nothing;
-        if (NetworkManager.Singleton == null) return PlayerJob.Nothing;
-        if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(shooter.ClientId, out var client))
-            return PlayerJob.Nothing;
+        playerJob = PlayerJob.Nothing;
+        if (shooter == null) return false;
+        if (!NetworkManager.ConnectedClients.TryGetValue(shooter.ClientId, out var client))
+            return false;
 
-        if (client.PlayerObject == null) return PlayerJob.Nothing;
+        if (client.PlayerObject == null) return false;
 
         SyncroPropaty propaty = client.PlayerObject.GetComponentInChildren<SyncroPropaty>();
-        if (propaty == null) return PlayerJob.Nothing;
-
-        return propaty.Job;
+        if (propaty == null) return false;
+        playerJob = propaty.Job;
+        return true;
     }
 
     private ulong[] CollectVisibleClientIdsServer()
     {
         List<ulong> ids = new();
-
-        if (NetworkManager.Singleton == null) return ids.ToArray();
 
         foreach (var pair in NetworkManager.Singleton.ConnectedClients)
         {
@@ -93,7 +86,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             SyncroPropaty propaty = playerObject.GetComponentInChildren<SyncroPropaty>();
             if (propaty == null) continue;
 
-            if (fxRuleServer.IsVisibleTo(propaty.Job))
+            if (JobSetting.JobLayerMaskDic[propaty.Job].IsVisibleLayer(gameObject.layer))
             {
                 ids.Add(pair.Key);
             }
@@ -105,24 +98,22 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     private void PlayValidHitClientRpc(Vector3 position)
     {
-        NetFxSpawnUtility.Spawn(
-            validHitFxPrefabAll,
+        gameEffectEvent.Invoke(new GameEffect(
             validHitSfxAll,
+            validHitFxPrefabAll,
             position,
-            Quaternion.identity,
-            validHitLifeTimeAll,
-            validHitVolumeAll);
+            volume:validHitVolumeAll
+            ));
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     private void PlayInvalidHitClientRpc(Vector3 position)
     {
-        NetFxSpawnUtility.Spawn(
-            invalidHitFxPrefabAll,
+        gameEffectEvent.Invoke(new GameEffect(
             invalidHitSfxAll,
+            invalidHitFxPrefabAll,
             position,
-            Quaternion.identity,
-            invalidHitLifeTimeAll,
-            invalidHitVolumeAll);
+            volume: invalidHitVolumeAll
+            ));
     }
 }

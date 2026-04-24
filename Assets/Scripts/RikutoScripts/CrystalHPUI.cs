@@ -10,6 +10,8 @@ public class CrystalHPUI : MonoBehaviour
     [Header("UI")]
     [SerializeField] private Image scoreBar; // Filled Image
     [SerializeField] private TextMeshProUGUI scoreText;
+    [Header("Subscribe Event")]
+    [SerializeField] HPInfoEvent HPInfoRpcEvent;
 
     private float maxScore;
 

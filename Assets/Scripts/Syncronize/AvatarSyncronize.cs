@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR;

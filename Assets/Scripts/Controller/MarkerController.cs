@@ -23,7 +23,6 @@ public class MarkerController : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if(!IsOwner) return;
-        //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnMarker += PlaceMarkerRpc;
         markerEvent.Register(PlaceMarkerRpc);
     }
   
@@ -50,8 +49,33 @@ public class MarkerController : NetworkBehaviour
         }
         if (IsOwner)
         {
-            //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnMarker -= PlaceMarkerRpc;
             markerEvent.Unregister(PlaceMarkerRpc);
+        }
+    }
+    private void Update()
+    {
+        if (!IsOwner) return;
+        UpdateLaser();
+    }
+    void UpdateLaser()
+    {
+        if (lineRenderer == null || firePoint == null) return;
+
+        // �J�n�_
+        lineRenderer.SetPosition(0, firePoint.position);
+
+        // Raycast �Œ��e�_�𔻒�
+        Vector3 forward = firePoint.forward;
+
+        if (Physics.Raycast(firePoint.position, forward, out RaycastHit hit, laserDistance))
+        {
+            // ���������ꍇ
+            lineRenderer.SetPosition(1, hit.point);
+        }
+        else
+        {
+            // ������Ȃ������ꍇ
+            lineRenderer.SetPosition(1, firePoint.position + forward * laserDistance);
         }
     }
     [Rpc(SendTo.Server)]
