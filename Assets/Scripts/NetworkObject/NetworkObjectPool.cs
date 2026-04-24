@@ -29,11 +29,13 @@ namespace Syacapachi.util
         {
             if (Singleton != null && Singleton != this)
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
+                Debug.LogError($"{nameof(NetworkObjectPool)} is maltiplicate!");
             }
             else
             {
                 Singleton = this;
+                DontDestroyOnLoad(gameObject);
             }
         }
 
