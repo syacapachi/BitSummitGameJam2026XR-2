@@ -183,7 +183,7 @@ public class AvatarSyncronize : NetworkBehaviour
         {
             if (!isfoundLocalPlayer) return;
             //avatorRootTransfromからみた、networkHeadの相対座標
-            float headOffsetLocalY = avatorRootTransfrom.InverseTransformPoint(networkHead.position).y;
+            Vector3 headOffsetLocalY = avatorRootTransfrom.InverseTransformPoint(networkHead.position);
             //カメラのY座標は、地面からの距離
             //Avatorの頭を動かす不自然になる。->rootを調整
             Vector3 cameraPos = xrOrigin.Camera.transform.position;
@@ -192,11 +192,8 @@ public class AvatarSyncronize : NetworkBehaviour
                 cameraPos += xrOrigin.Camera.transform.forward * 2f;
             }
             // rootを補正
-            cameraPos.y -= headOffsetLocalY;
-            avatorRootTransfrom.SetPositionAndRotation(cameraPos , xrOrigin.transform.rotation);
-
-            //Head
-            networkHead.SetLocalPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
+            cameraPos.y -= headOffsetLocalY.y;
+            avatorRootTransfrom.SetPositionAndRotation(cameraPos, xrOrigin.transform.rotation);
 
             if (XRSettings.isDeviceActive)
             {

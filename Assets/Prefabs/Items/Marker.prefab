@@ -457,3 +457,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d2afc506ca80341b7a9e810daa26a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetRenderers: []
+  normalColor: {r: 0, g: 1, b: 0, a: 1}
+  blinkColor: {r: 1, g: 1, b: 1, a: 1}
+  blinkSpeed: 8
+  useEmission: 1
+  scaleTarget: {fileID: 5570317700273741475}
+  scaleSpeed: 6
+  scaleMultiplier: 1.2
