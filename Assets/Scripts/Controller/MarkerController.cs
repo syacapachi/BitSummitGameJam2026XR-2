@@ -32,10 +32,19 @@ public class MarkerController : NetworkBehaviour
         {
             var marker = GameObject.Instantiate(playerMarker);
             var networkObject = marker.GetComponent<NetworkObject>();
-            blinkEffect = marker.GetComponentInChildren<MarkerBlinkEffect>(); // 水野が追加した
+            
             attach = marker.GetComponentInChildren<AttachableBehaviour>();
             networkObject.SpawnWithOwnership(OwnerClientId);
+            GetBlincEffect(networkObject);
             isMarkAttachedServerOnly = false;
+        }
+        
+    }
+    private void GetBlincEffect(NetworkObjectReference reference)
+    {
+        if(reference.TryGet(out var networkObject))
+        {
+            blinkEffect = networkObject.GetComponentInChildren<MarkerBlinkEffect>(); // 水野が追加した
         }
     }
     public override void OnNetworkDespawn()
@@ -87,13 +96,13 @@ public class MarkerController : NetworkBehaviour
 
         if (Physics.Raycast(firePoint.position, forward, out RaycastHit hit, laserDistance))
         {
-            MoveMarkerClientRpc(hit.point);
+            MoveMarkerServerRpc(hit.point);
             markerAudioController.OnMarkerSondPlayRpc(hit.point);
         }
     }
 
     [Rpc(SendTo.Server)]
-    private void MoveMarkerClientRpc(Vector3 pos)
+    private void MoveMarkerServerRpc(Vector3 pos)
     {
         if (attach == null)
         {
@@ -114,12 +123,7 @@ public class MarkerController : NetworkBehaviour
         }
         attach.gameObject.transform.position = pos;
 
-        // 水野が追加した
-        if (blinkEffect != null)
-        {
-            blinkEffect.StartBlink();
-        }
-        // 以上
+        StartBlinkRpc();
 
         markerCoroutine = StartCoroutine(MarkerBackCorutine());
 
@@ -129,19 +133,13 @@ public class MarkerController : NetworkBehaviour
     private IEnumerator MarkerBackCorutine()
     {
         yield return new WaitForSeconds(5f);
-;
         if (attach != null)
         {
             attach.Attach(node);
             attach.gameObject.transform.localPosition = Vector3.zero;
             isMarkAttachedServerOnly = true;
 
-            // 水野が追加した
-            if (blinkEffect != null)
-            {
-                blinkEffect.StopBlink();
-            }
-            // 水野が追加した
+            StopBlinkRpc();
 
         }
         else
@@ -149,6 +147,25 @@ public class MarkerController : NetworkBehaviour
             Debug.LogError($"[{gameObject.name}]AttachableBehaviour is null");
             isMarkAttachedServerOnly = false;
         }
-        
+    }
+    [Rpc(SendTo.ClientsAndHost)]
+    private void StartBlinkRpc()
+    {
+        // 水野が追加した
+        if (blinkEffect != null)
+        {
+            blinkEffect.StartBlink();
+        }
+        // 水野が追加した
+    }
+    [Rpc(SendTo.ClientsAndHost)]
+    private void StopBlinkRpc()
+    {
+        // 水野が追加した
+        if (blinkEffect != null)
+        {
+            blinkEffect.StopBlink();
+        }
+        // 水野が追加した
     }
 }
