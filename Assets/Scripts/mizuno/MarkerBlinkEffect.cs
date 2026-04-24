@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MarkerBlinkEffect : MonoBehaviour
@@ -18,18 +19,15 @@ public class MarkerBlinkEffect : MonoBehaviour
     Material[] materials;
     bool isBlinking = false;
     Vector3 defaultScale;
+    Coroutine blinkCoroutine;
 
     private void Awake()
     {
         if (targetRenderers == null || targetRenderers.Length == 0)
-        {
             targetRenderers = GetComponentsInChildren<Renderer>(true);
-        }
 
         if (scaleTarget == null)
-        {
             scaleTarget = transform;
-        }
 
         defaultScale = scaleTarget.localScale;
 
@@ -40,15 +38,12 @@ public class MarkerBlinkEffect : MonoBehaviour
             materials[i] = targetRenderers[i].material;
             ApplyColor(materials[i], normalColor);
         }
-
-        Debug.Log($"[MarkerBlinkEffect] Renderer count = {targetRenderers.Length}");
     }
 
     private void Update()
     {
         if (!isBlinking) return;
 
-        // 色の点滅
         if (materials != null)
         {
             float colorT = (Mathf.Sin(Time.time * blinkSpeed) + 1f) * 0.5f;
@@ -61,7 +56,6 @@ public class MarkerBlinkEffect : MonoBehaviour
             }
         }
 
-        // Scaleの脈動
         if (scaleTarget != null)
         {
             float t = (Mathf.Sin(Time.time * scaleSpeed) + 1f) * 0.5f;
@@ -70,9 +64,20 @@ public class MarkerBlinkEffect : MonoBehaviour
         }
     }
 
-    public void StartBlink()
+    public void StartBlink(float duration = 5f)
     {
+        if (blinkCoroutine != null)
+            StopCoroutine(blinkCoroutine);
+
         isBlinking = true;
+        blinkCoroutine = StartCoroutine(BlinkRoutine(duration));
+    }
+
+    IEnumerator BlinkRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        StopBlink();
+        blinkCoroutine = null;
     }
 
     public void StopBlink()
@@ -89,9 +94,7 @@ public class MarkerBlinkEffect : MonoBehaviour
         }
 
         if (scaleTarget != null)
-        {
             scaleTarget.localScale = defaultScale;
-        }
     }
 
     void ApplyColor(Material mat, Color color)
@@ -99,14 +102,10 @@ public class MarkerBlinkEffect : MonoBehaviour
         if (mat == null) return;
 
         if (mat.HasProperty("_BaseColor"))
-        {
             mat.SetColor("_BaseColor", color);
-        }
 
         if (mat.HasProperty("_Color"))
-        {
             mat.color = color;
-        }
 
         if (useEmission && mat.HasProperty("_EmissionColor"))
         {
