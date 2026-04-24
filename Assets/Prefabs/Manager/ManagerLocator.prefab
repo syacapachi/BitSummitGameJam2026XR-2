@@ -66,7 +66,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
   protectArea: {fileID: 0}
   OnAllEnemyDeadRpcEvent: {fileID: 11400000, guid: d48233639feb72e4ba705392d35f3c40, type: 2}
   EnemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
@@ -116,7 +115,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CheckPointParent: {fileID: 0}
   checkPoints:
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -398,9 +396,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localRoot: {fileID: 0}
-  jobChangeEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
-  IsJobOverride: 1
-  JobOverride: 2
 --- !u!1 &5382503739911564800
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,7 +721,6 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
-  playerCount: 2
   spawner: {fileID: 0}
   step1Enemies: []
   step2Enemies: []
@@ -776,6 +770,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameStateRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
+  phaseChangeEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
   logStateChange: 0
   moonQuad: {fileID: 0}
   roomLights:

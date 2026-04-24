@@ -35,7 +35,6 @@ namespace Syacapachi.util
             else
             {
                 Singleton = this;
-                DontDestroyOnLoad(gameObject);
             }
         }
 

@@ -24,22 +24,29 @@ public class TutorialManager : NetworkBehaviour
 
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
 
-
+    
     public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
-            StartStep(TutorialStep.Step1);
             attackBlockedEvent.Register(OnAttackBlocked);
+            NetworkManager.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
         }
 
         CurrentStep.OnValueChanged += OnStepChanged;
     }
+
+    private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+    {
+        StartStep(TutorialStep.Step1);
+    }
+
     public override void OnNetworkDespawn()
     {
         CurrentStep.OnValueChanged -= OnStepChanged;
         if (IsServer)
         {
+            NetworkManager.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
             attackBlockedEvent.Unregister(OnAttackBlocked);
         }
     }
