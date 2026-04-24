@@ -22,20 +22,27 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] Button backButton;
     [SerializeField] WorldViewData worldViewData;
 
+    [Header("Canvas管理")]
+    // (connectCanvas・boardCanvasの直接SetActiveをやめてUIViewSettingのuiEventで管理)
+    // [SerializeField] private GameObject connectCanvas;
+    // [SerializeField] private GameObject boardCanvas;
+    [SerializeField] private VoidEvent connectCanvasEvent;
+    [SerializeField] private GameObject boardCanvas;
+
     [Header("ページ設定")]
-    // private int totalBoards = 4;
+    // private int totalBoards = 4; // 旧: ハードコード
     [SerializeField] private int totalBoards = 5;
 
     [Header("ボタンテキスト設定")]
     // (ハードコードしていた文字列をInspectorで設定可能に)
-    [SerializeField] private string japaneseNextText = "次へ";
-    [SerializeField] private string englishNextText = "Next";
-    [SerializeField] private string japaneseCloseText = "閉じる";
-    [SerializeField] private string englishCloseText = "Close";
-    [SerializeField] private string japaneseBackText = "戻る";
-    [SerializeField] private string englishBackText = "Back";
+    [SerializeField] private string japaneseNextText;
+    [SerializeField] private string englishNextText;
+    [SerializeField] private string japaneseCloseText;
+    [SerializeField] private string englishCloseText;
+    [SerializeField] private string japaneseBackText;
+    [SerializeField] private string englishBackText;
 
-    // private string[] japaneseTitles =
+    // private string[] japaneseTitles =  // 旧: WorldViewDataに一本化したため削除
     // {
     //     "双子の霊媒師",
     //     "霊力の法則",
@@ -43,7 +50,7 @@ public class WorldViewManager : NetworkBehaviour
     //     "操作説明"
     // };
 
-    // private string[] englishTitles =
+    // private string[] englishTitles =   // 旧: WorldViewDataに一本化したため削除
     // {
     //     "Twin Mediums",
     //     "Law of Spiritual Power",
@@ -51,17 +58,47 @@ public class WorldViewManager : NetworkBehaviour
     //     "Controls"
     // };
 
+    // =========================
+    // 起動時: 看板を非表示にしてConnectCanvasを表示
+    // =========================
+    private void Start()
+    {
+        // (UIViewSettingのuiEventを発火してConnectCanvasを表示)
+        if (connectCanvasEvent != null) connectCanvasEvent.Invoke();
+        // (看板は接続完了まで非表示)
+        if (boardCanvas != null) boardCanvas.SetActive(false);
+    }
+
+    // =========================
+    // ネットワーク接続完了時
+    // =========================
     public override void OnNetworkSpawn()
     {
-        Debug.Log($"[WorldView] Spawned clientId={NetworkManager.LocalClientId}");
+        base.OnNetworkSpawn();
+        Debug.Log("WorldViewManager OnNetworkSpawn called");
 
+        // ConnectCanvasを非表示にする（VoidEventで切り替え）
+        connectCanvasEvent?.Invoke();
+
+        // 看板を表示
+        if (boardCanvas != null)
+            boardCanvas.SetActive(true);
+
+        // ページ変更の監視開始
+        // pageIndex.OnValueChanged += OnPageIndexChanged; // 旧: メソッド名が誤っていたため修正
         pageIndex.OnValueChanged += OnPageChanged;
 
+        // 初期ページ表示
         ShowPage(pageIndex.Value);
     }
 
+    // =========================
+    // ネットワーク切断時
+    // =========================
     public override void OnNetworkDespawn()
     {
+        // pageIndex.OnValueChanged -= OnPageChanged; // 旧: base呼び出しが抜けていたため修正
+        base.OnNetworkDespawn();
         pageIndex.OnValueChanged -= OnPageChanged;
     }
 
@@ -81,7 +118,6 @@ public class WorldViewManager : NetworkBehaviour
             MoveScene();
             return;
         }
-
         pageIndex.Value++;
     }
 
@@ -97,7 +133,6 @@ public class WorldViewManager : NetworkBehaviour
     void RequestBackPageRpc()
     {
         if (pageIndex.Value <= 0) return;
-
         pageIndex.Value--;
     }
 
@@ -136,7 +171,7 @@ public class WorldViewManager : NetworkBehaviour
                 : (isJapanese ? japaneseNextText : englishNextText);
 
         if (backButtonText != null)
-            // backButtonText.text = isJapanese ? "戻る" : "Back";
+            // backButtonText.text = isJapanese ? "戻る" : "Back"; // 旧: ハードコード
             backButtonText.text = isJapanese ? japaneseBackText : englishBackText;
 
         if (backButton != null)
@@ -154,8 +189,7 @@ public class WorldViewManager : NetworkBehaviour
         if (isTutorialSkip)
         {
             Debug.Log("[WorldView] Loading VRSystemScene");
-
-            NetworkManager.SceneManager.LoadScene(
+            NetworkManager.Singleton.SceneManager.LoadScene(
                 "VRSystemScene",
                 LoadSceneMode.Single
             );
@@ -163,8 +197,7 @@ public class WorldViewManager : NetworkBehaviour
         else
         {
             Debug.Log("[WorldView] Loading TutorialScene");
-
-            NetworkManager.SceneManager.LoadScene(
+            NetworkManager.Singleton.SceneManager.LoadScene(
                 "TutorialScene",
                 LoadSceneMode.Single
             );
