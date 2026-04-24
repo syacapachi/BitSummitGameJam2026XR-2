@@ -27,7 +27,7 @@ public class WorldViewManager : NetworkBehaviour
     // [SerializeField] private GameObject connectCanvas;
     // [SerializeField] private GameObject boardCanvas;
     [SerializeField] private VoidEvent connectCanvasEvent;
-    [SerializeField] private GameObject boardCanvas;
+    [SerializeField] private Canvas boardCanvas;
 
     [Header("ページ設定")]
     // private int totalBoards = 4; // 旧: ハードコード
@@ -66,7 +66,7 @@ public class WorldViewManager : NetworkBehaviour
         // (UIViewSettingのuiEventを発火してConnectCanvasを表示)
         if (connectCanvasEvent != null) connectCanvasEvent.Invoke();
         // (看板は接続完了まで非表示)
-        if (boardCanvas != null) boardCanvas.SetActive(false);
+        if (boardCanvas != null) boardCanvas.enabled = false;
     }
 
     // =========================
@@ -82,7 +82,7 @@ public class WorldViewManager : NetworkBehaviour
 
         // 看板を表示
         if (boardCanvas != null)
-            boardCanvas.SetActive(true);
+            boardCanvas.enabled = true;
 
         // ページ変更の監視開始
         // pageIndex.OnValueChanged += OnPageIndexChanged; // 旧: メソッド名が誤っていたため修正
@@ -100,6 +100,7 @@ public class WorldViewManager : NetworkBehaviour
         // pageIndex.OnValueChanged -= OnPageChanged; // 旧: base呼び出しが抜けていたため修正
         base.OnNetworkDespawn();
         pageIndex.OnValueChanged -= OnPageChanged;
+        if (boardCanvas != null) boardCanvas.enabled = false;
     }
 
     // =========================
