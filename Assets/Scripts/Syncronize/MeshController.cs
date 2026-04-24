@@ -5,16 +5,25 @@ using Unity.Netcode;
 using UnityEngine;
 public class MeshController : NetworkBehaviour
 {
-    [SerializeField] bool meshEnable = false;
+    [SerializeField, SingleFlagOnly] LayerMask layer; 
     [SerializeField] List<Renderer> m_Renderer = new();
 
     public override void OnNetworkSpawn()
     {
+        int value = 0;
+        for(int i = 0; i < 32; i++)
+        {
+            if((layer & 1 << i) != 0)
+            {
+                value = i;
+                break;
+            }
+        }
         if (IsOwner)
         {
             foreach (var renderer in m_Renderer)
             {
-                renderer.enabled = meshEnable;
+                renderer.gameObject.layer = value;
             }
         }
     }
