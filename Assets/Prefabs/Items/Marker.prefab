@@ -116,7 +116,7 @@ Transform:
   m_GameObject: {fileID: 2818825565032162250}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.016, y: -0.208, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -200,8 +200,7 @@ MeshRenderer:
   m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: e6c9d0581475007489070e61ce92097d, type: 2}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -262,8 +261,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 92.342354
-  m_Center: {x: -0.4999936, y: -6.7357225, z: -0.17508864}
+  m_Radius: 148.42703
+  m_Center: {x: -0.49999353, y: -6.735712, z: 0.7656514}
 --- !u!1 &6642326925801029688
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +377,7 @@ Transform:
   m_GameObject: {fileID: 8123762091118261607}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.54320717, y: 0.68793774, z: 1.123}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -457,3 +456,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d2afc506ca80341b7a9e810daa26a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetRenderers: []
+  normalColor: {r: 0, g: 1, b: 0, a: 1}
+  blinkColor: {r: 0.92853254, g: 0.9748427, b: 0, a: 1}
+  blinkSpeed: 8
+  useEmission: 1
+  scaleTarget: {fileID: 5570317700273741475}
+  scaleSpeed: 3
+  scaleMultiplier: 1.2
