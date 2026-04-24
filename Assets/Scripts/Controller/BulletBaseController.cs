@@ -18,8 +18,6 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
 
     public float Damage => gunSO.Damage;
 
-    /// <summary>
-    //public IResultCollector ResultCollector => throw new System.NotImplementedException();
     public IResultCollector ResultCollector => shooterId;
 
 

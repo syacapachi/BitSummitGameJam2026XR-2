@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using Syacapachi.Attribute;
 
 public class NEnemyShoot : GunController
 {
@@ -8,6 +9,7 @@ public class NEnemyShoot : GunController
     [SerializeField] NEnemy nEnemy;
     private EnemyWeaponSettingsSO weaponSO;
     [SerializeField] AudioClip shotClip;
+    [SerializeField] Animator animator;
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffect;
 
@@ -23,11 +25,17 @@ public class NEnemyShoot : GunController
         weaponSO ??= base.WeaponSettings as EnemyWeaponSettingsSO;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
+    [OnInspectorButton]
+    private void InspectorShoot()
+    {
+        shootCorutine = StartCoroutine(ShootCorutine());
+    }
 
     protected override void OnShootServer()
     {
 
         if (!TryGetTarget(out var target)) return;
+        animator?.SetTrigger("Attack");
 
         Vector3 direction = (target.position - transform.position).normalized;
 
@@ -47,6 +55,7 @@ public class NEnemyShoot : GunController
 
     private IEnumerator ShootCorutine()
     {
+        animator.SetFloat("Speed", 2.0f);
         yield return new WaitForSeconds(weaponSO.FirstShootDelayTime);
         OnShootServer();
 

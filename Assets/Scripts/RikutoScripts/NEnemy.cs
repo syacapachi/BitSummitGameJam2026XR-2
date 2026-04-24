@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 {
+    [SerializeField] Transform rootTransfrom;
     [SerializeField] EnemySO enemySO;
     [SerializeField] JobSettingGenerator enemyJobSetting;
     private readonly NetworkVariable<float> currentHP = new(
@@ -95,7 +96,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         if (hpCanvas == null) return;
         if (!isInitialize) return;
-
+        if (rootTransfrom != null)
+        {
+            rootTransfrom.LookAt(targetPlayer);
+        }
         hpCanvas.transform.LookAt(targetPlayer);
         hpCanvas.transform.Rotate(0, 180f, 0);
     }
@@ -143,6 +147,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     void DieOnspector()
     {
         DieOnServer(null);
+        isInitialize = true;
     }
 
     void OnHPChanged(float oldValue, float newValue)
