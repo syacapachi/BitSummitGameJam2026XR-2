@@ -13,11 +13,6 @@ public class PlayerManager : MonoBehaviour
     public LocalPlayerRoot LocalPlayerRoot => localRoot;
     public IReadOnlyList<NetworkPlayerRoot> AllPlayers => playerList;
 
-    [Header("Owner Setting")]
-    [Tooltip("ホスト、クライアント設定前のカメラ")]
-    [SerializeField] bool IsJobOverride;
-    [SerializeField,EnableIf(nameof(IsJobOverride))]
-    PlayerJob JobOverride;
     public void ResistPlayer(NetworkPlayerRoot playerRoot)
     {
         playerList.Add(playerRoot);
@@ -30,10 +25,6 @@ public class PlayerManager : MonoBehaviour
     {
         NetworkOwnerPlayer = playerRoot;
         Debug.Log("Resist owner");
-        if (IsJobOverride)
-        {
-            //playerRoot.Propaty.Job = JobOverride;
-        }
     }
     public void UnResistOwner(NetworkPlayerRoot playerRoot)
     {
