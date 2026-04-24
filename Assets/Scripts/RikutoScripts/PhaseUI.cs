@@ -66,6 +66,7 @@ public class PhaseUI : MonoBehaviour
     // =========================
     void ChangeState(UIState next, object payload = null)
     {
+        if (currentState == next && next != UIState.Countdown) return;
         // 同じ状態は無視（必要なら消す）
         if (currentState == next) return;
 
@@ -120,7 +121,14 @@ public class PhaseUI : MonoBehaviour
 
     void OnCountdownChanged(int oldValue, int newValue)
     {
-        ChangeState(UIState.Countdown,newValue);
+        if (currentState == UIState.Countdown)
+        {
+            phaseText.text = newValue.ToString();
+            StartCoroutine(PopAnimation());
+            return;
+        }
+
+        ChangeState(UIState.Countdown, newValue);
     }
 
     // =========================
@@ -155,7 +163,7 @@ public class PhaseUI : MonoBehaviour
         phaseText.gameObject.SetActive(true);
         yield return PopAnimation();
 
-        ChangeState(UIState.Idle);
+        //ChangeState(UIState.Idle);
     }
 
     IEnumerator PhaseFinishRoutine()
