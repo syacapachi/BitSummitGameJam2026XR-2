@@ -9,11 +9,14 @@ public class MarkerController : NetworkBehaviour
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] GameObject playerMarker;
     [SerializeField] AttachableNode node;
-    [SerializeField] int laserDistance = 10;
+    [SerializeField] int laserDistance = 50;
     [SerializeField] MarkerAudioController markerAudioController;
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent markerEvent;
     AttachableBehaviour attach;
+    //水野が追加した。マーカーの発光用
+    MarkerBlinkEffect blinkEffect;
+    //以上
     bool isMarkAttachedServerOnly = false;
     Coroutine markerCoroutine;
     
@@ -23,12 +26,14 @@ public class MarkerController : NetworkBehaviour
         //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnMarker += PlaceMarkerRpc;
         markerEvent.Register(PlaceMarkerRpc);
     }
+  
     protected override void OnNetworkPostSpawn()
     {
         if (IsServer)
         {
             var marker = GameObject.Instantiate(playerMarker);
             var networkObject = marker.GetComponent<NetworkObject>();
+            blinkEffect = marker.GetComponentInChildren<MarkerBlinkEffect>(); // 水野が追加した
             attach = marker.GetComponentInChildren<AttachableBehaviour>();
             networkObject.SpawnWithOwnership(OwnerClientId);
             isMarkAttachedServerOnly = false;
@@ -62,7 +67,7 @@ public class MarkerController : NetworkBehaviour
             markerAudioController.OnMarkerSondPlayRpc(hit.point);
         }
     }
-    
+
     [Rpc(SendTo.Server)]
     private void MoveMarkerClientRpc(Vector3 pos)
     {
@@ -84,6 +89,14 @@ public class MarkerController : NetworkBehaviour
             }
         }
         attach.gameObject.transform.position = pos;
+
+        // 水野が追加した
+        if (blinkEffect != null)
+        {
+            blinkEffect.StartBlink();
+        }
+        // 以上
+
         markerCoroutine = StartCoroutine(MarkerBackCorutine());
 
         //var renderer = playerMarker.GetComponent<MeshRenderer>();
@@ -98,6 +111,14 @@ public class MarkerController : NetworkBehaviour
             attach.Attach(node);
             attach.gameObject.transform.localPosition = Vector3.zero;
             isMarkAttachedServerOnly = true;
+
+            // 水野が追加した
+            if (blinkEffect != null)
+            {
+                blinkEffect.StopBlink();
+            }
+            // 水野が追加した
+
         }
         else
         {
