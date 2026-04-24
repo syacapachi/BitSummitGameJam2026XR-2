@@ -184,7 +184,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e43407cadc1dced45af5fb6c7c592a72, type: 2}
+  - {fileID: 2100000, guid: d15e757defe3b384c831acbf28ec8542, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -223,8 +223,8 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.040633917
-        value: 0.13424979
+        time: 0.060554266
+        value: 0.12971793
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -338,8 +338,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014049742, y: 0.009317992, z: 0.13891283}
-  m_Center: {x: 0.00025426783, y: 0.0006450964, z: -0.036725193}
+  m_Size: {x: 0.014049741, y: 0.009317993, z: 0.22910963}
+  m_Center: {x: 0.00025426745, y: 0.0006450966, z: -0.081823476}
 --- !u!1001 &2327151915792440291
 PrefabInstance:
   m_ObjectHideFlags: 0
