@@ -52,7 +52,7 @@ public class PhaseUI : MonoBehaviour
     }
     private void OnGameStateChanged(GameState newState)
     {
-        if(newState == GameState.GameOver || newState == GameState.GameOver)
+        if(newState == GameState.GameOver || newState == GameState.GameClear)
         {
             ChangeState(UIState.GameFinish);
         }
@@ -121,6 +121,8 @@ public class PhaseUI : MonoBehaviour
 
     void OnCountdownChanged(int oldValue, int newValue)
     {
+        if (currentState == UIState.GameFinish) return;
+        if (newValue <= 0) return;
         if (currentState == UIState.Countdown)
         {
             phaseText.text = newValue.ToString();

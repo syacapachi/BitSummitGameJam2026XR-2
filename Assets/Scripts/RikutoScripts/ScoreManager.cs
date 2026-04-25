@@ -19,7 +19,7 @@ public class ScoreManager : NetworkBehaviour
     public void AddBonusServerOnly(int value)
     {
         if (!IsServer) return;
-        lastClearBonus.Value = value;
+        //lastClearBonus.Value = value;
         totalBonus.Value += value;
         AddScoreServerOnly(value);
         //Debug.Log("Bonus Added: " + value + ", Total Score: " + score.Value);
@@ -56,5 +56,11 @@ public class ScoreManager : NetworkBehaviour
     public void ResetScore()
     {
         SetScoreServerOnly();
+    }
+
+    public void SetBonusServerOnly(int value)
+    {
+        if (!IsServer) return;
+        lastClearBonus.Value = value;
     }
 }
