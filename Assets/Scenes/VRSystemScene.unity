@@ -25207,7 +25207,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1917126890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28654,6 +28654,14 @@ PrefabInstance:
       propertyPath: useCameraSolidColor
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'setting.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'setting.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

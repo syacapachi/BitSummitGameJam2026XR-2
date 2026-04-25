@@ -1,4 +1,5 @@
 ﻿using Syacapachi.Attribute;
+using System;
 using System.Collections;
 using TMPro;
 using Unity.Netcode;
@@ -38,6 +39,13 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     public bool IsAttackable => isAttackable;
 
+    [SerializeField]
+        private PlayerJob[] jobCycle = new PlayerJob[]
+    {
+        PlayerJob.Demon,
+        PlayerJob.Ghost,
+        PlayerJob.Tutorial
+    };
     public override void OnNetworkSpawn()
     {
         isInitialize = false;
@@ -170,5 +178,71 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public void SetAttackabe(bool value)
     {
         isAttackable = value;
+    }
+
+    [OnInspectorButton("NextJob")]
+    // =========================
+    public void NextJob()
+    {
+        if (!IsServer) return;
+
+        if (jobCycle == null || jobCycle.Length == 0)
+        {
+            Debug.LogError("[Enemy] JobCycle is empty");
+            return;
+        }
+
+        int index = Array.IndexOf(jobCycle, enemyJob);
+
+        int nextIndex;
+
+        if (index == -1)
+        {
+            // 見つからない場合は先頭へ
+            nextIndex = 0;
+        }
+        else
+        {
+            nextIndex = (index + 1) % jobCycle.Length;
+        }
+
+        ChangeJobServer(jobCycle[nextIndex]);
+    }
+
+    // =========================
+    // 🌐 サーバー専用：Job変更
+    // =========================
+    public void ChangeJobServer(PlayerJob newJob)
+    {
+        if (!IsServer) return;
+
+        ApplyJobInternal(newJob);
+
+        // 全クライアントへ同期
+        ChangeJobRpc(newJob);
+    }
+
+    // =========================
+    // 🌐 クライアント同期
+    // =========================
+    [Rpc(SendTo.ClientsAndHost)]
+    private void ChangeJobRpc(PlayerJob newJob)
+    {
+        ApplyJobInternal(newJob);
+    }
+
+    // =========================
+    // 🧠 内部処理
+    // =========================
+    private void ApplyJobInternal(PlayerJob newJob)
+    {
+        if (enemyJob == newJob) return;
+
+        var oldJob = enemyJob;
+        enemyJob = newJob;
+
+        ApplySettting(); // ← 既存のLayer変更処理
+
+        Debug.Log($"[Enemy] Job Changed: {oldJob} → {enemyJob}");
     }
 }
