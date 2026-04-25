@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
-  m_Name: HumanEnemy3
+  m_Name: GhostEnemy1NU
   m_EditorClassIdentifier: 
-  ID: 20
+  ID: 15
   Name: Enemy
-  HP: 300
+  HP: 100
   Damage: 100
-  Speed: 1
+  Speed: 0.1
   BulletSpeed: 5
   FirstShootDelay: 10
   shootInterval: 10
-  scoreValue: 300
-  prefab: {fileID: 6119941039605284742, guid: c91aeeb4085cdae4691a5b25995d470a, type: 3}
+  scoreValue: 100
+  prefab: {fileID: 2698170366202094917, guid: 99e7e033032dd6e4ba4b86579a76fa2a, type: 3}
