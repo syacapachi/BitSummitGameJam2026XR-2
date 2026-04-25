@@ -11,11 +11,11 @@ PrefabInstance:
     - target: {fileID: 2499958070715350036, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: animator
       value: 
-      objectReference: {fileID: 2501523732502254909}
+      objectReference: {fileID: 2579837985482361494}
     - target: {fileID: 2499958070715350036, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: networkAnimator
       value: 
-      objectReference: {fileID: 8946327595227902150}
+      objectReference: {fileID: 1524968715706929381}
     - target: {fileID: 3029493964516840045, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: m_Name
       value: GreenDemonNA Variant
@@ -23,10 +23,6 @@ PrefabInstance:
     - target: {fileID: 5941648011695898324, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2203346275
-      objectReference: {fileID: 0}
-    - target: {fileID: 5941648011695898324, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
-      propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 2280367477
       objectReference: {fileID: 0}
     - target: {fileID: 7078614501938154821, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -71,62 +67,21 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4499898262733962194, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2501523732502254909}
-    - targetCorrespondingSourceObject: {fileID: 4499898262733962194, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8946327595227902150}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
---- !u!1 &1625149769738833708 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4499898262733962194, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+--- !u!114 &1524968715706929381 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4455940530001110043, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
   m_PrefabInstance: {fileID: 2954195028914795774}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &2501523732502254909
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1625149769738833708}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e87a8bdd37537d44794313820aa1c11b, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8946327595227902150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1625149769738833708}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkAnimatorExpanded: 0
-  AuthorityMode: 0
-  m_Animator: {fileID: 2501523732502254909}
-  TransitionStateInfoList: []
-  AnimatorParameterEntries:
-    ParameterEntries:
-    - name: Attack
-      NameHash: 1080829965
-      Synchronize: 1
-      ParameterType: 9
-  AnimatorParametersExpanded: 0
+--- !u!95 &2579837985482361494 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 806711958879125096, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+  m_PrefabInstance: {fileID: 2954195028914795774}
+  m_PrefabAsset: {fileID: 0}
