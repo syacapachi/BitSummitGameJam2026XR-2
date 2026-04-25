@@ -363,9 +363,9 @@ namespace Syacapachi.Editor
         /// <summary>
         /// ScriptableObjectのネストされたフィールドを再帰的に描画
         /// </summary>
-        private void DrawNestedScriptableObjects(UnityEngine.Object obj, int depth = 0, HashSet<UnityEngine.Object> visited = null)
+        private void DrawNestedScriptableObjects(UnityEngine.Object obj, int depth = 0, HashSet<UnityEngine.Object> visited = null, string overrideLabel = null)
         {
-            if (obj == null || depth > 3) return;
+            if (obj == null || depth > 1) return;
 
             visited ??= new HashSet<UnityEngine.Object>();
 
@@ -387,9 +387,8 @@ namespace Syacapachi.Editor
                                        //UnityEngine.Objectの参照が有る場合は描画
                 if (prop.propertyType == SerializedPropertyType.ObjectReference)
                 {
-                    DrawSOReference(prop, depth, visited);
+                    DrawSOReference(prop, depth, visited, overrideLabel);
                 }
-                //配列の場合は、要素がScriptableObjectの参照になっている可能性があるので、さらにチェックする
                 else if (prop.isArray && prop.propertyType != SerializedPropertyType.String)
                 {
                     //配列の中身もチェックする
@@ -398,7 +397,7 @@ namespace Syacapachi.Editor
                         var elementProp = prop.GetArrayElementAtIndex(i);
                         if (elementProp.propertyType == SerializedPropertyType.ObjectReference)
                         {
-                            DrawSOReference(elementProp, depth, visited, $"{prop.displayName}[{i}]");
+                            DrawSOReference(elementProp, depth, visited, overrideLabel + $"{prop.displayName}[{i}]");
                         }
                     }
                 }
@@ -409,8 +408,13 @@ namespace Syacapachi.Editor
         private void DrawSOReference(SerializedProperty prop, int depth, HashSet<UnityEngine.Object> visited, string overrideLabel = null)
         {
             UnityEngine.Object refObj = prop.objectReferenceValue;
-            if (refObj is not ScriptableObject nestedSO) return;
-
+            if (refObj == null) return;
+            if (refObj is not ScriptableObject nestedSO)
+            {
+                // ScriptableObjectじゃない場合は再帰
+                DrawNestedScriptableObjects(refObj, depth + 1, visited, $"{refObj.name} ");
+                return;
+            }
             //非永続オブジェクト(一時オブジェクト)を拒否
             if (!EditorUtility.IsPersistent(nestedSO))
                 return;
@@ -441,16 +445,12 @@ namespace Syacapachi.Editor
                 editorCache[nestedSO] = cachedEditor;
             }
 
+            //エディター描画(この中でも呼ばれするの実質再帰)
             if (cachedEditor != null)
             {
                 cachedEditor.OnInspectorGUI();
             }
-
-            // 再帰
-            DrawNestedScriptableObjects(nestedSO, depth + 1, visited);
-
             EditorGUI.indentLevel--;
-
         }
     }
 }
