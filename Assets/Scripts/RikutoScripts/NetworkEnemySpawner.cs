@@ -62,7 +62,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         if (!IsServer) return;
 
         StopAllCoroutines();
-        remain = 0;
+        //remain = 0;
         // 追加（次のフェーズでリセット）　
         isAllDead = false;
         isSpawnFinished = false;
