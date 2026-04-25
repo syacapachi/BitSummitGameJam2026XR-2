@@ -22,13 +22,13 @@ public class PhaseSO : ScriptableObject
 }
 
 [System.Serializable]
-public class SpawnEvent
+public struct SpawnEvent
 {
     [SerializeField] EnemySO enemyType;   // 敵の種類
     [SerializeField] int spawnPointIndex; // 出現位置
     [SerializeField] float spawnTime;     // 何秒後に出るか（phase開始から）
 
-    public EnemySO EnemyType => enemyType;
-    public int SpawnPointIndex => spawnPointIndex;
-    public float SpawnTime => spawnTime;
+    public readonly EnemySO EnemyType => enemyType;
+    public readonly int SpawnPointIndex => spawnPointIndex;
+    public readonly float SpawnTime => spawnTime;
 }

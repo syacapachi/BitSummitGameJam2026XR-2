@@ -200,7 +200,7 @@ public class PhaseUI : MonoBehaviour
 
     IEnumerator AllEnemyDeadRoutine()
     {
-        int bonus = nGameManager.ScoreManager.lastClearBonus.Value;
+        int bonus = nGameManager.ScoreManager.LastClearBonus;
 
         SetupNormal();
 
