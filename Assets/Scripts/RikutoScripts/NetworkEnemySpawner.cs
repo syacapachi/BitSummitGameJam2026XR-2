@@ -63,6 +63,9 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
 
         StopAllCoroutines();
         remain = 0;
+        // 追加（次のフェーズでリセット）　
+        isAllDead = false;
+        isSpawnFinished = false;
 
         StartCoroutine(SpawnRoutine(events));
     }

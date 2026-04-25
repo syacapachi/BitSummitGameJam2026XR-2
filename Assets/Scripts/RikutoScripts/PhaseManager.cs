@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
@@ -71,7 +72,9 @@ public class PhaseManager : NetworkBehaviour
     void StartNextPhase()
     {
         Debug.Log("StartNextPhase called: " + this.name);
+
         syncedPhaseIndex.Value++;
+
 
         if (CurrentPhaseIndex >= phases.Length)
         {
@@ -111,7 +114,8 @@ public class PhaseManager : NetworkBehaviour
     }
     IEnumerator PhaseProgress()
     {
-        
+
+
         float max = phases[CurrentPhaseIndex].PhaseTime;
         while (timer > 0 && !spawner.IsAllDeadServerOnly)
         {
@@ -124,6 +128,7 @@ public class PhaseManager : NetworkBehaviour
         {
             phaseProgress.Value = 0f;
         }
+
         StartCoroutine(EndPhase());
     }
 
@@ -131,16 +136,21 @@ public class PhaseManager : NetworkBehaviour
     {
         if (CurrentPhaseIndex == phases.Length - 1)
         {
+
             yield return EndPhaseWithCountdown();
         }
+        
         else if (spawner.IsAllDeadServerOnly)
         {
+
             int bonus = phases[CurrentPhaseIndex].ClearBonus;
 
             scoreManager.AddBonusServerOnly(bonus); // ← ここ重要
 
             yield return AllDeadSequence();
         }
+
+
 
         StartNextPhase();
     }
