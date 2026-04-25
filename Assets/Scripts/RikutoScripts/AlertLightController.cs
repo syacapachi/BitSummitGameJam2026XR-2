@@ -30,16 +30,20 @@ public class AlertLightController : MonoBehaviour
 
     IEnumerator Start()
     {
-        var locator = ManagerLocator.Instance;
-        while(  locator == null
-                || locator.AllGameManager == null
-                || locator.AllGameManager.ScoreManager == null
-        )
+        while (true)
         {
-            yield return null;
+            var locator = ManagerLocator.Instance;
 
-        scoreManager = ManagerLocator.Instance.AllGameManager.ScoreManager;
-        Debug.Log("ScoreManager: " + scoreManager);
+            if (locator != null &&
+                locator.AllGameManager != null &&
+                locator.AllGameManager.ScoreManager != null)
+            {
+                scoreManager = locator.AllGameManager.ScoreManager;
+                Debug.Log("ScoreManager取得成功: " + scoreManager);
+                break;
+            }
+
+            yield return null;
         }
     }
 
