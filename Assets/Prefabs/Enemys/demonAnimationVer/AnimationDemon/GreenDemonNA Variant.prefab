@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 2501523732502254909}
+    - target: {fileID: 2499958070715350036, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: networkAnimator
+      value: 
+      objectReference: {fileID: 8946327595227902150}
     - target: {fileID: 3029493964516840045, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: m_Name
       value: GreenDemonNA Variant
@@ -71,6 +75,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4499898262733962194, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2501523732502254909}
+    - targetCorrespondingSourceObject: {fileID: 4499898262733962194, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8946327595227902150}
   m_SourcePrefab: {fileID: 100100000, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
 --- !u!1 &1625149769738833708 stripped
 GameObject:
@@ -99,3 +106,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8946327595227902150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1625149769738833708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 2501523732502254909}
+  TransitionStateInfoList: []
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Attack
+      NameHash: 1080829965
+      Synchronize: 1
+      ParameterType: 9
+  AnimatorParametersExpanded: 0
