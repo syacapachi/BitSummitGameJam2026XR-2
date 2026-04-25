@@ -24,7 +24,7 @@ public class JobChangedHandle : MonoBehaviour
     /// <param name="newValue"></param>
     private void OnJobChanged(PlayerJob newJob)
     {
-        if(setting.JobLayerMaskDic.TryGetValue(newJob, out var mask))
+        if(setting.TryGetPlayerLayerSettings(newJob, out var mask))
         {
             LayerChange(mask);
         }

@@ -86,7 +86,7 @@ public class SyncroPropaty : NetworkBehaviour
     {
         if (previousJob != newJob)
         {
-            PlayerLayerSettings settings = setting.JobLayerMaskDic[newJob];
+            PlayerLayerSettings settings = setting.JobLayerMaskReadOnlyDic[newJob];
             avatorCollider.layer = settings.Layer;
         }
     }

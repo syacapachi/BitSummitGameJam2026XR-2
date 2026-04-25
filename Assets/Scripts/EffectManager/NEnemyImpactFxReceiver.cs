@@ -44,7 +44,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             fxPosition = other.transform.position;
         }
         PlayerJob shooterJob = bullet.ShooterJob;
-        if(!JobSetting.JobLayerMaskDic.TryGetValue(shooterJob,out var playerLayerSettings))
+        if(!JobSetting.TryGetPlayerLayerSettings(shooterJob,out var playerLayerSettings))
         {
             return;
         }
@@ -86,7 +86,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             SyncroPropaty propaty = playerObject.GetComponentInChildren<SyncroPropaty>();
             if (propaty == null) continue;
 
-            if (JobSetting.JobLayerMaskDic[propaty.Job].IsVisibleLayer(gameObject.layer))
+            if (JobSetting.TryGetPlayerLayerSettings(propaty.Job, out var playerLayerSettings) && playerLayerSettings.IsVisibleLayer(gameObject.layer))
             {
                 ids.Add(pair.Key);
             }

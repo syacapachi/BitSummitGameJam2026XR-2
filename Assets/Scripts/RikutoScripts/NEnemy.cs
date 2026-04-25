@@ -79,7 +79,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             Debug.LogError("enemyJonSetting is null!");
             return;
         }
-        if(enemyJobSetting.JobLayerMaskDic.TryGetValue(EnemyJob, out var setting)){
+        if(enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)){
             foreach (Transform childs in transform.GetComponentsInChildren<Transform>())
             {
                 childs.gameObject.layer = setting.Layer;
@@ -145,7 +145,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (collector != null && collector is PlayerStats stats)
         {
             Debug.Log("Add kill");
-            stats.AddKill(enemySO.Id, enemySO.ScoreValue);
+            stats.AddKill(enemySO, enemySO.ScoreValue);
         }
 
         enemyKilled.Invoke(new EnemyKilled() {KilledEnemy = this,positon = transform.position});

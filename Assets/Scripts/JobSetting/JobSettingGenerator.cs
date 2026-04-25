@@ -12,7 +12,7 @@ public class JobSettingGenerator : ScriptableObject
     /// シリアライズできないクラスは、参照が消える(そのシーンにこのScriptableObjectを使うScriptがない) -> 値が初期化される。
     /// </summary>
     private readonly Dictionary<PlayerJob, PlayerLayerSettings> JobToLayerMaskDic = new();
-    public IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> JobLayerMaskDic
+    public IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> JobLayerMaskReadOnlyDic
     {
         get
         {
@@ -22,6 +22,17 @@ public class JobSettingGenerator : ScriptableObject
         }
     }
     private bool isInitialized = false;
+    /// <summary>
+    /// PlayerJobに対応するPlayerLayerSettingsを取得する。JobSettingSOに定義されていないジョブがあれば、ColliderLayerは0、CullingMaskはすべてのレイヤーの積集合に設定して返す。
+    /// </summary>
+    /// <param name="job"></param>
+    /// <param name="settings"></param>
+    /// <returns></returns>
+    public bool TryGetPlayerLayerSettings(PlayerJob job, out PlayerLayerSettings settings)
+    {
+        InitDic();
+        return JobToLayerMaskDic.TryGetValue(job, out settings);
+    }
     private void InitDic()
     {
         if (isInitialized) return;
@@ -29,7 +40,7 @@ public class JobSettingGenerator : ScriptableObject
 
         foreach (var settings in playerLayerSettingsList)
         {
-            if (JobLayerMaskDic.ContainsKey(settings.TargetJob))
+            if (JobLayerMaskReadOnlyDic.ContainsKey(settings.TargetJob))
             {
                 Debug.LogError($"Job {settings.TargetJob} is duplicated in JobSettingSO.");
                 continue;
@@ -43,7 +54,7 @@ public class JobSettingGenerator : ScriptableObject
         {
             // PlayerJobのビットフラグを考慮して、定義されていないジョブがあれば、ColliderLayerは0、CullingMaskはすべてのレイヤーの積集合に設定
             PlayerJob playerJob = (PlayerJob)job;
-            if (!JobLayerMaskDic.ContainsKey(playerJob))
+            if (!JobLayerMaskReadOnlyDic.ContainsKey(playerJob))
             {
                 //とりあえず、ColliderLayerは0、CullingMaskはすべてのレイヤーの積集合に設定
                 int colliderLayer = 0;
@@ -54,8 +65,8 @@ public class JobSettingGenerator : ScriptableObject
                 {
                     if ((playerJob != (PlayerJob)mask) && ((playerJob & (PlayerJob)mask) != 0))
                     {
-                        cullingMask &= JobLayerMaskDic[(PlayerJob)mask].CullingMask;
-                        attackableJob |= JobLayerMaskDic[(PlayerJob)mask].AttackableJob;
+                        cullingMask &= JobLayerMaskReadOnlyDic[(PlayerJob)mask].CullingMask;
+                        attackableJob |= JobLayerMaskReadOnlyDic[(PlayerJob)mask].AttackableJob;
                     }
                 }
                 JobToLayerMaskDic[playerJob] = new PlayerLayerSettings

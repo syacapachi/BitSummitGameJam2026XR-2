@@ -9,6 +9,7 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] GameObject protectArea;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseManager phaseManager;
+    [SerializeField] PlayerManager PlayerManager;
 
     [SerializeField] GameMode gameMode = GameMode.Protect;
     public GameMode CurrentGameMode => gameMode;
@@ -143,9 +144,8 @@ public class NetworkGameManager : NetworkBehaviour
     void SendResults()
     {
         var list = new List<PlayerResultData>();
-        var manager = ManagerLocator.Instance.AllPlayerManager;
 
-        foreach (var player in manager.AllPlayers)
+        foreach (var player in PlayerManager.AllPlayers)
         {
             if (player == null) continue;
 
