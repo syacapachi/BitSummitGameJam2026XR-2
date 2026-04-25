@@ -21370,45 +21370,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1561107942}
   m_Mesh: {fileID: -8356141293787191088, guid: ca87aad269ed931419d95d25680f3ead, type: 3}
---- !u!1 &1568944831 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1266559103897700638, guid: 07f51410c6523454580003730b31cfff, type: 3}
-  m_PrefabInstance: {fileID: 4265914712845988598}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1568944833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568944831}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 236cd14e1e5783c468e66a2f1d2dd8f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_CheckPointParent: {fileID: 1415695849}
-  checkPoints:
-  - {fileID: 257093670}
-  - {fileID: 1900339566}
-  - {fileID: 489795077}
-  - {fileID: 654655785}
-  - {fileID: 803324478}
-  - {fileID: 1954196039}
-  - {fileID: 1137725901}
-  - {fileID: 1395990037}
-  - {fileID: 30932656}
-  - {fileID: 1627746464}
-  - {fileID: 697224365}
-  - {fileID: 2081699480}
-  - {fileID: 1140056687}
-  - {fileID: 6387800}
-  - {fileID: 1607416041}
-  - {fileID: 661439564}
-  - {fileID: 1645160419}
-  - {fileID: 1652795296}
-  - {fileID: 863579255}
-  - {fileID: 299496988}
 --- !u!1 &1580435474
 GameObject:
   m_ObjectHideFlags: 0
@@ -28884,10 +28845,90 @@ PrefabInstance:
       propertyPath: 'targetCameras.Array.data[0]'
       value: 
       objectReference: {fileID: 1479436516}
-    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: checkPointSetting
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: m_CheckPointParent
       value: 
-      objectReference: {fileID: 11400000, guid: ddf08e95919abdd47b50ff24971340ef, type: 2}
+      objectReference: {fileID: 1415695849}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 257093670}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1900339566}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[2]'
+      value: 
+      objectReference: {fileID: 489795077}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[3]'
+      value: 
+      objectReference: {fileID: 654655785}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[4]'
+      value: 
+      objectReference: {fileID: 803324478}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[5]'
+      value: 
+      objectReference: {fileID: 1954196039}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[6]'
+      value: 
+      objectReference: {fileID: 1137725901}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[7]'
+      value: 
+      objectReference: {fileID: 1395990037}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[8]'
+      value: 
+      objectReference: {fileID: 30932656}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[9]'
+      value: 
+      objectReference: {fileID: 1627746464}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[10]'
+      value: 
+      objectReference: {fileID: 697224365}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[11]'
+      value: 
+      objectReference: {fileID: 2081699480}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[12]'
+      value: 
+      objectReference: {fileID: 1140056687}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[13]'
+      value: 
+      objectReference: {fileID: 6387800}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[14]'
+      value: 
+      objectReference: {fileID: 1607416041}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[15]'
+      value: 
+      objectReference: {fileID: 661439564}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[16]'
+      value: 
+      objectReference: {fileID: 1645160419}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[17]'
+      value: 
+      objectReference: {fileID: 1652795296}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[18]'
+      value: 
+      objectReference: {fileID: 863579255}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[19]'
+      value: 
+      objectReference: {fileID: 299496988}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -29023,10 +29064,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1266559103897700638, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1568944833}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07f51410c6523454580003730b31cfff, type: 3}
 --- !u!1001 &4870831369144877344
 PrefabInstance:
