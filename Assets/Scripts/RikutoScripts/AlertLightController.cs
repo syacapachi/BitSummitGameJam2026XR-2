@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class AlertLightController : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class AlertLightController : MonoBehaviour
     [SerializeField] float interval = 3f;
     [SerializeField] AudioClip buzzerClip;
 
+    [Header("Subscribe Event")]
+    [SerializeField] HPInfoEvent hpInfo;
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffectEvent;
 
@@ -25,23 +28,23 @@ public class AlertLightController : MonoBehaviour
             alertObject.SetActive(false);
     }
 
-    void Start()
+    IEnumerator Start()
     {
         var locator = ManagerLocator.Instance;
-        Debug.Log("Locator: " + locator);
+        while(  locator == null
+                || locator.AllGameManager == null
+                || locator.AllGameManager.ScoreManager == null
+        )
+        {
+            yield return null;
 
-        var gameManager = locator?.AllGameManager;
-        Debug.Log("GameManager: " + gameManager);
-
-        scoreManager = gameManager?.ScoreManager;
+        scoreManager = ManagerLocator.Instance.AllGameManager.ScoreManager;
         Debug.Log("ScoreManager: " + scoreManager);
+        }
     }
 
     void Update()
     {
-        if (scoreManager == null) return;
-
-
         int score = scoreManager.GetScore();
 
         if (score <= threshold)

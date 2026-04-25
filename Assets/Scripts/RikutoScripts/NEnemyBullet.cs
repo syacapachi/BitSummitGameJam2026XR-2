@@ -102,8 +102,5 @@ public class NEnemyBullet : BulletBaseController
     {
         gameManager.BulletHitProtectArea((int)-Damage);
         Debug.Log($"[NEnemyBullet] ProtectArea took {Damage} damage.");
-
-        if (NetworkObject.IsSpawned)
-            NetworkObject.Despawn(true);
     }
 }

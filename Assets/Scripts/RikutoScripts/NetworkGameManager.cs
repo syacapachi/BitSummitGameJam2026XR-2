@@ -127,7 +127,7 @@ public class NetworkGameManager : NetworkBehaviour
         scoreManager.AddScoreServerOnly(damage);
         InvokeEventRpc();
     }
-    [Rpc(SendTo.ClientsAndHost,InvokePermission = RpcInvokePermission.Server)]
+    [Rpc(SendTo.Everyone,InvokePermission = RpcInvokePermission.Server)]
     private void InvokeEventRpc()
     {
         OnbulletComeRpcEvent.Invoke();
