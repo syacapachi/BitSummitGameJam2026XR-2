@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1610029794184755906
+--- !u!1001 &3079290298670010007
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -70,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7617211511488400545, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3990644478
+      value: 31129577
       objectReference: {fileID: 0}
     - target: {fileID: 7617211511488400545, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
@@ -82,7 +82,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: c337d469678aa0d4fb70415fb29fb25d, type: 3}
     - target: {fileID: 7921933964387478276, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: m_Name
-      value: BlackGhostAnimation Variant
+      value: BlackGhostAnimation Variant Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8781079944661039900, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -91,11 +91,11 @@ PrefabInstance:
     - target: {fileID: 9142516393628170595, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: animator
       value: 
-      objectReference: {fileID: 2082407759920648395}
+      objectReference: {fileID: 2308690144698524830}
     - target: {fileID: 9142516393628170595, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: networkAnimator
       value: 
-      objectReference: {fileID: 6292533144360114653}
+      objectReference: {fileID: 7764133367025626504}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3472691729243235445, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
@@ -103,21 +103,21 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1626770062420064645, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5282891356847086701}
+      addedObject: {fileID: 8483856001575888952}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
---- !u!4 &55322279703528263 stripped
+--- !u!4 &4334896020115814162 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1626770062420064645, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
-  m_PrefabInstance: {fileID: 1610029794184755906}
+  m_PrefabInstance: {fileID: 3079290298670010007}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &5681889955616881542
+--- !u!1001 &8229782312674545619
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 55322279703528263}
+    m_TransformParent: {fileID: 4334896020115814162}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 7ac2683489cb1194697191a0b7b55281, type: 3}
       propertyPath: m_LocalScale.x
@@ -185,24 +185,29 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7ac2683489cb1194697191a0b7b55281, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2082407759920648395}
+      addedObject: {fileID: 2308690144698524830}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7ac2683489cb1194697191a0b7b55281, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6292533144360114653}
+      addedObject: {fileID: 7764133367025626504}
   m_SourcePrefab: {fileID: 100100000, guid: 7ac2683489cb1194697191a0b7b55281, type: 3}
---- !u!1 &4763481425907959511 stripped
+--- !u!4 &8483856001575888952 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7ac2683489cb1194697191a0b7b55281, type: 3}
+  m_PrefabInstance: {fileID: 8229782312674545619}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9148894113214460546 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7ac2683489cb1194697191a0b7b55281, type: 3}
-  m_PrefabInstance: {fileID: 5681889955616881542}
+  m_PrefabInstance: {fileID: 8229782312674545619}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &2082407759920648395
+--- !u!95 &2308690144698524830
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4763481425907959511}
+  m_GameObject: {fileID: 9148894113214460546}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: b4f2b528ce57069408312aabb94a596a, type: 2}
@@ -217,13 +222,13 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6292533144360114653
+--- !u!114 &7764133367025626504
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4763481425907959511}
+  m_GameObject: {fileID: 9148894113214460546}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
@@ -232,7 +237,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkAnimatorExpanded: 0
   AuthorityMode: 0
-  m_Animator: {fileID: 2082407759920648395}
+  m_Animator: {fileID: 2308690144698524830}
   TransitionStateInfoList:
   - IsCrossFadeExit: 0
     Layer: 0
@@ -252,8 +257,3 @@ MonoBehaviour:
       Synchronize: 1
       ParameterType: 1
   AnimatorParametersExpanded: 0
---- !u!4 &5282891356847086701 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7ac2683489cb1194697191a0b7b55281, type: 3}
-  m_PrefabInstance: {fileID: 5681889955616881542}
-  m_PrefabAsset: {fileID: 0}
