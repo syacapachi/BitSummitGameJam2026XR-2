@@ -37,6 +37,34 @@ public class CheckPointManager : MonoBehaviour
         }
     }
 #endif
+    public bool IsLastPoint(Transform transform)
+    {
+        if (transformToIndexDic.TryGetValue(transform, out int val))
+        {
+            return val == checkPoints.Length - 1;
+        }
+        Debug.LogError("Transform is not assinged");
+        return false;
+    }
+    public bool TryGetNextPoint(Transform transform, out Transform nextPoint)
+    {
+        nextPoint = null;
+        if (transformToIndexDic.TryGetValue(transform, out int val))
+        {
+            if (val < checkPoints.Length - 1)
+            {
+                nextPoint = checkPoints[val + 1];
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning("This is the last point. No next point available.");
+                return false;
+            }
+        }
+        Debug.LogError("Transform is not assinged");
+        return false;
+    }
     public Transform GetNextPoint(Transform transform)
     {
         if (transformToIndexDic.TryGetValue(transform, out int val))

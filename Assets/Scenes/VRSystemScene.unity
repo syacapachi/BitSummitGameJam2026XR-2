@@ -10595,7 +10595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a2d7d89889b4d94fa1f8d6fe49788e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Target: {fileID: 0}
+  m_Target: {fileID: 1479436520}
   m_TargetOffset: {x: 0, y: 0, z: 0.5}
   m_FollowInLocalSpace: 0
   m_ApplyTargetInLocalSpace: 0
@@ -11735,11 +11735,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4123251404296712853, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 61.4
+      value: 41.87
       objectReference: {fileID: 0}
     - target: {fileID: 4123251404296712853, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 44.7
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 4123251404296712853, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -11751,6 +11751,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4123251404623452489, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983985599767242308, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4983985599855904455, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
@@ -11879,11 +11883,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8792094514802383362, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 61.4
+      value: 51.54
       objectReference: {fileID: 0}
     - target: {fileID: 8792094514802383362, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 44.7
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8792094514802383362, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -29008,6 +29012,10 @@ PrefabInstance:
       propertyPath: localRoot
       value: 
       objectReference: {fileID: 663060509}
+    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: attackBlockedEvent
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

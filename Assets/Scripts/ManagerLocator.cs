@@ -6,8 +6,6 @@ using Syacapachi.Manager;
 public class ManagerLocator : MonoBehaviour
 {
     public static ManagerLocator Instance;
-
-    [field:SerializeField] public NetworkManager NetworkManager { get; private set; }
     [field:SerializeField] public PlayerManager AllPlayerManager { get; private set; }
     [field:SerializeField] public SettingLoactor JobManager { get; private set; }
     [field:SerializeField] public NetworkGameManager AllGameManager { get; private set; }
