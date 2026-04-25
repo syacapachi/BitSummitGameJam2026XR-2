@@ -83,7 +83,7 @@ public class PhaseManager : NetworkBehaviour
             OnAllPhaseEndedServerOnly?.Invoke();
             return;
         }
-
+        ManagerLocator.Instance.AllGameManager.ScoreManager.SetBonusServerOnly(phases[CurrentPhaseIndex].ClearBonus);
         StartCoroutine(StartPhaseWithCountdown(CurrentPhaseIndex));
     }
     IEnumerator StartPhaseWithCountdown(int phaseIndex)
