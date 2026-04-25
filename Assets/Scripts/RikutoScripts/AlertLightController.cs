@@ -49,6 +49,7 @@ public class AlertLightController : MonoBehaviour
 
     void Update()
     {
+        if(scoreManager == null) return;
         int score = scoreManager.GetScore();
 
         if (score <= threshold)
@@ -62,7 +63,7 @@ public class AlertLightController : MonoBehaviour
 
         if (isActive && alertObject != null)
         {
-            alertObject.transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
+            alertObject.transform.Rotate(rotateSpeed * Time.deltaTime * Vector3.up);
             timer += Time.deltaTime;
 
             if (timer >= interval)

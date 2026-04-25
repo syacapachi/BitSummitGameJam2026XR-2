@@ -5,14 +5,15 @@ using UnityEngine;
 /// <summary>
 /// NavMeshを使って、敵を移動させる。
 /// </summary>
-public class CheckPointManager : MonoBehaviour
+[CreateAssetMenu(fileName = "CheckPointSetting", menuName = "ScriptableObjects/CheckPointSetting", order = 1)]
+public class CheckPointSetting : ScriptableObject
 {
 #if UNITY_EDITOR
     [SerializeField] GameObject m_CheckPointParent;
 #endif
     [SerializeField] Transform[] checkPoints;
     readonly Dictionary<Transform, int> transformToIndexDic = new();
-    private void Awake()
+    private void OnEnable()
     {
         transformToIndexDic.Clear();
         for(int i = 0; i < checkPoints.Length; i++)
@@ -21,10 +22,6 @@ public class CheckPointManager : MonoBehaviour
         }
     }
 #if UNITY_EDITOR
-    private void Reset()
-    {
-        
-    }
     private void OnValidate()
     {
         if(m_CheckPointParent != null)

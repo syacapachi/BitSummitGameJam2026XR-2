@@ -9,8 +9,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     public int shield = 0;
     public float damageDealt = 0;
 
-    [SerializeField]
-    private int enemyTypeCount = 10; // 敵の種類数（固定）
+    [SerializeField] EnemyDataBase enemyDataBase; // 敵のデータベースへの参照
     [SerializeField]
     private int[] killCounts;
 
@@ -18,7 +17,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
 
     void Awake()
     {
-        killCounts = new int[enemyTypeCount];
+        killCounts = new int[enemyDataBase.IdToEnemyDataDict.Count];
     }
 
     // 発射
@@ -52,17 +51,18 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     }
 
     // 敵撃破（enemyIdに変更）
-    public void AddKill(int enemyId, int scoreValue)
+    public void AddKill(EnemySO enemyso, int scoreValue)
     {
         if (!IsServer)
         {
             Debug.Log("Can call only Server");
         }
+        int enemyId = enemyDataBase.GetIdFromEnemyData(enemyso);
         score += scoreValue;
 
         if (enemyId < 0 || enemyId >= killCounts.Length)
         {
-            Debug.LogWarning($"Invalid enemyId: {enemyId}");
+            Debug.LogWarning($"Invalid enemyso: {enemyso}");
             return;
         }
 

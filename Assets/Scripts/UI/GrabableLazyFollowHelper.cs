@@ -6,9 +6,9 @@ using UnityEngine.XR.Interaction.Toolkit.UI;
 [RequireComponent(typeof(XRGrabInteractable))]
 public class GrabableLazyFollowHelper : MonoBehaviour
 {
-    [HideInInspector, SerializeField]
+    [SerializeField]
     LazyFollow m_LazyFollow;
-    [HideInInspector,SerializeField]
+    [SerializeField]
     XRGrabInteractable m_GrabInteractable;
     [SerializeField] Camera Camera;
     private void Awake()

@@ -39,7 +39,7 @@ public class NBullet : BulletBaseController
 
         if (enemy != null)
         {
-            if (!setting.JobLayerMaskDic.TryGetValue(ShooterJob, out var layerMaskSetting))
+            if (!setting.TryGetPlayerLayerSettings(ShooterJob, out var layerMaskSetting))
             {
                 Debug.LogError($"LayerMask setting not found for job: {ShooterJob}");
                 NetworkObject.Despawn(true);

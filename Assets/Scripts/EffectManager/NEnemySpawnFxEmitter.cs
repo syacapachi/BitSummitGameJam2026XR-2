@@ -35,7 +35,7 @@ public class NEnemySpawnFxEmitter : NetworkBehaviour
             gameEffectEvent.Invoke(
                 new GameEffect(
                     spawnSfxAll,
-                    null,
+                    spawnFxPrefabAll,
                     position,
                     volume: spawnVolumeAll
                 )

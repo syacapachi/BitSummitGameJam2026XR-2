@@ -85,7 +85,7 @@ public class ResultUI : MonoBehaviour
         panel.SetActive(true);
 
         int score = nGameManager.ScoreManager.GetScore();
-        int bonus = nGameManager.ScoreManager.totalBonus.Value;
+        int bonus = nGameManager.ScoreManager.TotalBonus;
 
         // ⭐タイトル分岐
         if (isGameOver)

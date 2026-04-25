@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class NEnemyBullet : BulletBaseController
 {
-    public PlayerJob enemyJob; // Human / Ghost
-
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
     {
         Debug.Log($"[{nameof(NEnemyBullet)}] OnHitServer called. hit: {reciever.GameObject.name}");
@@ -76,10 +74,10 @@ public class NEnemyBullet : BulletBaseController
         // ジョブフィルタ: enemyJob と playerJob のビットが重なっている場合のみターゲット
         // 例) enemyJob=Ghost, playerJob=Ghost → (Ghost & Ghost) != 0 → ターゲット
         //     enemyJob=Ghost, playerJob=Nothing → (Ghost & Nothing) == 0 → スキップ
-        bool canTarget = (enemyJob & playerJob) != 0 || playerJob == PlayerJob.Nothing;
+        bool canTarget = (ShooterJob & playerJob) != 0 || playerJob == PlayerJob.Nothing;
         if (!canTarget)
         {
-            Debug.Log($"[NEnemyBullet] Player job {playerJob} not targeted by {enemyJob}, skipping.");
+            Debug.Log($"[NEnemyBullet] Player job {playerJob} not targeted by {ShooterJob}, skipping.");
             if (NetworkObject.IsSpawned)
                 NetworkObject.Despawn(true);
             return;

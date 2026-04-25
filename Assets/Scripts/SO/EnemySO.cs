@@ -3,7 +3,6 @@
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/EnemyData", order = 1)]
 public class EnemySO : ScriptableObject
 {
-    [SerializeField] int ID;
     [SerializeField] string Name = "Enemy";
     [SerializeField] Sprite icon;
     [SerializeField] int HP = 100;
@@ -11,8 +10,6 @@ public class EnemySO : ScriptableObject
     [SerializeField] int MoveSpeed = 100;
     [SerializeField] GameObject prefab;
     [SerializeField] EnemyWeaponSettingsSO enemyWeapon;
-
-    public int Id => ID;
     public string EnemyName => Name;
     public Sprite Icon => icon;
     public int Hp => HP;

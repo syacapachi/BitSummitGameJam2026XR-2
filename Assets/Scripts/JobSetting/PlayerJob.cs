@@ -63,41 +63,36 @@ public struct PlayerLayerSettings
         CullingMask = playerLayer;
         TargetJob = job;
         AttackableJob = attackableJob;
-        Layer = 0;
+        Layer = TargetColliderLayer.value;
         //最初に見つかったレイヤーを使用する
-        for (int i = 0; i < 32; i++)
-        {
-            if((TargetColliderLayer.value & (1 << i)) != 0)
-            {
-                Layer = i;
-                break;
-            }
-        }
+        LayerUpdate();
     }
     public void LayerUpdate()
     {
-        Layer = 0;
-        //最初に見つかったレイヤーを使用する
+        Layer = GetFirstLayer(TargetColliderLayer);
+    }
+    /// <summary>
+    /// 最初に見つかったレイヤーを返す
+    /// </summary>
+    /// <returns></returns>
+    public static int GetFirstLayer(LayerMask mask)
+    {
         for (int i = 0; i < 32; i++)
         {
-            if ((TargetColliderLayer.value & (1 << i)) != 0)
+            if ((mask.value & (1 << i)) != 0)
             {
-                Layer = i;
-                break;
+                return i;
             }
         }
+        return -1; //見つからない場合は-1を返す
     }
     public readonly bool IsAttackableJob(PlayerJob targetJob)
     {
         return (AttackableJob & targetJob) != 0;
     }
-    public readonly bool IsAttackableLayer(int targetLayer)
+    public readonly int GetNonVisibleLayerIndex()
     {
-        return (CullingMask.value & (1 << targetLayer)) == 0;
-    }
-    public readonly bool IsAttackableLayer(LayerMask targetLayerMask)
-    {
-        return (CullingMask.value & targetLayerMask.value) == 0;
+        return GetFirstLayer(~CullingMask);
     }
     public readonly bool IsVisibleLayer(int targetLayer)
     {

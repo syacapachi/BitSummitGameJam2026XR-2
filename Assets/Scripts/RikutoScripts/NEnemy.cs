@@ -79,7 +79,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             Debug.LogError("enemyJonSetting is null!");
             return;
         }
-        if(enemyJobSetting.JobLayerMaskDic.TryGetValue(EnemyJob, out var setting)){
+        if(enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)){
             foreach (Transform childs in transform.GetComponentsInChildren<Transform>())
             {
                 childs.gameObject.layer = setting.Layer;
@@ -129,6 +129,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         {
             hpText.text = $"{currentHP.Value} / {enemySO.Hp}";
         }
+        //プレイヤーに寄ってくる
+        //StartCoroutine(MoveToNextPos(targetPlayer.position));
         
 
         if (currentHP.Value <= 0)
@@ -137,6 +139,17 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
     }
 
+    IEnumerator MoveToNextPos(Vector3 targetPos)
+    {
+        //位置情報の更新はFixedupdateにする。
+        var nextFixed = new WaitForFixedUpdate();
+        yield return nextFixed;
+        while(Vector3.Distance(transform.position, targetPos) > 0.1f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * enemySO.MoveSpeedValue);
+            yield return nextFixed;
+        }
+    }
     
 
     void DieOnServer(IResultCollector collector)
@@ -145,7 +158,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (collector != null && collector is PlayerStats stats)
         {
             Debug.Log("Add kill");
-            stats.AddKill(enemySO.Id, enemySO.ScoreValue);
+            stats.AddKill(enemySO, enemySO.ScoreValue);
         }
 
         enemyKilled.Invoke(new EnemyKilled() {KilledEnemy = this,positon = transform.position});

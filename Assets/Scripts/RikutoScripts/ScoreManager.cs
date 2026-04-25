@@ -10,10 +10,11 @@ public class ScoreManager : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-    public NetworkVariable<int> totalBonus = new NetworkVariable<int>(0);
-    public NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(0);
+    [SerializeField] NetworkVariable<int> totalBonus = new NetworkVariable<int>(0);
+    [SerializeField] NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(0);
     bool isGameOver = false;
-
+    public int TotalBonus => totalBonus.Value;
+    public int LastClearBonus => lastClearBonus.Value;
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
     public void AddBonusServerOnly(int value)

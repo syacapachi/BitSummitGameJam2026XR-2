@@ -66,6 +66,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   protectArea: {fileID: 0}
   OnAllEnemyDeadRpcEvent: {fileID: 11400000, guid: d48233639feb72e4ba705392d35f3c40, type: 2}
   EnemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
@@ -78,7 +80,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6995849510927855908}
-  - component: {fileID: 299582908975167603}
+  - component: {fileID: 4441792715120167192}
   m_Layer: 0
   m_Name: CheckPointManager
   m_TagString: Untagged
@@ -101,7 +103,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4908882465109089120}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &299582908975167603
+--- !u!114 &4441792715120167192
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,11 +112,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1266559103897700638}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd9dfb6e2ec6bd74ab586b3af253069f, type: 3}
+  m_Script: {fileID: 11500000, guid: 236cd14e1e5783c468e66a2f1d2dd8f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_CheckPointParent: {fileID: 0}
   checkPoints:
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -178,6 +182,7 @@ Transform:
   - {fileID: 4322182251488153399}
   - {fileID: 4746944526076724239}
   - {fileID: 8180314942974675238}
+  - {fileID: 7532219791915829058}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &577900837676337283
@@ -192,16 +197,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f3a920fc619b8b4daa239736f59ace6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <NetworkManager>k__BackingField: {fileID: 0}
   <AllPlayerManager>k__BackingField: {fileID: 8012348177458703508}
-  <JobManager>k__BackingField: {fileID: 4391330651534924166}
   <AllGameManager>k__BackingField: {fileID: 5542295562281695918}
   <AllNetworkObjectPool>k__BackingField: {fileID: 4084111059737820316}
   <LocalObjectPool>k__BackingField: {fileID: 4446207769095747314}
-  <EffectAudioManager>k__BackingField: {fileID: 6731689958154144565}
   <RankingManager>k__BackingField: {fileID: 2563868915211156367}
   <TutorialManager>k__BackingField: {fileID: 8343285116251111980}
-  <GameEffectParticleManager>k__BackingField: {fileID: 0}
+  <CheckPointManager>k__BackingField: {fileID: 4441792715120167192}
 --- !u!114 &4316947998156742355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,9 +275,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   phases:
-  - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
-  - {fileID: 11400000, guid: 9130db537808a9a4bbf5f8c246970b30, type: 2}
-  - {fileID: 11400000, guid: 09e28c63f7a683f46919a5d21940185b, type: 2}
+  - {fileID: 11400000, guid: 01e97072af31c5746aae4fc3efb30aec, type: 2}
+  - {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
   spawner: {fileID: 5843874078436757177}
   scoreManager: {fileID: 7622921992766210704}
   uiSettings: {fileID: 11400000, guid: 501a16477cf3ffe419cd09b562a62f7a, type: 2}
@@ -407,7 +408,7 @@ GameObject:
   - component: {fileID: 4411501771318302359}
   - component: {fileID: 4391330651534924166}
   m_Layer: 0
-  m_Name: JobManager
+  m_Name: SettingLocator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -441,9 +442,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   setting:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
+  - {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
+  enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
 --- !u!1 &5655868705551815652
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,6 +599,7 @@ MonoBehaviour:
   protectArea: {fileID: 0}
   scoreManager: {fileID: 7622921992766210704}
   phaseManager: {fileID: 1871165705981970814}
+  PlayerManager: {fileID: 8012348177458703508}
   gameMode: 1
   gameState:
     UpdateTraits:
@@ -671,6 +673,78 @@ MonoBehaviour:
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   OnScoreReachZeroServerEvent: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
+--- !u!1 &6500222626716750681
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7532219791915829058}
+  - component: {fileID: 4214020285422082898}
+  m_Layer: 0
+  m_Name: SkyBoxColorChange
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7532219791915829058
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6500222626716750681}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4908882465109089120}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4214020285422082898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6500222626716750681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e353cdde9fb192544980c182e28be148, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skyboxMat: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
+  skyBoxColors:
+  - topColor: {r: 0, g: 0.22023964, b: 1, a: 0}
+    horizonColor: {r: 0, g: 0.91134834, b: 1, a: 0}
+    bottomColor: {r: 0, g: 1, b: 0.65164423, a: 0}
+    intensity: 1
+    exponentTop: 0.5
+    exponentBottom: 5
+  - topColor: {r: 0, g: 0.16482663, b: 1, a: 0}
+    horizonColor: {r: 1, g: 0.8398217, b: 0, a: 0}
+    bottomColor: {r: 1, g: 0.06938208, b: 0, a: 0}
+    intensity: 1
+    exponentTop: 0.5
+    exponentBottom: 10
+  - topColor: {r: 0, g: 0, b: 0, a: 0}
+    horizonColor: {r: 0, g: 0.5877962, b: 1, a: 0}
+    bottomColor: {r: 0, g: 0, b: 0, a: 0}
+    intensity: 0.1
+    exponentTop: 1
+    exponentBottom: 1
+  - topColor: {r: 0, g: 0, b: 0, a: 0}
+    horizonColor: {r: 0, g: 0, b: 0, a: 0}
+    bottomColor: {r: 0, g: 0, b: 0, a: 0}
+    intensity: 0
+    exponentTop: 0
+    exponentBottom: 0
+  defaultIndex: 0
+  phaseChageEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
 --- !u!1 &7146760537532538251
 GameObject:
   m_ObjectHideFlags: 0
@@ -770,14 +844,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameStateRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
-  phaseChangeEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
   logStateChange: 0
   moonQuad: {fileID: 0}
   roomLights:
   - {fileID: 0}
   clearLightIntensity: 4
   useCameraSolidColor: 0
-  targetCameras: []
+  targetCameras:
+  - {fileID: 0}
   clearBackgroundColor: {r: 0.7, g: 0.8, b: 1, a: 1}
   forceSolidColorClearFlags: 1
   useRenderSettingsSkybox: 1

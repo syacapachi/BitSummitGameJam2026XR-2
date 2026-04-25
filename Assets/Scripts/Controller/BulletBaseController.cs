@@ -7,7 +7,7 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     [SerializeField] float lifeTime = 5f;
     [SerializeField] Rigidbody rb;
     [SerializeField] protected JobSettingGenerator setting;
-    WeaponSettingsSO gunSO;
+    private WeaponSettingsSO gunSO;
     private PlayerJob shooterJob = PlayerJob.Both;
     private IResultCollector shooterId;
     protected Coroutine despawnTimer;
@@ -19,6 +19,8 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     public float Damage => gunSO.Damage;
 
     public IResultCollector ResultCollector => shooterId;
+
+    protected WeaponSettingsSO GunSO => gunSO;
 
 
     void Start()
@@ -35,11 +37,25 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
             despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
         }
     }
-    public void BulletInit(IResultCollector shooter,PlayerJob shooterJob,WeaponSettingsSO so)
+    public void BulletInit(IResultCollector shooter, PlayerJob shooterJob, WeaponSettingsSO so, bool isApplyLayer = false)
     {
         shooterId = shooter;
         this.shooterJob = shooterJob;
         gunSO = so;
+        if (isApplyLayer)
+        {
+            ApplySetting();
+        }
+    }
+    private void ApplySetting()
+    {
+        if (setting.TryGetPlayerLayerSettings(ShooterJob, out var layersetting))
+        {
+            foreach (Transform childs in transform.GetComponentsInChildren<Transform>())
+            {
+                childs.gameObject.layer = layersetting.Layer;
+            }
+        }
     }
     private IEnumerator DespawnCorutine(float time)
     {

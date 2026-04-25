@@ -1,11 +1,13 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
-public class MarkerBlinkEffect : MonoBehaviour
+public class MarkerBlinkEffect : NetworkBehaviour
 {
     [Header("Color Blink")]
     [SerializeField] Renderer[] targetRenderers;
-    [SerializeField] Color normalColor = Color.green;
+    [SerializeField] Color ownerNormalColor = Color.green;
+    [SerializeField] Color nonOwnerNormalColor = Color.blue;
     [SerializeField] Color blinkColor = Color.red;
     [SerializeField] float blinkSpeed = 8f;
     [SerializeField] bool useEmission = true;
@@ -15,14 +17,15 @@ public class MarkerBlinkEffect : MonoBehaviour
     [SerializeField] Transform scaleTarget;
     [SerializeField] float scaleSpeed = 3f;
     [SerializeField] float scaleMultiplier = 1.12f;
-
+    Color DefaultColor;
     Material[] materials;
     bool isBlinking = false;
     Vector3 defaultScale;
     Coroutine blinkCoroutine;
 
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
+        DefaultColor = IsOwner ? ownerNormalColor : nonOwnerNormalColor;
         if (targetRenderers == null || targetRenderers.Length == 0)
             targetRenderers = GetComponentsInChildren<Renderer>(true);
 
@@ -36,7 +39,7 @@ public class MarkerBlinkEffect : MonoBehaviour
         {
             if (targetRenderers[i] == null) continue;
             materials[i] = targetRenderers[i].material;
-            ApplyColor(materials[i], normalColor);
+            ApplyColor(materials[i], DefaultColor);
         }
     }
 
@@ -47,7 +50,7 @@ public class MarkerBlinkEffect : MonoBehaviour
         if (materials != null)
         {
             float colorT = (Mathf.Sin(Time.time * blinkSpeed) + 1f) * 0.5f;
-            Color currentColor = Color.Lerp(normalColor, blinkColor, colorT);
+            Color currentColor = Color.Lerp(DefaultColor, blinkColor, colorT);
 
             for (int i = 0; i < materials.Length; i++)
             {
@@ -89,7 +92,7 @@ public class MarkerBlinkEffect : MonoBehaviour
             for (int i = 0; i < materials.Length; i++)
             {
                 if (materials[i] == null) continue;
-                ApplyColor(materials[i], normalColor);
+                ApplyColor(materials[i], ownerNormalColor);
             }
         }
 
@@ -113,4 +116,10 @@ public class MarkerBlinkEffect : MonoBehaviour
             mat.SetColor("_EmissionColor", color * emissionIntensity);
         }
     }
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        targetRenderers = GetComponentsInChildren<Renderer>(true);
+    }
+#endif
 }
