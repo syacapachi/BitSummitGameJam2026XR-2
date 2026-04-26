@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Syacapachi.Attribute;
 using System;
 using UnityEditor;
+using UnityEngine.Events;
 public class SampleScript : MonoBehaviour
 {
     [ShowInspector, SerializeField] int a;
@@ -37,6 +38,10 @@ public class SampleScript : MonoBehaviour
         {
             Debug.Log($"This is an inline method. number = {number}");
         }
+    }
+    public class GeneticClass<T>
+    {
+        public T value;
     }
 
     [Flags]
@@ -73,6 +78,12 @@ public class SampleScript : MonoBehaviour
         Debug.Log("Value: " + valueString);
     }
     [OnInspectorButton]
+    public void SampleMethodWithParameter(List<GameObject> value)
+    {
+        string valueString = string.Join(", ", value);
+        Debug.Log("Value: " + valueString);
+    }
+    [OnInspectorButton]
     public void SampleMethodWithParameter(InlineClass inlineClass)
     {
         inlineClass.InlineMethod();
@@ -92,5 +103,35 @@ public class SampleScript : MonoBehaviour
     public void SampleMethodWithParameter(IInLineInterface resisterable)
     {
         resisterable.InlineMethod();
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(UnityEvent invokeEvent)
+    {
+        invokeEvent.Invoke();
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(LayerMask invokeEvent)
+    {
+        Debug.Log("Value: " + invokeEvent.value);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(Quaternion invokeEvent)
+    {
+        Debug.Log("Value: " + invokeEvent);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(DateTime invokeEvent)
+    {
+        Debug.Log("Value: " + invokeEvent);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter<F>(GeneticClass<F> invokeEvent)
+    {
+        Debug.Log("Value: " + invokeEvent.value);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(GeneticClass<int> invokeEvent)
+    {
+        Debug.Log("Value: " + invokeEvent.value);
     }
 }

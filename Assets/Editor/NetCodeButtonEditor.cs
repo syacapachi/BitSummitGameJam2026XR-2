@@ -11,6 +11,7 @@ namespace Syacapachi.Editor
     using Unity.Netcode.Editor;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.Events;
 
     /// <summary>
     /// [OnInspectorButton]属性を持つメソッドを、Inspectorにボタンとして表示。
@@ -23,7 +24,7 @@ namespace Syacapachi.Editor
         // メソッド名と引数のキャッシュ (パフォーマンス向上のため)
         private readonly Dictionary<MethodInfo, object[]> methodParameters = new();
         // 抽象クラスやインターフェースと、それを実装/継承する具体的なクラスのキャッシュ (描画できない型を識別するため)
-        private readonly Dictionary<Type, Type> abstructToClass = new();
+        private readonly Dictionary<object, Type> abstructToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<object, bool> foldouts = new();
         // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
@@ -145,6 +146,25 @@ namespace Syacapachi.Editor
                 return EditorGUILayout.LongField(name, currentValue != null ? (long)currentValue : 0);
             if (t == typeof(string))
                 return EditorGUILayout.TextField(name, currentValue as string ?? "");
+            if (t == typeof(char))
+            {
+                string str = EditorGUILayout.TextField(name, currentValue != null ? ((char)currentValue).ToString() : "");
+                return string.IsNullOrEmpty(str) ? '\0' : str[0];
+            }
+            if (t == typeof(DateTime))
+            {
+                string str = EditorGUILayout.TextField(name, currentValue != null ? ((DateTime)currentValue).ToString("o") : DateTime.Now.ToString("o"));
+                if (DateTime.TryParse(str, null, System.Globalization.DateTimeStyles.RoundtripKind, out var result))
+                    return result;
+                return currentValue ?? DateTime.Now;
+            }
+            if (t == typeof(TimeSpan))
+            {
+                string str = EditorGUILayout.TextField(name, currentValue != null ? ((TimeSpan)currentValue).ToString() : TimeSpan.Zero.ToString());
+                if (TimeSpan.TryParse(str, out var result))
+                    return result;
+                return currentValue ?? TimeSpan.Zero;
+            }
             if (t == typeof(bool))
                 return EditorGUILayout.Toggle(name, currentValue != null && (bool)currentValue);
             if (t == typeof(Vector2))
@@ -172,13 +192,31 @@ namespace Syacapachi.Editor
             if (t == typeof(Gradient))
                 return EditorGUILayout.GradientField(name, currentValue as Gradient ?? new Gradient());
             if (t == typeof(LayerMask))
-                return EditorGUILayout.LayerField(name, currentValue != null ? (LayerMask)currentValue : new LayerMask());
-            if (t == typeof(SerializedProperty))
-                return EditorGUILayout.PropertyField(currentValue as SerializedProperty, new GUIContent(name));
+                return EditorGUILayout.MaskField(name, ((LayerMask?)currentValue)?.value ?? 0, UnityEditorInternal.InternalEditorUtility.layers);
+            if (t == typeof(Quaternion))
+                return Quaternion.Euler(EditorGUILayout.Vector3Field(name, ((Quaternion?)currentValue)?.eulerAngles ?? Vector3.zero));
+            if (t == typeof(UnityEvent))
+            {
+                // UnityEventは専用のプロパティドローアーが必要なので、ここでは描画できないことを示すメッセージを表示する。
+                EditorGUILayout.HelpBox($"UnityEvent type is not supported for field {name}.", MessageType.Error);
+                return currentValue;
+            }
+            //Nullableな型は、nullを許容するためにNullable.GetUnderlyingTypeで元の型を取得して描画する。
+            if (Nullable.GetUnderlyingType(t) is Type underlyingType)
+            {
+                currentValue ??= GetDefault(underlyingType);
+                return DrawField(underlyingType, name, currentValue);
+            }
             // Enum
             if (t.IsEnum)
             {
                 currentValue ??= Enum.GetValues(t).GetValue(0);
+                if (t.GetCustomAttribute<FlagsAttribute>() != null)
+                {
+                    // [Flags]属性がある場合はEnumFlagsFieldで描画
+                    return EditorGUILayout.EnumFlagsField(name, (Enum)currentValue);
+                }
+                // 通常のEnumはEnumPopupで描画
                 return EditorGUILayout.EnumPopup(name, (Enum)currentValue);
             }
 
@@ -213,10 +251,28 @@ namespace Syacapachi.Editor
             {
                 return DrawDictionary(name, t, currentValue);
             }
-            // 抽象クラスやインターフェース
             if (t.IsAbstract || t.IsInterface)
             {
                 return DrawAbstructOrInterface(name, t, currentValue);
+            }
+            //リスト、辞書、抽象クラス/インターフェース以外のジェネリック型
+            if (t.IsGenericType)
+            {
+                if (t.IsGenericTypeDefinition)
+                {
+                    //Generic<> やGeneric<,>など、ジェネリック型の定義自体の場合は、描画できないので、エラーメッセージを表示する
+                    // ジェネリック型の定義自体は描画できないので、エラーメッセージを表示する
+                    EditorGUILayout.HelpBox($"Generic type definition {t.Name} is not supported.", MessageType.Error);
+                    return currentValue;
+                }
+                else if (t.ContainsGenericParameters)
+                {
+                    //Generic<T>やGeneric<T,U>など、ジェネリック型の引数に未指定の型パラメータが含まれている場合は描画できないので、エラーメッセージを表示する
+                    // ジェネリック型の引数に未指定の型パラメータが含まれている場合も描画できないので、エラーメッセージを表示する
+                    EditorGUILayout.HelpBox($"Generic type {t.Name}<{string.Join(", ", t.GetGenericArguments().Select(t => t.Name))}> contains unspecified type parameters and is not supported.", MessageType.Error);
+                    return currentValue;
+                }
+                //上記以外のジェネリック型は、通常のクラスと同様に描画する
             }
             // ScriptableObjectをインラインで描画
             return DrawObject(name, t, currentValue);
