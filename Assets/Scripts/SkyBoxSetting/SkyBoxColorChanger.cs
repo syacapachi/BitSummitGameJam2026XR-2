@@ -1,22 +1,22 @@
-using Syacapachi.Attribute;
+ï»¿using Syacapachi.Attribute;
 using UnityEngine;
 
 public class SkyBoxColorChanger : MonoBehaviour
 {
     [System.Serializable]
-    class SkyBoxSetting
+    struct SkyBoxSetting
     {
-        [Header("‹ó‚Ì^ã‚ÌF")]
+        [Header("ç©ºã®çœŸä¸Šã®è‰²")]
         public Color topColor;
-        [Header("‹ó‚ÌŠî–{F")]
+        [Header("ç©ºã®åŸºæœ¬è‰²")]
         public Color horizonColor;
-        [Header("‹ó‚Ì’n•½ü‚ÌF")]
+        [Header("ç©ºã®åœ°å¹³ç·šã®è‰²")]
         public Color bottomColor;
-        [Header("‹ó‚Ì–¾‚é‚³(0~1)")]
+        [Header("ç©ºã®æ˜ã‚‹ã•(0~1)")]
         public float intensity;
-        [Header("‹ó‚Ì^ã‚ÌF‚ÌZH“x")]
+        [Header("ç©ºã®çœŸä¸Šã®è‰²ã®æµ¸é£Ÿåº¦")]
         public float exponentTop;
-        [Header("‹ó‚Ì’n•½ü‚ÌF‚ÌZH“x")]
+        [Header("ç©ºã®åœ°å¹³ç·šã®è‰²ã®æµ¸é£Ÿåº¦")]
         public float exponentBottom;
     }
     [Header("SkyBox Material")]
@@ -39,10 +39,10 @@ public class SkyBoxColorChanger : MonoBehaviour
         phaseChageEvent.Unregister(ApplyColor);
     }
     /// <summary>
-    /// ‘¦•ÏX—pB
+    /// å³æ™‚å¤‰æ›´ç”¨ã€‚
     /// </summary>
     /// <param name="index"></param>
-    [OnInspectorButton("‰¼“K‰ƒ{ƒ^ƒ“")]
+    [OnInspectorButton("ä»®é©å¿œãƒœã‚¿ãƒ³")]
     void ApplyColor(int index)
     {
         if (index < 0 || index >= skyBoxColors.Length) return;
@@ -56,7 +56,7 @@ public class SkyBoxColorChanger : MonoBehaviour
         skyboxMat.SetFloat("_Exponent2", c.exponentBottom);
     }
     /// <summary>
-    /// ™X‚É•Ï‰»‚³‚¹‚é—pBUpdate“™‚ÅŒÄ‚Ño‚·‚±‚Æ‚ğ‘z’èB
+    /// å¾ã€…ã«å¤‰åŒ–ã•ã›ã‚‹ç”¨ã€‚Updateç­‰ã§å‘¼ã³å‡ºã™ã“ã¨ã‚’æƒ³å®šã€‚
     /// </summary>
     /// <param name="a"></param>
     /// <param name="b"></param>

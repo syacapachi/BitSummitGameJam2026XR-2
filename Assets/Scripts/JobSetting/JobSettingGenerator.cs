@@ -7,7 +7,7 @@ public class JobSettingGenerator : ScriptableObject
     /// <summary>
     /// [SerializeField],publicはシーンをまたいでも値が残る。
     /// </summary>
-    [SerializeField] List<PlayerLayerSettings> playerLayerSettingsList = new();
+    [SerializeField] PlayerLayerSettings[] playerLayerSettingsList;
     /// <summary>
     /// シリアライズできないクラスは、参照が消える(そのシーンにこのScriptableObjectを使うScriptがない) -> 値が初期化される。
     /// </summary>

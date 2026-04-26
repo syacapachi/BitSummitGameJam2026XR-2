@@ -1,16 +1,16 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// EnemySO‚ğID‚ÅŠÇ—‚·‚éScriptableObject
-/// ’ÊM‚ÅAEnemySO‚ğID‚Å‘—‚é‚½‚ß‚É•K—v
+/// EnemySOã‚’IDã§ç®¡ç†ã™ã‚‹ScriptableObject
+/// é€šä¿¡ã§ã€EnemySOã‚’IDã§é€ã‚‹ãŸã‚ã«å¿…è¦
 /// </summary>
 [CreateAssetMenu(fileName = "EnemyDataBase", menuName = "ScriptableObjects/EnemyDataBase", order = 1)]
 public class EnemyDataBase : ScriptableObject
 {
-    [Header("EnemySO‚Æ”z—ñ‚ÌƒCƒ“ƒfƒbƒNƒX‚ğ‘Î‰‚³‚¹‚é")]
-    [Tooltip("EnemySO‚Æ”z—ñ‚ÌƒCƒ“ƒfƒbƒNƒX‚ğ‘Î‰‚³‚¹‚Ü‚·B”z—ñ‚ÌƒCƒ“ƒfƒbƒNƒX‚ğID‚Æ‚µ‚Äæ“¾‚Å‚«‚Ü‚·B")]
+    [Header("EnemySOã¨é…åˆ—ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å¯¾å¿œã•ã›ã‚‹")]
+    [Tooltip("EnemySOã¨é…åˆ—ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å¯¾å¿œã•ã›ã¾ã™ã€‚é…åˆ—ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’IDã¨ã—ã¦å–å¾—ã§ãã¾ã™ã€‚")]
     [SerializeField] EnemySO[] enemyDataArray;
     private readonly Dictionary<EnemySO,int> enemyDataToIdDict = new();
     public IReadOnlyDictionary<EnemySO,int> EnemyDataToIdDict
