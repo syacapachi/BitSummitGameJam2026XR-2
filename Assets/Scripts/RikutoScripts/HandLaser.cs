@@ -3,11 +3,12 @@ using Unity.Netcode;
 
 public class HandLaser : MonoBehaviour
 {
-    public Transform leftHand;
-    public Transform rightHand;
 
-    public LineRenderer leftLaser;
-    public LineRenderer rightLaser;
+    [SerializeField] Transform leftHand;
+    [SerializeField] Transform rightHand;
+
+    [SerializeField] LineRenderer leftLaser;
+    [SerializeField] LineRenderer rightLaser;
 
     public float distance = 20f;
 

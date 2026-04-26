@@ -56,11 +56,11 @@ public class JobSettingGenerator : ScriptableObject
             PlayerJob playerJob = (PlayerJob)job;
             if (!JobLayerMaskReadOnlyDic.ContainsKey(playerJob))
             {
-                //とりあえず、ColliderLayerは0、CullingMaskはすべてのレイヤーの積集合に設定
-                int colliderLayer = 0;
+                //とりあえず、ColliderLayerは6(Avator)、CullingMaskはすべてのレイヤーの積集合に設定
+                //攻撃可能なジョブは和集合で設定
+                int colliderLayer = 6;
                 LayerMask cullingMask = -1;
                 PlayerJob attackableJob = PlayerJob.Nothing;
-                LayerMask attackableLayer = 0;
                 foreach (var mask in JobArray)
                 {
                     if ((playerJob != (PlayerJob)mask) && ((playerJob & (PlayerJob)mask) != 0))

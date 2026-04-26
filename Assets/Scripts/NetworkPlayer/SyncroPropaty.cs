@@ -2,14 +2,15 @@
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SyncroPropaty : NetworkBehaviour
 {
-    [SerializeField] GameObject avatorCollider;
+    [SerializeField] Collider[] avatorColliders;
     [SerializeField] JobSettingGenerator setting;
-    [SerializeField] PlayerJob playerjob = PlayerJob.Both;
+    [SerializeField,ReadOnly] PlayerJob playerjob = PlayerJob.Both;
     [SerializeField]
     NetworkVariable<PlayerJob> syncroJob = new(
         PlayerJob.Both,
@@ -87,7 +88,10 @@ public class SyncroPropaty : NetworkBehaviour
         if (previousJob != newJob)
         {
             PlayerLayerSettings settings = setting.JobLayerMaskReadOnlyDic[newJob];
-            avatorCollider.layer = settings.Layer;
+            foreach (var collider in avatorColliders)
+            {
+                collider.gameObject.layer = settings.Layer;
+            }
         }
     }
     private void OnJobChangeHandle()
@@ -103,4 +107,10 @@ public class SyncroPropaty : NetworkBehaviour
         };
         Debug.Log("Job changed to: " + Job);
     }
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        avatorColliders = GetComponentsInChildren<Collider>();
+    }
+#endif
 }
