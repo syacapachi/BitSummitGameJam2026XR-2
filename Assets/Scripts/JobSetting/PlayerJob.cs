@@ -96,7 +96,7 @@ public struct PlayerLayerSettings
     }
     public readonly bool IsVisibleLayer(int targetLayer)
     {
-        Debug.Log($"Checking visibility for OwnerLayer {targetLayer} in CullingMask {CullingMask.value}");
+        Debug.Log($"Checking visibility for ownerLayer {targetLayer} in CullingMask {CullingMask.value}");
         return (CullingMask.value & (1 << targetLayer)) != 0;
     }
     public readonly bool IsVisibleLayer(LayerMask targetLayerMask)
