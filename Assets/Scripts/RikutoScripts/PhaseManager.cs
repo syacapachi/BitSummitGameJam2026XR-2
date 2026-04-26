@@ -28,7 +28,6 @@ public class PhaseManager : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-    [SerializeField] bool isSkip = false;
     public PhaseSO[] Phases => phases;
     public int CurrentPhaseIndex => syncedPhaseIndex.Value;
 

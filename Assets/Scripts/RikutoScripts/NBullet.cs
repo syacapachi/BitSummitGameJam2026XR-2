@@ -95,8 +95,14 @@ public class NBullet : BulletBaseController
         }
         else
         {
-            // [追加] IEnemy が見つからない場合のデバッグログ
-            Debug.LogWarning($"IEnemy not found on {other.name} or its parents");
+            // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
+            Debug.Log("Shield by Player");
+            attackBlockedEvent.Invoke(new AttackBlocked()
+            {
+                Collector = Shooter,
+                Enemy = null
+            });
+            SpawnShieldFxClientRpc(transform.position);
             return;
         }
 
@@ -106,72 +112,3 @@ public class NBullet : BulletBaseController
         }
     }
 }
-
-/*
-void OnCollisionEnter(Collision collision)
-{
-    Debug.Log("Hit");
-    // Enemy �ɓ��������ꍇ
-    NEnemy enemy = collision.gameObject.GetComponent<NEnemy>();
-    if (enemy != null)
-    {
-
-        enemy.TakeDamage();
-    }
-    StopCoroutine(despawnTimer);
-    GetComponent<NetworkObject>().Despawn(true); // �e�͏�����
-}
-*/
-//水野が追加した。ダメージ判定の無効化スクリプト（元に戻しました。）
-// if (!IsServer) return;
-// Debug.Log("Hit" + other.name);
-
-// NEnemy enemy = other.GetComponent<NEnemy>() ?? other.GetComponentInParent<NEnemy>();
-// if (enemy != null)
-// {
-//     EnemyFxRule rule = enemy.GetComponent<EnemyFxRule>() ?? enemy.GetComponentInParent<EnemyFxRule>();
-
-//     if (rule != null)
-//     {
-//         PlayerPropaty.PlayerJob shooterJob = PlayerPropaty.PlayerJob.Nothing;
-
-//         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(shooterId, out var client))
-//         {
-//             var propaty = client.PlayerObject.GetComponentInChildren<PlayerPropaty>();
-//             if (propaty != null)
-//             {
-//                 shooterJob = propaty.Job;
-//             }
-//         }
-
-//         if (!rule.IsEffectiveFor(shooterJob))
-//         {
-//             StopCoroutine(despawnTimer);
-//             if (NetworkObject.IsSpawned)
-//             {
-//                 NetworkObject.Despawn(false);
-//             }
-//             return;
-//         }
-//     }
-// }
-//水野が追加した。ダメージ判定の無効化スクリプト
-//下の2行消しました。//元に戻しました。
-
-//動いてたやつ
-/*
-if (!IsServer) return;
-Debug.Log("Hit"+other.name);
-// Enemy �ɓ��������ꍇ
-if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
-{
-    Debug.Log("Hit DamageReciever" + other.name);
-
-    damageReciver.TakeDamage(gunSO.damage);
-    SpawnHitFxClientRpc(transform.position);
-    if (NetworkObject.IsSpawned)
-    {
-        NetworkObject.Despawn(true); // �e�͏�����
-    }
-}
-*/
