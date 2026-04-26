@@ -94,7 +94,7 @@ Animator:
   m_GameObject: {fileID: 161344895394006075}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4ca7b11fea9153c4ab0b9e9cfb807aba, type: 2}
+  m_Controller: {fileID: 9100000, guid: d68e253c4d9af6a46a17c814581a0040, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -124,7 +124,15 @@ MonoBehaviour:
   m_Animator: {fileID: 5276962141669802077}
   TransitionStateInfoList: []
   AnimatorParameterEntries:
-    ParameterEntries: []
+    ParameterEntries:
+    - name: Attack
+      NameHash: 1080829965
+      Synchronize: 1
+      ParameterType: 9
+    - name: Speed
+      NameHash: -823668238
+      Synchronize: 1
+      ParameterType: 1
   AnimatorParametersExpanded: 0
 --- !u!4 &681986377607814785 stripped
 Transform:

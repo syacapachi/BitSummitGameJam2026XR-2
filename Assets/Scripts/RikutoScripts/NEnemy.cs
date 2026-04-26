@@ -23,6 +23,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     [SerializeField] PlayerJob enemyJob;
     [Header("Publish Event")]
     [SerializeField] EnemyKilledEvent enemyKilled;
+    [SerializeField] GameEffectEvent dieEffectEvent;
     private bool isInitialize = false;
 
     private Transform targetPlayer;
@@ -46,6 +47,19 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         PlayerJob.Ghost,
         PlayerJob.Tutorial
     };
+    public bool IsAttackableJob(PlayerJob playerJob)
+    {
+        if(enemyJobSetting == null)
+        {
+            Debug.LogError("enemyJobSetting is null!");
+            return false;
+        }
+        if(enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)){
+            return setting.IsAttackableJob(playerJob);
+        }
+        Debug.LogError($"LayerMask setting not found for job: {playerJob}");
+        return false;
+    }
     public override void OnNetworkSpawn()
     {
         isInitialize = false;
@@ -110,6 +124,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (rootTransfrom != null)
         {
             rootTransfrom.LookAt(targetPlayer);
+            rootTransfrom.Rotate(0, 180f, 0);
         }
         hpCanvas.transform.LookAt(targetPlayer);
         hpCanvas.transform.Rotate(0, 180f, 0);
@@ -173,10 +188,14 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         DieOnServer(null);
         isInitialize = true;
     }
-
     void OnHPChanged(float oldValue, float newValue)
     {
         UpdateHPUI(newValue);
+        // 死亡エフェクトの発火
+        if (newValue <= 0)
+        {
+            dieEffectEvent.Invoke(new GameEffect() {  });
+        }
     }
 
     void UpdateHPUI(float hp)

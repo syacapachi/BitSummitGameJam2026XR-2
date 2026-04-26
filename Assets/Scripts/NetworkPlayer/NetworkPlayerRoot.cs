@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.XR;
 /// <summary>
@@ -14,9 +15,7 @@ public class NetworkPlayerRoot : NetworkBehaviour
     public SyncroPropaty propaty; 
     public PlayerItemControll itemControll;
     public PlayerStats stats; // プレイヤーの統計情報を管理するコンポーネント
-    private bool isXREnabled = false;
     private PlayerManager playerManager;
-    public bool IsXREnabled => isXREnabled;
     /// <summary>
     /// OnNetworkSpawn()の後
     /// </summary>
@@ -34,28 +33,21 @@ public class NetworkPlayerRoot : NetworkBehaviour
 
     private void OnSceneLoad(ulong clientId, string SceneName, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
-        ResistPlayerManager();
+        StartCoroutine(ResistPlayerManager());
     }
-    private void ResistPlayerManager()
+    private IEnumerator ResistPlayerManager()
     {
         var Locator = ManagerLocator.Instance;
-        if(Locator == null )
+        while (Locator == null || Locator.AllPlayerManager == null)
         {
-            Debug.LogError("ManagerLocator is null");
-            return;
+            yield return null;
         }
         playerManager = Locator.AllPlayerManager;
-        if (playerManager == null)
-        {
-            Debug.LogError("Player Manager is null");
-            return;
-        }
         playerManager.ResistPlayer(this);
         if (IsOwner)
         {
             playerRoot.gameObject.name = $"You Player_{OwnerClientId}";
             playerManager.ResistOwner(this);
-            isXREnabled = XRSettings.isDeviceActive;
         }
         else
         {

@@ -1,6 +1,7 @@
 ﻿using Syacapachi.Attribute;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -8,15 +9,26 @@ using UnityEngine.SceneManagement;
 
 public class SyncroPropaty : NetworkBehaviour
 {
+    [Serializable]
+    struct DefaultJobSetting
+    {
+        public bool IsHost;
+        public PlayerJob Job;
+    }
     [SerializeField] Collider[] avatorColliders;
     [SerializeField] JobSettingGenerator setting;
-    [SerializeField,ReadOnly] PlayerJob playerjob = PlayerJob.Both;
+    [SerializeField] DefaultJobSetting[] defaultJobSettings = new DefaultJobSetting[]
+    {
+        new DefaultJobSetting { IsHost = true, Job = PlayerJob.Demon },
+        new DefaultJobSetting { IsHost = false, Job = PlayerJob.Ghost },
+    };
     [SerializeField]
     NetworkVariable<PlayerJob> syncroJob = new(
         PlayerJob.Both,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
     );
+    [SerializeField, ReadOnly] PlayerJob currentjob = PlayerJob.Both;
     [Header("Subscribe Event")]
     [SerializeField] PlayerJobEvent jobChangeLocalEvent;
     [Header("Debug")]
@@ -30,7 +42,7 @@ public class SyncroPropaty : NetworkBehaviour
             if (IsOwner)
             {
                 jobChangeLocalEvent.Invoke(value);
-                playerjob = value;
+                currentjob = value;
                 if (syncroJob.Value != value)
                 {
                     syncroJob.Value = value;
@@ -68,7 +80,8 @@ public class SyncroPropaty : NetworkBehaviour
     private void ApplyInitializeJob()
     {
         // ホストならHuman、クライアントならGhost
-        PlayerJob initialJob = IsHost ? PlayerJob.Demon : PlayerJob.Ghost;
+        PlayerJob initialJob = IsHost ? defaultJobSettings.FirstOrDefault(s => s.IsHost).Job
+                                      : defaultJobSettings.FirstOrDefault(s => !s.IsHost).Job;
         Job = initialJob;
     }
 

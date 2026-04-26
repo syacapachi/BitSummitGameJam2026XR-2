@@ -47,10 +47,12 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
 
     public override void OnNetworkSpawn()
     {
+        if(!IsServer) return;
         EnemyKilled.Register(EnemyKilledEventHandle);
     }
     public override void OnNetworkDespawn()
     {
+        if(!IsServer) return;
         EnemyKilled.Unregister(EnemyKilledEventHandle);
     }
     private void EnemyKilledEventHandle(EnemyKilled killled)

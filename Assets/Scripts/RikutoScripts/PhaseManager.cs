@@ -32,13 +32,10 @@ public class PhaseManager : NetworkBehaviour
     public PhaseSO[] Phases => phases;
     public int CurrentPhaseIndex => syncedPhaseIndex.Value;
 
-    private float timer;
     private bool IsCountingDown = false;
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnAllPhaseEndedServerOnly;
-    //public event Action OnAllPhaseEnded;
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
-    //public event Action<int> OnPhaseChange;
 
     public override void OnNetworkSpawn()
     {
@@ -80,7 +77,7 @@ public class PhaseManager : NetworkBehaviour
         {
             Debug.Log("GAME CLEAR");
             spawner.KillAll();
-            OnAllPhaseEndedServerOnly?.Invoke();
+            OnAllPhaseEndedServerOnly.Invoke();
             return;
         }
         scoreManager.SetBonusServerOnly(phases[CurrentPhaseIndex].ClearBonus);
@@ -106,27 +103,24 @@ public class PhaseManager : NetworkBehaviour
         IsCountingDown = false;
 
         var phase = phases[phaseIndex];
-        timer = phase.PhaseTime;
         SpawnableHandle.SpawnFromEvent(phase.SpawnEvents.ToList());
-        OnPhaseChangeRpcEvent?.Invoke(phaseIndex);
+        OnPhaseChangeRpcEvent.Invoke(phaseIndex);
 
-        StartCoroutine(PhaseProgress());
+        StartCoroutine(PhaseProgress(phase.PhaseTime));
     }
-    IEnumerator PhaseProgress()
+    IEnumerator PhaseProgress(float time)
     {
-
-
-        float max = phases[CurrentPhaseIndex].PhaseTime;
+        //フェーズの残り時間を管理するためのタイマー
+        float timer = time;
+        //最大時間を保存しておくことで、UIに進行度を0~1の範囲で渡すことができる
+        float max = time;
         while (timer > 0 && !spawner.IsAllDeadServerOnly)
         {
             //コルーチンは1フレームごとに呼ばれるため、Time.deltaTimeを引いていくことで、フェーズの残り時間を管理する
             timer -= Time.deltaTime;
+            if (timer <= 0) timer = 0;
             phaseProgress.Value = Mathf.Clamp01(timer / max);
             yield return null;
-        }
-        if (phaseProgress.Value < 0f)
-        {
-            phaseProgress.Value = 0f;
         }
 
         StartCoroutine(EndPhase());
@@ -194,7 +188,6 @@ public class PhaseManager : NetworkBehaviour
         CountdownValue.Value = 0;
         phaseProgress.Value = 1f;
 
-        timer = 0f;
         IsCountingDown = false;
     }
 }

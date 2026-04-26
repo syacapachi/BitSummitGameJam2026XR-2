@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class ScoreUI : MonoBehaviour
 {
@@ -7,20 +8,15 @@ public class ScoreUI : MonoBehaviour
 
     NetworkGameManager gameManager;
 
-    void Start()
+    IEnumerator Start()
     {
-        TryRegister();
-    }
-
-    void TryRegister()
-    {
-        gameManager = ManagerLocator.Instance?.AllGameManager;
-        if (gameManager == null)
+        ManagerLocator locator = ManagerLocator.Instance;
+        while (locator == null
+            || locator.AllGameManager == null)
         {
-            Invoke(nameof(TryRegister), 0.5f);
-            return;
+            yield return null;
         }
-
+        gameManager = locator.AllGameManager;
         // 初期表示
         UpdateScore(gameManager.ScoreManager.score.Value);
 

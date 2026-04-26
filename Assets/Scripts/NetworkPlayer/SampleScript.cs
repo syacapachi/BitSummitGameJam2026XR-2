@@ -13,8 +13,15 @@ public class SampleScript : MonoBehaviour
     [ShowInspector, SerializeField] List<float> list = new List<float>();
     [ShowInspector, SerializeField] List<InlineClass> classList = new List<InlineClass>();
     [ShowInspector, SerializeField] Dictionary<int,string> adic = new Dictionary<int,string>();
+
+    [SerializeReference,SerializeReferenceView]
+    IInLineInterface resultCollector;
+    public interface IInLineInterface
+    {
+        public void InlineMethod();
+    }
     [Serializable]
-    public class InlineClass
+    public class InlineClass : IInLineInterface
     {
         public string name;
         public void InlineMethod()
@@ -22,6 +29,15 @@ public class SampleScript : MonoBehaviour
             Debug.Log($"This is an inline method. name = {name}");
         }
     }
+    public class InLineClass2 : IInLineInterface
+    {
+        public int number;
+        public void InlineMethod()
+        {
+            Debug.Log($"This is an inline method. number = {number}");
+        }
+    }
+
     [Flags]
     public enum SampleEnum
     {
@@ -70,5 +86,10 @@ public class SampleScript : MonoBehaviour
     public void SampleMethodWithParameter(GameObject obj, PhaseSO so)
     {
         Debug.Log("Message: " + obj.name + so.name);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(IInLineInterface resisterable)
+    {
+        resisterable.InlineMethod();
     }
 }

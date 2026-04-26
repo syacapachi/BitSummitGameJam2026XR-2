@@ -1,15 +1,17 @@
 ﻿#if UNITY_EDITOR
 namespace Syacapachi.Editor
 {
+    using Syacapachi.Attribute;
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using Unity.Netcode;
     using Unity.Netcode.Editor;
     using UnityEditor;
     using UnityEngine;
-    using Syacapachi.Attribute;
+
     /// <summary>
     /// [OnInspectorButton]属性を持つメソッドを、Inspectorにボタンとして表示。
     /// NetworkBehaviour 対応版。
@@ -20,6 +22,8 @@ namespace Syacapachi.Editor
         private readonly Dictionary<Type, MethodInfo[]> methodCache = new();
         // メソッド名と引数のキャッシュ (パフォーマンス向上のため)
         private readonly Dictionary<MethodInfo, object[]> methodParameters = new();
+        // 抽象クラスやインターフェースと、それを実装/継承する具体的なクラスのキャッシュ (描画できない型を識別するため)
+        private readonly Dictionary<Type, Type> abstructToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<object, bool> foldouts = new();
         // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
@@ -187,6 +191,11 @@ namespace Syacapachi.Editor
             {
                 return DrawDictionary(name, t, value);
             }
+            // 抽象クラスやインターフェース
+            if (t.IsAbstract || t.IsInterface)
+            {
+                return DrawAbstructOrInterface(name, t, value);
+            }
             // ScriptableObjectをインラインで描画
             return DrawObject(name, t, value);
         }
@@ -317,6 +326,49 @@ namespace Syacapachi.Editor
             EditorGUI.indentLevel--;
 
             return value;
+        }
+        /// <summary>
+        /// 抽象クラスやインターフェースは直接描画できないので、実装/継承する具体的なクラスを選択して描画する。選択されていない場合は、選択ボタンを表示する。
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        object DrawAbstructOrInterface(string name, Type type, object value)
+        {
+            if (abstructToClass.TryGetValue(type, out var concreteType))
+            {
+                if (GUILayout.Button($"Delete: {concreteType.Name} ({type.Name})"))
+                {
+                    abstructToClass.Remove(type);
+                    return null;
+                }
+                return DrawField(concreteType, name, value);
+            }
+            if (GUILayout.Button($"Select Class ({type.Name})"))
+            {
+                ShowTypeMenu(type);
+            }
+            return value;
+        }
+        /// <summary>
+        /// 具象クラスの選択メニューを表示する。選択されたクラスは、抽象クラスやインターフェースのキャッシュに保存される。次回以降は直接描画されるようになる。
+        /// </summary>
+        /// <param name="baseType"></param>
+        private void ShowTypeMenu(Type baseType)
+        {
+            var menu = new GenericMenu();
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .Where(t => baseType.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface);
+            foreach (var type in types)
+            {
+                menu.AddItem(new GUIContent(type.FullName), false, () =>
+                {
+                    abstructToClass[baseType] = type;
+                });
+            }
+            menu.ShowAsContext();
         }
         void DrawScriptableObjectInline(ScriptableObject so)
         {
