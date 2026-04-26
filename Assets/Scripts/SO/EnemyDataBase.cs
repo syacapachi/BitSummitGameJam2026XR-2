@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -12,7 +13,6 @@ public class EnemyDataBase : ScriptableObject
     [Tooltip("EnemySOと配列のインデックスを対応させます。配列のインデックスをIDとして取得できます。")]
     [SerializeField] EnemySO[] enemyDataArray;
     private readonly Dictionary<EnemySO,int> enemyDataToIdDict = new();
-    private readonly Dictionary<int, EnemySO> idToEnemyDataDict = new();
     public IReadOnlyDictionary<EnemySO,int> EnemyDataToIdDict
     {
         get 
@@ -21,12 +21,11 @@ public class EnemyDataBase : ScriptableObject
             return enemyDataToIdDict;
         }
     }
-    public IReadOnlyDictionary<int ,EnemySO> IdToEnemyDataDict
+    public IReadOnlyList<EnemySO> IdToEnemyList
     {
         get
         {
-            Create();
-            return idToEnemyDataDict;
+            return enemyDataArray.ToList();
         }
     }
     public int GetIdFromEnemyData(EnemySO data)
@@ -39,15 +38,15 @@ public class EnemyDataBase : ScriptableObject
         }
         return EnemyDataToIdDict[data];
     }
+    public int Length => enemyDataArray.Length;
     public EnemySO GetEnemyDataFromId(int id)
     {
-        Create();
-        if (!IdToEnemyDataDict.ContainsKey(id))
+        if (id < 0 || id >= IdToEnemyList.Count)
         {
             Debug.LogError($"EnemyData with ID {id} is not found in EnemyDataBase.");
             return null;
         }
-        return IdToEnemyDataDict[id];
+        return IdToEnemyList[id];
     }
 
     private bool isInitialized = false;
@@ -55,10 +54,8 @@ public class EnemyDataBase : ScriptableObject
     {
         if (isInitialized) return;
         enemyDataToIdDict.Clear();
-        idToEnemyDataDict.Clear();
         for (int i = 0; i < enemyDataArray.Length; i++)
         {
-            idToEnemyDataDict[i] = enemyDataArray[i];
             enemyDataToIdDict[enemyDataArray[i]] = i;
         }
         isInitialized = true;
