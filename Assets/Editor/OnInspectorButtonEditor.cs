@@ -253,7 +253,8 @@ namespace Syacapachi.Editor
             {
                 return DrawDictionary(name, t, currentValue);
             }
-            if(t.IsAbstract || t.IsInterface)
+            // 抽象クラスやインターフェースは直接描画できないので、実装/継承する具体的なクラスを選択して描画する。選択されていない場合は、選択ボタンを表示する。
+            if (t.IsAbstract || t.IsInterface)
             {
                 return DrawAbstructOrInterface(name, t, currentValue);
             }
@@ -448,6 +449,11 @@ namespace Syacapachi.Editor
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
                 .Where(t => baseType.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface);
+            if (!types.Any())
+            {
+                EditorUtility.DisplayDialog("No Concrete Class Found", $"No concrete class found that implements/inherits {baseType.Name}.", "OK");
+                return;
+            }
             foreach (var type in types)
             {
                 menu.AddItem(new GUIContent(type.FullName), false, () =>

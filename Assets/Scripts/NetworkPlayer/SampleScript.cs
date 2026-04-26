@@ -22,6 +22,10 @@ public class SampleScript : MonoBehaviour
     {
         public void InlineMethod();
     }
+    public interface IInLineGenericInterface<T>
+    {
+        public void InlineMethod(T value);
+    }
     [Serializable]
     public class InlineClass : IInLineInterface
     {
@@ -37,6 +41,14 @@ public class SampleScript : MonoBehaviour
         public void InlineMethod()
         {
             Debug.Log($"This is an inline method. number = {number}");
+        }
+    }
+    public class InLineClass3 : IInLineGenericInterface<string>
+    {
+        public string name;
+        public void InlineMethod(string value)
+        {
+            Debug.Log($"This is an inline method. name = {name}, value = {value}");
         }
     }
     public class GeneticClass<T>
@@ -133,5 +145,15 @@ public class SampleScript : MonoBehaviour
     public void SampleMethodWithParameter(GeneticClass<int> invokeEvent)
     {
         Debug.Log("Value: " + invokeEvent.value);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(IInLineGenericInterface<string> invokeEvent)
+    {
+        invokeEvent.InlineMethod("Sample Value");
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(IInLineGenericInterface<int> invokeEvent)
+    {
+        invokeEvent.InlineMethod(1);
     }
 }

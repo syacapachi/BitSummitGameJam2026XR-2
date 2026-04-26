@@ -446,6 +446,11 @@ namespace Syacapachi.Editor
                     abstructToClass[baseType] = type;
                 });
             }
+            if (!types.Any())
+            {
+                EditorUtility.DisplayDialog("No Concrete Class Found", $"No concrete class found that implements/inherits {baseType.Name}.", "OK");
+                return;
+            }
             menu.ShowAsContext();
         }
         void DrawScriptableObjectInline(ScriptableObject so)
