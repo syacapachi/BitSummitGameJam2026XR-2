@@ -118,52 +118,74 @@ namespace Syacapachi.Editor
             }
         }
 
-        private object DrawField(Type t, string name, object value)
+        private object DrawField(Type t, string name, object currentValue)
         {
             name = ObjectNames.NicifyVariableName(name);
             if (t == typeof(int))
-                return EditorGUILayout.IntField(name, value != null ? (int)value : 0);
+                return EditorGUILayout.IntField(name, currentValue != null ? (int)currentValue : 0);
+            if (t == typeof(byte))
+                return EditorGUILayout.IntField(name, currentValue != null ? (byte)currentValue : 0);
+            if (t == typeof(short))
+                return EditorGUILayout.IntField(name, currentValue != null ? (short)currentValue : 0);
+            if (t == typeof(ushort))
+                return EditorGUILayout.IntField(name, currentValue != null ? (ushort)currentValue : 0);
+            if (t == typeof(uint))
+                return EditorGUILayout.IntField(name, currentValue != null ? (int)(uint)currentValue : 0);
+            if (t == typeof(ulong))
+                return EditorGUILayout.LongField(name, currentValue != null ? (long)(ulong)currentValue : 0);
+            if (t == typeof(sbyte))
+                return EditorGUILayout.IntField(name, currentValue != null ? (sbyte)currentValue : 0);
+            if (t == typeof(decimal))
+                return EditorGUILayout.FloatField(name, currentValue != null ? (float)(decimal)currentValue : 0f);
             if (t == typeof(float))
-                return EditorGUILayout.FloatField(name, value != null ? (float)value : 0f);
+                return EditorGUILayout.FloatField(name, currentValue != null ? (float)currentValue : 0f);
             if (t == typeof(double))
-                return EditorGUILayout.DoubleField(name, value != null ? (double)value : 0);
+                return EditorGUILayout.DoubleField(name, currentValue != null ? (double)currentValue : 0);
             if (t == typeof(long))
-                return EditorGUILayout.LongField(name, value != null ? (long)value : 0);
+                return EditorGUILayout.LongField(name, currentValue != null ? (long)currentValue : 0);
             if (t == typeof(string))
-                return EditorGUILayout.TextField(name, value as string ?? "");
+                return EditorGUILayout.TextField(name, currentValue as string ?? "");
             if (t == typeof(bool))
-                return EditorGUILayout.Toggle(name, value != null && (bool)value);
+                return EditorGUILayout.Toggle(name, currentValue != null && (bool)currentValue);
             if (t == typeof(Vector2))
-                return EditorGUILayout.Vector2Field(name, value != null ? (Vector2)value : Vector2.zero);
+                return EditorGUILayout.Vector2Field(name, currentValue != null ? (Vector2)currentValue : Vector2.zero);
             if (t == typeof(Vector3))
-                return EditorGUILayout.Vector3Field(name, value != null ? (Vector3)value : Vector3.zero);
+                return EditorGUILayout.Vector3Field(name, currentValue != null ? (Vector3)currentValue : Vector3.zero);
             if (t == typeof(Vector4))
-                return EditorGUILayout.Vector4Field(name, value != null ? (Vector4)value : Vector4.zero);
+                return EditorGUILayout.Vector4Field(name, currentValue != null ? (Vector4)currentValue : Vector4.zero);
             if (t == typeof(Vector2Int))
-                return EditorGUILayout.Vector2IntField(name, value != null ? (Vector2Int)value : Vector2Int.zero);
+                return EditorGUILayout.Vector2IntField(name, currentValue != null ? (Vector2Int)currentValue : Vector2Int.zero);
             if (t == typeof(Vector3Int))
-                return EditorGUILayout.Vector3IntField(name, value != null ? (Vector3Int)value : Vector3Int.zero);
+                return EditorGUILayout.Vector3IntField(name, currentValue != null ? (Vector3Int)currentValue : Vector3Int.zero);
             if (t == typeof(Color))
-                return EditorGUILayout.ColorField(name, value != null ? (Color)value : Color.white);
+                return EditorGUILayout.ColorField(name, currentValue != null ? (Color)currentValue : Color.white);
             if (t == typeof(Rect))
-                return EditorGUILayout.RectField(name, value != null ? (Rect)value : new Rect());
+                return EditorGUILayout.RectField(name, currentValue != null ? (Rect)currentValue : new Rect());
+            if (t == typeof(RectInt))
+                return EditorGUILayout.RectIntField(name, currentValue != null ? (RectInt)currentValue : new RectInt());
             if (t == typeof(Bounds))
-                return EditorGUILayout.BoundsField(name, value != null ? (Bounds)value : new Bounds());
+                return EditorGUILayout.BoundsField(name, currentValue != null ? (Bounds)currentValue : new Bounds());
+            if (t == typeof(BoundsInt))
+                return EditorGUILayout.BoundsIntField(name, currentValue != null ? (BoundsInt)currentValue : new BoundsInt());
             if (t == typeof(AnimationCurve))
-                return EditorGUILayout.CurveField(name, value as AnimationCurve ?? new AnimationCurve());
+                return EditorGUILayout.CurveField(name, currentValue as AnimationCurve ?? new AnimationCurve());
             if (t == typeof(Gradient))
-                return EditorGUILayout.GradientField(name, value as Gradient ?? new Gradient());
+                return EditorGUILayout.GradientField(name, currentValue as Gradient ?? new Gradient());
+            if (t == typeof(LayerMask))
+                return EditorGUILayout.LayerField(name, currentValue != null ? (LayerMask)currentValue : new LayerMask());
+            if (t == typeof(SerializedProperty))
+                return EditorGUILayout.PropertyField(currentValue as SerializedProperty, new GUIContent(name));
             // Enum
             if (t.IsEnum)
             {
-                value ??= Enum.GetValues(t).GetValue(0);
-                return EditorGUILayout.EnumPopup(name, (Enum)value);
+                currentValue ??= Enum.GetValues(t).GetValue(0);
+                return EditorGUILayout.EnumPopup(name, (Enum)currentValue);
             }
 
             // UnityEngine.Object
             if (typeof(UnityEngine.Object).IsAssignableFrom(t))
             {
-                var obj = value as UnityEngine.Object;
+                var obj = currentValue as UnityEngine.Object;
 
                 obj = EditorGUILayout.ObjectField(name, obj, t, true);
 
@@ -176,28 +198,28 @@ namespace Syacapachi.Editor
             if (t.IsArray)
             {
                 Type elementType = t.GetElementType();
-                IList list = value as IList;
+                IList list = currentValue as IList;
                 return DrawList(name, elementType, list);
             }
             // List
             if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(List<>))
             {
                 Type elementType = t.GetGenericArguments()[0];
-                IList list = value as IList;
+                IList list = currentValue as IList;
                 return DrawList(name, elementType, list);
             }
             // 辞書
             if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
-                return DrawDictionary(name, t, value);
+                return DrawDictionary(name, t, currentValue);
             }
             // 抽象クラスやインターフェース
             if (t.IsAbstract || t.IsInterface)
             {
-                return DrawAbstructOrInterface(name, t, value);
+                return DrawAbstructOrInterface(name, t, currentValue);
             }
             // ScriptableObjectをインラインで描画
-            return DrawObject(name, t, value);
+            return DrawObject(name, t, currentValue);
         }
         IList DrawList(string name, Type elementType, IList list)
         {

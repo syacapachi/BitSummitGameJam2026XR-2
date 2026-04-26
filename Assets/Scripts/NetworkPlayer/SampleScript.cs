@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Syacapachi.Attribute;
 using System;
+using UnityEditor;
 public class SampleScript : MonoBehaviour
 {
     [ShowInspector, SerializeField] int a;

@@ -125,6 +125,20 @@ namespace Syacapachi.Editor
             name = ObjectNames.NicifyVariableName(name);
             if (t == typeof(int))
                 return EditorGUILayout.IntField(name, currentValue != null ? (int)currentValue : 0);
+            if(t == typeof(byte))
+                return EditorGUILayout.IntField(name, currentValue != null ? (byte)currentValue : 0);
+            if(t == typeof(short))
+                return EditorGUILayout.IntField(name, currentValue != null ? (short)currentValue : 0);
+            if(t == typeof(ushort))
+                return EditorGUILayout.IntField(name, currentValue != null ? (ushort)currentValue : 0);
+            if(t == typeof(uint))
+                return EditorGUILayout.IntField(name, currentValue != null ? (int)(uint)currentValue : 0);
+            if(t == typeof(ulong))
+                return EditorGUILayout.LongField(name, currentValue != null ? (long)(ulong)currentValue : 0);
+            if(t == typeof(sbyte))
+                return EditorGUILayout.IntField(name, currentValue != null ? (sbyte)currentValue : 0);
+            if(t == typeof(decimal))
+                return EditorGUILayout.FloatField(name, currentValue != null ? (float)(decimal)currentValue : 0f);
             if (t == typeof(float))
                 return EditorGUILayout.FloatField(name, currentValue != null ? (float)currentValue : 0f);
             if (t == typeof(double))
@@ -149,12 +163,20 @@ namespace Syacapachi.Editor
                 return EditorGUILayout.ColorField(name, currentValue != null ? (Color)currentValue : Color.white);
             if (t == typeof(Rect))
                 return EditorGUILayout.RectField(name, currentValue != null ? (Rect)currentValue : new Rect());
+            if(t == typeof(RectInt))
+                return EditorGUILayout.RectIntField(name, currentValue != null ? (RectInt)currentValue : new RectInt());
             if (t == typeof(Bounds))
                 return EditorGUILayout.BoundsField(name, currentValue != null ? (Bounds)currentValue : new Bounds());
+            if(t == typeof(BoundsInt))
+                return EditorGUILayout.BoundsIntField(name, currentValue != null ? (BoundsInt)currentValue : new BoundsInt());
             if (t == typeof(AnimationCurve))
                 return EditorGUILayout.CurveField(name, currentValue as AnimationCurve ?? new AnimationCurve());
             if (t == typeof(Gradient))
                 return EditorGUILayout.GradientField(name, currentValue as Gradient ?? new Gradient());
+            if(t == typeof(LayerMask))
+                return EditorGUILayout.LayerField(name, currentValue != null ? (LayerMask)currentValue : new LayerMask());
+            if(t == typeof(SerializedProperty))
+                return EditorGUILayout.PropertyField(currentValue as SerializedProperty, new GUIContent(name));
             // Enum
             if (t.IsEnum)
             {
