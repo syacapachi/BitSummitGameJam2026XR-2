@@ -6,17 +6,30 @@ using Unity.Netcode.Components;
 
 public class NEnemyShoot : GunController
 {
-    public EnemySO enemySO;
+    [SerializeField] EnemySO enemySO;
     [SerializeField] NEnemy nEnemy;
-    private EnemyWeaponSettingsSO weaponSO;
     [SerializeField] AudioClip shotClip;
+    [Header("Reference")]
     [SerializeField] NetworkAnimator networkAnimator;
     [SerializeField] Animator animator;
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffect;
 
-    Transform target;
+    private EnemyWeaponSettingsSO weaponSO;
     Coroutine shootCorutine;
+    NetworkGameManager gameManager;
+    PlayerManager playerManager;
+
+    private IEnumerator Start()
+    {
+        //ゲームマネージャーが生成されるのを待つ
+        while (ManagerLocator.Instance.AllGameManager == null || ManagerLocator.Instance.AllPlayerManager == null)
+        {
+            yield return null;
+        }
+        gameManager = ManagerLocator.Instance.AllGameManager;
+        playerManager = ManagerLocator.Instance.AllPlayerManager;
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -73,7 +86,6 @@ public class NEnemyShoot : GunController
     bool TryGetTarget(out Transform target)
     {
         target = null;
-        var gameManager = ManagerLocator.Instance.AllGameManager;
         if(gameManager == null) return false;
 
         switch (gameManager.CurrentGameMode)
@@ -99,7 +111,7 @@ public class NEnemyShoot : GunController
 
     bool TryGetNearestPlayer(out Transform nearest)
     {
-        var players = ManagerLocator.Instance.AllPlayerManager.AllPlayers;
+        var players = playerManager.AllPlayers;
 
         nearest = null;
         float minDist = float.MaxValue;
@@ -110,7 +122,7 @@ public class NEnemyShoot : GunController
             if (prop == null) continue;
 
             var playerJob = prop.Job;
-
+            
             bool canTarget = (nEnemy.EnemyJob & playerJob) == 0;
 
             //Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {nEnemy.EnemyJob}, canTarget: {canTarget}");

@@ -2,13 +2,16 @@
 
 namespace Syacapachi.Editor
 {
+    using Syacapachi.Attribute;
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using UnityEditor;
     using UnityEngine;
-    using Syacapachi.Attribute;
+    using UnityEngine.Events;
+
     /// <summary>
     /// [OnInspectorButton]属性を持つメソッドを、Inspectorにボタンとして表示。
     /// MonoBehaviour / ScriptableObject 両対応版。
@@ -20,6 +23,8 @@ namespace Syacapachi.Editor
         private readonly Dictionary<Type, MethodInfo[]> methodCache = new();
         // メソッドと引数のキャッシュ (パフォーマンス向上のため)
         private readonly Dictionary<MethodInfo, object[]> methodParameters = new();
+        // 抽象クラスやインターフェースと、それを実装/継承する具体的なクラスのキャッシュ (描画できない型を識別するため)
+        private readonly Dictionary<string,Type> abstructToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<object, bool> foldouts = new();
         // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
@@ -121,6 +126,20 @@ namespace Syacapachi.Editor
             name = ObjectNames.NicifyVariableName(name);
             if (t == typeof(int))
                 return EditorGUILayout.IntField(name, currentValue != null ? (int)currentValue : 0);
+            if(t == typeof(byte))
+                return EditorGUILayout.IntField(name, currentValue != null ? (byte)currentValue : 0);
+            if(t == typeof(short))
+                return EditorGUILayout.IntField(name, currentValue != null ? (short)currentValue : 0);
+            if(t == typeof(ushort))
+                return EditorGUILayout.IntField(name, currentValue != null ? (ushort)currentValue : 0);
+            if(t == typeof(uint))
+                return EditorGUILayout.IntField(name, currentValue != null ? (int)(uint)currentValue : 0);
+            if(t == typeof(ulong))
+                return EditorGUILayout.LongField(name, currentValue != null ? (long)(ulong)currentValue : 0);
+            if(t == typeof(sbyte))
+                return EditorGUILayout.IntField(name, currentValue != null ? (sbyte)currentValue : 0);
+            if(t == typeof(decimal))
+                return EditorGUILayout.FloatField(name, currentValue != null ? (float)(decimal)currentValue : 0f);
             if (t == typeof(float))
                 return EditorGUILayout.FloatField(name, currentValue != null ? (float)currentValue : 0f);
             if (t == typeof(double))
@@ -129,6 +148,25 @@ namespace Syacapachi.Editor
                 return EditorGUILayout.LongField(name, currentValue != null ? (long)currentValue : 0);
             if (t == typeof(string))
                 return EditorGUILayout.TextField(name, currentValue as string ?? "");
+            if(t == typeof(char))
+            {
+                string str = EditorGUILayout.TextField(name, currentValue != null ? ((char)currentValue).ToString() : "");
+                return string.IsNullOrEmpty(str) ? '\0' : str[0];
+            }
+            if(t == typeof(DateTime))
+            {
+                string str = EditorGUILayout.TextField(name, currentValue != null ? ((DateTime)currentValue).ToString("o") : DateTime.Now.ToString("o"));
+                if (DateTime.TryParse(str, null, System.Globalization.DateTimeStyles.RoundtripKind, out var result))
+                    return result;
+                return currentValue ?? DateTime.Now;
+            }
+            if(t == typeof(TimeSpan))
+            {
+                string str = EditorGUILayout.TextField(name, currentValue != null ? ((TimeSpan)currentValue).ToString() : TimeSpan.Zero.ToString());
+                if (TimeSpan.TryParse(str, out var result))
+                    return result;
+                return currentValue ?? TimeSpan.Zero;
+            }
             if (t == typeof(bool))
                 return EditorGUILayout.Toggle(name, currentValue != null && (bool)currentValue);
             if (t == typeof(Vector2))
@@ -145,12 +183,32 @@ namespace Syacapachi.Editor
                 return EditorGUILayout.ColorField(name, currentValue != null ? (Color)currentValue : Color.white);
             if (t == typeof(Rect))
                 return EditorGUILayout.RectField(name, currentValue != null ? (Rect)currentValue : new Rect());
+            if(t == typeof(RectInt))
+                return EditorGUILayout.RectIntField(name, currentValue != null ? (RectInt)currentValue : new RectInt());
             if (t == typeof(Bounds))
                 return EditorGUILayout.BoundsField(name, currentValue != null ? (Bounds)currentValue : new Bounds());
+            if(t == typeof(BoundsInt))
+                return EditorGUILayout.BoundsIntField(name, currentValue != null ? (BoundsInt)currentValue : new BoundsInt());
             if (t == typeof(AnimationCurve))
                 return EditorGUILayout.CurveField(name, currentValue as AnimationCurve ?? new AnimationCurve());
             if (t == typeof(Gradient))
                 return EditorGUILayout.GradientField(name, currentValue as Gradient ?? new Gradient());
+            if(t == typeof(LayerMask))
+                return (LayerMask)EditorGUILayout.MaskField(name, currentValue != null ? ((LayerMask)currentValue).value : 0, UnityEditorInternal.InternalEditorUtility.layers);
+            if (t == typeof(Quaternion))
+                return Quaternion.Euler(EditorGUILayout.Vector3Field(name, ((Quaternion?)currentValue)?.eulerAngles ?? Vector3.zero));
+            if(t == typeof(UnityEvent))
+            {
+                // UnityEventは専用のプロパティドローアーが必要なので、ここでは描画できないことを示すメッセージを表示する。
+                EditorGUILayout.HelpBox($"UnityEvent type is not supported for field {name}.", MessageType.Error);
+                return currentValue;
+            }
+            //Nullableな型は、nullを許容するためにNullable.GetUnderlyingTypeで元の型を取得して描画する。
+            if (Nullable.GetUnderlyingType(t) is Type underlyingType)
+            {
+                currentValue ??= GetDefault(underlyingType);
+                return DrawField(underlyingType, name, currentValue);
+            }
             // Enum
             if (t.IsEnum)
             {
@@ -195,6 +253,30 @@ namespace Syacapachi.Editor
             {
                 return DrawDictionary(name, t, currentValue);
             }
+            // 抽象クラスやインターフェースは直接描画できないので、実装/継承する具体的なクラスを選択して描画する。選択されていない場合は、選択ボタンを表示する。
+            if (t.IsAbstract || t.IsInterface)
+            {
+                return DrawAbstructOrInterface(name, t, currentValue,target.name + "." + name);
+            }
+            //リスト、辞書、抽象クラス/インターフェース以外のジェネリック型
+            if (t.IsGenericType)
+            {
+                if(t.IsGenericTypeDefinition)
+                {
+                    //Generic<> やGeneric<,>など、ジェネリック型の定義自体の場合は、描画できないので、エラーメッセージを表示する
+                    // ジェネリック型の定義自体は描画できないので、エラーメッセージを表示する
+                    EditorGUILayout.HelpBox($"Generic type definition {t.Name} is not supported.", MessageType.Error);
+                    return currentValue;
+                }
+                else if (t.ContainsGenericParameters)
+                {
+                    //Generic<T>やGeneric<T,U>など、ジェネリック型の引数に未指定の型パラメータが含まれている場合は描画できないので、エラーメッセージを表示する
+                    // ジェネリック型の引数に未指定の型パラメータが含まれている場合も描画できないので、エラーメッセージを表示する
+                    EditorGUILayout.HelpBox($"Generic type {t.Name}<{string.Join(", ", t.GetGenericArguments().Select(t => t.Name))}> contains unspecified type parameters and is not supported.", MessageType.Error);
+                    return currentValue;
+                }
+                //上記以外のジェネリック型は、通常のクラスと同様に描画する
+            }
             // ScriptableObjectをインラインで描画
             return DrawObject(name, t, currentValue);
         }
@@ -227,7 +309,11 @@ namespace Syacapachi.Editor
             for (int i = 0; i < list.Count; i++)
             {
                 //要素を描画して更新
-                list[i] = DrawField(elementType, $"Element {i}", list[i]);
+                list[i] = DrawField(elementType, $"{name} Element[{i}]", list[i]);
+            }
+            if (GUILayout.Button("Add"))
+            {
+                list.Add(GetDefault(elementType));
             }
 
             EditorGUI.indentLevel--;
@@ -261,12 +347,19 @@ namespace Syacapachi.Editor
             foreach (var k in dict.Keys)
                 keys.Add(k);
 
-            foreach (var key in keys)
+            for (int i = 0; i < keys.Count; i++)
             {
-                EditorGUILayout.BeginHorizontal();
+                var key = keys[i];
+                EditorGUILayout.BeginVertical();
 
-                object newKey = DrawField(keyType, "Key", key);
-                object newValue = DrawField(valueType, "Value", dict[key]);
+                if (GUILayout.Button("-", GUILayout.Width(20)))
+                {
+                    dict.Remove(key);
+                    break;
+                }
+
+                object newKey = DrawField(keyType, $"{name} Key [{i}]", key);
+                object newValue = DrawField(valueType, $"{name} Value [{i}]", dict[key]);
 
                 //キーが変更された場合は、古いキーを削除して新しいキーで追加。そうでない場合は値だけ更新。
                 if (!Equals(newKey, key))
@@ -279,24 +372,25 @@ namespace Syacapachi.Editor
                     dict[key] = newValue;
                 }
 
-                if (GUILayout.Button("-", GUILayout.Width(20)))
-                {
-                    dict.Remove(key);
-                    break;
-                }
-
-                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndVertical();
             }
 
             if (GUILayout.Button("Add"))
             {
-                dict[GetDefault(keyType)] = GetDefault(valueType);
+                var key = GetDefault(keyType);
+                if(key == null) 
+                { 
+                    EditorUtility.DisplayDialog("No Concrete Class Found", $"Cannot add entry with null key for type {keyType.Name}.", "OK");
+                    return dict;
+                }
+                dict[key] = GetDefault(valueType);
             }
 
             EditorGUI.indentLevel--;
 
             return dict;
         }
+        
         object DrawObject(string name, Type type, object value)
         {
             value ??= Activator.CreateInstance(type);
@@ -332,6 +426,59 @@ namespace Syacapachi.Editor
 
             return value;
         }
+        /// <summary>
+        /// 抽象クラスやインターフェースは直接描画できないので、実装/継承する具体的なクラスを選択して描画する。選択されていない場合は、選択ボタンを表示する。
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        object DrawAbstructOrInterface(string name, Type type, object value,string path)
+        {
+            if (abstructToClass.TryGetValue(path, out var concreteType))
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField($"{type.Name} ▶ {concreteType.Name}", EditorStyles.boldLabel);
+                    if (GUILayout.Button("Delete", GUILayout.Width(100)))
+                    {
+                        abstructToClass.Remove(path);
+                        return null;
+                    }
+                }
+                return DrawField(concreteType, name, value);
+            }
+            if (GUILayout.Button($"Select Class ({type.Name})"))
+            {
+                ShowTypeMenu(type, path);
+            }
+
+            return value;
+        }
+        /// <summary>
+        /// 具象クラスの選択メニューを表示する。選択されたクラスは、抽象クラスやインターフェースのキャッシュに保存される。次回以降は直接描画されるようになる。
+        /// </summary>
+        /// <param name="baseType"></param>
+        private void ShowTypeMenu(Type baseType, string path)
+        {
+            var menu = new GenericMenu();
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .Where(t => baseType.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface);
+            if (!types.Any())
+            {
+                EditorUtility.DisplayDialog("No Concrete Class Found", $"No concrete class found that implements/inherits {baseType.Name}.", "OK");
+                return;
+            }
+            foreach (var type in types)
+            {
+                menu.AddItem(new GUIContent(type.FullName), false, () =>
+                {
+                    abstructToClass[path] = type;
+                });
+            }
+            menu.ShowAsContext();
+        }
         void DrawScriptableObjectInline(ScriptableObject so)
         {
             if (so == null)
@@ -351,10 +498,20 @@ namespace Syacapachi.Editor
         }
         object GetDefault(Type t)
         {
+            if(t == null)
+                return null;
             if (t.IsValueType)
                 return Activator.CreateInstance(t);
 
-            return null;
+            //生成できない型の場合はnullを返す
+            try
+            {
+                return Activator.CreateInstance(t);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         bool GetFoldout(object key)

@@ -10,7 +10,7 @@ public class ResultUI : MonoBehaviour
     [SerializeField] GameObject panel;
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI titleText;
-    [SerializeField] private EnemySO[] enemyDatabase;
+    [SerializeField] EnemyDataBase enemyDatabase;
     [SerializeField] private GameObject enemyRowPrefab;
     [SerializeField] private Transform contentParent;
     [SerializeField] Font textFont;                 // 必要に応じて設定
@@ -155,7 +155,7 @@ public class ResultUI : MonoBehaviour
                 int count = r.killCounts[i];
                 if (count <= 0) continue;
 
-                var enemy = enemyDatabase[i];
+                var enemy = enemyDatabase.GetEnemyDataFromId(i);
 
                 var obj = Instantiate(enemyRowPrefab, contentParent);
                 var row = obj.GetComponent<EnemyResultRow>();

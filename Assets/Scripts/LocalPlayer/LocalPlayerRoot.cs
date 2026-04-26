@@ -37,12 +37,4 @@ public class LocalPlayerRoot : MonoBehaviour
             characterControll.enabled = false;
         }
     }
-    public void ONChanged(bool isGround)
-    {
-        Debug.Log("ONChanged: " + isGround);
-    }
-    public void OnLockChange(GravityOverride locked)
-    {
-        Debug.Log("OnLockChange: " + locked);
-    }
 }
