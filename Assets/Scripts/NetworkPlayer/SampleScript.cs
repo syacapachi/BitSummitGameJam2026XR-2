@@ -69,9 +69,9 @@ public class SampleScript : MonoBehaviour
         Debug.Log("This is a sample method.");
     }
     [OnInspectorButton]
-    public void SampleMethodWithParameter(string message)
+    public void SampleMethodWithParameter(string message, int number)
     {
-        Debug.Log("Message: " + message);
+        Debug.Log("Message: " + message + ", Number: " + number);
     }
     [OnInspectorButton]
     public void SampleMethodWithParameter(SampleEnum message)
@@ -79,42 +79,21 @@ public class SampleScript : MonoBehaviour
         Debug.Log("Message: " + message);
     }
     [OnInspectorButton]
-    public void SampleMethodWithParameter(int number)
-    {
-        Debug.Log("Number: " + number);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(List<float> value)
+    public void SampleMethodWithParameter(List<float> value, List<ScriptableObject> valueObject,List<InlineClass> inlineClasses,List<IInLineInterface> inlineInterfaces, List<IInLineGenericInterface<int>> inlineGenericInterfaces)
     {
         string valueString = string.Join(", ", value);
-        Debug.Log("Value: " + valueString);
+        string valueObjectString = string.Join(", ", valueObject);
+        string inlineClassString = string.Join(", ", inlineClasses);
+        string inlineInterfaceString = string.Join(", ", inlineInterfaces);
+        string inlineGenericInterfaceString = string.Join(", ", inlineGenericInterfaces);
+        Debug.Log("Value: " + valueString + ", " + valueObjectString + ", " + inlineClassString + ", " + inlineInterfaceString + ", " + inlineGenericInterfaceString);
     }
     [OnInspectorButton]
-    public void SampleMethodWithParameter(List<GameObject> value)
-    {
-        string valueString = string.Join(", ", value);
-        Debug.Log("Value: " + valueString);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(InlineClass inlineClass)
-    {
-        inlineClass.InlineMethod();
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(Dictionary<int,bool> dic, string message)
+    public void SampleMethodWithParameter(Dictionary<InlineClass, IInLineInterface> dic,Dictionary<IInLineGenericInterface<string>,IInLineGenericInterface<int>> dic2)
     {
         string dicString = string.Join(", ", dic);
-        Debug.Log("Message: " + dicString + message);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(GameObject obj, PhaseSO so)
-    {
-        Debug.Log("Message: " + obj.name + so.name);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(IInLineInterface resisterable)
-    {
-        resisterable.InlineMethod();
+        string dic2String = string.Join(", ", dic2);
+        Debug.Log("Message: " + dicString + ", " + dic2String);
     }
     [OnInspectorButton]
     public void SampleMethodWithParameter(UnityEvent invokeEvent)
@@ -122,19 +101,9 @@ public class SampleScript : MonoBehaviour
         invokeEvent.Invoke();
     }
     [OnInspectorButton]
-    public void SampleMethodWithParameter(LayerMask invokeEvent)
+    public void SampleMethodWithParameter(LayerMask mask,Quaternion quatanion, DateTime time)
     {
-        Debug.Log("Value: " + invokeEvent.value);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(Quaternion invokeEvent)
-    {
-        Debug.Log("Value: " + invokeEvent);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(DateTime invokeEvent)
-    {
-        Debug.Log("Value: " + invokeEvent);
+        Debug.Log("Value: " + mask + ", " + quatanion + ", " + time);
     }
     [OnInspectorButton]
     public void SampleMethodWithParameter<F>(GeneticClass<F> invokeEvent)
@@ -147,8 +116,9 @@ public class SampleScript : MonoBehaviour
         Debug.Log("Value: " + invokeEvent.value);
     }
     [OnInspectorButton]
-    public void SampleMethodWithParameter(IInLineGenericInterface<string> invokeEvent)
+    public void SampleMethodWithParameter(IInLineInterface resisterable,IInLineGenericInterface<string> invokeEvent)
     {
+        resisterable.InlineMethod();
         invokeEvent.InlineMethod("Sample Value");
     }
     [OnInspectorButton]

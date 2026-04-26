@@ -24,7 +24,7 @@ namespace Syacapachi.Editor
         // メソッド名と引数のキャッシュ (パフォーマンス向上のため)
         private readonly Dictionary<MethodInfo, object[]> methodParameters = new();
         // 抽象クラスやインターフェースと、それを実装/継承する具体的なクラスのキャッシュ (描画できない型を識別するため)
-        private readonly Dictionary<object, Type> abstructToClass = new();
+        private readonly Dictionary<string, Type> abstructToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<object, bool> foldouts = new();
         // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
@@ -253,7 +253,7 @@ namespace Syacapachi.Editor
             }
             if (t.IsAbstract || t.IsInterface)
             {
-                return DrawAbstructOrInterface(name, t, currentValue);
+                return DrawAbstructOrInterface(name, t, currentValue,target.name+"."+name);
             }
             //リスト、辞書、抽象クラス/インターフェース以外のジェネリック型
             if (t.IsGenericType)
@@ -301,7 +301,11 @@ namespace Syacapachi.Editor
 
             for (int i = 0; i < list.Count; i++)
             {
-                list[i] = DrawField(elementType, $"Element {i}", list[i]);
+                list[i] = DrawField(elementType, $"{name} Element[{i}]", list[i]);
+            }
+            if (GUILayout.Button("Add"))
+            {
+                list.Add(GetDefault(elementType));
             }
 
             EditorGUI.indentLevel--;
@@ -335,13 +339,21 @@ namespace Syacapachi.Editor
             foreach (var k in dict.Keys)
                 keys.Add(k);
 
-            foreach (var key in keys)
+            for (int i = 0; i < keys.Count; i++)
             {
-                EditorGUILayout.BeginHorizontal();
+                var key = keys[i];
+                EditorGUILayout.BeginVertical();
 
-                object newKey = DrawField(keyType, "Key", key);
-                object newValue = DrawField(valueType, "Value", dict[key]);
+                if (GUILayout.Button("-", GUILayout.Width(20)))
+                {
+                    dict.Remove(key);
+                    break;
+                }
 
+                object newKey = DrawField(keyType, $"{name} Key [{i}]", key);
+                object newValue = DrawField(valueType, $"{name} Value [{i}]", dict[key]);
+
+                //キーが変更された場合は、古いキーを削除して新しいキーで追加。そうでない場合は値だけ更新。
                 if (!Equals(newKey, key))
                 {
                     dict.Remove(key);
@@ -352,18 +364,18 @@ namespace Syacapachi.Editor
                     dict[key] = newValue;
                 }
 
-                if (GUILayout.Button("-", GUILayout.Width(20)))
-                {
-                    dict.Remove(key);
-                    break;
-                }
-
-                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndVertical();
             }
 
             if (GUILayout.Button("Add"))
             {
-                dict[GetDefault(keyType)] = GetDefault(valueType);
+                var key = GetDefault(keyType);
+                if (key == null)
+                {
+                    EditorUtility.DisplayDialog("No Concrete Class Found", $"Cannot add entry with null key for type {keyType.Name}.", "OK");
+                    return dict;
+                }
+                dict[key] = GetDefault(valueType);
             }
 
             EditorGUI.indentLevel--;
@@ -412,20 +424,24 @@ namespace Syacapachi.Editor
         /// <param name="type"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        object DrawAbstructOrInterface(string name, Type type, object value)
+        object DrawAbstructOrInterface(string name, Type type, object value,string path)
         {
-            if (abstructToClass.TryGetValue(type, out var concreteType))
+            if (abstructToClass.TryGetValue(path, out var concreteType))
             {
-                if (GUILayout.Button($"Delete: {concreteType.Name} ({type.Name})"))
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    abstructToClass.Remove(type);
-                    return null;
+                    EditorGUILayout.LabelField($"{type.Name} ▶ {concreteType.Name}", EditorStyles.boldLabel);
+                    if (GUILayout.Button("Delete", GUILayout.Width(100)))
+                    {
+                        abstructToClass.Remove(path);
+                        return null;
+                    }
                 }
                 return DrawField(concreteType, name, value);
             }
             if (GUILayout.Button($"Select Class ({type.Name})"))
             {
-                ShowTypeMenu(type);
+                ShowTypeMenu(type, path);
             }
             return value;
         }
@@ -433,7 +449,7 @@ namespace Syacapachi.Editor
         /// 具象クラスの選択メニューを表示する。選択されたクラスは、抽象クラスやインターフェースのキャッシュに保存される。次回以降は直接描画されるようになる。
         /// </summary>
         /// <param name="baseType"></param>
-        private void ShowTypeMenu(Type baseType)
+        private void ShowTypeMenu(Type baseType,string path)
         {
             var menu = new GenericMenu();
             var types = AppDomain.CurrentDomain.GetAssemblies()
@@ -443,7 +459,7 @@ namespace Syacapachi.Editor
             {
                 menu.AddItem(new GUIContent(type.FullName), false, () =>
                 {
-                    abstructToClass[baseType] = type;
+                    abstructToClass[path] = type;
                 });
             }
             if (!types.Any())
@@ -473,10 +489,20 @@ namespace Syacapachi.Editor
 
         object GetDefault(Type t)
         {
+            if (t == null)
+                return null;
             if (t.IsValueType)
                 return Activator.CreateInstance(t);
 
-            return null;
+            //生成できない型の場合はnullを返す
+            try
+            {
+                return Activator.CreateInstance(t);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         bool GetFoldout(object key)
