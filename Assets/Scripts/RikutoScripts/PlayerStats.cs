@@ -17,7 +17,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
 
     void Awake()
     {
-        killCounts = new int[enemyDataBase.IdToEnemyDataDict.Count];
+        killCounts = new int[enemyDataBase.Length];
     }
 
     // 発射

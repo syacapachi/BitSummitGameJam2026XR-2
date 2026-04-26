@@ -5,15 +5,15 @@ using Unity.Netcode;
 using UnityEngine;
 public class MeshController : NetworkBehaviour
 {
-    [SerializeField, SingleFlagOnly] LayerMask layer; 
-    [SerializeField] List<Renderer> m_Renderer = new();
+    [SerializeField, SingleFlagOnly] LayerMask OwnerLayer = 1; 
+    [SerializeField] Renderer[] m_Renderer;
 
     public override void OnNetworkSpawn()
     {
         int value = 0;
         for(int i = 0; i < 32; i++)
         {
-            if((layer & 1 << i) != 0)
+            if((OwnerLayer & 1 << i) != 0)
             {
                 value = i;
                 break;
@@ -35,8 +35,7 @@ public class MeshController : NetworkBehaviour
     [OnInspectorButton]
     private void FindAndApply()
     {
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
-        m_Renderer = renderers.ToList();
+        m_Renderer = GetComponentsInChildren<Renderer>();
     }
 #endif
 }

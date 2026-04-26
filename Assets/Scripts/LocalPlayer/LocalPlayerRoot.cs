@@ -1,6 +1,7 @@
 ﻿using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Gravity;
 /// <summary>
 /// プレイヤークラスのルートコンポーネント。プレイヤーに関連するすべてのコンポーネントを管理するためのクラス。プレイヤーの入力、キャラクターコントロール、ヘルス、プロパティ、カメラ設定などを統括する役割を持つ。
 /// </summary>
@@ -36,5 +37,12 @@ public class LocalPlayerRoot : MonoBehaviour
             characterControll.enabled = false;
         }
     }
-
+    public void ONChanged(bool isGround)
+    {
+        Debug.Log("ONChanged: " + isGround);
+    }
+    public void OnLockChange(GravityOverride locked)
+    {
+        Debug.Log("OnLockChange: " + locked);
+    }
 }

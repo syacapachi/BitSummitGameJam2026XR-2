@@ -207,9 +207,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  layer:
+  OwnerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   m_Renderer:
   - {fileID: 3586039225926179217}
   - {fileID: 5432640361929983673}
@@ -5945,7 +5945,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  avatorCollider: {fileID: 6125224147537168939}
+  avatorColliders:
+  - {fileID: 4079171741146091682}
   setting: {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
   playerjob: 0
   syncroJob:
@@ -7215,9 +7216,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  layer:
+  OwnerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   m_Renderer:
   - {fileID: 4281159005728926349}
   - {fileID: 1316376018937414345}
@@ -7935,7 +7936,7 @@ GameObject:
   - component: {fileID: 8928491125407436489}
   - component: {fileID: 4079171741146091682}
   - component: {fileID: 1849897984924995840}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7977,9 +7978,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2.7
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 1.09, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1849897984924995840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9205,7 +9206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  layer:
+  OwnerLayer:
     serializedVersion: 2
     m_Bits: 64
   m_Renderer:

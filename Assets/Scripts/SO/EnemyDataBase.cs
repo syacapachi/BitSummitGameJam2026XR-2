@@ -1,18 +1,18 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// EnemySO‚ğID‚ÅŠÇ—‚·‚éScriptableObject
-/// ’ÊM‚ÅAEnemySO‚ğID‚Å‘—‚é‚½‚ß‚É•K—v
+/// EnemySOã‚’IDã§ç®¡ç†ã™ã‚‹ScriptableObject
+/// é€šä¿¡ã§ã€EnemySOã‚’IDã§é€ã‚‹ãŸã‚ã«å¿…è¦
 /// </summary>
 [CreateAssetMenu(fileName = "EnemyDataBase", menuName = "ScriptableObjects/EnemyDataBase", order = 1)]
 public class EnemyDataBase : ScriptableObject
 {
-    [Header("EnemySO‚Æ”z—ñ‚ÌƒCƒ“ƒfƒbƒNƒX‚ğ‘Î‰‚³‚¹‚é")]
-    [Tooltip("EnemySO‚Æ”z—ñ‚ÌƒCƒ“ƒfƒbƒNƒX‚ğ‘Î‰‚³‚¹‚Ü‚·B”z—ñ‚ÌƒCƒ“ƒfƒbƒNƒX‚ğID‚Æ‚µ‚Äæ“¾‚Å‚«‚Ü‚·B")]
+    [Header("EnemySOã¨é…åˆ—ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å¯¾å¿œã•ã›ã‚‹")]
+    [Tooltip("EnemySOã¨é…åˆ—ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å¯¾å¿œã•ã›ã¾ã™ã€‚é…åˆ—ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’IDã¨ã—ã¦å–å¾—ã§ãã¾ã™ã€‚")]
     [SerializeField] EnemySO[] enemyDataArray;
     private readonly Dictionary<EnemySO,int> enemyDataToIdDict = new();
-    private readonly Dictionary<int, EnemySO> idToEnemyDataDict = new();
     public IReadOnlyDictionary<EnemySO,int> EnemyDataToIdDict
     {
         get 
@@ -21,12 +21,11 @@ public class EnemyDataBase : ScriptableObject
             return enemyDataToIdDict;
         }
     }
-    public IReadOnlyDictionary<int ,EnemySO> IdToEnemyDataDict
+    public IReadOnlyList<EnemySO> IdToEnemyList
     {
         get
         {
-            Create();
-            return idToEnemyDataDict;
+            return enemyDataArray.ToList();
         }
     }
     public int GetIdFromEnemyData(EnemySO data)
@@ -39,15 +38,15 @@ public class EnemyDataBase : ScriptableObject
         }
         return EnemyDataToIdDict[data];
     }
+    public int Length => enemyDataArray.Length;
     public EnemySO GetEnemyDataFromId(int id)
     {
-        Create();
-        if (!IdToEnemyDataDict.ContainsKey(id))
+        if (id < 0 || id >= IdToEnemyList.Count)
         {
             Debug.LogError($"EnemyData with ID {id} is not found in EnemyDataBase.");
             return null;
         }
-        return IdToEnemyDataDict[id];
+        return IdToEnemyList[id];
     }
 
     private bool isInitialized = false;
@@ -55,10 +54,8 @@ public class EnemyDataBase : ScriptableObject
     {
         if (isInitialized) return;
         enemyDataToIdDict.Clear();
-        idToEnemyDataDict.Clear();
         for (int i = 0; i < enemyDataArray.Length; i++)
         {
-            idToEnemyDataDict[i] = enemyDataArray[i];
             enemyDataToIdDict[enemyDataArray[i]] = i;
         }
         isInitialized = true;

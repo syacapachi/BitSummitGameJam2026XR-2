@@ -17,16 +17,12 @@ public class LocalCameraSetting : MonoBehaviour
     Vector2 cameraAngle;
     Vector2 lastSendRotation;
     
-    private bool isXR = false;
     // シーン内のアクティブなカメラを追跡するためのフィールド。これにより、どのカメラが現在アクティブであるかを簡単に確認できるようになる。
     public Camera CurrentActiveCamera { 
         get => localCamera; 
     }
     private void OnEnable()
     {
-        isXR = XRSettings.isDeviceActive;
-        if (isXR) return;
-
         //Cursor.lockState = CursorLockMode.Locked;
 
         Vector3 angle = localCamera.transform.eulerAngles;
@@ -41,7 +37,7 @@ public class LocalCameraSetting : MonoBehaviour
     }
     public void LateUpdate()
     {
-        if (isXR) return;
+        if (XRSettings.isDeviceActive) return;
         Vector2 rotation = look.CurrentValue;
         if(rotation == Vector2.zero) return;
         //オーナーのクライアントで、現在アクティブなカメラがローカルカメラである場合、ローカルカメラの位置と回転をプレイヤーの位置と回転に合わせて更新する。これにより、ローカルカメラがプレイヤーの動きに追従するようになる。

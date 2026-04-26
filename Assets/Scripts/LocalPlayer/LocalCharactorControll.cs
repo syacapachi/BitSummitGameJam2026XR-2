@@ -1,5 +1,6 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class LocalCharactorControll : MonoBehaviour 
 { 
@@ -17,7 +18,6 @@ public class LocalCharactorControll : MonoBehaviour
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent jumpEvent;
     [SerializeField] BoolEventSO dashEvent;
-    [SerializeField] VoidEvent fireEvent;
     [SerializeField] Vector2Event moveEvent;
     public bool IsStop => moveMode == MoveMode.Stop;
     Vector2 lastMove = Vector2.zero;
@@ -28,23 +28,16 @@ public class LocalCharactorControll : MonoBehaviour
     {
         jumpEvent.Register(OnJunp);
         dashEvent.Register(OnDashChanged);
-        fireEvent.Register(OnUIChanged);
-        //reciever.OnDashChanged += OnDashChanged;
-        //reciever.OnFireed += OnUIChanged;
-        //reciever.OnJumped += OnJunp;
     }
     private void OnDisable()
     {
         jumpEvent.Unregister(OnJunp);
         dashEvent.Unregister(OnDashChanged);
-        fireEvent.Unregister(OnUIChanged);
-        //reciever.OnDashChanged -= OnDashChanged;
-        //reciever.OnFireed -= OnUIChanged;
-        //reciever.OnJumped -= OnJunp;
     }
     private void Update()
     {
         Vector2 moveInput = moveEvent.CurrentValue;
+        if(XRSettings.isDeviceActive) return;
         if (lastMove == Vector2.zero && moveInput == lastMove) return;
         float speed = moveMode switch
         {
@@ -72,7 +65,7 @@ public class LocalCharactorControll : MonoBehaviour
     private void OnJunp()
     {
         Debug.Log("Jump");
-        playerRootTransform.Translate(Vector3.up * jumpForce * Time.deltaTime);
+        playerRootTransform.Translate(jumpForce * Time.deltaTime * Vector3.up);
     }
     private void OnDashChanged(bool isDash)
     {
@@ -83,19 +76,6 @@ public class LocalCharactorControll : MonoBehaviour
         else
         {
             moveMode = MoveMode.Normal;
-        }
-    }
-    private void OnUIChanged()
-    {
-        if (moveMode == MoveMode.Stop)
-        {
-            //Cursor.lockState = CursorLockMode.Locked;
-            moveMode = MoveMode.Normal;
-        }
-        else
-        {
-            //Cursor.lockState = CursorLockMode.None;
-            moveMode = MoveMode.Stop;
         }
     }
 }
