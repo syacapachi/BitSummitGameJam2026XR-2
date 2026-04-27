@@ -93,7 +93,7 @@ public class NBullet : BulletBaseController
                 SpawnShieldFxClientRpc(transform.position);
             }
         }
-        else
+        else if(ResultCollector.ClientId != OwnerClientId)
         {
             // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
             Debug.Log("Shield by Player");
@@ -103,6 +103,12 @@ public class NBullet : BulletBaseController
                 Enemy = null
             });
             SpawnShieldFxClientRpc(transform.position);
+            return;
+        }
+        else
+        {
+            //自分に当たってる場合
+            //Debug.Log("");
             return;
         }
 

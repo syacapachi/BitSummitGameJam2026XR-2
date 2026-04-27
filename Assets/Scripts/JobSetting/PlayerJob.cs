@@ -57,13 +57,13 @@ public struct PlayerLayerSettings
     [HideInInspector]
     public int Layer ;
 
-    public PlayerLayerSettings(int layer, LayerMask playerLayer, PlayerJob job,PlayerJob attackableJob)
+    public PlayerLayerSettings(LayerMask colliderLayer, LayerMask cullingMask, PlayerJob job,PlayerJob attackableJob)
     {
-        TargetColliderLayer = layer;
-        CullingMask = playerLayer;
+        TargetColliderLayer = colliderLayer;
+        CullingMask = cullingMask;
         TargetJob = job;
         AttackableJob = attackableJob;
-        Layer = TargetColliderLayer.value;
+        Layer = 0;
         //最初に見つかったレイヤーを使用する
         LayerUpdate();
     }

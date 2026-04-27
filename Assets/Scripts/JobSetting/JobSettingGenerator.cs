@@ -58,7 +58,7 @@ public class JobSettingGenerator : ScriptableObject
             {
                 //とりあえず、ColliderLayerは6(Avator)、CullingMaskはすべてのレイヤーの積集合に設定
                 //攻撃可能なジョブは和集合で設定
-                int colliderLayer = 6;
+                LayerMask colliderLayer = 1<<6;
                 LayerMask cullingMask = -1;
                 PlayerJob attackableJob = PlayerJob.Nothing;
                 foreach (var mask in JobArray)
@@ -69,13 +69,9 @@ public class JobSettingGenerator : ScriptableObject
                         attackableJob |= JobLayerMaskReadOnlyDic[(PlayerJob)mask].AttackableJob;
                     }
                 }
-                JobToLayerMaskDic[playerJob] = new PlayerLayerSettings
-                {
-                    TargetJob = playerJob,
-                    TargetColliderLayer = colliderLayer,
-                    CullingMask = cullingMask,
-                    AttackableJob = attackableJob,
-                };
+                var newSetting = new PlayerLayerSettings(colliderLayer, cullingMask, playerJob, attackableJob);
+                newSetting.LayerUpdate();
+                JobToLayerMaskDic[playerJob] = newSetting;
                 Debug.LogWarning($"[{nameof(JobSettingGenerator)}]Job {playerJob} is not defined in JobSettingSO. ColliderLayer set to {colliderLayer}, CullingMask set to {cullingMask} (intersection of all defined jobs).");
             }
         }

@@ -21,7 +21,7 @@ public class NetworkPlayerRoot : NetworkBehaviour
     /// </summary>
     protected override void OnNetworkPostSpawn()
     {
-        ResistPlayerManager();
+        StartCoroutine(ResistPlayerManager());
         NetworkManager.SceneManager.OnLoadComplete += OnSceneLoad;
         NetworkManager.SceneManager.OnUnloadComplete += OnUnloadComplete;
     }

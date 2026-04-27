@@ -1,23 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static CheckPointManager;
 
 /// <summary>
 /// NavMeshを使って、敵を移動させる。
 /// </summary>
 public class CheckPointManager : MonoBehaviour
 {
+    [Serializable]
+    public readonly struct IndexToTransform
+    {
+        public readonly int id;
+        public readonly Transform transform;
+        public IndexToTransform(int id, Transform transform)
+        {
+            this.id = id;
+            this.transform = transform;
+        }
+    }
 #if UNITY_EDITOR
     [SerializeField] GameObject m_CheckPointParent;
 #endif
     [SerializeField] Transform[] checkPoints;
-    readonly Dictionary<Transform, int> transformToIndexDic = new();
+    IndexToTransform[] indexToTransformArr;
+    readonly Dictionary<IndexToTransform, int> transformToIndexDic = new();
     private void Awake()
     {
         transformToIndexDic.Clear();
+        indexToTransformArr = new IndexToTransform[checkPoints.Length];
         for(int i = 0; i < checkPoints.Length; i++)
         {
-            transformToIndexDic[checkPoints[i]] = i;
+            IndexToTransform indexToTransform = new(i, checkPoints[i]);
+            indexToTransformArr[i] = indexToTransform;
+            transformToIndexDic[indexToTransform] = i;
         }
     }
 #if UNITY_EDITOR
@@ -37,7 +54,7 @@ public class CheckPointManager : MonoBehaviour
         }
     }
 #endif
-    public bool IsLastPoint(Transform transform)
+    public bool IsLastPoint(IndexToTransform transform)
     {
         if (transformToIndexDic.TryGetValue(transform, out int val))
         {
@@ -46,14 +63,14 @@ public class CheckPointManager : MonoBehaviour
         Debug.LogError("Transform is not assinged");
         return false;
     }
-    public bool TryGetNextPoint(Transform transform, out Transform nextPoint)
+    public bool TryGetNextPoint(IndexToTransform transform, out IndexToTransform nextPoint)
     {
-        nextPoint = null;
+        nextPoint = default;
         if (transformToIndexDic.TryGetValue(transform, out int val))
         {
             if (val < checkPoints.Length - 1)
             {
-                nextPoint = checkPoints[val + 1];
+                nextPoint = indexToTransformArr[val + 1];
                 return true;
             }
             else
@@ -65,22 +82,22 @@ public class CheckPointManager : MonoBehaviour
         Debug.LogError("Transform is not assinged");
         return false;
     }
-    public Transform GetNextPoint(Transform transform)
+    public IndexToTransform GetNextPoint(IndexToTransform transform)
     {
         if (transformToIndexDic.TryGetValue(transform, out int val))
         {
             return GetNextPoint(val);
         }
         Debug.LogError("Transform is not assinged");
-        return null;
+        return default;
     }
-    public Transform GetNextPoint(int index)
+    public IndexToTransform GetNextPoint(int index)
     {
         if(index < 0 || index >= checkPoints.Length)
         {
             Debug.LogError("List out Range");
-            return null;
+            return default;
         }
-        return (index == checkPoints.Length - 1) ? checkPoints[0] : checkPoints[index+1];
+        return (index == checkPoints.Length - 1) ? indexToTransformArr[0] : indexToTransformArr[index+1];
     }
 }
