@@ -13,9 +13,9 @@ public class MarkerController : NetworkBehaviour
     [SerializeField] MarkerAudioController markerAudioController;
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent markerEvent;
-    AttachableBehaviour attach;
-    //水野が追加した。マーカーの発光用
-    MarkerBlinkEffect blinkEffect;
+    AttachableBehaviour attachServerOnly;
+    //水野が追加した。マーカーの発光用サーバーだけもつ
+    MarkerBlinkEffect blinkEffectServerOnly;
     //以上
     bool isMarkAttachedServerOnly = false;
     Coroutine markerCoroutine;
@@ -28,26 +28,19 @@ public class MarkerController : NetworkBehaviour
   
     protected override void OnNetworkPostSpawn()
     {
+        Debug.Log($"{nameof(MarkerController)},IsOwner={IsOwner},Owned by={OwnerClientId}");
         if (IsServer)
         {
             var marker = GameObject.Instantiate(playerMarker);
             var networkObject = marker.GetComponent<NetworkObject>();
             
-            attach = marker.GetComponentInChildren<AttachableBehaviour>();
+            attachServerOnly = marker.GetComponentInChildren<AttachableBehaviour>();
             networkObject.SpawnWithOwnership(OwnerClientId);
-            GetBlincEffectRpc(networkObject);
+            blinkEffectServerOnly = networkObject.GetComponentInChildren<MarkerBlinkEffect>();
             isMarkAttachedServerOnly = false;
         }
-        
     }
-    [Rpc(SendTo.ClientsAndHost)]
-    private void GetBlincEffectRpc(NetworkObjectReference reference)
-    {
-        if(reference.TryGet(out var networkObject))
-        {
-            blinkEffect = networkObject.GetComponentInChildren<MarkerBlinkEffect>(); // 水野が追加した
-        }
-    }
+
     public override void OnNetworkDespawn()
     {
         if (IsServer)
@@ -105,14 +98,15 @@ public class MarkerController : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void MoveMarkerServerRpc(Vector3 pos)
     {
-        if (attach == null)
+        if (attachServerOnly == null)
         {
             Debug.LogWarning("Player marker not found. Cannot place marker.");
             return;
         }
         if (isMarkAttachedServerOnly)
         {
-            attach.Detach();
+            attachServerOnly.Detach();
+            isMarkAttachedServerOnly = false;
         }
         else
         {
@@ -122,9 +116,14 @@ public class MarkerController : NetworkBehaviour
                 markerCoroutine = null;
             }
         }
-        attach.gameObject.transform.position = pos;
+        attachServerOnly.gameObject.transform.position = pos;
 
-        StartBlinkRpc();
+        // 水野が追加した 非サーバーに点滅を指示
+        if (blinkEffectServerOnly != null)
+        {
+            blinkEffectServerOnly.StartBlinkRpc();
+        }
+        // 水野が追加した
 
         markerCoroutine = StartCoroutine(MarkerBackCorutine());
 
@@ -134,39 +133,23 @@ public class MarkerController : NetworkBehaviour
     private IEnumerator MarkerBackCorutine()
     {
         yield return new WaitForSeconds(5f);
-        if (attach != null)
+        if (attachServerOnly != null)
         {
-            attach.Attach(node);
-            attach.gameObject.transform.localPosition = Vector3.zero;
+            attachServerOnly.Attach(node);
+            attachServerOnly.gameObject.transform.localPosition = Vector3.zero;
             isMarkAttachedServerOnly = true;
 
-            StopBlinkRpc();
-
+            // 水野が追加した
+            if (blinkEffectServerOnly != null)
+            {
+                blinkEffectServerOnly.StopBlinkRpc();
+            }
+            // 水野が追加した
         }
         else
         {
             Debug.LogError($"[{gameObject.name}]AttachableBehaviour is null");
             isMarkAttachedServerOnly = false;
         }
-    }
-    [Rpc(SendTo.ClientsAndHost)]
-    private void StartBlinkRpc()
-    {
-        // 水野が追加した
-        if (blinkEffect != null)
-        {
-            blinkEffect.StartBlink();
-        }
-        // 水野が追加した
-    }
-    [Rpc(SendTo.ClientsAndHost)]
-    private void StopBlinkRpc()
-    {
-        // 水野が追加した
-        if (blinkEffect != null)
-        {
-            blinkEffect.StopBlink();
-        }
-        // 水野が追加した
     }
 }
