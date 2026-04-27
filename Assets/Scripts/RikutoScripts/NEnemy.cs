@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 {
     [SerializeField] Transform rootTransfrom;
-    [SerializeField] EnemySO enemySO;
     [SerializeField] JobSettingGenerator enemyJobSetting;
     private readonly NetworkVariable<float> currentHP = new(
         0,
@@ -27,10 +26,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     private bool isInitialize = false;
 
     private Transform targetPlayer;
+    private EnemySO enemySO;
     public GameObject GameObject => this.gameObject;
     NetworkObject IEnemy.NetworkObject => this.NetworkObject;
     public EnemySO EnemySO => enemySO;  
-    public int Layer => gameObject.layer;
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => enemySO.Hp;
     
@@ -59,6 +58,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         Debug.LogError($"LayerMask setting not found for job: {playerJob}");
         return false;
+    }
+    public void InjectSetting(EnemySO enemySO)
+    {
+        this.enemySO = enemySO;
     }
     public override void OnNetworkSpawn()
     {
@@ -168,14 +171,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     void DieOnServer(IResultCollector collector)
     {
-        Debug.Log("Die");
         if (collector != null && collector is PlayerStats stats)
         {
-            Debug.Log("Add kill");
             stats.AddKill(enemySO, enemySO.ScoreValue);
         }
+        else
+        {
+            Debug.LogError("collector is null!");
+        }
 
-        enemyKilled.Invoke(new EnemyKilled() {KilledEnemy = this,positon = transform.position});
+        enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

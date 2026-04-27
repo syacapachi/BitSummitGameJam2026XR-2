@@ -3,7 +3,6 @@ using Unity.Netcode;
 
 public interface IEnemy
 {
-    public int Layer { get; }
     public NetworkObject NetworkObject {get;}
 
     public PlayerJob EnemyJob { get; }
@@ -11,4 +10,5 @@ public interface IEnemy
     /// こいつの存在意義は？
     /// </summary>
     public bool IsAttackable { get; }
+    public void InjectSetting(EnemySO enemySO);
 }
