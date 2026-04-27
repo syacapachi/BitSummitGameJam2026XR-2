@@ -22,7 +22,14 @@ public class GameEffectAudioManager : MonoBehaviour
     private void OnEventRecived(GameEffect e)
     {
         //イベントの処理を追加する場合はここへ
-        PlayGameEffect(e);
+        if (e.Clip != null)
+        {
+            PlayGameEffect(e);
+        }
+        if(e.FxPrefab != null)
+        {
+            PlayFx(e.FxPrefab,e.Position);
+        }
     }
     public void PlayGameEffect(GameEffect effect)
     {
@@ -62,6 +69,12 @@ public class GameEffectAudioManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         yield return PlayAndRelease(source);
+    }
+    private void PlayFx(GameObject fxPrefab,Vector3 pos)
+    {
+        GameObject obj = localObjectPool.Get(fxPrefab);
+        obj.transform.SetPositionAndRotation(pos, Quaternion.identity);
+        localObjectPool.Release(fxPrefab,2f);
     }
     private void ReturnPool(AudioSource source)
     {

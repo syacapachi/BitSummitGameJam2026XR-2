@@ -37004,6 +37004,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManagerLocator
       objectReference: {fileID: 0}
+    - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: phases.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'phases.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 01e97072af31c5746aae4fc3efb30aec, type: 2}
+    - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'phases.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3782534606

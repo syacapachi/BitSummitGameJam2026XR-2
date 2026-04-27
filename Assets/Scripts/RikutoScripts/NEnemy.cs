@@ -146,14 +146,13 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         {
             hpText.text = $"{currentHP.Value} / {enemySO.Hp}";
         }
-        //プレイヤーに寄ってくる
-        //StartCoroutine(MoveToNextPos(targetPlayer.position));
-        
 
         if (currentHP.Value <= 0)
         {
             DieOnServer(sender.ResultCollector);
         }
+        //プレイヤーに寄ってくる
+        StartCoroutine(MoveToNextPos(targetPlayer.position));
     }
 
     IEnumerator MoveToNextPos(Vector3 targetPos)
@@ -163,7 +162,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         yield return nextFixed;
         while(Vector3.Distance(transform.position, targetPos) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * enemySO.MoveSpeedValue);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.fixedDeltaTime * enemySO.MoveSpeedValue);
             yield return nextFixed;
         }
     }

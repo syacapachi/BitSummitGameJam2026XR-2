@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
   m_Name: KingGhost
   m_EditorClassIdentifier: 
-  ID: 13
   Name: KingGhost
   icon: {fileID: 21300000, guid: b3905a73a6672d9449647aaf036e23fc, type: 3}
   HP: 2000
   scoreValue: 10000
-  MoveSpeed: 100
+  MoveSpeed: 0.6
   prefab: {fileID: 6380092818085878473, guid: 106af4cebf8e6a44eaba7b8750652562, type: 3}
   enemyWeapon: {fileID: 11400000, guid: c888351ad86b0b541a1f5b3c6f93969a, type: 2}

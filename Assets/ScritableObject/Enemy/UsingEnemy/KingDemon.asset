@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
   m_Name: KingDemon
   m_EditorClassIdentifier: 
-  ID: 14
   Name: KingDemon
   icon: {fileID: 21300000, guid: c587cac8808c8b745adbae420e9acc83, type: 3}
   HP: 2000
   scoreValue: 10000
-  MoveSpeed: 100
+  MoveSpeed: 0.8
   prefab: {fileID: 4098379032595231479, guid: d49aab5b63282ab46916f816abe2585e, type: 3}
   enemyWeapon: {fileID: 11400000, guid: 2d27e6e1f8fc91240b0402a317b6f27a, type: 2}
