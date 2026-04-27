@@ -9,6 +9,8 @@ public class NBullet : BulletBaseController
     [SerializeField] GameObject hitFxPrefab;
     [SerializeField] GameObject shieldFxPrefab;
     [SerializeField] float hitFxLife = 2f;
+    [Header("Publis Event")]
+    [SerializeField] GameEffectEvent gameEffectEvent;
     private void OnDisable()
     {
         trailRenderer.Clear();
@@ -20,6 +22,7 @@ public class NBullet : BulletBaseController
         GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(hitFxPrefab);
         fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
         ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
+        gameEffectEvent.Invoke(new GameEffect(null, hitFxPrefab, pos));
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -28,6 +31,7 @@ public class NBullet : BulletBaseController
         GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(shieldFxPrefab);
         fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
         ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
+        gameEffectEvent.Invoke(new GameEffect(null, shieldFxPrefab, pos));
     }
 
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)

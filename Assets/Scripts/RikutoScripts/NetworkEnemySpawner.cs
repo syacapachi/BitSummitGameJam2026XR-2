@@ -148,6 +148,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                rot);
 
         var enemy = networkObject.GetComponent<IEnemy>();
+        enemy.InjectSetting(enemyData);
         RegisterEnemy(enemy);
         networkObject.Spawn();
         

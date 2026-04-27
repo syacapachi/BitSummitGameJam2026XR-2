@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -25,6 +25,7 @@ public class MarkerBlinkEffect : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log($"{nameof(MarkerBlinkEffect)},IsOwner={IsOwner},Owned by={OwnerClientId}");
         DefaultColor = IsOwner ? ownerNormalColor : nonOwnerNormalColor;
         if (targetRenderers == null || targetRenderers.Length == 0)
             targetRenderers = GetComponentsInChildren<Renderer>(true);
@@ -67,7 +68,8 @@ public class MarkerBlinkEffect : NetworkBehaviour
         }
     }
 
-    public void StartBlink(float duration = 5f)
+    [Rpc(SendTo.ClientsAndHost)]
+    public void StartBlinkRpc(float duration = 5f)
     {
         if (blinkCoroutine != null)
             StopCoroutine(blinkCoroutine);
@@ -79,11 +81,11 @@ public class MarkerBlinkEffect : NetworkBehaviour
     IEnumerator BlinkRoutine(float duration)
     {
         yield return new WaitForSeconds(duration);
-        StopBlink();
+        StopBlinkRpc();
         blinkCoroutine = null;
     }
-
-    public void StopBlink()
+    [Rpc(SendTo.ClientsAndHost)]
+    public void StopBlinkRpc()
     {
         isBlinking = false;
 

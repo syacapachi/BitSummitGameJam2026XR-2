@@ -6,7 +6,6 @@ using Unity.Netcode.Components;
 
 public class NEnemyShoot : GunController
 {
-    [SerializeField] EnemySO enemySO;
     [SerializeField] NEnemy nEnemy;
     [SerializeField] AudioClip shotClip;
     [Header("Reference")]
@@ -36,7 +35,7 @@ public class NEnemyShoot : GunController
         base.OnNetworkSpawn();
 
         if (!IsServer) return;
-        weaponSO = enemySO.EnemyWeapon;
+        weaponSO = nEnemy.EnemySO.EnemyWeapon;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]

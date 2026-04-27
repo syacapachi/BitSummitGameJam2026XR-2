@@ -58,6 +58,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
             Debug.Log("Can call only Server");
         }
         int enemyId = enemyDataBase.GetIdFromEnemyData(enemyso);
+        Debug.Log($"Add kill{enemyso.name}({enemyId})");
         score += scoreValue;
 
         if (enemyId < 0 || enemyId >= killCounts.Length)

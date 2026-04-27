@@ -7,14 +7,14 @@ public class EnemySO : ScriptableObject
     [SerializeField] Sprite icon;
     [SerializeField] int HP = 100;
     [SerializeField] int scoreValue = 100;
-    [SerializeField] int MoveSpeed = 100;
+    [SerializeField] float MoveSpeed = 1;
     [SerializeField] GameObject prefab;
     [SerializeField] EnemyWeaponSettingsSO enemyWeapon;
     public string EnemyName => Name;
     public Sprite Icon => icon;
     public int Hp => HP;
     public int ScoreValue => scoreValue;
-    public int MoveSpeedValue => MoveSpeed;
+    public float MoveSpeedValue => MoveSpeed;
     public GameObject Prefab => prefab;
     public EnemyWeaponSettingsSO EnemyWeapon => enemyWeapon;
 }

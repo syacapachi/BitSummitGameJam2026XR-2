@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 {
     [SerializeField] Transform rootTransfrom;
-    [SerializeField] EnemySO enemySO;
     [SerializeField] JobSettingGenerator enemyJobSetting;
     private readonly NetworkVariable<float> currentHP = new(
         0,
@@ -27,10 +26,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     private bool isInitialize = false;
 
     private Transform targetPlayer;
+    private EnemySO enemySO;
     public GameObject GameObject => this.gameObject;
     NetworkObject IEnemy.NetworkObject => this.NetworkObject;
     public EnemySO EnemySO => enemySO;  
-    public int Layer => gameObject.layer;
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => enemySO.Hp;
     
@@ -59,6 +58,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         Debug.LogError($"LayerMask setting not found for job: {playerJob}");
         return false;
+    }
+    public void InjectSetting(EnemySO enemySO)
+    {
+        this.enemySO = enemySO;
     }
     public override void OnNetworkSpawn()
     {
@@ -143,14 +146,13 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         {
             hpText.text = $"{currentHP.Value} / {enemySO.Hp}";
         }
-        //プレイヤーに寄ってくる
-        //StartCoroutine(MoveToNextPos(targetPlayer.position));
-        
 
         if (currentHP.Value <= 0)
         {
             DieOnServer(sender.ResultCollector);
         }
+        //プレイヤーに寄ってくる
+        StartCoroutine(MoveToNextPos(targetPlayer.position));
     }
 
     IEnumerator MoveToNextPos(Vector3 targetPos)
@@ -160,7 +162,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         yield return nextFixed;
         while(Vector3.Distance(transform.position, targetPos) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * enemySO.MoveSpeedValue);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.fixedDeltaTime * enemySO.MoveSpeedValue);
             yield return nextFixed;
         }
     }
@@ -168,14 +170,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     void DieOnServer(IResultCollector collector)
     {
-        Debug.Log("Die");
         if (collector != null && collector is PlayerStats stats)
         {
-            Debug.Log("Add kill");
             stats.AddKill(enemySO, enemySO.ScoreValue);
         }
+        else
+        {
+            Debug.LogError("collector is null!");
+        }
 
-        enemyKilled.Invoke(new EnemyKilled() {KilledEnemy = this,positon = transform.position});
+        enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);
