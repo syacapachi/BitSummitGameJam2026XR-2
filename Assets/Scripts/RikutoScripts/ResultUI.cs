@@ -116,7 +116,7 @@ public class ResultUI : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (var r in results)
+        foreach (var playerResult in results)
         {
             var headerObj = new GameObject("PlayerHeader");
             headerObj.transform.SetParent(contentParent, false);
@@ -127,15 +127,15 @@ public class ResultUI : MonoBehaviour
             headerText.fontSize = fontSizeHeader;
             headerText.alignment = TextAlignmentOptions.TopLeft;
             headerText.enableAutoSizing = false;
-            headerText.text = $"Player {r.clientId} : {r.playerName}\n";
+            headerText.text = $"Player {playerResult.clientId} : {playerResult.playerName}\n";
 
             // 統計情報（2項目ずつ改行）
             string[] stats = new string[]
             {
-                $"Score: {r.score}",
-                $"Hits: {r.hits}/{r.shotsFired}",
-                $"Shield: {r.shield}",
-                $"Damage: {r.damageDealt:F1}"
+                $"Score: {playerResult.score}",
+                $"Hits: {playerResult.hits}/{playerResult.shotsFired}",
+                $"Shield: {playerResult.shield}",
+                $"Damage: {playerResult.damageDealt:F1}"
             };
 
             string statsText = "";
@@ -150,9 +150,9 @@ public class ResultUI : MonoBehaviour
             headerText.text += statsText;
 
             // 🔴 敵ごとに行生成
-            for (int i = 0; i < r.killCounts.Length; i++)
+            for (int i = 0; i < playerResult.killCounts.Length; i++)
             {
-                int count = r.killCounts[i];
+                int count = playerResult.killCounts[i];
                 if (count <= 0) continue;
 
                 var enemy = enemyDatabase.GetEnemyDataFromId(i);

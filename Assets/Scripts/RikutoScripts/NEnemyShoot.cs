@@ -37,7 +37,6 @@ public class NEnemyShoot : GunController
 
         if (!IsServer) return;
         weaponSO = enemySO.EnemyWeapon;
-        weaponSO ??= base.WeaponSettings as EnemyWeaponSettingsSO;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
