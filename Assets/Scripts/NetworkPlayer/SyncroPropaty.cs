@@ -109,7 +109,6 @@ public class SyncroPropaty : NetworkBehaviour
     }
     private void OnJobChangeHandle()
     {
-        Debug.Log("SwitchJob action performed! Current job: " + Job);
         Job = Job switch
         {
             PlayerJob.Nothing => PlayerJob.Demon,

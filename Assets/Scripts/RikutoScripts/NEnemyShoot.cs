@@ -37,7 +37,6 @@ public class NEnemyShoot : GunController
 
         if (!IsServer) return;
         weaponSO = enemySO.EnemyWeapon;
-        weaponSO ??= base.WeaponSettings as EnemyWeaponSettingsSO;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
@@ -64,7 +63,7 @@ public class NEnemyShoot : GunController
         networkObject.gameObject.layer = this.gameObject.layer;
 
         var bullet = networkObject.GetComponent<BulletBaseController>();
-        bullet.BulletInit(null, PlayerJob.Nothing, weaponSO);
+        bullet.BulletInit(null, nEnemy.EnemyJob, weaponSO);
 
         networkObject.Spawn();
     }

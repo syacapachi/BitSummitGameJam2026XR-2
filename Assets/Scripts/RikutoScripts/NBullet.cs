@@ -32,12 +32,12 @@ public class NBullet : BulletBaseController
 
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
     {
-        // [変更前] other.GetComponent<IEnemy>() のみ
-        // [変更後] 親オブジェクトも検索するように修正
-        var enemy = other.GetComponent<IEnemy>()
-                    ?? other.GetComponentInParent<IEnemy>();
-
-        if (enemy != null)
+        //switch (reciever)
+        //{
+        //    case IEnemy enemy1:
+        //        break;
+        //}
+        if (reciever is IEnemy enemy)
         {
             if (!setting.TryGetPlayerLayerSettings(ShooterJob, out var layerMaskSetting))
             {
@@ -93,8 +93,10 @@ public class NBullet : BulletBaseController
                 SpawnShieldFxClientRpc(transform.position);
             }
         }
-        else if(ResultCollector.ClientId != OwnerClientId)
+        else if(reciever is PlayerCollider player || reciever is PlayerHealth health)
         {
+            //自身は無視
+            if (ResultCollector.ClientId == OwnerClientId) return;
             // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
             Debug.Log("Shield by Player");
             attackBlockedEvent.Invoke(new AttackBlocked()
@@ -107,8 +109,7 @@ public class NBullet : BulletBaseController
         }
         else
         {
-            //自分に当たってる場合
-            //Debug.Log("");
+            Debug.Log($"Unkown type");
             return;
         }
 

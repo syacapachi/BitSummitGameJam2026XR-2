@@ -30,7 +30,6 @@ public class EnemyDataBase : ScriptableObject
     }
     public int GetIdFromEnemyData(EnemySO data)
     {
-        Create();
         if (!EnemyDataToIdDict.ContainsKey(data))
         {
             Debug.LogError($"EnemyData {data.name} is not found in EnemyDataBase.");
