@@ -64,7 +64,7 @@ public class NEnemyShoot : GunController
         networkObject.gameObject.layer = this.gameObject.layer;
 
         var bullet = networkObject.GetComponent<BulletBaseController>();
-        bullet.BulletInit(null, PlayerJob.Nothing, weaponSO);
+        bullet.BulletInit(null, nEnemy.EnemyJob, weaponSO);
 
         networkObject.Spawn();
     }

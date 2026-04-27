@@ -228,6 +228,8 @@ public class AvatarSyncronize : NetworkBehaviour
             cameraPos.y -= headOffsetLocalY.y;
             avatorRootTransfrom.SetPositionAndRotation(cameraPos, xrOrigin.transform.rotation);
 
+            networkHead.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
+
             if (XRSettings.isDeviceActive)
             {
                 // ★手

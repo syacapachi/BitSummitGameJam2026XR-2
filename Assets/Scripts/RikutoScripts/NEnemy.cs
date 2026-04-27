@@ -124,7 +124,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (rootTransfrom != null)
         {
             rootTransfrom.LookAt(targetPlayer);
-            rootTransfrom.Rotate(0, 180f, 0);
         }
         hpCanvas.transform.LookAt(targetPlayer);
         hpCanvas.transform.Rotate(0, 180f, 0);
@@ -194,7 +193,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         // 死亡エフェクトの発火
         if (newValue <= 0)
         {
-            dieEffectEvent.Invoke(new GameEffect() {  });
+            //dieEffectEvent.Invoke(new GameEffect() {  });
         }
     }
 

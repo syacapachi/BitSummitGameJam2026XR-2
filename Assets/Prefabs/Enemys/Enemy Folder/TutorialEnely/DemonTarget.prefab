@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  rootTransfrom: {fileID: 0}
+  rootTransfrom: {fileID: 1592323602591201922}
   enemySO: {fileID: 11400000, guid: eef6fe2fc1d95ac46ae381ae53e3288a, type: 2}
   enemyJobSetting: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   hpCanvas: {fileID: 0}
@@ -156,4 +156,6 @@ MonoBehaviour:
   hpText: {fileID: 0}
   enemyJob: 4
   enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
+  dieEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
   isAttackable: 1
+  jobCycle: 010000000200000004000000

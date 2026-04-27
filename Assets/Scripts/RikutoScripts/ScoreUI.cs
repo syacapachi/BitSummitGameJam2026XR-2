@@ -12,7 +12,8 @@ public class ScoreUI : MonoBehaviour
     {
         ManagerLocator locator = ManagerLocator.Instance;
         while (locator == null
-            || locator.AllGameManager == null)
+            || locator.AllGameManager == null
+            || locator.AllGameManager.ScoreManager == null)
         {
             yield return null;
         }
