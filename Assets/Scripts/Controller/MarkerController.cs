@@ -37,7 +37,8 @@ public class MarkerController : NetworkBehaviour
             attachServerOnly = marker.GetComponentInChildren<AttachableBehaviour>();
             networkObject.SpawnWithOwnership(OwnerClientId);
             blinkEffectServerOnly = networkObject.GetComponentInChildren<MarkerBlinkEffect>();
-            isMarkAttachedServerOnly = false;
+            attachServerOnly.Attach(node);
+            isMarkAttachedServerOnly = true;
         }
     }
 
