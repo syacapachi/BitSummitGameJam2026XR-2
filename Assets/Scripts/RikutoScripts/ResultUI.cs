@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using TMPro;
 using Unity.Netcode;
-using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class ResultUI : MonoBehaviour
 {
@@ -179,6 +180,12 @@ public class ResultUI : MonoBehaviour
                 var row = obj.GetComponent<EnemyResultRow>();
 
                 row.Setup(enemy.Icon, enemy.EnemyName, count);
+                //レイアウトを手動で即時更新
+                //ContentSizeFitter contentSizeFitter = obj.GetComponent<ContentSizeFitter>();
+                //contentSizeFitter.SetLayoutHorizontal();
+                //contentSizeFitter.SetLayoutVertical();
+
+                //LayoutRebuilder.ForceRebuildLayoutImmediate(contentSizeFitter.GetComponent<RectTransform>());
             }
 
             var sepObj = new GameObject("Separator");

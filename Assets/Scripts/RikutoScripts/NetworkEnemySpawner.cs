@@ -9,8 +9,45 @@ using UnityEngine;
 
 public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IKillable
 {
+    /// <summary>
+    /// 待ってる敵が出てくるタイプ
+    /// </summary>
+    enum WaitSpawnType
+    {
+        /// <summary>
+        /// 敵が分けるようになったらすぐに次の敵を出す
+        /// </summary>
+        WaitForNext,
+        /// <summary>
+        /// 全ての敵が倒されるまで次の敵を出さない
+        /// </summary>
+        WaitForAllEnemyDead,
+        /// <summary>
+        /// 一部の敵が倒されるまで次の敵を出さない
+        /// </summary>
+        WaitForSomeEnemyDead
+    }
+    /// <summary>
+    /// 次のフェイズに行った時の条件
+    /// </summary>
+    enum NextPhaseType
+    {
+        /// <summary>
+        /// 待ち行列を残す
+        /// </summary>
+        Remain,
+        /// <summary>
+        /// 待ち行列を削除する
+        /// </summary>
+        Delete
+    }
     [Header("Setting")]
     [SerializeField] int maxEnemyCapacity = 10;
+    [SerializeField] WaitSpawnType waitSpawnType = WaitSpawnType.WaitForNext;
+    [SerializeField,EnableIfEnum(nameof(waitSpawnType),true, WaitSpawnType.WaitForSomeEnemyDead)] 
+    int waitSpawnRemainCount = 5;
+    [SerializeField] NextPhaseType nextPhaseType = NextPhaseType.Remain;
+    [Header("Reference")]
     [SerializeField] NetworkObjectPool networkPool;
 #if UNITY_EDITOR
     [SerializeField] Transform spawnPointParent;
@@ -50,9 +87,12 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     {
         if (!IsServer) return;
 
-        Debug.Log($"[{nameof(NetworkEnemySpawner)}] SpawnFromEvent!");
         StopAllCoroutines();
         waitForSpawn = null;
+        if(nextPhaseType == NextPhaseType.Delete)
+        {
+            waitSpawnEnemyQueue.Clear();
+        }
         //remain = 0;
         // 追加（次のフェーズでリセット）　
         isAllDead = false;
@@ -63,7 +103,6 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
 
     IEnumerator SpawnRoutine(List<SpawnEvent> spawnEvents)
     {
-        Debug.Log($"[{nameof(NetworkEnemySpawner)}] Start Corutine!");
         float timer = 0f;
 
         // spawnTime順にソート（重要）
@@ -92,7 +131,6 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                 {
                     waitSpawnEnemyQueue.Enqueue(e);
                     waitForSpawn ??= StartCoroutine(WaitForSpawn());
-                    Debug.Log($"[{nameof(NetworkEnemySpawner)}] Start WaitCorutine!");
                 }
                 else
                 {
@@ -111,9 +149,26 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     {
         while (waitSpawnEnemyQueue.Count > 0)
         {
-            while (spawnedEnemies.Count >= maxEnemyCapacity)
+            switch(waitSpawnType)
             {
-                yield return null;
+                case WaitSpawnType.WaitForNext:
+                    while (spawnedEnemies.Count >= maxEnemyCapacity)
+                    {
+                        yield return null;
+                    }
+                    break;
+                case WaitSpawnType.WaitForAllEnemyDead:
+                    while (spawnedEnemies.Count > 0)
+                    {
+                        yield return null;
+                    }
+                    break;
+                case WaitSpawnType.WaitForSomeEnemyDead:
+                     while (spawnedEnemies.Count > waitSpawnRemainCount)
+                    {
+                        yield return null;
+                    }
+                    break;
             }
             SpawnEvent e = waitSpawnEnemyQueue.Dequeue();
             SpawnEnemy(e.EnemyType,e.SpawnPointIndex);

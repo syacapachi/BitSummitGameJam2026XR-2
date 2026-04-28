@@ -239,8 +239,8 @@ namespace Syacapachi.Editor
             if (t.IsArray)
             {
                 Type elementType = t.GetElementType();
-                IList list = currentValue as IList;
-                return DrawList(name, elementType, list);
+                Array array = currentValue as Array;
+                return DrawArray(name, elementType, array);
             }
             // List
             if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(List<>))
@@ -321,8 +321,59 @@ namespace Syacapachi.Editor
 
             return list;
         }
+        Array DrawArray(string name, Type elementType, Array array)
+        {
+            // 配列はサイズ変更のたびに新しい配列を作成して要素をコピーする必要があるため、Array.Resizeのような機能を自前で実装する。
+            static Array ArrayResize(Array oldArray, int newSize, Type elementType)
+            {
+                var newArray = Array.CreateInstance(elementType, newSize);
+                if (oldArray != null)
+                {
+                    for (int i = 0; i < Mathf.Min(oldArray.Length, newSize); i++)
+                        newArray.SetValue(oldArray.GetValue(i), i);
+                }
+                return newArray;
+            }
 
-        object DrawDictionary(string name, Type dictType, object dictObj)
+            array ??= Array.CreateInstance(elementType, 0);
+            // nullの場合は新しいリストを作成
+            bool fold = GetFoldout(array);
+            fold = EditorGUILayout.Foldout(fold, $"{name} [{array.Length}]",true);
+            SetFoldout(array, fold);
+
+
+            if (!fold)
+                return array;
+
+            //展開されている場合は要素を描画
+            EditorGUI.indentLevel++;
+
+            
+            int newSize = EditorGUILayout.IntField("Size", array.Length);
+
+            if (array == null || newSize != array.Length)
+            {
+                array = ArrayResize(array, newSize, elementType);
+                SetFoldout(array, true);
+            }
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                //要素を描画して更新
+                array.SetValue(DrawField(elementType, $"{name} Element[{i}]", array.GetValue(i)), i);
+            }
+            if (GUILayout.Button("Add"))
+            {
+                array = ArrayResize(array, array.Length + 1, elementType);
+                SetFoldout(array, true);
+            }
+
+            EditorGUI.indentLevel--;
+
+            return array;
+        }
+
+        IDictionary DrawDictionary(string name, Type dictType, object dictObj)
         {
             var args = dictType.GetGenericArguments();
 
@@ -418,7 +469,6 @@ namespace Syacapachi.Editor
                 var fieldValue = f.GetValue(value);
                 
                 var newValue = DrawField(f.FieldType, f.Name, fieldValue);
-                Debug.Log($"{f.FieldType},{newValue.GetType()}");
                 if (!Equals(fieldValue, newValue))
                     f.SetValue(value, newValue);
             }
