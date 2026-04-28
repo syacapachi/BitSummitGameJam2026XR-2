@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 435602761845220820, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.423
+      objectReference: {fileID: 0}
+    - target: {fileID: 435602761845220820, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.201
+      objectReference: {fileID: 0}
     - target: {fileID: 1626770062420064645, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -48,6 +56,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2936583415042763542, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: deathFxPrefabAll
+      value: 
+      objectReference: {fileID: 8529547205874415710, guid: 9f5c7e7c50a44cb4a8ef99bc5f670265, type: 3}
     - target: {fileID: 6499077098043190950, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: m_Height
       value: 1.8835092
@@ -88,6 +100,14 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 4252995899069437938}
+    - target: {fileID: 9142516393628170595, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 6912148272411766303, guid: 2037a9ed06a411d44a86d92fa6af4c3b, type: 3}
+    - target: {fileID: 9142516393628170595, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: weaponSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: 01d57ad43a4b4cc458319eb71fd9e72a, type: 2}
     - target: {fileID: 9142516393628170595, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: networkAnimator
       value: 
