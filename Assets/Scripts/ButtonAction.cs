@@ -24,7 +24,6 @@ public class Scripts : MonoBehaviour
     private bool isNetworkStarted = false;
     [SerializeField] NetworkManager m_NetworkManager;
 
-    // ★ 追加: ConnectCanvas非表示トリガー
     [SerializeField] private VoidEvent connectCanvasEvent;
 
     [Header("UI テキスト参照")]
@@ -55,6 +54,10 @@ public class Scripts : MonoBehaviour
     [SerializeField] private string japaneseExitText;
     [SerializeField] private string englishExitText;
 
+    // ★ 追加: 接続ボタンテキスト
+    [SerializeField] private string japaneseRoomFoundText = "部屋を見つけた！";
+    [SerializeField] private string englishRoomFoundText = "Room Found!";
+
     readonly Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new();
     public UnityEvent OnClientStart = new UnityEvent();
 
@@ -75,7 +78,6 @@ public class Scripts : MonoBehaviour
         m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);
 
-        // discovertext を先に取得してから UpdateLanguageText を呼ぶ
         if (DiscoveryButton != null)
             discovertext = DiscoveryButton.GetComponentInChildren<TextMeshProUGUI>();
 
@@ -118,7 +120,6 @@ public class Scripts : MonoBehaviour
         if (exitButtonText != null)
             exitButtonText.text = isJapanese ? japaneseExitText : englishExitText;
 
-        // 探索ボタンのデフォルトテキストと再探索テキストを設定
         discoverTextDefault = isJapanese ? japaneseDiscoverText : englishDiscoverText;
         refreshText = isJapanese ? japaneseRefreshText : englishRefreshText;
 
@@ -130,10 +131,7 @@ public class Scripts : MonoBehaviour
     {
         NetworkManager.Singleton.StartHost();
         Debug.Log("Host Started");
-
-        // ★ ConnectCanvas を非表示にして看板を表示
         connectCanvasEvent?.Invoke();
-
         OnNetworkStart();
     }
 
@@ -166,18 +164,15 @@ public class Scripts : MonoBehaviour
     {
         if (m_Discovery.IsRunning)
         {
-            // 再探索
             RefreshList();
             m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
         }
         else
         {
-            // 初回探索開始
             m_Discovery.StartClient();
             m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
         }
 
-        // ボタンテキストを「もう一度探す」に変更
         if (discovertext != null)
             discovertext.text = refreshText;
 
@@ -189,7 +184,6 @@ public class Scripts : MonoBehaviour
         m_Discovery.StopDiscovery();
         RefreshList();
 
-        // ボタンテキストを元に戻す
         if (discovertext != null)
             discovertext.text = discoverTextDefault;
 
@@ -224,8 +218,22 @@ public class Scripts : MonoBehaviour
             button = obj.GetComponent<Button>();
         }
 
+        // ★ テキストを日英対応に変更
+        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
         button.GetComponentInChildren<TextMeshProUGUI>().text =
-            $"{response.ServerName}[{sender}]";
+            isJapanese ? japaneseRoomFoundText : englishRoomFoundText;
+
+        // ★ ボタンの色を赤に変更
+        ColorBlock colors = button.colors;
+        colors.normalColor = new Color(0.6f, 0.05f, 0.05f, 1f);
+        colors.highlightedColor = new Color(0.8f, 0.1f, 0.1f, 1f);
+        colors.pressedColor = new Color(0.4f, 0.02f, 0.02f, 1f);
+        button.colors = colors;
+
+        // ★ テキストの色を金色に変更
+        button.GetComponentInChildren<TextMeshProUGUI>().color =
+            new Color(1f, 0.78f, 0.2f, 1f);
+
         button.onClick.AddListener(() =>
             ConnectedToServer(sender.Address.ToString(), response.Port));
         button.gameObject.SetActive(true);
@@ -239,10 +247,7 @@ public class Scripts : MonoBehaviour
         m_NetworkManager.StartClient();
         OnClientStart.Invoke();
         OnNetworkStart();
-
-        // ★ ConnectCanvas を非表示にして看板を表示
         connectCanvasEvent?.Invoke();
-
         StopDiscoveryButton?.gameObject.SetActive(false);
     }
 }
