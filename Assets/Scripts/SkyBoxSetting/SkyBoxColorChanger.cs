@@ -20,7 +20,7 @@ public class SkyBoxColorChanger : MonoBehaviour
         [Header("空の地平線の色の浸食度")]
         public float exponentBottom;
     }
-    [SerializeField] float changeTime;
+    [SerializeField] float changeTime = 5f;
     [Header("SkyBox Material")]
     [SerializeField] Material skyboxMat;
     [SerializeField] SkyBoxSetting[] skyBoxColors;
@@ -74,7 +74,7 @@ public class SkyBoxColorChanger : MonoBehaviour
             ApplyLerp(skyBoxColors[fromIndex], skyBoxColors[toIndex], timer / changeTime);
             yield return null;
         }
-        ApplyLerp(skyBoxColors[fromIndex], skyBoxColors[toIndex], 1f);
+        ApplyColor(toIndex);
     }
     /// <summary>
     /// 徐々に変化させる用。Update等で呼び出すことを想定。

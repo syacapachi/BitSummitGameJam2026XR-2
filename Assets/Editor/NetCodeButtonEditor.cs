@@ -125,19 +125,19 @@ namespace Syacapachi.Editor
             if (t == typeof(int))
                 return EditorGUILayout.IntField(name, currentValue != null ? (int)currentValue : 0);
             if (t == typeof(byte))
-                return EditorGUILayout.IntField(name, currentValue != null ? (byte)currentValue : 0);
+                return (byte)EditorGUILayout.IntField(name, currentValue != null ? (byte)currentValue : 0);
             if (t == typeof(short))
-                return EditorGUILayout.IntField(name, currentValue != null ? (short)currentValue : 0);
+                return (short)EditorGUILayout.IntField(name, currentValue != null ? (short)currentValue : 0);
             if (t == typeof(ushort))
-                return EditorGUILayout.IntField(name, currentValue != null ? (ushort)currentValue : 0);
+                return (ushort)EditorGUILayout.IntField(name, currentValue != null ? (ushort)currentValue : 0);
             if (t == typeof(uint))
-                return EditorGUILayout.IntField(name, currentValue != null ? (int)(uint)currentValue : 0);
+                return (uint)EditorGUILayout.IntField(name, currentValue != null ? (int)(uint)currentValue : 0);
             if (t == typeof(ulong))
-                return EditorGUILayout.LongField(name, currentValue != null ? (long)(ulong)currentValue : 0);
+                return (ulong)EditorGUILayout.LongField(name, currentValue != null ? (long)(ulong)currentValue : 0);
             if (t == typeof(sbyte))
-                return EditorGUILayout.IntField(name, currentValue != null ? (sbyte)currentValue : 0);
+                return (sbyte)EditorGUILayout.IntField(name, currentValue != null ? (sbyte)currentValue : 0);
             if (t == typeof(decimal))
-                return EditorGUILayout.FloatField(name, currentValue != null ? (float)(decimal)currentValue : 0f);
+                return (decimal)EditorGUILayout.FloatField(name, currentValue != null ? (float)(decimal)currentValue : 0f);
             if (t == typeof(float))
                 return EditorGUILayout.FloatField(name, currentValue != null ? (float)currentValue : 0f);
             if (t == typeof(double))

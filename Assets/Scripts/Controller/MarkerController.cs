@@ -28,7 +28,7 @@ public class MarkerController : NetworkBehaviour
   
     protected override void OnNetworkPostSpawn()
     {
-        Debug.Log($"{nameof(MarkerController)},IsOwner={IsOwner},Owned by={OwnerClientId}");
+        //Debug.Log($"{nameof(MarkerController)},IsOwner={IsOwner},Owned by={OwnerClientId}");
         //IsServerだと、クライアントでスポーンする前にサーバーでスポーンする->オーナー権限が消えるため、IsOwnerでスポーンさせる
         if (IsOwner)
         {

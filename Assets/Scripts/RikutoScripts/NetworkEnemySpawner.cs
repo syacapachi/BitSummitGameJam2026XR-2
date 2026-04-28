@@ -50,7 +50,9 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     {
         if (!IsServer) return;
 
+        Debug.Log($"[{nameof(NetworkEnemySpawner)}] SpawnFromEvent!");
         StopAllCoroutines();
+        waitForSpawn = null;
         //remain = 0;
         // 追加（次のフェーズでリセット）　
         isAllDead = false;
@@ -61,6 +63,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
 
     IEnumerator SpawnRoutine(List<SpawnEvent> spawnEvents)
     {
+        Debug.Log($"[{nameof(NetworkEnemySpawner)}] Start Corutine!");
         float timer = 0f;
 
         // spawnTime順にソート（重要）
@@ -89,6 +92,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                 {
                     waitSpawnEnemyQueue.Enqueue(e);
                     waitForSpawn ??= StartCoroutine(WaitForSpawn());
+                    Debug.Log($"[{nameof(NetworkEnemySpawner)}] Start WaitCorutine!");
                 }
                 else
                 {

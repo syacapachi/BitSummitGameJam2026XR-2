@@ -23,8 +23,6 @@ public class TutorialManager : NetworkBehaviour
     [SerializeField] List<EnemySO> step2Enemies;
 
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
-
-    
     public override void OnNetworkSpawn()
     {
         if (IsServer)

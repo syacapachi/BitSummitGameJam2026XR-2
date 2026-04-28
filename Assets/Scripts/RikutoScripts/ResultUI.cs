@@ -24,6 +24,8 @@ public class ResultUI : MonoBehaviour
     [Header("テキスト設定")]
     [SerializeField] LocalizeSimpleText gameClearText;
     [SerializeField] LocalizeSimpleText gameOverText;
+    [SerializeField] LocalizeSimpleText youText;
+    [SerializeField] LocalizeSimpleText otherText;
     [SerializeField] LocalizeSimpleText scoreText;
     [SerializeField] LocalizeSimpleText killsText;
     [SerializeField] LocalizeSimpleText HitsText;
@@ -122,6 +124,7 @@ public class ResultUI : MonoBehaviour
         // （必要なら）前回削除
         foreach (Transform child in contentParent)
         {
+            if (child.gameObject == resultText.gameObject || child.gameObject == titleText.gameObject) continue;
             Destroy(child.gameObject);
         }
 
@@ -134,12 +137,15 @@ public class ResultUI : MonoBehaviour
             {
                 headerText = headerObj.AddComponent<TextMeshProUGUI>();
             }
-            var rect = headerObj.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(400, 120); // 高さを120に固定。横は0で親に合わせる 
+            //var rect = headerObj.GetComponent<RectTransform>();
+            //rect.sizeDelta = new Vector2(400, 120); // 高さを120に固定。横は0で親に合わせる 
             headerText.fontSize = fontSizeHeader;
             headerText.alignment = TextAlignmentOptions.TopLeft;
             headerText.enableAutoSizing = false;
-            headerText.text = $"Player {playerResult.clientId} : {playerResult.playerName}\n";
+            headerText.text = NetworkManager.Singleton.LocalClientId == playerResult.clientId
+                ? $"{youText.GetText(isJapanese)} : {playerResult.playerName}\n"
+                : $"{otherText.GetText(isJapanese)} : {playerResult.playerName}\n";
+
 
             // 統計情報（2項目ずつ改行）
             string[] stats = new string[]
@@ -176,7 +182,7 @@ public class ResultUI : MonoBehaviour
             }
 
             var sepObj = new GameObject("Separator");
-            sepObj.transform.SetParent(contentParent, false);
+            sepObj.transform.SetParent(contentParent);
             var sepText = sepObj.AddComponent<TextMeshProUGUI>();
             sepText.text = "----------------------------";
             sepText.fontSize = fontSizeKill;

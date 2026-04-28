@@ -41,12 +41,10 @@ public class NEnemyBullet : BulletBaseController
     /// </summary>
     private void TryDamagePlayer(IDamageReciever reciever)
     {
-        // PlayerCollider かどうかを確認
+        // PlayerCollider かどうかを確認　違う場合はまだ飛ぶ
         if (reciever is not PlayerCollider playerCollider)
         {
-            Debug.Log($"[NEnemyBullet] Hit non-player object: {reciever.GameObject.name}, skipping damage.");
-            if (NetworkObject.IsSpawned)
-                NetworkObject.Despawn(true);
+            //Debug.Log($"[NEnemyBullet] Hit non-player object: {reciever.GameObject.name}, skipping damage.");
             return;
         }
 
@@ -69,7 +67,7 @@ public class NEnemyBullet : BulletBaseController
         setting.TryGetPlayerLayerSettings(ShooterJob, out var layerSetting);
         if (!layerSetting.IsAttackableJob(playerJob))
         {
-            Debug.Log($"[NEnemyBullet] Player job {playerJob} not targeted by {ShooterJob}, skipping.");
+            //Debug.Log($"[NEnemyBullet] Player job {playerJob} not targeted by {ShooterJob}, skipping.");
             if (NetworkObject.IsSpawned)
                 NetworkObject.Despawn(true);
             return;
@@ -80,7 +78,6 @@ public class NEnemyBullet : BulletBaseController
         reciever.TakeDamage(this, Damage);
         var gameManager = ManagerLocator.Instance.AllGameManager;
         ApplyProtectDamage(gameManager);
-        Debug.Log($"[NEnemyBullet] Player {playerProp.OwnerClientId} took {Damage} damage! (job: {playerJob})");
 
         if (NetworkObject.IsSpawned)
             NetworkObject.Despawn(true);

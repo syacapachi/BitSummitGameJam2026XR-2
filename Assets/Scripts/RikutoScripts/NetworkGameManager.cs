@@ -144,6 +144,10 @@ public class NetworkGameManager : NetworkBehaviour
         RecieveResultRpcEvent.Invoke(result);
     }
     [OnInspectorButton]
+    void SendMockData(PlayerResultData[] data)
+    {
+        OnSendResultRpc(data);
+    }
     void SendResults()
     {
         var list = new List<PlayerResultData>();
