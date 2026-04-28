@@ -24,7 +24,7 @@ public class Scripts : MonoBehaviour
     private bool isNetworkStarted = false;
     [SerializeField] NetworkManager m_NetworkManager;
 
-    [SerializeField] private VoidEvent connectCanvasEvent;
+    [SerializeField] private BoolEvent networkConnectionEvent;
 
     [Header("UI テキスト参照")]
     [SerializeField] private TextMeshProUGUI titleText;
@@ -131,7 +131,7 @@ public class Scripts : MonoBehaviour
     {
         NetworkManager.Singleton.StartHost();
         Debug.Log("Host Started");
-        connectCanvasEvent?.Invoke();
+        networkConnectionEvent.Invoke(true);
         OnNetworkStart();
     }
 
@@ -142,6 +142,7 @@ public class Scripts : MonoBehaviour
         NetworkManager.Singleton.Shutdown();
         Debug.Log("Network Stopped");
         isNetworkStarted = false;
+        networkConnectionEvent.Invoke(false);
         StopDiscovery();
         SetActiveButtons(true);
     }
@@ -247,7 +248,7 @@ public class Scripts : MonoBehaviour
         m_NetworkManager.StartClient();
         OnClientStart.Invoke();
         OnNetworkStart();
-        connectCanvasEvent?.Invoke();
+        networkConnectionEvent.Invoke(true);
         StopDiscoveryButton?.gameObject.SetActive(false);
     }
 }

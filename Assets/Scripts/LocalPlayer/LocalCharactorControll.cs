@@ -17,7 +17,7 @@ public class LocalCharactorControll : MonoBehaviour
     [SerializeField] protected float dashSpeed = 10f;
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent jumpEvent;
-    [SerializeField] BoolEventSO dashEvent;
+    [SerializeField] BoolEvent dashEvent;
     [SerializeField] Vector2Event moveEvent;
     public bool IsStop => moveMode == MoveMode.Stop;
     Vector2 lastMove = Vector2.zero;
