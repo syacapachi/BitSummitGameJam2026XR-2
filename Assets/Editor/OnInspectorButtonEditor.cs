@@ -37,7 +37,6 @@ namespace Syacapachi.Editor
             //base.OnInspectorGUI(); //これを呼ぶと、全てのフィールドが描画される。DrawDefaultInspector()と同様。
             //通常のインスペクター描画を行う。これを呼ばないと、通常のフィールドが表示されない。
             DrawDefaultInspector();
-
             //インスペクター上に関数を呼び出すためのボタンを描画する。対象のオブジェクトの型をリフレクションで調べて、[OnInspectorButton]属性が付いているメソッドを探し、ボタンを表示する。
             DrawInspectorButtons(target);
 
@@ -46,7 +45,7 @@ namespace Syacapachi.Editor
             //変更を保存
             serializedObject.ApplyModifiedProperties();
         }
-        private void DrawInspectorButtons(object obj)
+        private void DrawInspectorButtons(UnityEngine.Object obj)
         {
             //各インスペクターで呼ばれる。
             var targetType = obj.GetType();
@@ -71,6 +70,7 @@ namespace Syacapachi.Editor
                 if (attr.showOnlyInPlayMode && !Application.isPlaying)
                     continue;
 
+                EditorGUILayout.LabelField($"{targetType.FullName}$ Parameters", EditorStyles.boldLabel);
                 DrawButtonForMethod(method, attr);
             }
         }
@@ -124,6 +124,12 @@ namespace Syacapachi.Editor
         private object DrawField(Type t, string name, object currentValue)
         {
             name = ObjectNames.NicifyVariableName(name);
+            //Nullableな型は、nullを許容するためにNullable.GetUnderlyingTypeで元の型を取得して描画する。
+            if (Nullable.GetUnderlyingType(t) is Type underlyingType)
+            {
+                currentValue ??= GetDefault(underlyingType);
+                return DrawField(underlyingType, name, currentValue);
+            }
             if (t == typeof(int))
                 return EditorGUILayout.IntField(name, currentValue != null ? (int)currentValue : 0);
             if(t == typeof(byte))
@@ -203,12 +209,7 @@ namespace Syacapachi.Editor
                 EditorGUILayout.HelpBox($"UnityEvent type is not supported for field {name}.", MessageType.Error);
                 return currentValue;
             }
-            //Nullableな型は、nullを許容するためにNullable.GetUnderlyingTypeで元の型を取得して描画する。
-            if (Nullable.GetUnderlyingType(t) is Type underlyingType)
-            {
-                currentValue ??= GetDefault(underlyingType);
-                return DrawField(underlyingType, name, currentValue);
-            }
+            
             // Enum
             if (t.IsEnum)
             {
@@ -256,7 +257,7 @@ namespace Syacapachi.Editor
             // 抽象クラスやインターフェースは直接描画できないので、実装/継承する具体的なクラスを選択して描画する。選択されていない場合は、選択ボタンを表示する。
             if (t.IsAbstract || t.IsInterface)
             {
-                return DrawAbstructOrInterface(name, t, currentValue,target.name + "." + name);
+                return DrawAbstructOrInterface(name, t, currentValue,$"{target.name}({target.GetInstanceID()}).{name}");
             }
             //リスト、辞書、抽象クラス/インターフェース以外のジェネリック型
             if (t.IsGenericType)
@@ -439,7 +440,7 @@ namespace Syacapachi.Editor
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    EditorGUILayout.LabelField($"{type.Name} ▶ {concreteType.Name}", EditorStyles.boldLabel);
+                    EditorGUILayout.LabelField($"{type.Name} ▶ {concreteType.Name} ({path})", EditorStyles.boldLabel);
                     if (GUILayout.Button("Delete", GUILayout.Width(100)))
                     {
                         abstructToClass.Remove(path);
