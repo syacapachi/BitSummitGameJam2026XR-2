@@ -29,19 +29,23 @@ public class MarkerController : NetworkBehaviour
     protected override void OnNetworkPostSpawn()
     {
         Debug.Log($"{nameof(MarkerController)},IsOwner={IsOwner},Owned by={OwnerClientId}");
-        if (IsServer)
+        //IsServerだと、クライアントでスポーンする前にサーバーでスポーンする->オーナー権限が消えるため、IsOwnerでスポーンさせる
+        if (IsOwner)
         {
-            var marker = GameObject.Instantiate(playerMarker);
-            var networkObject = marker.GetComponent<NetworkObject>();
-            
-            attachServerOnly = marker.GetComponentInChildren<AttachableBehaviour>();
-            networkObject.SpawnWithOwnership(OwnerClientId);
-            blinkEffectServerOnly = networkObject.GetComponentInChildren<MarkerBlinkEffect>();
-            attachServerOnly.Attach(node);
-            isMarkAttachedServerOnly = true;
+            //オーナーがSpawnした後でRPCを呼び出す
+            CreateMerkerRpc();
         }
     }
-
+    [Rpc(SendTo.Server)]
+    private  void CreateMerkerRpc()
+    {
+        var marker = GameObject.Instantiate(playerMarker);
+        var networkObject = marker.GetComponent<NetworkObject>();
+        attachServerOnly = marker.GetComponentInChildren<AttachableBehaviour>();
+        networkObject.SpawnWithOwnership(OwnerClientId);
+        attachServerOnly.Attach(node);
+        isMarkAttachedServerOnly = true;
+    }   
     public override void OnNetworkDespawn()
     {
         if (IsServer)
@@ -56,6 +60,7 @@ public class MarkerController : NetworkBehaviour
             markerEvent.Unregister(PlaceMarkerRpc);
         }
     }
+
     private void Update()
     {
         if (!IsOwner) return;
