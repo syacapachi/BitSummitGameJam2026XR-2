@@ -4991,6 +4991,10 @@ PrefabInstance:
         Room\"!"
       objectReference: {fileID: 0}
     - target: {fileID: 5992330147667127163, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: networkConnectionEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 9e14145d9b265624292f952d1af4cf1c, type: 2}
+    - target: {fileID: 5992330147667127163, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: stopDiscoverButtonText
       value: 
       objectReference: {fileID: 814713919}
@@ -14041,6 +14045,66 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1075384733}
   m_Mesh: {fileID: -8356141293787191088, guid: ca87aad269ed931419d95d25680f3ead, type: 3}
+--- !u!1 &1086353598
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1086353599}
+  - component: {fileID: 1086353600}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1086353599
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086353598}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1086353600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086353598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83471f19e1b306d4186ffb0a1da944d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  a: 0
+  b: 0
+  vec: {x: 0, y: 0, z: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
+  obj: {fileID: 0}
+  clazz:
+    name: 
+  list: []
+  classList: []
+  resultCollector:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &1086400704
 GameObject:
   m_ObjectHideFlags: 0
@@ -23551,8 +23615,8 @@ MonoBehaviour:
   backButtonText: {fileID: 1718701367}
   backButton: {fileID: 1720230557}
   worldViewData: {fileID: 11400000, guid: 481f88afe0368e34795a397d8d115d0e, type: 2}
-  connectCanvasEvent: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
-  boardCanvas: {fileID: 1625551507}
+  connectCanvasEvent: {fileID: 11400000, guid: 9e14145d9b265624292f952d1af4cf1c, type: 2}
+  boardCanvas: {fileID: 1625551504}
   totalBoards: 5
   japaneseNextText: "\u6B21\u3078"
   englishNextText: Next
@@ -28383,3 +28447,4 @@ SceneRoots:
   - {fileID: 1469440565}
   - {fileID: 513862571}
   - {fileID: 1577609281}
+  - {fileID: 1086353599}

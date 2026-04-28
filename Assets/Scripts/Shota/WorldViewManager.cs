@@ -23,7 +23,7 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] WorldViewData worldViewData;
 
     [Header("Canvas管理")]
-    [SerializeField] private VoidEvent connectCanvasEvent;
+    [SerializeField] private BoolEvent connectCanvasEvent;
     [SerializeField] private GameObject boardCanvas;
 
     [Header("ページ設定")]
@@ -47,7 +47,6 @@ public class WorldViewManager : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         Debug.Log("WorldViewManager OnNetworkSpawn called");
-        connectCanvasEvent?.Invoke();
         if (boardCanvas != null) boardCanvas.SetActive(true);
         pageIndex.OnValueChanged += OnPageChanged;
         ShowPage(pageIndex.Value);
