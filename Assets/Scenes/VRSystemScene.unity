@@ -16608,7 +16608,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4983985599855904455, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8462398
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4983985599855904455, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_LocalRotation.x
@@ -16616,7 +16616,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4983985599855904455, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.53280234
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4983985599855904455, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_LocalRotation.z
@@ -16624,7 +16624,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4983985599855904455, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -64.39
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4983985600312387258, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_Layer
@@ -38104,6 +38104,226 @@ PrefabInstance:
     - target: {fileID: 1615890855193563394, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_Name
       value: ManagerLocator
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[0].intensity
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[2].intensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[3].intensity
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].intensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[5].intensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[0].topColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[0].topColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[1].topColor.g
+      value: 0.22023964
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[2].topColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[2].topColor.g
+      value: 0.16482663
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].topColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].topColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].topColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[5].topColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[5].topColor.g
+      value: 0.16482663
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[0].exponentTop
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[2].exponentTop
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[3].exponentTop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].exponentTop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[5].exponentTop
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[0].bottomColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[0].bottomColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[1].bottomColor.b
+      value: 0.65164423
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[1].bottomColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[1].bottomColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[2].bottomColor.g
+      value: 0.06938208
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[2].bottomColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].bottomColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].bottomColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].bottomColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[5].bottomColor.g
+      value: 0.06938208
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[5].bottomColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[0].exponentBottom
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[0].horizonColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[0].horizonColor.g
+      value: 0.41960785
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[1].exponentBottom
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[1].horizonColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[1].horizonColor.g
+      value: 0.91134834
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[1].horizonColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[2].exponentBottom
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[2].horizonColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[2].horizonColor.g
+      value: 0.8398217
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[2].horizonColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[3].exponentBottom
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[3].horizonColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[3].horizonColor.g
+      value: 0.5877962
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].exponentBottom
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].horizonColor.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].horizonColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].horizonColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[4].horizonColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[5].exponentBottom
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[5].horizonColor.g
+      value: 0.8398217
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[5].horizonColor.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
