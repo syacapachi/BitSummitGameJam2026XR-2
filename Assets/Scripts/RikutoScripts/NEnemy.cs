@@ -151,8 +151,11 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         {
             DieOnServer(sender.ResultCollector);
         }
-        //プレイヤーに寄ってくる
-        StartCoroutine(MoveToNextPos(targetPlayer.position));
+        else
+        {
+            //プレイヤーに寄ってくる
+            StartCoroutine(MoveToNextPos(targetPlayer.position));
+        }     
     }
 
     IEnumerator MoveToNextPos(Vector3 targetPos)
