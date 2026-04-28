@@ -17,6 +17,15 @@ public class ResultUI : MonoBehaviour
     [SerializeField] int fontSizeHeader = 28;
     [SerializeField] int fontSizeStats = 22;
     [SerializeField] int fontSizeKill = 20;
+    [Header("テキスト設定")]
+    [SerializeField] LocalizeSimpleText gameClearText;
+    [SerializeField] LocalizeSimpleText gameOverText;
+    [SerializeField] LocalizeSimpleText scoreText;
+    [SerializeField] LocalizeSimpleText killsText;
+    [SerializeField] LocalizeSimpleText HitsText;
+    [SerializeField] LocalizeSimpleText bonusText;
+    [SerializeField] LocalizeSimpleText shieldText;
+    [SerializeField] LocalizeSimpleText damageText;
 
     [Header("SubscribeEvent")]
     [SerializeField] GameStateEvent gameStateEvent;
@@ -25,17 +34,13 @@ public class ResultUI : MonoBehaviour
     private bool isGameOver = false;
     IEnumerator Start()
     {
+        InitializeUI();
         // GameManager待機
         while (ManagerLocator.Instance.AllGameManager == null)
         {
             yield return null;
         }
-
         nGameManager = ManagerLocator.Instance.AllGameManager;
-
-        Debug.Log("GameManager取得成功");
-
-        InitializeUI();
     }
 
     void InitializeUI()
@@ -64,8 +69,9 @@ public class ResultUI : MonoBehaviour
         {
             Debug.Log($"Player {r.clientId} Score:{r.score} Kills:{string.Join(",", r.killCounts)}");
         }
-        ShowResult();
-        ShowDetail(resultData);
+        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+        ShowResult(isJapanese);
+        ShowDetail(resultData, isJapanese);
     }
     private void OnGameStateChanged(GameState state)
     {
@@ -80,7 +86,7 @@ public class ResultUI : MonoBehaviour
 
         }
     }
-    void ShowResult()
+    void ShowResult(bool isJapanese)
     {
         panel.SetActive(true);
 
@@ -90,25 +96,27 @@ public class ResultUI : MonoBehaviour
         // ⭐タイトル分岐
         if (isGameOver)
         {
-            titleText.text = "GAME OVER!";
+            titleText.text = gameOverText.GetText(isJapanese);
         }
         else
         {
-            titleText.text = "GAME CLEAR!";
+            titleText.text = gameClearText.GetText(isJapanese);
         }
 
         resultText.text =
-            $"SCORE : {score}\n" +
-            $"BONUS : {bonus}";
+            $"{scoreText.GetText(isJapanese)} : {score}\n" +
+            $"{bonusText.GetText(isJapanese)} : {bonus}";
     }
 
     
 
-    void ShowDetail(PlayerResultData[] results)
+    void ShowDetail(PlayerResultData[] results,bool isJapanese)
     {
         panel.SetActive(true);
 
-        titleText.text = isGameOver ? "GAME OVER!" : "GAME CLEAR!";
+        titleText.text = isGameOver 
+            ? gameOverText.GetText(isJapanese) 
+            : gameClearText.GetText(isJapanese);
 
         // （必要なら）前回削除
         foreach (Transform child in contentParent)
@@ -132,10 +140,10 @@ public class ResultUI : MonoBehaviour
             // 統計情報（2項目ずつ改行）
             string[] stats = new string[]
             {
-                $"Score: {playerResult.score}",
-                $"Hits: {playerResult.hits}/{playerResult.shotsFired}",
-                $"Shield: {playerResult.shield}",
-                $"Damage: {playerResult.damageDealt:F1}"
+                $"{scoreText.GetText(isJapanese)}: {playerResult.score}",
+                $"{HitsText.GetText(isJapanese)}: {playerResult.hits}/{playerResult.shotsFired}",
+                $"{shieldText.GetText(isJapanese)}: {playerResult.shield}",
+                $"{damageText.GetText(isJapanese)}: {playerResult.damageDealt:F1}"
             };
 
             string statsText = "";

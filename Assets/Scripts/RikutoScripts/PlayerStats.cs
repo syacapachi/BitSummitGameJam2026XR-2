@@ -100,7 +100,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
         return killCounts;
     }
 
-    public PlayerResultData CreateResultData()
+    public PlayerResultData CreateResultDataServerOnly()
     {
         if (!IsServer)
         {
@@ -108,7 +108,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
         }
         return new PlayerResultData
         {
-            clientId = GetComponentInParent<NetworkObject>().OwnerClientId,
+            clientId = OwnerClientId,
             score = score,
             shotsFired = shotsFired,
             hits = hits,

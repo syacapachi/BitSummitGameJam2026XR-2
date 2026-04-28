@@ -10883,13 +10883,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   tutorialManager: {fileID: 1993381231}
-  boardText: {fileID: 1156238547}
-  titleText: {fileID: 1313227490}
+  boardTextGUI: {fileID: 1156238547}
+  titleTextGUI: {fileID: 1313227490}
   nextButton: {fileID: 1249310079}
-  buttonText: {fileID: 1855977945}
+  nextButtonTextGUI: {fileID: 1855977945}
   backButton: {fileID: 1733377744}
-  backButtonText: {fileID: 2125165733}
-  localizedText: {fileID: 11400000, guid: 6e8b5fef5cc800545b9f6725b7359e4d, type: 2}
+  backButtonTextGUI: {fileID: 2125165733}
+  tutorialTexts: {fileID: 11400000, guid: 6e8b5fef5cc800545b9f6725b7359e4d, type: 2}
+  nextButtonText: {fileID: 11400000, guid: 906da01bb17d624409330db6e8accb56, type: 2}
+  backButtonText: {fileID: 11400000, guid: 693361e151328d3408bbf5627e620fb8, type: 2}
+  startButtonText: {fileID: 11400000, guid: b3fa2a89e879f70459f5920725f44dc6, type: 2}
 --- !u!114 &805776663
 MonoBehaviour:
   m_ObjectHideFlags: 0

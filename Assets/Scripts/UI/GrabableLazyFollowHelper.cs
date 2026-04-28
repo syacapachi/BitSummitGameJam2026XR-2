@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Transformers;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 [RequireComponent(typeof(LazyFollow))]
 [RequireComponent(typeof(XRGrabInteractable))]
+[RequireComponent(typeof(XRGeneralGrabTransformer))]
 public class GrabableLazyFollowHelper : MonoBehaviour
 {
     [SerializeField]
@@ -50,5 +52,10 @@ public class GrabableLazyFollowHelper : MonoBehaviour
     {
         m_LazyFollow = GetComponent<LazyFollow>();
         m_GrabInteractable = GetComponent<XRGrabInteractable>();
+        if(TryGetComponent<Rigidbody>(out var rigidbody))
+        {
+            rigidbody.isKinematic = true;
+            rigidbody.useGravity = false;
+        }
     }
 }

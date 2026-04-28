@@ -69,21 +69,21 @@ public class LocalObjectPoolManager : MonoBehaviour
     {
         if(!objectPoolDic.ContainsKey(prefab.GetInstanceID()))
         {
-            Debug.LogWarning($"Prefab {prefab.name} is not registered in the pool. Registering it now.");
+            Debug.LogWarning($"Prefab {prefab.name}({prefab.GetInstanceID()}) is not registered in the pool. Registering it now.");
             ResisterPrefab(prefab, 0);
         }
         if (objectPoolDic.TryGetValue(prefab.GetInstanceID(), out var pool))
         {
             return pool.Get();
         }
-        Debug.LogError($"Prefab {prefab.name} not found in pool and failed to register.");
+        Debug.LogError($"Prefab {prefab.name}({prefab.GetInstanceID()}) not found in pool and failed to register.");
         return null;
     }
     public void Release(GameObject gameObject)
     {
         if (!instanceToPrefabDic.TryGetValue(gameObject.GetInstanceID(),out int prefabId))
         {
-            Debug.LogWarning($"Prefab {gameObject.name},{gameObject.GetInstanceID()} is not registered in the pool. Destroying object instead.");
+            Debug.LogWarning($"Prefab {gameObject.name}({gameObject.GetInstanceID()}) is not registered in the pool. Destroying object instead.");
             Destroy(gameObject);
             return;
         }

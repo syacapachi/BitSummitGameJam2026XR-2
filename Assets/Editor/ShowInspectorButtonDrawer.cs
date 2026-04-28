@@ -262,7 +262,7 @@ namespace Syacapachi.Editor
 
             bool fold = GetFoldout(value);
 
-            fold = EditorGUILayout.Foldout(fold, name);
+            fold = EditorGUILayout.Foldout(fold, name,true);
 
             SetFoldout(value, fold);
 

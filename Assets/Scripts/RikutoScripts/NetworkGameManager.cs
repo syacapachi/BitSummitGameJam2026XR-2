@@ -140,7 +140,7 @@ public class NetworkGameManager : NetworkBehaviour
     {
         RecieveResultRpcEvent.Invoke(result);
     }
-
+    [OnInspectorButton]
     void SendResults()
     {
         var list = new List<PlayerResultData>();
@@ -152,7 +152,7 @@ public class NetworkGameManager : NetworkBehaviour
             var stats = player.stats;
             if (stats == null) continue;
 
-            list.Add(stats.CreateResultData());
+            list.Add(stats.CreateResultDataServerOnly());
         }
 
         OnSendResultRpc(list.ToArray());

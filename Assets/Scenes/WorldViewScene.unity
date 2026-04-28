@@ -23618,12 +23618,9 @@ MonoBehaviour:
   connectCanvasEvent: {fileID: 11400000, guid: 9e14145d9b265624292f952d1af4cf1c, type: 2}
   boardCanvas: {fileID: 1625551504}
   totalBoards: 5
-  japaneseNextText: "\u6B21\u3078"
-  englishNextText: Next
-  japaneseCloseText: "\u9589\u3058\u308B"
-  englishCloseText: Close
-  japaneseBackText: "\u623B\u308B"
-  englishBackText: Back
+  nextButtonText: {fileID: 11400000, guid: 906da01bb17d624409330db6e8accb56, type: 2}
+  closeText: {fileID: 11400000, guid: b0cfc476d5081e24ba29ea8e014589ec, type: 2}
+  backText: {fileID: 11400000, guid: 693361e151328d3408bbf5627e620fb8, type: 2}
 --- !u!114 &1625551511
 MonoBehaviour:
   m_ObjectHideFlags: 0
