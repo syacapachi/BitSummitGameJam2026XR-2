@@ -46,6 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   maxEnemyCapacity: 10
+  waitSpawnType: 0
+  waitSpawnRemainCount: 5
+  nextPhaseType: 0
   networkPool: {fileID: 4084111059737820316}
   spawnPointParent: {fileID: 0}
   spawnPoints:
@@ -622,6 +625,7 @@ MonoBehaviour:
   RecieveResultRpcEvent: {fileID: 11400000, guid: b1254d9a30b83b44ca1aa9f037d0a8fc, type: 2}
   OnScoreReachZeroServerEvent: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
   OnAllPhaseEndedServerEvent: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
+  difficultyEvent: {fileID: 11400000, guid: e641f2abcabb4f8449947c45a980c10f, type: 2}
 --- !u!1 &6159796624332967230
 GameObject:
   m_ObjectHideFlags: 0

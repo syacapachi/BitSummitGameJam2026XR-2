@@ -47,6 +47,7 @@ public class NetworkGameManager : NetworkBehaviour
     [Header("SubscribeEvent")]
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
     [SerializeField] VoidEvent OnAllPhaseEndedServerEvent;
+    [SerializeField] DifficultyEvent difficultyEvent;
 
 
     private void OnEnable()
@@ -65,6 +66,7 @@ public class NetworkGameManager : NetworkBehaviour
         // 🔗 イベント接続
         OnAllPhaseEndedServerEvent.Register(HandleAllPhaseEnded);
         OnScoreReachZeroServerEvent.Register(HandleScoreZeroServer);
+        difficultyEvent.Register(HandleDifficltyChange);
     }
     public override void OnNetworkDespawn()
     {
@@ -72,6 +74,7 @@ public class NetworkGameManager : NetworkBehaviour
         // 🔗 イベント切断
         OnAllPhaseEndedServerEvent.Unregister(HandleAllPhaseEnded);
         OnScoreReachZeroServerEvent.Unregister(HandleScoreZeroServer);
+        difficultyEvent.Unregister(HandleDifficltyChange);
     }
 
     [OnInspectorButton("Start Game")]
@@ -99,6 +102,10 @@ public class NetworkGameManager : NetworkBehaviour
         phaseManager.KillableHandle.KillAll();
         scoreManager.ResetScore();
         MoveScene();
+    }
+    void HandleDifficltyChange(Difficulty newDifficulty)
+    {
+        diffculty = newDifficulty;
     }
 
     void HandleGameStateChanged(GameState oldState, GameState newState)
@@ -171,7 +178,7 @@ public class NetworkGameManager : NetworkBehaviour
         {
             Debug.Log("[VRSystemScene] Loading WorldViewScene");
 
-            NetworkManager.Singleton.SceneManager.LoadScene(
+            NetworkManager.SceneManager.LoadScene(
                 "WorldViewScene",
                 LoadSceneMode.Single
             );
