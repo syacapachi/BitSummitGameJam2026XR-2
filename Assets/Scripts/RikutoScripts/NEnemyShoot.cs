@@ -49,7 +49,7 @@ public class NEnemyShoot : GunController
 
         if (!TryGetTarget(out var target)) return;
         //トリガーはこっち
-        networkAnimator.SetTrigger("Attack");
+        networkAnimator?.SetTrigger("Attack");
 
         Vector3 direction = (target.position - transform.position).normalized;
 
@@ -70,7 +70,7 @@ public class NEnemyShoot : GunController
     private IEnumerator ShootCorutine()
     {
         //トリガー以外はこっち
-        animator.SetFloat("Speed", 2.0f);
+        animator?.SetFloat("Speed", 2.0f);
         yield return new WaitForSeconds(weaponSO.FirstShootDelayTime);
         OnShootServer();
 

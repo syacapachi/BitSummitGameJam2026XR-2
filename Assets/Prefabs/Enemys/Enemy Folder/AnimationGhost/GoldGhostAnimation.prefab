@@ -58,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5137352365067904403, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: m_Name
-      value: GoldGhost
+      value: GoldGhostAnimation
       objectReference: {fileID: 0}
     - target: {fileID: 6009912523952469387, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: m_LocalScale.x
@@ -91,11 +91,11 @@ PrefabInstance:
     - target: {fileID: 6078566534491158516, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: animator
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4851763076102458298}
     - target: {fileID: 6078566534491158516, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: networkAnimator
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3645392918491448187}
     - target: {fileID: 8109445922640224305, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: m_Height
       value: 5.419359
@@ -197,8 +197,76 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4761817041595856741, guid: 33a29565fc3f8c54bbf6256414c509c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4851763076102458298}
+    - targetCorrespondingSourceObject: {fileID: 4761817041595856741, guid: 33a29565fc3f8c54bbf6256414c509c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3645392918491448187}
   m_SourcePrefab: {fileID: 100100000, guid: 33a29565fc3f8c54bbf6256414c509c9, type: 3}
+--- !u!1 &188397347547309514 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4761817041595856741, guid: 33a29565fc3f8c54bbf6256414c509c9, type: 3}
+  m_PrefabInstance: {fileID: 4649981172793086639}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &4851763076102458298
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188397347547309514}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b4f2b528ce57069408312aabb94a596a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3645392918491448187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188397347547309514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkAnimatorExpanded: 0
+  AuthorityMode: 0
+  m_Animator: {fileID: 4851763076102458298}
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 90155753
+    DestinationState: -408737282
+    TransitionDuration: 2.0047526
+    TriggerNameHash: 1080829965
+    TransitionIndex: 0
+  AnimatorParameterEntries:
+    ParameterEntries:
+    - name: Attack
+      NameHash: 1080829965
+      Synchronize: 1
+      ParameterType: 9
+    - name: Speed
+      NameHash: -823668238
+      Synchronize: 1
+      ParameterType: 1
+  AnimatorParametersExpanded: 0
 --- !u!4 &708897817659096944 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5286821283651694047, guid: 33a29565fc3f8c54bbf6256414c509c9, type: 3}

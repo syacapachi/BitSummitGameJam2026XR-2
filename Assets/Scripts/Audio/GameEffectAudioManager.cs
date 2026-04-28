@@ -74,7 +74,7 @@ public class GameEffectAudioManager : MonoBehaviour
     {
         GameObject obj = localObjectPool.Get(fxPrefab);
         obj.transform.SetPositionAndRotation(pos, Quaternion.identity);
-        localObjectPool.Release(obj, 2f);
+        localObjectPool.Release(obj, 5f);
     }
     private void ReturnPool(AudioSource source)
     {

@@ -21,13 +21,13 @@ public class NEnemySpawnFxEmitter : NetworkBehaviour
     private void PlaySpawnFxClientRpc(Vector3 position)
     {
         // FX
-        NetFxSpawnUtility.Spawn(
-            spawnFxPrefabAll,
-            spawnSfxAll,
-            position,
-            Quaternion.identity,
-            spawnFxLifeTimeAll
-        );
+        //NetFxSpawnUtility.Spawn(
+        //    spawnFxPrefabAll,
+        //    spawnSfxAll,
+        //    position,
+        //    Quaternion.identity,
+        //    spawnFxLifeTimeAll
+        //);
 
         // 音
         if (spawnSfxAll != null)

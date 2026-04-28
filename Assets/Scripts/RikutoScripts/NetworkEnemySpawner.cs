@@ -9,6 +9,8 @@ using UnityEngine;
 
 public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawnable,IKillable
 {
+    [Header("Setting")]
+    [SerializeField] int maxEnemyCapacity = 10;
     [SerializeField] NetworkObjectPool networkPool;
 #if UNITY_EDITOR
     [SerializeField] Transform spawnPointParent;
@@ -26,24 +28,9 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     private bool isAllDead = false;
     public bool IsSpawnFinishedServerOnly => isSpawnFinished;
     public bool IsAllDeadServerOnly => isAllDead;
-    private readonly List<IEnemy> enemies = new List<IEnemy>();
-    /*
-        public void SpawnFromPhase(PhaseSO phase)
-        {
-            if (!IsServer) return;
-
-            remain = 0;
-
-            foreach (var data in phase.spawnList)
-            {
-                for (int i = 0; i < data.count; i++)
-                {
-                    SpawnEnemy(data.enemyType, phase.usableSpawnPointIndex);
-                    remain++;
-                }
-            }
-        }
-    */
+    private readonly List<IEnemy> spawnedEnemies = new ();
+    private readonly Queue<SpawnEvent> waitSpawnEnemyQueue = new();
+    Coroutine waitForSpawn;
 
     public override void OnNetworkSpawn()
     {
@@ -77,22 +64,36 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         float timer = 0f;
 
         // spawnTime順にソート（重要）
-        spawnEvents.Sort((a, b) => a.SpawnTime.CompareTo(b.SpawnTime));
+        //spawnEvents.Sort((a, b) => a.SpawnTime.CompareTo(b.SpawnTime));
+        //Queueで高速に
+        Queue<SpawnEvent> spawnQueue = new(spawnEvents.OrderBy(e => e.SpawnTime));
+
 
         int index = 0;
         isSpawnFinished = false; // 念のためリセット
 
 
-        while (index < spawnEvents.Count)
+        while (spawnQueue.Count > 0)
         {
             timer += Time.deltaTime;
 
             // 今の時間で出すべき敵を全部出す
-            while (index < spawnEvents.Count && spawnEvents[index].SpawnTime <= timer)
+            while (spawnQueue.Count > 0 && spawnEvents[index].SpawnTime <= timer)
             {
-                SpawnEvent e = spawnEvents[index];
 
-                SpawnEnemy(e.EnemyType, e.SpawnPointIndex);
+                SpawnEvent e = spawnQueue.Dequeue();
+                //SpawnEvent e = spawnEvents[index];
+
+                //規定数以上の場合待機行列に送る
+                if (spawnedEnemies.Count >= maxEnemyCapacity)
+                {
+                    waitSpawnEnemyQueue.Enqueue(e);
+                    waitForSpawn ??= StartCoroutine(WaitForSpawn());
+                }
+                else
+                {
+                    SpawnEnemy(e.EnemyType, e.SpawnPointIndex);
+                }
                 remain++;
 
                 index++;
@@ -101,6 +102,19 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
             yield return null;
         }
         isSpawnFinished = true;
+    }
+    private IEnumerator WaitForSpawn()
+    {
+        while (waitSpawnEnemyQueue.Count > 0)
+        {
+            while (spawnedEnemies.Count >= maxEnemyCapacity)
+            {
+                yield return null;
+            }
+            SpawnEvent e = waitSpawnEnemyQueue.Dequeue();
+            SpawnEnemy(e.EnemyType,e.SpawnPointIndex);
+        }
+        waitForSpawn = null;
     }
     /*
     void SpawnEnemy(EnemySO enemyData, int[] usableIndex)
@@ -149,9 +163,8 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
 
         var enemy = networkObject.GetComponent<IEnemy>();
         enemy.InjectSetting(enemyData);
-        RegisterEnemy(enemy);
-        networkObject.Spawn();
-        
+        spawnedEnemies.Add(enemy);
+        networkObject.Spawn();   
     }
 
     public void OnEnemyKilled(IEnemy enemy)
@@ -163,35 +176,25 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
             isAllDead = true;
             InvokeAllEnemyDeadRpc();
         }
-        UnregisterEnemy(enemy);
+        spawnedEnemies.Remove(enemy);
     }
     [Rpc(SendTo.ClientsAndHost)]
     private void InvokeAllEnemyDeadRpc()
     {
         OnAllEnemyDeadRpcEvent.Invoke();
     }
-    
-
-    private void RegisterEnemy(IEnemy enemy)
-    {
-        enemies.Add(enemy);
-    }
-
-    private void UnregisterEnemy(IEnemy enemy)
-    {
-        enemies.Remove(enemy);
-    }
 
     public void KillAll()
     {
-        foreach (var enemy in enemies)
+        waitSpawnEnemyQueue.Clear();    
+        foreach (var enemy in spawnedEnemies)
         {
             if (enemy != null && enemy.NetworkObject.IsSpawned)
             {
                 enemy.NetworkObject.Despawn(true);   
             }
         }
-        enemies.Clear();
+        spawnedEnemies.Clear();
         remain = 0;
         isSpawnFinished = false;
     }

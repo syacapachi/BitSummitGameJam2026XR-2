@@ -11,8 +11,12 @@ public class ResultUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] EnemyDataBase enemyDatabase;
+    [Header("Prefab")]
     [SerializeField] private GameObject enemyRowPrefab;
+    [SerializeField] GameObject playerHeaderPrefab;
+    [Header("ContentPos")]
     [SerializeField] private Transform contentParent;
+    [Header("Font Setting")]
     [SerializeField] Font textFont;                 // 必要に応じて設定
     [SerializeField] int fontSizeHeader = 28;
     [SerializeField] int fontSizeStats = 22;
@@ -62,9 +66,6 @@ public class ResultUI : MonoBehaviour
 
     void OnGameFinished(PlayerResultData[] resultData)
     {
-        Debug.Log("Result Received!");
-        Debug.Log("Result length: " + resultData.Length);
-
         foreach (var r in resultData)
         {
             Debug.Log($"Player {r.clientId} Score:{r.score} Kills:{string.Join(",", r.killCounts)}");
@@ -126,12 +127,15 @@ public class ResultUI : MonoBehaviour
 
         foreach (var playerResult in results)
         {
-            var headerObj = new GameObject("PlayerHeader");
-            headerObj.transform.SetParent(contentParent, false);
+            var headerObj = Instantiate(playerHeaderPrefab,contentParent);
+            //headerObj.transform.SetParent(contentParent, false);
             // RectTransformの設定
-            var rect = headerObj.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(400, 120); // 高さを120に固定。横は0で親に合わせる
-            var headerText = headerObj.AddComponent<TextMeshProUGUI>();
+            if(!headerObj.TryGetComponent<TextMeshProUGUI>(out var headerText))
+            {
+                headerText = headerObj.AddComponent<TextMeshProUGUI>();
+            }
+            var rect = headerObj.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(400, 120); // 高さを120に固定。横は0で親に合わせる 
             headerText.fontSize = fontSizeHeader;
             headerText.alignment = TextAlignmentOptions.TopLeft;
             headerText.enableAutoSizing = false;

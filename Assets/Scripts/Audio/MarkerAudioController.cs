@@ -7,7 +7,6 @@ public class MarkerAudioController : NetworkBehaviour
     [SerializeField] private AudioClip markerPlacedClipAll;
     [SerializeField] private GameObject markerFxPrefabAll;
     [SerializeField, Range(0f, 1f)] private float markerPlacedVolumeAll = 1f;
-    [SerializeField] private bool playAsUiAll = false;
 
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffectEvent;
@@ -24,21 +23,16 @@ public class MarkerAudioController : NetworkBehaviour
         // 各クライアントで「自分の耳元」から鳴らす
         Vector3 playPosition = GetLocalEarPosition();
 
-        if (playAsUiAll)
-        {
-            gameEffectEvent.Invoke(
-                new GameEffect(
-                    markerPlacedClipAll,
-                    markerFxPrefabAll,
-                    playPosition,
-                    volume: markerPlacedVolumeAll
-                )
-            );
-        }
-        else
-        {
-            AudioSource.PlayClipAtPoint(markerPlacedClipAll, playPosition, markerPlacedVolumeAll);
-        }
+        gameEffectEvent.Invoke(
+            new GameEffect(
+                markerPlacedClipAll,
+                markerFxPrefabAll,
+                hitPoint,
+                volume: markerPlacedVolumeAll
+            )
+        );
+        AudioSource.PlayClipAtPoint(markerPlacedClipAll, playPosition, markerPlacedVolumeAll);
+
     }
 
     private Vector3 GetLocalEarPosition()
