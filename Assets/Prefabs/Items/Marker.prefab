@@ -96,7 +96,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5570317700273741475}
   - component: {fileID: 8153864540634290414}
-  - component: {fileID: 7219940089673531300}
   - component: {fileID: 1103239692597537299}
   - component: {fileID: 6232679789972296265}
   m_Layer: 0
@@ -169,14 +168,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!33 &7219940089673531300
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2818825565032162250}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1103239692597537299
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -184,7 +175,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2818825565032162250}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -429,12 +420,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d2afc506ca80341b7a9e810daa26a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   targetRenderers:
   - {fileID: 1103239692597537299}
   - {fileID: 7412702607922249090}
   - {fileID: 2072110858647038560}
-  hostNormalColor: {r: 0, g: 1, b: 0, a: 1}
-  clientNormalColor: {r: 0, g: 0, b: 1, a: 1}
+  ownerNormalColor: {r: 0, g: 1, b: 0, a: 1}
+  nonOwnerNormalColor: {r: 0, g: 0, b: 1, a: 1}
   blinkColor: {r: 0.92941177, g: 0.9764706, b: 0, a: 1}
   blinkSpeed: 8
   useEmission: 1

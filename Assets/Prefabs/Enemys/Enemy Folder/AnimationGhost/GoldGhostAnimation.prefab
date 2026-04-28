@@ -58,7 +58,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5137352365067904403, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: m_Name
-      value: GoldGhost
+      value: GoldGhostAnimation
+      objectReference: {fileID: 0}
+    - target: {fileID: 5548266849939351625, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: spawnFxPrefabAll
+      value: 
+      objectReference: {fileID: 2632902684132212087, guid: d6485a41623cfe44e97d30a8770a5a14, type: 3}
+    - target: {fileID: 5548266849939351625, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: spawnFxLifeTimeAll
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6009912523952469387, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: m_LocalScale.x

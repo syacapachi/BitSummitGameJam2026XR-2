@@ -22,11 +22,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bb72a254097f66d40ae5f40dd13208ae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bb72a254097f66d40ae5f40dd13208ae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bb72a254097f66d40ae5f40dd13208ae, type: 3}
       propertyPath: m_LocalPosition.z
@@ -122,7 +122,14 @@ MonoBehaviour:
   NetworkAnimatorExpanded: 0
   AuthorityMode: 0
   m_Animator: {fileID: 5276962141669802077}
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 1119931081
+    DestinationState: 665554848
+    TransitionDuration: 0.25
+    TriggerNameHash: 1080829965
+    TransitionIndex: 0
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Attack
@@ -192,8 +199,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1431743341286987319, guid: 51c87882fbc28984083999e0612867d3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 1431743341286987319, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.455
+      value: 1.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 1507100403117325063, guid: 51c87882fbc28984083999e0612867d3, type: 3}
+      propertyPath: spawnFxPrefabAll
+      value: 
+      objectReference: {fileID: 1389866778582299859, guid: 892ddf1b837759b4a9994414e91b2cc0, type: 3}
+    - target: {fileID: 1507100403117325063, guid: 51c87882fbc28984083999e0612867d3, type: 3}
+      propertyPath: spawnFxLifeTimeAll
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3903738317801702636, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: m_Name
@@ -225,23 +244,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5597823880750522856, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: m_Height
-      value: 2.6001923
+      value: 4.1937995
       objectReference: {fileID: 0}
     - target: {fileID: 5597823880750522856, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: m_Radius
-      value: 0.8544645
+      value: 1.6391089
       objectReference: {fileID: 0}
     - target: {fileID: 5597823880750522856, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: m_Center.x
-      value: 0
+      value: 0.21188688
       objectReference: {fileID: 0}
     - target: {fileID: 5597823880750522856, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: m_Center.y
-      value: 1.3630971
+      value: 1.5154784
       objectReference: {fileID: 0}
     - target: {fileID: 5597823880750522856, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: m_Center.z
-      value: 0
+      value: -0.061685562
       objectReference: {fileID: 0}
     - target: {fileID: 5637691317398501634, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: animator
