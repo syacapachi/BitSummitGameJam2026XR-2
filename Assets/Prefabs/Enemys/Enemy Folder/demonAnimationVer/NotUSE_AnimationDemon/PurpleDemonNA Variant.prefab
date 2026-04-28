@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2385688263842873445, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: m_Name
-      value: BlackDemonNA Variant
+      value: PurpleDemonNA Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2999649127194750492, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: animator
@@ -67,6 +67,10 @@ PrefabInstance:
     - target: {fileID: 7578726946820382541, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8320318173726403609, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: spawnFxLifeTimeAll
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

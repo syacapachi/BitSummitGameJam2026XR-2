@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1591173180755725065, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.429
+      objectReference: {fileID: 0}
+    - target: {fileID: 1591173180755725065, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.413
+      objectReference: {fileID: 0}
     - target: {fileID: 2385688263842873445, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: m_Name
       value: KingDemonNA Variant
@@ -17,29 +25,41 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5444326999018349154}
     - target: {fileID: 2999649127194750492, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 959754860058491867, guid: 5c473204f1a9d904cb1b712a09931aaa, type: 3}
+    - target: {fileID: 2999649127194750492, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: weaponSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: 2d27e6e1f8fc91240b0402a317b6f27a, type: 2}
+    - target: {fileID: 2999649127194750492, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: networkAnimator
       value: 
       objectReference: {fileID: 3228758392293437158}
     - target: {fileID: 3040644113553880822, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: m_Height
-      value: 1.7136949
+      value: 2.2268157
       objectReference: {fileID: 0}
     - target: {fileID: 3040644113553880822, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: m_Radius
-      value: 0.7139699
+      value: 0.8360108
       objectReference: {fileID: 0}
     - target: {fileID: 3040644113553880822, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: m_Center.x
-      value: -0.10986774
+      value: 0.44073203
       objectReference: {fileID: 0}
     - target: {fileID: 3040644113553880822, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: m_Center.y
-      value: 0.7822353
+      value: 1.0695462
       objectReference: {fileID: 0}
     - target: {fileID: 3040644113553880822, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: m_Center.z
-      value: 0.25036216
+      value: -0.16558437
       objectReference: {fileID: 0}
+    - target: {fileID: 5016991474193591491, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: deathFxPrefabAll
+      value: 
+      objectReference: {fileID: 278788122339841109, guid: 642a551cd9afd564488cfb9bb464c7fa, type: 3}
     - target: {fileID: 6441764854625807580, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2957230015
@@ -104,6 +124,14 @@ PrefabInstance:
       propertyPath: spawnSfxAll
       value: 
       objectReference: {fileID: 8300000, guid: 755277c4df6a1704b91570f49b062caa, type: 3}
+    - target: {fileID: 8320318173726403609, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: spawnFxPrefabAll
+      value: 
+      objectReference: {fileID: 5047653985756365193, guid: f1b326d782d62e84a9f500fe1b2e665a, type: 3}
+    - target: {fileID: 8320318173726403609, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: spawnFxLifeTimeAll
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8377658911031197993, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -0.148
