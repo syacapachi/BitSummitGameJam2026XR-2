@@ -30,7 +30,5 @@ public class PlayerHPBarUI : MonoBehaviour
         {
             hpText.text = $"{info.CurrentHP} / {info.MaxHP}";
         }
-
-        Debug.Log($"[PlayerHPBarUI] HP updated: {info.CurrentHP} / {info.MaxHP}");
     }
 }

@@ -39,7 +39,6 @@ public class AlertLightController : MonoBehaviour
                 locator.AllGameManager.ScoreManager != null)
             {
                 scoreManager = locator.AllGameManager.ScoreManager;
-                Debug.Log("ScoreManager取得成功: " + scoreManager);
                 break;
             }
 

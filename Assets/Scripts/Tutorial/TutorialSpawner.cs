@@ -81,11 +81,12 @@ public class TutorialSpawner : NetworkBehaviour
             Quaternion.identity
         );
 
-        obj.Spawn(true);
         if (obj.TryGetComponent<IEnemy>(out var enemy))
         {
+            enemy.InjectSetting(enemyData);
             spawnedEnemies.Add(enemy);
         }
+        obj.Spawn(true);
     }
 
     public void OnEnemyKilled()

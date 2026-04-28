@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  maxEnemyCapacity: 10
   networkPool: {fileID: 4084111059737820316}
   spawnPointParent: {fileID: 0}
   spawnPoints:
@@ -274,9 +275,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  phases:
-  - {fileID: 11400000, guid: 01e97072af31c5746aae4fc3efb30aec, type: 2}
-  - {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
+  phaseSetting:
+  - Difficulity: 0
+    phases:
+    - {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
+  - Difficulity: 1
+    phases:
+    - {fileID: 11400000, guid: 01e97072af31c5746aae4fc3efb30aec, type: 2}
+    - {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
+  - Difficulity: 2
+    phases:
+    - {fileID: 11400000, guid: 01e97072af31c5746aae4fc3efb30aec, type: 2}
+    - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
+    - {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
   spawner: {fileID: 5843874078436757177}
   scoreManager: {fileID: 7622921992766210704}
   uiSettings: {fileID: 11400000, guid: 501a16477cf3ffe419cd09b562a62f7a, type: 2}
@@ -300,7 +311,6 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 1
-  isSkip: 0
   OnAllPhaseEndedServerOnly: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
   OnPhaseChangeRpcEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
 --- !u!1 &2223224338536376484
@@ -349,7 +359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pooledPrefabsList:
   - Prefab: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
-    PrewarmCount: 5
+    PrewarmCount: 10
   - Prefab: {fileID: 8369679245763667583, guid: 48336ae6e56cca440ae3e0237126786e, type: 3}
     PrewarmCount: 10
 --- !u!1 &2827320418798051780
@@ -596,11 +606,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  diffculty: 1
+  gameMode: 1
   protectArea: {fileID: 0}
   scoreManager: {fileID: 7622921992766210704}
   phaseManager: {fileID: 1871165705981970814}
   PlayerManager: {fileID: 8012348177458703508}
-  gameMode: 1
   gameState:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -717,6 +728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e353cdde9fb192544980c182e28be148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  changeTime: 5
   skyboxMat: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
   skyBoxColors:
   - topColor: {r: 0, g: 0.22023964, b: 1, a: 0}

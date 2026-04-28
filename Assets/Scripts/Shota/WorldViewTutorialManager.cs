@@ -67,8 +67,8 @@ public class WorldTutorialManager : NetworkBehaviour
         "Cooperate with your partner\nto protect the crystal!\nLet the game begin!"
         */
         "Pull the right controller trigger\nto shoot bullets.\nDestroy all the targets!",
-        "Enemies have appeared.\nVisible enemies cannot be defeated.\nShoot the enemy in front of you three times to check!",
-        "Invisible enemies can be defeated.\nCommunicate the enemy's location to your partner\nand attack!",
+        "Enemies have appeared.\nVisible spawnedEnemies cannot be defeated.\nShoot the enemy in front of you three times to check!",
+        "Invisible spawnedEnemies can be defeated.\nCommunicate the enemy's location to your partner\nand attack!",
         "Cooperate with your partner\nand survive!\nThe game starts!"
     };
 

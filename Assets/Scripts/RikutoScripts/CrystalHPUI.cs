@@ -25,7 +25,6 @@ public class CrystalHPUI : MonoBehaviour
 
         nGameManager = ManagerLocator.Instance.AllGameManager;
 
-        Debug.Log("GameManager取得成功");
 
         //  scoreの初期値が入るまで待つ（0対策）
         yield return new WaitUntil(() => nGameManager.ScoreManager.score.Value > 0);

@@ -1,23 +1,23 @@
 ﻿
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
-/// <summary>
-/// 変更お願い、Phaseが変わるごとに夕方->夜->深夜と暗くする by 水野
-/// </summary>
 public class PhaseManager : NetworkBehaviour
 {
-    [SerializeField] PhaseSO[] phases;
+    [Serializable]
+    class DifficultyToPhase
+    {
+        public Difficulty Difficulity;
+        public PhaseSO[] phases;
+    }
+    [SerializeField] DifficultyToPhase[] phaseSetting;
     [SerializeField] NetworkEnemySpawner spawner;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseCountDownSettingSO uiSettings;
-       
-    public IKillable KillableHandle => spawner;
-    public ISpawnable SpawnableHandle => spawner;
-
-
     [SerializeField] NetworkVariable<int> syncedPhaseIndex = new(-1);
     public NetworkVariable<int> CountdownValue = new(0);
     
@@ -28,18 +28,40 @@ public class PhaseManager : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-    public PhaseSO[] Phases => phases;
+    public IKillable KillableHandle => spawner;
+    public ISpawnable SpawnableHandle => spawner;
+    public PhaseSO[] Phases => currentPhaseMode.phases;
     public int CurrentPhaseIndex => syncedPhaseIndex.Value;
-
+    private bool isInitialize = false;
+    private readonly Dictionary<Difficulty, DifficultyToPhase> difficultToPhaseDic = new();
     private bool IsCountingDown = false;
+    private DifficultyToPhase currentPhaseMode;
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnAllPhaseEndedServerOnly;
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
+    private void CreateDic()
+    {
+        if (isInitialize) return;
+        isInitialize = true;
+        foreach (var setting in phaseSetting)
+        {
+            difficultToPhaseDic[setting.Difficulity] = setting;
+        }
+#if UNITY_EDITOR
+        foreach (var diff in Enum.GetValues(typeof(Difficulty)))
+        {
+            if (!difficultToPhaseDic.ContainsKey((Difficulty)diff))
+            {
+                Debug.LogError($"{(Difficulty)diff} is not setting");
+            }
+        }
+#endif
+    }
 
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
-
+        CreateDic();
         if (spawner == null)
             spawner = GetComponentInChildren<NetworkEnemySpawner>();
     }
@@ -56,30 +78,34 @@ public class PhaseManager : NetworkBehaviour
         OnPhaseChangeRpcEvent.Invoke(newValue);
     }
 
-    public void StartPhases()
+    public void StartPhases(Difficulty difficulity)
     {
-        Debug.Log("StartPhases called: " + this.name);
+#if UNITY_EDITOR
+        Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartPhases called");
+#endif
         if (!IsServer) return;
-
+        CreateDic();
+        currentPhaseMode = difficultToPhaseDic[difficulity];
         syncedPhaseIndex.Value = -1;
         StartNextPhase();
     }
 
     void StartNextPhase()
     {
-        Debug.Log("StartNextPhase called: " + this.name);
+#if UNITY_EDITOR
+        Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartNextPhases called");
+#endif
 
         syncedPhaseIndex.Value++;
 
 
-        if (CurrentPhaseIndex >= phases.Length)
+        if (CurrentPhaseIndex >= Phases.Length)
         {
-            Debug.Log("GAME CLEAR");
             spawner.KillAll();
             OnAllPhaseEndedServerOnly.Invoke();
             return;
         }
-        scoreManager.SetBonusServerOnly(phases[CurrentPhaseIndex].ClearBonus);
+        scoreManager.SetBonusServerOnly(Phases[CurrentPhaseIndex].ClearBonus);
         StartCoroutine(StartPhaseWithCountdown(CurrentPhaseIndex));
     }
     IEnumerator StartPhaseWithCountdown(int phaseIndex)
@@ -93,7 +119,6 @@ public class PhaseManager : NetworkBehaviour
         while (count > 0)
         {
             CountdownValue.Value = count;
-            Debug.Log("Countdown: " + count);
             yield return waitBase;
             count--;
         }
@@ -101,7 +126,7 @@ public class PhaseManager : NetworkBehaviour
         CountdownValue.Value = 0;
         IsCountingDown = false;
 
-        var phase = phases[phaseIndex];
+        var phase = Phases[phaseIndex];
         SpawnableHandle.SpawnFromEvent(phase.SpawnEvents.ToList());
         OnPhaseChangeRpcEvent.Invoke(phaseIndex);
 
@@ -127,7 +152,7 @@ public class PhaseManager : NetworkBehaviour
 
     IEnumerator EndPhase()
     {
-        if (CurrentPhaseIndex == phases.Length - 1)
+        if (CurrentPhaseIndex == Phases.Length - 1)
         {
 
             yield return EndPhaseWithCountdown();
@@ -136,7 +161,7 @@ public class PhaseManager : NetworkBehaviour
         else if (spawner.IsAllDeadServerOnly)
         {
 
-            int bonus = phases[CurrentPhaseIndex].ClearBonus;
+            int bonus = Phases[CurrentPhaseIndex].ClearBonus;
 
             scoreManager.AddBonusServerOnly(bonus); // ← ここ重要
 
@@ -173,8 +198,6 @@ public class PhaseManager : NetworkBehaviour
         }
 
         CountdownValue.Value = 0;
-
-        Debug.Log("FINISH!");
 
         IsCountingDown = false;
     }

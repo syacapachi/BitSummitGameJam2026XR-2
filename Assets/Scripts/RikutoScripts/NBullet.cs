@@ -19,18 +19,18 @@ public class NBullet : BulletBaseController
     [Rpc(SendTo.ClientsAndHost)]
     void SpawnHitFxClientRpc(Vector3 pos)
     {
-        GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(hitFxPrefab);
-        fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
-        ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
+        //GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(hitFxPrefab);
+        //fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
+        //ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
         gameEffectEvent.Invoke(new GameEffect(null, hitFxPrefab, pos));
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     void SpawnShieldFxClientRpc(Vector3 pos)
     {
-        GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(shieldFxPrefab);
-        fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
-        ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
+        //GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(shieldFxPrefab);
+        //fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
+        //ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
         gameEffectEvent.Invoke(new GameEffect(null, shieldFxPrefab, pos));
     }
 

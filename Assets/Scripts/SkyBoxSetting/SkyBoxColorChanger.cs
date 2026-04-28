@@ -1,4 +1,5 @@
 ﻿using Syacapachi.Attribute;
+using System.Collections;
 using UnityEngine;
 
 public class SkyBoxColorChanger : MonoBehaviour
@@ -19,6 +20,7 @@ public class SkyBoxColorChanger : MonoBehaviour
         [Header("空の地平線の色の浸食度")]
         public float exponentBottom;
     }
+    [SerializeField] float changeTime = 5f;
     [Header("SkyBox Material")]
     [SerializeField] Material skyboxMat;
     [SerializeField] SkyBoxSetting[] skyBoxColors;
@@ -32,11 +34,11 @@ public class SkyBoxColorChanger : MonoBehaviour
     }
     private void OnEnable()
     {
-        phaseChageEvent.Register(ApplyColor);
+        phaseChageEvent.Register(ApplyWithCorutine);
     }
     private void OnDisable()
     {
-        phaseChageEvent.Unregister(ApplyColor);
+        phaseChageEvent.Unregister(ApplyWithCorutine);
     }
     /// <summary>
     /// 即時変更用。
@@ -54,6 +56,25 @@ public class SkyBoxColorChanger : MonoBehaviour
         skyboxMat.SetFloat("_Intensity", c.intensity);
         skyboxMat.SetFloat("_Exponent1", c.exponentTop);
         skyboxMat.SetFloat("_Exponent2", c.exponentBottom);
+    }
+    private void ApplyWithCorutine(int index)
+    {
+        if(index == 0)
+        {
+            StartCoroutine(ApplyColorCorutine(skyBoxColors.Length -1, index, changeTime));
+            return;
+        }
+        if(index < 1 || index >= skyBoxColors.Length) return;
+        StartCoroutine(ApplyColorCorutine(index-1,index, changeTime));
+    }
+    IEnumerator ApplyColorCorutine(int fromIndex,int toIndex,float changeTime)
+    {
+        for(float timer = 0f; timer <= changeTime; timer += Time.deltaTime)
+        {
+            ApplyLerp(skyBoxColors[fromIndex], skyBoxColors[toIndex], timer / changeTime);
+            yield return null;
+        }
+        ApplyColor(toIndex);
     }
     /// <summary>
     /// 徐々に変化させる用。Update等で呼び出すことを想定。

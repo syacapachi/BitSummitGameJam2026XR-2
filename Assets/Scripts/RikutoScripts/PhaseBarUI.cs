@@ -14,6 +14,8 @@ public class PhaseBarUI : MonoBehaviour
 
     [Header("Size")]
     [SerializeField] RectTransform rect;
+    [Header("Subscribe Event")]
+    [SerializeField] GameStateEvent GameStateEvent;
     float MaxWidth => rect.rect.width; // 最大フェーズの長さ
 
     private readonly List<Image> phaseBars = new List<Image>();
@@ -21,10 +23,13 @@ public class PhaseBarUI : MonoBehaviour
 
     private Color defaultColor;
 
-    void Start()
+    private void OnEnable()
     {
-        CreateBars();
-        SetupBarLength();
+        GameStateEvent.Register(OnStateChange);
+    }
+    private void OnDisable()
+    {
+        GameStateEvent.Unregister(OnStateChange);
     }
 
     void Update()
@@ -62,7 +67,14 @@ public class PhaseBarUI : MonoBehaviour
             }
         }
     }
-
+    private void OnStateChange(GameState state)
+    {
+        if (state == GameState.Playing)
+        {
+            CreateBars();
+            SetupBarLength();
+        }
+    }
     // =========================
     // フェーズバー生成
     // =========================

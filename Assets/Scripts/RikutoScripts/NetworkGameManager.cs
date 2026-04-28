@@ -6,12 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class NetworkGameManager : NetworkBehaviour
 {
+    [Header("ゲーム設定")]
+    [SerializeField] Difficulty diffculty;
+    [SerializeField] GameMode gameMode = GameMode.Protect;
+    [Header("Refernce")]
     [SerializeField] GameObject protectArea;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] PlayerManager PlayerManager;
-
-    [SerializeField] GameMode gameMode = GameMode.Protect;
+    
     public GameMode CurrentGameMode => gameMode;
 
 
@@ -78,9 +81,9 @@ public class NetworkGameManager : NetworkBehaviour
         if (CurrentGameState != GameState.Initializing) return;
 
         Debug.Log("Game Start");
-        gameState.Value = GameState.Playing;
         scoreManager.SetScoreServerOnly();
-        phaseManager.StartPhases();
+        phaseManager.StartPhases(diffculty);
+        gameState.Value = GameState.Playing;
     }
 
     [OnInspectorButton("Reset")]
@@ -141,6 +144,10 @@ public class NetworkGameManager : NetworkBehaviour
         RecieveResultRpcEvent.Invoke(result);
     }
     [OnInspectorButton]
+    void SendMockData(PlayerResultData[] data)
+    {
+        OnSendResultRpc(data);
+    }
     void SendResults()
     {
         var list = new List<PlayerResultData>();
@@ -183,4 +190,10 @@ public enum GameMode
 {
     Protect,   // 拠点防衛あり
     Survival   // 拠点なし（耐久）
+}
+public enum Difficulty
+{
+    Easy,
+    Normal,
+    Hard
 }

@@ -45,7 +45,6 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
         }
 
         currentHP.Value = Mathf.Max(currentHP.Value - damage, 0);
-        Debug.Log($"Player {OwnerClientId} took {damage} damage. Current HP: {currentHP.Value}");
 
         if (currentHP.Value <= 0)
         {
@@ -67,7 +66,8 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
     }
     private void OnPlayerDead()
     {
-        Debug.Log($"[PlayerHealth] OnPlayerDead called for Player {OwnerClientId}");
+        Debug.Log($"[" +
+            $"[{nameof(PlayerHealth)}] OnPlayerDead called for Player {OwnerClientId}");
     }
 }
 public readonly struct HPInfo

@@ -30,6 +30,7 @@ public class SampleScript : MonoBehaviour
     public class InlineClass : IInLineInterface
     {
         public string name;
+        public int[] ints; 
         public void InlineMethod()
         {
             Debug.Log($"This is an inline method. name = {name}");
@@ -69,61 +70,71 @@ public class SampleScript : MonoBehaviour
         Debug.Log("This is a sample method.");
     }
     [OnInspectorButton]
-    public void SampleMethodWithParameter(string message, int number)
+    public void SampleMethod(InlineClass lass)
     {
-        Debug.Log("Message: " + message + ", Number: " + number);
+        Debug.Log("This is a sample method.");
     }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(SampleEnum message)
-    {
-        Debug.Log("Message: " + message);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(List<float> value, List<ScriptableObject> valueObject,List<InlineClass> inlineClasses,List<IInLineInterface> inlineInterfaces, List<IInLineGenericInterface<int>> inlineGenericInterfaces)
-    {
-        string valueString = string.Join(", ", value);
-        string valueObjectString = string.Join(", ", valueObject);
-        string inlineClassString = string.Join(", ", inlineClasses);
-        string inlineInterfaceString = string.Join(", ", inlineInterfaces);
-        string inlineGenericInterfaceString = string.Join(", ", inlineGenericInterfaces);
-        Debug.Log("Value: " + valueString + ", " + valueObjectString + ", " + inlineClassString + ", " + inlineInterfaceString + ", " + inlineGenericInterfaceString);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(Dictionary<InlineClass, IInLineInterface> dic,Dictionary<IInLineGenericInterface<string>,IInLineGenericInterface<int>> dic2)
-    {
-        string dicString = string.Join(", ", dic);
-        string dic2String = string.Join(", ", dic2);
-        Debug.Log("Message: " + dicString + ", " + dic2String);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(UnityEvent invokeEvent)
-    {
-        invokeEvent.Invoke();
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(LayerMask mask,Quaternion quatanion, DateTime time)
-    {
-        Debug.Log("Value: " + mask + ", " + quatanion + ", " + time);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter<F>(GeneticClass<F> invokeEvent)
-    {
-        Debug.Log("Value: " + invokeEvent.value);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(GeneticClass<int> invokeEvent)
-    {
-        Debug.Log("Value: " + invokeEvent.value);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(IInLineInterface resisterable,IInLineGenericInterface<string> invokeEvent)
-    {
-        resisterable.InlineMethod();
-        invokeEvent.InlineMethod("Sample Value");
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(IInLineGenericInterface<int> invokeEvent)
-    {
-        invokeEvent.InlineMethod(1);
-    }
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(string message, int number)
+    //{
+    //    Debug.Log("Message: " + message + ", Number: " + number);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(SampleEnum message)
+    //{
+    //    Debug.Log("Message: " + message);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(List<float> value, List<ScriptableObject> valueObject,List<InlineClass> inlineClasses,List<IInLineInterface> inlineInterfaces, List<IInLineGenericInterface<int>> inlineGenericInterfaces)
+    //{
+    //    string valueString = string.Join(", ", value);
+    //    string valueObjectString = string.Join(", ", valueObject);
+    //    string inlineClassString = string.Join(", ", inlineClasses);
+    //    string inlineInterfaceString = string.Join(", ", inlineInterfaces);
+    //    string inlineGenericInterfaceString = string.Join(", ", inlineGenericInterfaces);
+    //    Debug.Log("Value: " + valueString + ", " + valueObjectString + ", " + inlineClassString + ", " + inlineInterfaceString + ", " + inlineGenericInterfaceString);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(Dictionary<InlineClass, IInLineInterface> dic,Dictionary<IInLineGenericInterface<string>,IInLineGenericInterface<int>> dic2)
+    //{
+    //    string dicString = string.Join(", ", dic);
+    //    string dic2String = string.Join(", ", dic2);
+    //    Debug.Log("Message: " + dicString + ", " + dic2String);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(UnityEvent invokeEvent)
+    //{
+    //    invokeEvent.Invoke();
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(LayerMask mask,Quaternion quatanion, DateTime time)
+    //{
+    //    Debug.Log("Value: " + mask + ", " + quatanion + ", " + time);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(int[] arr, InlineClass[] inlineClasses, IInLineInterface[] inlineClasse, IInLineGenericInterface<string>[] inLineGenericInterface)
+    //{
+    //    Debug.Log("Value: " + arr + ", " + inlineClasse + ", " + inlineClasse + ", "+inLineGenericInterface);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter<F>(GeneticClass<F> invokeEvent)
+    //{
+    //    Debug.Log("Value: " + invokeEvent.value);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(GeneticClass<int> invokeEvent)
+    //{
+    //    Debug.Log("Value: " + invokeEvent.value);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(IInLineInterface resisterable,IInLineGenericInterface<string> invokeEvent)
+    //{
+    //    resisterable.InlineMethod();
+    //    invokeEvent.InlineMethod("Sample Value");
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(IInLineGenericInterface<int> invokeEvent)
+    //{
+    //    invokeEvent.InlineMethod(1);
+    //}
 }
