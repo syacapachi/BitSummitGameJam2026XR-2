@@ -152,7 +152,7 @@ public class NetworkGameManager : NetworkBehaviour
             var stats = player.stats;
             if (stats == null) continue;
 
-            list.Add(stats.CreateResultData());
+            list.Add(stats.CreateResultDataServerOnly());
         }
 
         OnSendResultRpc(list.ToArray());

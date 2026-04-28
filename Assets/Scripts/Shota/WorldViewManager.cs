@@ -30,12 +30,9 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] private int totalBoards = 5;
 
     [Header("ボタンテキスト設定")]
-    [SerializeField] private string japaneseNextText;
-    [SerializeField] private string englishNextText;
-    [SerializeField] private string japaneseCloseText;
-    [SerializeField] private string englishCloseText;
-    [SerializeField] private string japaneseBackText;
-    [SerializeField] private string englishBackText;
+    [SerializeField] LocalizeSimpleText nextButtonText;
+    [SerializeField] LocalizeSimpleText closeText;
+    [SerializeField] LocalizeSimpleText backText;
 
     private void Start()
     {
@@ -99,11 +96,11 @@ public class WorldViewManager : NetworkBehaviour
 
         if (buttonText != null)
             buttonText.text = index >= totalBoards - 1
-                ? (isJapanese ? japaneseCloseText : englishCloseText)
-                : (isJapanese ? japaneseNextText : englishNextText);
+                ? closeText.GetText(isJapanese)
+                : nextButtonText.GetText(isJapanese);
 
         if (backButtonText != null)
-            backButtonText.text = isJapanese ? japaneseBackText : englishBackText;
+            backButtonText.text = backText.GetText(isJapanese);
 
         if (backButton != null)
             backButton.gameObject.SetActive(index > 0);
@@ -114,12 +111,12 @@ public class WorldViewManager : NetworkBehaviour
         if (!IsServer) return;
         if (isTutorialSkip)
         {
-            Debug.Log("[WorldView] Loading VRSystemScene");
+            Debug.Log($"[{nameof(WorldViewManager)}] Loading VRSystemScene");
             NetworkManager.Singleton.SceneManager.LoadScene("VRSystemScene", LoadSceneMode.Single);
         }
         else
         {
-            Debug.Log("[WorldView] Loading TutorialScene");
+            Debug.Log($"[{nameof(WorldViewManager)}] Loading TutorialScene");
             NetworkManager.Singleton.SceneManager.LoadScene("TutorialScene", LoadSceneMode.Single);
         }
     }

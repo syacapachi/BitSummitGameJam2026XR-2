@@ -16,10 +16,8 @@ public class StartButton : NetworkBehaviour
     [Header("日英テキスト設定")]
     [SerializeField] private TextMeshProUGUI startButtonText;
     [SerializeField] private TextMeshProUGUI resetButtonText;
-    [SerializeField] private string japaneseStartText = "はじめる";
-    [SerializeField] private string englishStartText = "START";
-    [SerializeField] private string japaneseResetText = "もう一度";
-    [SerializeField] private string englishResetText = "RESET";
+    [SerializeField] LocalizeSimpleText gameStartButton;
+    [SerializeField] LocalizeSimpleText gameResetButton;
 
     public override void OnNetworkSpawn()
     {
@@ -33,9 +31,9 @@ public class StartButton : NetworkBehaviour
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
 
         if (startButtonText != null)
-            startButtonText.text = isJapanese ? japaneseStartText : englishStartText;
+            startButtonText.text = gameStartButton.GetText(isJapanese);
         if (resetButtonText != null)
-            resetButtonText.text = isJapanese ? japaneseResetText : englishResetText;
+            resetButtonText.text = gameResetButton.GetText(isJapanese);
     }
 
     private void OnEnable()
@@ -52,14 +50,12 @@ public class StartButton : NetworkBehaviour
     {
         if (IsServer) return;
         playerJobEvent.Invoke(PlayerJob.Demon);
-        Debug.Log("Human");
     }
 
     public void SelectGhost()
     {
         if (IsServer) return;
         playerJobEvent.Invoke(PlayerJob.Ghost);
-        Debug.Log("Ghost");
     }
 
     private void OnGameStateChange(GameState state)
@@ -91,14 +87,12 @@ public class StartButton : NetworkBehaviour
     [Rpc(SendTo.Server)]
     void StartGameRpc()
     {
-        Debug.Log("[Start Game Rpc]");
         ManagerLocator.Instance.AllGameManager.StartGameServerOnly();
     }
 
     [Rpc(SendTo.Server)]
     void ResetGameRpc()
     {
-        Debug.Log("[Start Game Rpc]");
         ManagerLocator.Instance.AllGameManager.ResetGameServerOnly();
         resetUI.SetActive(false);
     }

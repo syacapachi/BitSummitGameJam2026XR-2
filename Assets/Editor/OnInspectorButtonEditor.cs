@@ -290,7 +290,7 @@ namespace Syacapachi.Editor
             bool fold = GetFoldout(list);
 
             // Foldoutを描画して状態を更新
-            fold = EditorGUILayout.Foldout(fold, $"{name} [{list.Count}]");
+            fold = EditorGUILayout.Foldout(fold, $"{name} [{list.Count}]",true);
             SetFoldout(list, fold);
 
             if (!fold)
@@ -335,7 +335,7 @@ namespace Syacapachi.Editor
 
             bool fold = GetFoldout(dict);
 
-            fold = EditorGUILayout.Foldout(fold, $"{name} [{dict.Count}]");
+            fold = EditorGUILayout.Foldout(fold, $"{name} [{dict.Count}]",true);
             SetFoldout(dict, fold);
 
             if (!fold)
@@ -398,7 +398,7 @@ namespace Syacapachi.Editor
 
             bool fold = GetFoldout(value);
 
-            fold = EditorGUILayout.Foldout(fold, name);
+            fold = EditorGUILayout.Foldout(fold, name,true);
 
             SetFoldout(value, fold);
 

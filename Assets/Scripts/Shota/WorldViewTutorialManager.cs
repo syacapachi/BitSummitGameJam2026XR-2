@@ -9,25 +9,28 @@ public class WorldTutorialManager : NetworkBehaviour
     [SerializeField] TutorialManager tutorialManager;
 
     [Header("テキスト表示欄")]
-    public TextMeshProUGUI boardText;
+    public TextMeshProUGUI boardTextGUI;
 
     [Header("タイトルテキスト")]
-    public TextMeshProUGUI titleText;
+    public TextMeshProUGUI titleTextGUI;
 
     [Header("次へボタン")]
     public Button nextButton;
 
     [Header("ボタンのテキスト")]
-    public TextMeshProUGUI buttonText;
+    public TextMeshProUGUI nextButtonTextGUI;
 
     [Header("戻るボタン")]
     public Button backButton;
 
     [Header("戻るボタンのテキスト")]
-    public TextMeshProUGUI backButtonText;
+    public TextMeshProUGUI backButtonTextGUI;
 
     [Header("テキストデータ")]
-    [SerializeField] LocalizedText localizedText;
+    [SerializeField] LocalizedText tutorialTexts;
+    [SerializeField] LocalizeSimpleText nextButtonText;
+    [SerializeField] LocalizeSimpleText backButtonText;
+    [SerializeField] LocalizeSimpleText startButtonText;
 
     private string[] japaneseTitles = {
         "チュートリアル1",
@@ -105,13 +108,13 @@ public class WorldTutorialManager : NetworkBehaviour
         ShowPage(index);
 
         // 最後のステップならボタンを「開始」に
-        if (buttonText != null)
+        if (nextButtonTextGUI != null)
         {
             bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
 
-            buttonText.text = newStep == TutorialStep.Step4
-                ? (isJapanese ? "ゲームスタート" : "Game Start")
-                : (isJapanese ? "次へ" : "Next");
+            nextButtonTextGUI.text = newStep == TutorialStep.Step4
+                ? startButtonText.GetText(isJapanese)
+                : nextButtonText.GetText(isJapanese);
         }
     }
     
@@ -120,19 +123,20 @@ public class WorldTutorialManager : NetworkBehaviour
     {
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
 
-        if (boardText != null)
-            boardText.text = isJapanese ? japaneseTexts[index] : englishTexts[index];
+        TitileAndText[] titileAndText = tutorialTexts.Get(isJapanese);
+        if (boardTextGUI != null)
+            boardTextGUI.text = titileAndText[index].DescriptionText;
 
-        if (titleText != null)
-            titleText.text = isJapanese ? japaneseTitles[index] : englishTitles[index];
+        if (titleTextGUI != null)
+            titleTextGUI.text = titileAndText[index].Title;
 
-        if (buttonText != null)
-            buttonText.text = index >= totalPages - 1
-                ? (isJapanese ? "ゲームスタート" : "Game Start")
-                : (isJapanese ? "次へ" : "Next");
+        if (nextButtonTextGUI != null)
+            nextButtonTextGUI.text = index >= totalPages - 1
+                ? startButtonText.GetText(isJapanese)
+                : nextButtonText.GetText(isJapanese);
 
-        if (backButtonText != null)
-            backButtonText.text = isJapanese ? "戻る" : "Back";
+        if (backButtonTextGUI != null)
+            backButtonTextGUI.text = backButtonText.GetText(isJapanese);
 
         if (backButton != null)
             backButton.gameObject.SetActive(index > 0);
