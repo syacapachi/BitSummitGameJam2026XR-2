@@ -110,12 +110,20 @@ PrefabInstance:
       objectReference: {fileID: 7629155156942977378, guid: 703de710b50021e44a289a05ef237aef, type: 3}
     - target: {fileID: 7369210036037199582, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: spawnFxLifeTimeAll
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7617211511488400545, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2178200110
       objectReference: {fileID: 0}
+    - target: {fileID: 7904087729250832076, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: validHitFxPrefabAll
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7904087729250832076, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: invalidHitFxPrefabAll
+      value: 
+      objectReference: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
     - target: {fileID: 7921933964387478276, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: m_Name
       value: WhiteGhostAnimation Variant
