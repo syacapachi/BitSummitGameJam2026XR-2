@@ -155,7 +155,9 @@ public class GameEffectAudioManager : MonoBehaviour
         if (gameEffectEvent != null)
         {
             gameEffectEvent.Register(OnEventRecived);
+            Debug.Log($"[GameEffectAudioManager Register] {name} id={GetInstanceID()}");
         }
+
     }
 
     private void OnDisable()
@@ -163,6 +165,7 @@ public class GameEffectAudioManager : MonoBehaviour
         if (gameEffectEvent != null)
         {
             gameEffectEvent.Unregister(OnEventRecived);
+            Debug.Log($"[GameEffectAudioManager Unregister] {name} id={GetInstanceID()}");
         }
     }
 
