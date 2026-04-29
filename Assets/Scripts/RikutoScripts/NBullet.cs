@@ -82,7 +82,9 @@ public class NBullet : BulletBaseController
                 stats.AddHit();
                 stats.AddDamage(Damage);
                 reciever.TakeDamage(this, Damage);
+                //水野編集
                 SpawnHitFxClientRpc(transform.position);
+                //水野以上
             }
             else
             {
@@ -94,7 +96,9 @@ public class NBullet : BulletBaseController
                     Collector = Shooter,
                     Enemy = enemy
                 });
+                //水野編集
                 SpawnShieldFxClientRpc(transform.position);
+                //水野以上
             }
         }
         else if(reciever is PlayerCollider player || reciever is PlayerHealth health)

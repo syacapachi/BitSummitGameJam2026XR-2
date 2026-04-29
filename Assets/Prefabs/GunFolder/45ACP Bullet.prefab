@@ -226,7 +226,7 @@ TrailRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0
+        value: 0.038253784
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -290,7 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba19692adaa60848ac356959088b518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitEnemyClipAll: {fileID: 0}
+  hitEnemyClipAll: {fileID: 8300000, guid: c337d469678aa0d4fb70415fb29fb25d, type: 3}
   hitWallClipAll: {fileID: 0}
   hitEnemyVolumeAll: 1
   hitWallVolumeAll: 0.8
@@ -331,8 +331,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014049741, y: 0.009317993, z: 0.22910963}
-  m_Center: {x: 0.00025426745, y: 0.0006450966, z: -0.081823476}
+  m_Size: {x: 0.014049741, y: 0.009317993, z: 0.4327266}
+  m_Center: {x: 0.00025426745, y: 0.0006450966, z: -0.18363194}
 --- !u!114 &2013280611132370121
 MonoBehaviour:
   m_ObjectHideFlags: 0
