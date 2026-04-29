@@ -177,8 +177,27 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         if (!IsServer || !canReceiveHit) return;
         TryHandleBulletHitServer(collision.collider);
     }
+    private ulong[] CollectVisibleClientIdsServer()
+    {
+        List<ulong> ids = new();
 
-    private void TryHandleBulletHitServer(Collider other)
+        foreach (var pair in NetworkManager.Singleton.ConnectedClients)
+        {
+            NetworkObject playerObject = pair.Value.PlayerObject;
+            if (playerObject == null) continue;
+
+            SyncroPropaty propaty = playerObject.GetComponentInChildren<SyncroPropaty>();
+            if (propaty == null) continue;
+
+            if (JobSetting.TryGetPlayerLayerSettings(propaty.Job, out var playerLayerSettings)
+                && playerLayerSettings.IsVisibleLayer(gameObject.layer))
+            {
+                ids.Add(pair.Key);
+            }
+        }
+
+        return ids.ToArray();
+}    private void TryHandleBulletHitServer(Collider other)
     {
         if (other == null) return;
 
@@ -199,7 +218,6 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         {
             fxPosition = other.transform.position;
         }
-
         PlayerJob shooterJob = bullet.ShooterJob;
 
         if (!JobSetting.TryGetPlayerLayerSettings(shooterJob, out var playerLayerSettings))
@@ -207,20 +225,34 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             return;
         }
 
+        // この敵が見えるクライアントだけ集める
+        ulong[] visibleClientIds = CollectVisibleClientIdsServer();
+
+        if (visibleClientIds.Length == 0)
+        {
+            return;
+        }
+
         if (playerLayerSettings.IsAttackableJob(nEnemy.EnemyJob))
         {
-            PlayValidHitRpc(fxPosition);
+            PlayValidHitRpc(
+                fxPosition,
+                RpcTarget.Group(visibleClientIds, RpcTargetUse.Temp)
+            );
         }
         else
         {
-            PlayInvalidHitRpc(fxPosition);
+            PlayInvalidHitRpc(
+                fxPosition,
+                RpcTarget.Group(visibleClientIds, RpcTargetUse.Temp)
+            );
         }
     }
 //PlayValid(Cliant消した)HitRpc
-    [Rpc(SendTo.ClientsAndHost)]
-    private void PlayValidHitRpc(Vector3 position)
+    [Rpc(SendTo.SpecifiedInParams)]
+    private void PlayValidHitRpc(Vector3 position, RpcParams rpcParams = default)
     {
-        Debug.Log($"Hit FX RPC fired: {name} pos={position}");
+        Debug.Log($"Valid Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
 
         gameEffectEvent.Invoke(new GameEffect(
@@ -231,10 +263,10 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         ));
     }
 //PlayInValid(Cliant消した)HitRpc
-    [Rpc(SendTo.ClientsAndHost)]
-    private void PlayInvalidHitRpc(Vector3 position)
+    [Rpc(SendTo.SpecifiedInParams)]
+    private void PlayInvalidHitRpc(Vector3 position, RpcParams rpcParams = default)
     {
-        Debug.Log($"Hit FX RPC fired: {name} pos={position}");
+        Debug.Log($"Invalid Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
 
         gameEffectEvent.Invoke(new GameEffect(
