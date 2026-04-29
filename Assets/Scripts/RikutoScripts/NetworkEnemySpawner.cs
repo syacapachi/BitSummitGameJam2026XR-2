@@ -86,6 +86,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     public void SpawnFromEvent(List<SpawnEvent> events)
     {
         if (!IsServer) return;
+        if(!ManagerLocator.Instance.AllGameManager.IsGamePlaying) return;
 
         StopAllCoroutines();
         waitForSpawn = null;
@@ -117,6 +118,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
 
         while (spawnQueue.Count > 0)
         {
+            if (!ManagerLocator.Instance.AllGameManager.IsGamePlaying) yield break;
             timer += Time.deltaTime;
 
             // 今の時間で出すべき敵を全部出す
@@ -149,6 +151,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     {
         while (waitSpawnEnemyQueue.Count > 0)
         {
+            if (!ManagerLocator.Instance.AllGameManager.IsGamePlaying) yield break;
             switch(waitSpawnType)
             {
                 case WaitSpawnType.WaitForNext:
