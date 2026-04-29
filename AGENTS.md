@@ -7,7 +7,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Overlay UI, Water, UI, Avatar, Demon, Ghost, Both, Tutorial, Player
 - Active game object:
-  - Name: GreenDemonNA Variant
+  - Name: BlueDemonNA
   - Tag: Untagged
   - Layer: Demon
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

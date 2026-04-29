@@ -23,6 +23,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     [Header("Publish Event")]
     [SerializeField] EnemyKilledEvent enemyKilled;
     [SerializeField] GameEffectEvent dieEffectEvent;
+    //水野編集
+    [SerializeField] private NEnemyDespawnAudio enemyAudio;
+    //水野以上
     private bool isInitialize = false;
 
     private Transform targetPlayer;
@@ -66,6 +69,12 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public override void OnNetworkSpawn()
     {
         isInitialize = false;
+        //水野編集
+        if (enemyAudio == null)
+        {
+            enemyAudio = GetComponent<NEnemyDespawnAudio>() ?? GetComponentInParent<NEnemyDespawnAudio>();
+        }
+        //水野以上
         if (IsServer)
         {
             currentHP.Value = enemySO.Hp;
@@ -131,17 +140,19 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         hpCanvas.transform.LookAt(targetPlayer);
         hpCanvas.transform.Rotate(0, 180f, 0);
     }
-
+    //水野編集
     public void TakeDamage(IDamageSender sender, float damage)
     {
         if (!IsServer) return;
 
         Debug.Log("Take damage");
         currentHP.Value -= damage;
+
         if (hpImage != null)
         {
             hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.Hp);
         }
+
         if (hpText != null)
         {
             hpText.text = $"{currentHP.Value} / {enemySO.Hp}";
@@ -153,11 +164,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         else
         {
+            if (enemyAudio != null)
+            {
+                enemyAudio.PlayHitVoiceServer();
+            }
+
             //プレイヤーに寄ってくる
             StartCoroutine(MoveToNextPos(targetPlayer.position));
-        }     
+        }
     }
-
+    //水野以上    
     IEnumerator MoveToNextPos(Vector3 targetPos)
     {
         //位置情報の更新はFixedupdateにする。
