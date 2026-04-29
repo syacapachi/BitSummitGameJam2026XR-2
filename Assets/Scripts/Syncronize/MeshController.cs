@@ -20,7 +20,7 @@ public class MeshController : NetworkBehaviour
                 return i;
             }
         }
-        return -1; // 有効なレイヤーが見つからない場合
+        return 0; // 有効なレイヤーが見つからない場合
     }
 
     public override void OnNetworkSpawn()

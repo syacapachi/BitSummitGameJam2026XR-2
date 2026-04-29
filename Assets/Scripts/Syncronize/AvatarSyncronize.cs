@@ -23,6 +23,7 @@ public class AvatarSyncronize : NetworkBehaviour
     [SerializeField] private Transform networkRightController;
     [Header("Setting")]
     [SerializeField] float footOffset = 0.1f;
+    [SerializeField] float footWight = 0.2f;
     [SerializeField] float kneeWight = 0.2f;
     [Header("Calibration"),Tooltip("対象のアバターのスケールを慎重に応じて拡大・縮小します。(元のアバターの身長は1m,スケールは1.1.1にして下さい。)")]
     [SerializeField] int calibrationCount = 10;
@@ -178,10 +179,12 @@ public class AvatarSyncronize : NetworkBehaviour
                 Vector3.ProjectOnPlane(transform.forward, hit.normal),
                 hit.normal
             );
+            footPos += transform.right * (goal == AvatarIKGoal.LeftFoot ? -footWight : footWight);
             SetIKPositonAndRotation(goal, footPos, footRot, weight);
-            
+
             //Vector3 hintPos = animator.GetIKHintPosition(hint);
             // 🔥 Knee Hint
+            //ヒントは、0.3m+身長の0.4倍、左右にkneeWight、上に0.3mの位置にする
             Vector3 hintPos =
                 footPos
                 + transform.forward * 0.4f
