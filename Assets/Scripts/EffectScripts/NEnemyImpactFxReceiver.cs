@@ -206,7 +206,8 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             other.GetComponentInParent<IDamageSender>();
 
         if (damageSender == null) return;
-        if (damageSender is not BulletBaseController bullet) return;
+        //プレイヤーの弾ではない場合は無視
+        if (damageSender is not NBullet bullet) return;
         // 自分と同じJobの弾は無視する
         if (bullet.ShooterJob == nEnemy.EnemyJob) return;
 
