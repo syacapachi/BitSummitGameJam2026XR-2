@@ -79,9 +79,7 @@ public class MarkerAudioController : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     public void OnMarkerSondPlayRpc(Vector3 hitPoint)
     {
-        Vector3 earPosition = GetLocalEarPosition();
-
-        // 1. パーティクルはピン位置に出す
+        // 1. パーティクルはピン位置に1回だけ出す
         if (markerFxPrefabAll != null && gameEffectEvent != null)
         {
             gameEffectEvent.Invoke(
@@ -89,31 +87,21 @@ public class MarkerAudioController : NetworkBehaviour
                     null,
                     markerFxPrefabAll,
                     hitPoint,
-                    volume: 0f
+                    volume: 0f,
+                    fxLifeTime: 4f
                 )
             );
         }
 
-        // 2. 音は耳元で鳴らす
+        // 2. 音は耳元で1回だけ鳴らす
         if (markerPlacedClipAll == null)
         {
             Debug.LogWarning($"[{nameof(MarkerAudioController)}] markerPlacedClipAll is null");
             return;
         }
 
-        // 各クライアントで「自分の耳元」から鳴らす
         Vector3 playPosition = GetLocalEarPosition();
-
-        gameEffectEvent.Invoke(
-            new GameEffect(
-                markerPlacedClipAll,
-                markerFxPrefabAll,
-                hitPoint,
-                volume: markerPlacedVolumeAll
-            )
-        );
         AudioSource.PlayClipAtPoint(markerPlacedClipAll, playPosition, markerPlacedVolumeAll);
-
     }
 
     private Vector3 GetLocalEarPosition()
