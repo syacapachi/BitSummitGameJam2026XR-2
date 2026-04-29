@@ -1854,10 +1854,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  markerPlacedAudioDataAll: {fileID: 11400000, guid: 128455d11d69de24ea815f876ca42afb, type: 2}
+  markerPlacedFxDataAll: {fileID: 11400000, guid: a9c5974956f61fc4bbd6d79257531ddc, type: 2}
   markerPlacedClipAll: {fileID: 8300000, guid: 84de006a9c69e05469e8e7402c58543f, type: 3}
   markerFxPrefabAll: {fileID: 976249959754663240, guid: 06d26555edf3166479e9fee5631ea60c, type: 3}
   markerPlacedVolumeAll: 1
-  playAsUiAll: 0
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &1711947825537429324
 GameObject:
@@ -6407,10 +6408,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  shotClipAll: {fileID: 8300000, guid: bf21f0ff865c3fd40a355a49838467c9, type: 3}
-  reloadClipAll: {fileID: 8300000, guid: ba0d34c9bb6cc1f479867c3c2a33f736, type: 3}
-  shotVolumeAll: 1
-  reloadVolumeAll: 1
+  shotAudioEffect: {fileID: 11400000, guid: 46c5218051f758f4a98a58270a86b33b, type: 2}
+  reloadAudioEffect: {fileID: 11400000, guid: 451aaabc63e31524189cef59b049f733, type: 2}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &6839245052634589768
 GameObject:

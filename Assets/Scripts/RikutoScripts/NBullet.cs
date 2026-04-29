@@ -6,6 +6,12 @@ public class NBullet : BulletBaseController
 {
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
     [SerializeField] TrailRenderer trailRenderer;
+    [Header("hitFx Setting")]
+    [SerializeField] AudioEffectData hitAudio;
+    [SerializeField] FxEffectData hitFx;
+    [Header("shieldFx Setting")]
+    [SerializeField] AudioEffectData shieldAudio;
+    [SerializeField] FxEffectData shieldFx;
     [SerializeField] GameObject hitFxPrefab;
     [SerializeField] GameObject shieldFxPrefab;
     [SerializeField] float hitFxLife = 2f;
@@ -19,28 +25,20 @@ public class NBullet : BulletBaseController
     [Rpc(SendTo.ClientsAndHost)]
     void SpawnHitFxClientRpc(Vector3 pos)
     {
-        //GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(hitFxPrefab);
-        //fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
-        //ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
-        gameEffectEvent.Invoke(GameEffect.CreateFxEffect(hitFxPrefab, pos, fxLifeTime: hitFxLife));
+        //バグが起きたときのために、Prefabから生成する方法も残しておく
+        gameEffectEvent.Invoke(new GameEffect(hitAudio.ToRuntimeData(),hitFx.ToRuntimeData(), pos));
+        //gameEffectEvent.Invoke(GameEffect.CreateFxEffect(hitFxPrefab, pos, fxLifeTime: hitFxLife));
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     void SpawnShieldFxClientRpc(Vector3 pos)
     {
-        //GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(shieldFxPrefab);
-        //fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
-        //ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
-        gameEffectEvent.Invoke(GameEffect.CreateFxEffect(shieldFxPrefab, pos, fxLifeTime: hitFxLife));
+        gameEffectEvent.Invoke(new GameEffect(shieldAudio.ToRuntimeData(),shieldFx.ToRuntimeData(), pos));
+        //gameEffectEvent.Invoke(GameEffect.CreateFxEffect(shieldFxPrefab, pos, fxLifeTime: hitFxLife));
     }
 
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
     {
-        //switch (reciever)
-        //{
-        //    case IEnemy enemy1:
-        //        break;
-        //}
         if (reciever is IEnemy enemy)
         {
             if (!setting.TryGetPlayerLayerSettings(ShooterJob, out var layerMaskSetting))

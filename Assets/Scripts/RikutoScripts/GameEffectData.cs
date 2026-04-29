@@ -1,9 +1,9 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 public struct GameEffectData : INetworkSerializable
 {
-    public GameEffectId Id;
+    public EffectType type;
     public Vector3 Position;
     public float Volume;
     public float Pitch;
@@ -12,7 +12,7 @@ public struct GameEffectData : INetworkSerializable
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
-        serializer.SerializeValue(ref Id);
+        serializer.SerializeValue(ref type);
         serializer.SerializeValue(ref Position);
         serializer.SerializeValue(ref Volume);
         serializer.SerializeValue(ref Pitch);

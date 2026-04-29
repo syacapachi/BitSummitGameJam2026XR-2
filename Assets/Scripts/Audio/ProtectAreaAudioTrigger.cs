@@ -2,6 +2,7 @@
 
 public class ProtectAreaAudioTrigger : MonoBehaviour
 {
+    [SerializeField] AudioEffectData reachAudioEffect;
     [SerializeField] private AudioClip reachClipAll;
     [SerializeField, Range(0f, 1f)] private float reachVolumeAll = 1f;
     [Header("Publish Event")]
@@ -21,6 +22,7 @@ public class ProtectAreaAudioTrigger : MonoBehaviour
         {
             despawnAudioAll.MarkReachedGoalServer();
         }
+        //gameEffectEvent.Invoke(new GameEffect(reachAudioEffect.ToRuntimeData(), pointAll));
 
         gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(reachClipAll, pointAll, reachVolumeAll));
     }

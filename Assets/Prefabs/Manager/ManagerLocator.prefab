@@ -316,6 +316,7 @@ MonoBehaviour:
     m_InternalValue: 1
   OnAllPhaseEndedServerOnly: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
   OnPhaseChangeRpcEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
+  OnDifficultyChangedServerEvent: {fileID: 11400000, guid: e641f2abcabb4f8449947c45a980c10f, type: 2}
 --- !u!1 &2223224338536376484
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,7 +610,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  diffculty: 1
+  difficulty:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 1
   gameMode: 1
   protectArea: {fileID: 0}
   scoreManager: {fileID: 7622921992766210704}
@@ -735,6 +740,12 @@ MonoBehaviour:
   changeTime: 5
   skyboxMat: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
   skyBoxColors:
+  - topColor: {r: 1, g: 1, b: 1, a: 0}
+    horizonColor: {r: 0, g: 0.41960785, b: 1, a: 1}
+    bottomColor: {r: 1, g: 1, b: 1, a: 0}
+    intensity: 4
+    exponentTop: 0.1
+    exponentBottom: 10
   - topColor: {r: 0, g: 0.22023964, b: 1, a: 0}
     horizonColor: {r: 0, g: 0.91134834, b: 1, a: 0}
     bottomColor: {r: 0, g: 1, b: 0.65164423, a: 0}
@@ -759,6 +770,12 @@ MonoBehaviour:
     intensity: 0
     exponentTop: 0
     exponentBottom: 0
+  - topColor: {r: 0, g: 0.16482663, b: 1, a: 0}
+    horizonColor: {r: 1, g: 0.8398217, b: 0, a: 0}
+    bottomColor: {r: 1, g: 0.06938208, b: 0, a: 0}
+    intensity: 1
+    exponentTop: 0.5
+    exponentBottom: 10
   defaultIndex: 0
   phaseChageEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
 --- !u!1 &7146760537532538251

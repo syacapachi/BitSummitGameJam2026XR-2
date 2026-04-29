@@ -4,6 +4,7 @@ using System.Collections;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.UI;
 
 public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
@@ -66,15 +67,19 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         this.enemySO = enemySO;
     }
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
-        isInitialize = false;
         //水野編集
         if (enemyAudio == null)
         {
             enemyAudio = GetComponent<NEnemyDespawnAudio>() ?? GetComponentInParent<NEnemyDespawnAudio>();
         }
         //水野以上
+    }
+    public override void OnNetworkSpawn()
+    {
+        isInitialize = false;
+        
         if (IsServer)
         {
             currentHP.Value = enemySO.Hp;
@@ -170,7 +175,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             }
 
             //プレイヤーに寄ってくる
-            StartCoroutine(MoveToNextPos(targetPlayer.position));
+            StartCoroutine(MoveToNextPos(sender.GameObject.transform.position));
         }
     }
     //水野以上    

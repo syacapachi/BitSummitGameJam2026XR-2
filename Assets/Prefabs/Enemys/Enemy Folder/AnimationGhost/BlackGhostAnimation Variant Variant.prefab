@@ -85,6 +85,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 931573579279546627, guid: bc83d999e522f224c92e4e26fb1ccd85, type: 3}
     - target: {fileID: 7369210036037199582, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: fxEffect.FxPrefab
+      value: 
+      objectReference: {fileID: 931573579279546627, guid: bc83d999e522f224c92e4e26fb1ccd85, type: 3}
+    - target: {fileID: 7369210036037199582, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: spawnFxLifeTimeAll
       value: 3
       objectReference: {fileID: 0}
@@ -113,10 +117,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2308690144698524830}
     - target: {fileID: 9142516393628170595, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
-      propertyPath: shotClip
-      value: 
-      objectReference: {fileID: 8300000, guid: ed620494acb721c4f9b62ad6241c4889, type: 3}
-    - target: {fileID: 9142516393628170595, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: networkAnimator
       value: 
       objectReference: {fileID: 7764133367025626504}
@@ -128,56 +128,13 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1626770062420064645, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8483856001575888952}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7921933964387478276, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1385676645787381982}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
---- !u!114 &2732699724969779013 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
-  m_PrefabInstance: {fileID: 3079290298670010007}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5137352365067904403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0524e63ef5ed9c147a5ee84c8312ae66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &4334896020115814162 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1626770062420064645, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
   m_PrefabInstance: {fileID: 3079290298670010007}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5137352365067904403 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7921933964387478276, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
-  m_PrefabInstance: {fileID: 3079290298670010007}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1385676645787381982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5137352365067904403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3526a91bd42fa8845baad658c78833f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  nEnemy: {fileID: 2732699724969779013}
-  ghostHitClipAll: {fileID: 0}
-  demonHitClipAll: {fileID: 0}
-  defaultHitClipAll: {fileID: 8300000, guid: d78d523e7039336419d32e747e8dd408, type: 3}
-  hitVolumeAll: 1
-  hitVoiceCooldownAll: 1
-  ghostDeathClipAll: {fileID: 8300000, guid: 93c41a2f186aed54a9e13211c2d7bd37, type: 3}
-  demonDeathClipAll: {fileID: 8300000, guid: dc8f926fab434a844b493d2f6b677a58, type: 3}
-  defaultDeathClipAll: {fileID: 0}
-  deathVolumeAll: 1
-  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1001 &8229782312674545619
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -544,7 +501,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: b4f2b528ce57069408312aabb94a596a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0

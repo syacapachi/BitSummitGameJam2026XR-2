@@ -124,56 +124,13 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1626770062420064645, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9208777532424491955}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7921933964387478276, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -3408049716864937652}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
 --- !u!4 &3044335393632970157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1626770062420064645, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
   m_PrefabInstance: {fileID: 4372102613100780584}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3745726003545378298 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
-  m_PrefabInstance: {fileID: 4372102613100780584}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5862711303839627052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0524e63ef5ed9c147a5ee84c8312ae66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &5862711303839627052 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7921933964387478276, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
-  m_PrefabInstance: {fileID: 4372102613100780584}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &-3408049716864937652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5862711303839627052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3526a91bd42fa8845baad658c78833f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  nEnemy: {fileID: 3745726003545378298}
-  ghostHitClipAll: {fileID: 0}
-  demonHitClipAll: {fileID: 0}
-  defaultHitClipAll: {fileID: 8300000, guid: d78d523e7039336419d32e747e8dd408, type: 3}
-  hitVolumeAll: 1
-  hitVoiceCooldownAll: 1
-  ghostDeathClipAll: {fileID: 8300000, guid: 93c41a2f186aed54a9e13211c2d7bd37, type: 3}
-  demonDeathClipAll: {fileID: 8300000, guid: dc8f926fab434a844b493d2f6b677a58, type: 3}
-  defaultDeathClipAll: {fileID: 0}
-  deathVolumeAll: 1
-  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1001 &8666789481392632920
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -535,7 +492,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: b4f2b528ce57069408312aabb94a596a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0

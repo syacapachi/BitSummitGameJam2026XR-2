@@ -13,14 +13,12 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
     [SerializeField] private NEnemy nEnemy;
 
     [Header("Valid Hit FX / SFX")]
-    [SerializeField] private GameObject validHitFxPrefabAll;
-    [SerializeField] private AudioClip validHitSfxAll;
-    [SerializeField, Range(0f, 1f)] private float validHitVolumeAll = 1f;
+    [SerializeField] AudioEffectData validHitAudio;
+    [SerializeField] FxEffectData validHitFx;
 
     [Header("Invalid Hit FX / SFX")]
-    [SerializeField] private GameObject invalidHitFxPrefabAll;
-    [SerializeField] private AudioClip invalidHitSfxAll;
-    [SerializeField, Range(0f, 1f)] private float invalidHitVolumeAll = 1f;
+    [SerializeField] AudioEffectData invalidHitAudio;
+    [SerializeField] FxEffectData invalidHitFx;
 
     [Header("Setting")]
     [SerializeField] private JobSettingGenerator JobSetting;
@@ -139,12 +137,11 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         Debug.Log($"Valid Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
 
-        //gameEffectEvent.Invoke(GameEffect.CreateCombinedEffect(
-        // validHitSfxAll,
-        // validHitFxPrefabAll,
-        // position,
-        // volume: validHitVolumeAll
-        //));
+        //gameEffectEvent.Invoke(new GameEffect(
+        //    validHitAudio.ToRuntimeData(), 
+        //    validHitFx.ToRuntimeData(), 
+        //    position)
+        //);
     }
     //RpcParamsで送るクライアントを指定しているため、SendTo.SpecifiedInParamsを使用
 
@@ -155,12 +152,11 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         Debug.Log($"Invalid Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
 
-        //gameEffectEvent.Invoke(GameEffect.CreateCombinedEffect(
-        // invalidHitSfxAll,
-        // invalidHitFxPrefabAll,
-        // position,
-        // volume: invalidHitVolumeAll
-        //));
+        //gameEffectEvent.Invoke(new GameEffect(
+        //    invalidHitAudio.ToRuntimeData(),
+        //    invalidHitFx.ToRuntimeData(),
+        //    position)
+        //);
     }
 }
 //水野以上

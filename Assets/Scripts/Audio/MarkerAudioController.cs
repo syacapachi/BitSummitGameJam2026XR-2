@@ -69,6 +69,8 @@ using UnityEngine;
 public class MarkerAudioController : NetworkBehaviour
 {
     [Header("All References")]
+    [SerializeField] private AudioEffectData markerPlacedAudioDataAll;
+    [SerializeField] private FxEffectData markerPlacedFxDataAll;
     [SerializeField] private AudioClip markerPlacedClipAll;
     [SerializeField] private GameObject markerFxPrefabAll;
     [SerializeField, Range(0f, 1f)] private float markerPlacedVolumeAll = 1f;
@@ -82,6 +84,12 @@ public class MarkerAudioController : NetworkBehaviour
         // 1. パーティクルはピン位置に1回だけ出す
         if (markerFxPrefabAll != null && gameEffectEvent != null)
         {
+            //gameEffectEvent.Invoke(
+            //    new GameEffect(
+            //        markerPlacedAudioDataAll.ToRuntimeData(),
+            //        markerPlacedFxDataAll.ToRuntimeData(),
+            //        hitPoint
+            //    ));
             gameEffectEvent.Invoke(
                 GameEffect.CreateFxEffect(
                     markerFxPrefabAll,
