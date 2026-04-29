@@ -83,56 +83,6 @@
 //         localObjectPool.Release(source.gameObject);
 //     }
 // }
-// public readonly struct GameEffect
-// {
-//     /// <summary>
-//     /// 音
-//     /// </summary>
-//     public readonly AudioClip Clip;
-//     /// <summary>
-//     /// particle
-//     /// </summary>
-//     public readonly GameObject FxPrefab;
-//     /// <summary>
-//     /// 発生位置
-//     /// </summary>
-//     public readonly Vector3 Position;
-//     /// <summary>
-//     /// 大きさ
-//     /// </summary>
-//     public readonly float Volume;
-//     /// <summary>
-//     /// ピッチ
-//     /// </summary>
-//     public readonly float Pitch;
-//     /// <summary>
-//     /// 遅れ
-//     /// </summary>
-//     public readonly float Delay;
-//     /// <summary>
-//     /// ループさせるか
-//     /// </summary>
-//     public readonly bool Loop;
-
-//     public GameEffect(
-//         AudioClip clip,
-//         GameObject fxPrefab,
-//         Vector3 positon,
-//         float volume = 1.0f,
-//         float pitch = 1.0f,
-//         float delay = 0.0f,
-//         bool loop = false
-//         )
-//     {
-//         this.Clip = clip;
-//         this.FxPrefab = fxPrefab;
-//         this.Position = positon;
-//         this.Volume = volume;
-//         this.Pitch = pitch;
-//         this.Delay = delay;
-//         this.Loop = loop;
-//     }
-// }
 
 //水野が追加した
 using System.Collections;
@@ -155,7 +105,6 @@ public class GameEffectAudioManager : MonoBehaviour
         if (gameEffectEvent != null)
         {
             gameEffectEvent.Register(OnEventRecived);
-            Debug.Log($"[GameEffectAudioManager Register] {name} id={GetInstanceID()}");
         }
 
     }
@@ -165,41 +114,41 @@ public class GameEffectAudioManager : MonoBehaviour
         if (gameEffectEvent != null)
         {
             gameEffectEvent.Unregister(OnEventRecived);
-            Debug.Log($"[GameEffectAudioManager Unregister] {name} id={GetInstanceID()}");
         }
     }
 
     private void OnEventRecived(GameEffect e)
     {
-        if (e.Clip != null)
+        // イベントの処理を追加する場合はここへ
+        //パターマッチングでAudioEffectとFxEffectを分けて処理する
+        if (e.AudioEffect is AudioEffect audio)
         {
-            PlayGameEffect(e);
+            PlayAudioEffect(audio, e.Position, e.Delay);
         }
 
-        if (e.FxPrefab != null)
+        if (e.FxEffect is FxEffect fx)
         {
-            PlayFx(e.FxPrefab, e.Position, e.FxLifeTime);
+            PlayFxEffect(fx, e.Position, e.Delay);
         }
     }
 
-    public void PlayGameEffect(GameEffect effect)
+    public void PlayAudioEffect(AudioEffect effect,Vector3 positon,float delay = 0f)
     {
         GameObject obj = localObjectPool.Get(audioSourcePrefab);
         AudioSource audioSource = obj.GetComponent<AudioSource>();
 
         audioSource.clip = effect.Clip;
-        audioSource.transform.position = effect.Position;
+        audioSource.transform.position = positon    ;
         audioSource.volume = effect.Volume * masterSfxVolumeAll;
         audioSource.pitch = effect.Pitch;
         audioSource.loop = effect.Loop;
-
-        if (effect.Delay < 0.1f)
+        if (delay < 0.1f)
         {
             StartCoroutine(PlayAndRelease(audioSource));
         }
         else
         {
-            StartCoroutine(PlayAfterDelay(audioSource, effect.Delay));
+            StartCoroutine(PlayAfterDelay(audioSource, delay));
         }
     }
 
@@ -226,9 +175,9 @@ public class GameEffectAudioManager : MonoBehaviour
         yield return PlayAndRelease(source);
     }
 
-    private void PlayFx(GameObject fxPrefab, Vector3 pos, float fxLifeTime = -1f)
+    private void PlayFxEffect(FxEffect fxEffect, Vector3 pos, float delay = 0f)
     {
-        GameObject obj = localObjectPool.Get(fxPrefab);
+        GameObject obj = localObjectPool.Get(fxEffect.FxPrefab);
         obj.transform.SetPositionAndRotation(pos, Quaternion.identity);
 
         if (fxReleaseCoroutines.TryGetValue(obj, out Coroutine oldCoroutine))
@@ -244,7 +193,7 @@ public class GameEffectAudioManager : MonoBehaviour
 
         if (particleSystems == null || particleSystems.Length == 0)
         {
-            localObjectPool.Release(obj, 2f);
+            localObjectPool.Release(obj);
             return;
         }
 
@@ -274,9 +223,9 @@ public class GameEffectAudioManager : MonoBehaviour
         }
 
         // ループFXは、寿命が指定されていればその秒数後に自然停止→返却
-        if (fxLifeTime > 0f)
+        if (fxEffect.FxLifeTime > 0f)
         {
-            Coroutine releaseCoroutine = StartCoroutine(StopLoopFxAfterLifetime(obj, particleSystems, fxLifeTime));
+            Coroutine releaseCoroutine = StartCoroutine(StopLoopFxAfterLifetime(obj, particleSystems, fxEffect.FxLifeTime));
             fxReleaseCoroutines[obj] = releaseCoroutine;
         }
         // fxLifeTime <= 0 のときは手動停止まで残る
@@ -284,6 +233,7 @@ public class GameEffectAudioManager : MonoBehaviour
 
     private IEnumerator ReleaseFxWhenFinished(GameObject obj, ParticleSystem[] particleSystems)
     {
+        // 全てのパーティクルシステムが死ぬのを待つ
         yield return new WaitUntil(() =>
         {
             foreach (var ps in particleSystems)
@@ -313,7 +263,7 @@ public class GameEffectAudioManager : MonoBehaviour
             fxReleaseCoroutines.Remove(obj);
             yield break;
         }
-
+        // ループしているパーティクルを全て停止させる
         foreach (var ps in particleSystems)
         {
             if (ps != null)
@@ -321,25 +271,8 @@ public class GameEffectAudioManager : MonoBehaviour
                 ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
             }
         }
-
-        yield return new WaitUntil(() =>
-        {
-            foreach (var ps in particleSystems)
-            {
-                if (ps != null && ps.IsAlive(true))
-                {
-                    return false;
-                }
-            }
-            return true;
-        });
-
-        if (obj != null)
-        {
-            localObjectPool.Release(obj);
-        }
-
-        fxReleaseCoroutines.Remove(obj);
+        // 停止したら、全てのパーティクルが消えるのを待ってから返却
+        yield return ReleaseFxWhenFinished(obj, particleSystems);
     }
 
     private void ReturnPool(AudioSource source)
@@ -350,34 +283,16 @@ public class GameEffectAudioManager : MonoBehaviour
     }
 }
 
-public readonly struct GameEffect
+public class GameEffect
 {
-    /// <summary>音</summary>
-    public readonly AudioClip Clip;
+    public readonly AudioEffect? AudioEffect;
 
-    /// <summary>particle</summary>
-    public readonly GameObject FxPrefab;
+    public readonly FxEffect? FxEffect;
 
     /// <summary>発生位置</summary>
     public readonly Vector3 Position;
-
-    /// <summary>大きさ</summary>
-    public readonly float Volume;
-
-    /// <summary>ピッチ</summary>
-    public readonly float Pitch;
-
     /// <summary>遅れ</summary>
     public readonly float Delay;
-
-    /// <summary>音をループさせるか</summary>
-    public readonly bool Loop;
-
-    /// <summary>
-    /// FX寿命
-    /// 0以下なら、単発は自動返却・ループは手動停止まで残る
-    /// </summary>
-    public readonly float FxLifeTime;
 
     public GameEffect(
         AudioClip clip,
@@ -390,13 +305,53 @@ public readonly struct GameEffect
         float fxLifeTime = -1f
     )
     {
-        this.Clip = clip;
-        this.FxPrefab = fxPrefab;
+        this.AudioEffect = new AudioEffect(clip, volume, pitch, loop);
+        this.FxEffect = new FxEffect(fxPrefab, fxLifeTime);
         this.Position = positon;
+        this.Delay = delay;
+    }
+    public static GameEffect CreateAudioEffect(AudioClip clip, Vector3 position, float volume = 1.0f, float pitch = 1.0f, float delay = 0.0f, bool loop = false)
+    {
+        return new GameEffect(clip, null, position, volume, pitch, delay, loop);
+    }
+    public static GameEffect CreateFxEffect(GameObject fxPrefab, Vector3 position, float delay = 0.0f, float fxLifeTime = -1f)
+    {
+        return new GameEffect(null, fxPrefab, position, 1.0f, 1.0f, delay, false, fxLifeTime);
+    }
+    public static GameEffect CreateCombinedEffect(AudioClip clip, GameObject fxPrefab, Vector3 position, float volume = 1.0f, float pitch = 1.0f, float delay = 0.0f, bool loop = false, float fxLifeTime = -1f)
+    {
+        return new GameEffect(clip, fxPrefab, position, volume, pitch, delay, loop, fxLifeTime);
+    }
+}
+public readonly struct AudioEffect
+{
+    /// <summary>音</summary>
+    public readonly AudioClip Clip;
+    /// <summary>大きさ</summary>
+    public readonly float Volume;
+    /// <summary>ピッチ</summary>
+    public readonly float Pitch;
+    /// <summary>音をループさせるか</summary>
+    public readonly bool Loop;
+    public AudioEffect(AudioClip clip, float volume = 1.0f, float pitch = 1.0f, bool loop = false)
+    {
+        this.Clip = clip;
         this.Volume = volume;
         this.Pitch = pitch;
-        this.Delay = delay;
         this.Loop = loop;
+    }
+}
+public readonly struct FxEffect
+{
+    /// <summary>particle</summary>
+    public readonly GameObject FxPrefab;
+    // <summary>
+    /// FX寿命
+    /// 0以下なら、単発は自動返却・ループは手動停止まで残る
+    public readonly float FxLifeTime;
+    public FxEffect(GameObject fxPrefab, float fxLifeTime = -1f)
+    {
+        this.FxPrefab = fxPrefab;
         this.FxLifeTime = fxLifeTime;
     }
 }

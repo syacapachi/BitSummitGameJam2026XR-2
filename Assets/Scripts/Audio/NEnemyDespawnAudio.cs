@@ -24,6 +24,6 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     {
         if (reachedGoal) return;
 
-        gameEffectEvent.Invoke(new GameEffect(deathClipAll, null, transform.position, deathVolumeAll));
+        gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(deathClipAll, transform.position, deathVolumeAll));
     }
 }

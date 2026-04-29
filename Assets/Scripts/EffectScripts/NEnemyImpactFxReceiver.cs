@@ -139,13 +139,14 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         Debug.Log($"Valid Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
 
-        gameEffectEvent.Invoke(new GameEffect(
-            // validHitSfxAll,
-            // validHitFxPrefabAll,
-            // position,
-            // volume: validHitVolumeAll
-        ));
+        //gameEffectEvent.Invoke(GameEffect.CreateCombinedEffect(
+        // validHitSfxAll,
+        // validHitFxPrefabAll,
+        // position,
+        // volume: validHitVolumeAll
+        //));
     }
+    //RpcParamsで送るクライアントを指定しているため、SendTo.SpecifiedInParamsを使用
 
     [Rpc(SendTo.SpecifiedInParams)]
     //PlayInValid(Cliant消した)HitRpc
@@ -154,12 +155,12 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
         Debug.Log($"Invalid Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
 
-        gameEffectEvent.Invoke(new GameEffect(
-            // invalidHitSfxAll,
-            // invalidHitFxPrefabAll,
-            // position,
-            // volume: invalidHitVolumeAll
-        ));
+        //gameEffectEvent.Invoke(GameEffect.CreateCombinedEffect(
+        // invalidHitSfxAll,
+        // invalidHitFxPrefabAll,
+        // position,
+        // volume: invalidHitVolumeAll
+        //));
     }
 }
 //水野以上

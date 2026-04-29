@@ -9,7 +9,7 @@ public class ProtectAreaAudioTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var enemyAll = other.GetComponent<NEnemy>() ?? other.GetComponentInParent<NEnemy>();
+        var enemyAll = other.GetComponent<IEnemy>() ?? other.GetComponentInParent<IEnemy>();
         if (enemyAll == null) return;
 
         Vector3 pointAll = other.ClosestPoint(transform.position);
@@ -22,6 +22,6 @@ public class ProtectAreaAudioTrigger : MonoBehaviour
             despawnAudioAll.MarkReachedGoalServer();
         }
 
-        gameEffectEvent.Invoke(new GameEffect(reachClipAll, null, pointAll, reachVolumeAll));
+        gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(reachClipAll, pointAll, reachVolumeAll));
     }
 }

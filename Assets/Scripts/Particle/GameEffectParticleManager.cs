@@ -17,19 +17,19 @@ public class GameEffectParticleManager : MonoBehaviour
 
     private void OnEventReceived(GameEffect e)
     {
-        if (e.FxPrefab == null) return;
+        if (e.FxEffect is not FxEffect fx) return;
 
-        GameObject fx = Instantiate(e.FxPrefab, e.Position, Quaternion.identity);
+        GameObject fxObject = Instantiate(fx.FxPrefab, e.Position, Quaternion.identity);
         
-        if (fx.TryGetComponent<ParticleSystem>(out var ps))
+        if (fxObject.TryGetComponent<ParticleSystem>(out var ps))
         {
             var mainModule = ps.main;
             float lifetime = mainModule.duration + mainModule.startLifetime.constantMax;
-            Destroy(fx, lifetime);
+            Destroy(fxObject, lifetime);
         }
         else
         {
-            Destroy(fx, 2f);
+            Destroy(fxObject, 2f);
         }
     }
 }

@@ -11,7 +11,6 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     private PlayerJob shooterJob = PlayerJob.Both;
     private IResultCollector shooterId;
     protected Coroutine despawnTimer;
-    public IResultCollector Shooter => shooterId;
     public GameObject GameObject => gameObject;
 
     public PlayerJob ShooterJob => shooterJob;

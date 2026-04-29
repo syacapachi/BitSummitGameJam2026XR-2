@@ -31,12 +31,12 @@ public class NPhaseAudioObserver : MonoBehaviour
     {
         if (newValue >= 0)
         {
-            gameEffectEvent.Invoke(new GameEffect(phaseChangeClipAll, null, transform.position, phaseVolumeAll));
+            gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(phaseChangeClipAll, transform.position, phaseVolumeAll));
         }
     }
 
     private void OnGameFinished(PlayerResultData[] data)
     {
-        gameEffectEvent.Invoke(new GameEffect(gameClearClipAll, null, transform.position, clearVolumeAll));
+        gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(gameClearClipAll, transform.position, clearVolumeAll));
     }
 }

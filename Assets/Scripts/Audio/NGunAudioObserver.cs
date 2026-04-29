@@ -1,4 +1,4 @@
- using UnityEngine;
+﻿ using UnityEngine;
 using Unity.Netcode;
 public class NGunAudioObserver : NetworkBehaviour, IShotSound, IReloadSound
 {
@@ -14,10 +14,10 @@ public class NGunAudioObserver : NetworkBehaviour, IShotSound, IReloadSound
 
     public void PlayShotSound()
     {
-        gameEffectEvent.Invoke(new GameEffect(shotClipAll, null, transform.position, volume: shotVolumeAll));
+        gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(shotClipAll, transform.position, shotVolumeAll));
     }
     public void PlayReloadSound()
     {
-        gameEffectEvent.Invoke(new GameEffect(reloadClipAll, null, transform.position, volume: reloadVolumeAll));
+        gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(reloadClipAll, transform.position, reloadVolumeAll));
     }
 }
