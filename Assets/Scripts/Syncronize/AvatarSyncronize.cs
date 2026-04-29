@@ -44,6 +44,7 @@ public class AvatarSyncronize : NetworkBehaviour
         {
             //初期化
             OnScaleChanged(1, 1);
+            //avatorRootTransfromからみた、頭の相対座標のY成分を、アバターの目の高さとする
             avatarEyeHeight = avatorRootTransfrom.InverseTransformPoint(animator.GetBoneTransform(HumanBodyBones.Head).position).y;
             StartCoroutine(WaitForEnable());
             NetworkManager.SceneManager.OnLoadComplete += OnSceneLoaded;
@@ -105,9 +106,10 @@ public class AvatarSyncronize : NetworkBehaviour
         float eyeHeight = 0;
         for(int i = 0;i< calibrationCount; i++)
         {
-            eyeHeight += xrOrigin.Camera.transform.position.y / calibrationCount;
+            eyeHeight += xrOrigin.Camera.transform.position.y;
             yield return null;
         }
+        eyeHeight /= calibrationCount;
         AvatarScale.Value = eyeHeight / avatarEyeHeight;
         Debug.Log($"[{nameof(AvatarSyncronize)}] Scale is {AvatarScale.Value}");
     }
@@ -218,8 +220,8 @@ public class AvatarSyncronize : NetworkBehaviour
         if (IsOwner)
         {
             if (!isfoundLocalPlayer) return;
-            //avatorRootTransfromからみた、networkHeadの相対座標
-            Vector3 headOffsetLocalY = avatorRootTransfrom.InverseTransformPoint(animator.GetBoneTransform(HumanBodyBones.Head).position);
+            //avatorRootTransfromからみた、左目の相対座標
+            Vector3 headOffsetLocalY = avatorRootTransfrom.InverseTransformPoint(animator.GetBoneTransform(HumanBodyBones.LeftEye).position);
             //カメラのY座標は、地面からの距離
             //Avatorの頭を動かす不自然になる。->rootを調整
             Vector3 cameraPos = xrOrigin.Camera.transform.position;
