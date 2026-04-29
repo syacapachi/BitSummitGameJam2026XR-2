@@ -22,7 +22,7 @@ public class NBullet : BulletBaseController
         //GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(hitFxPrefab);
         //fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
         //ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
-        gameEffectEvent.Invoke(new GameEffect(null, hitFxPrefab, pos));
+        gameEffectEvent.Invoke(GameEffect.CreateFxEffect(hitFxPrefab, pos, fxLifeTime: hitFxLife));
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -31,7 +31,7 @@ public class NBullet : BulletBaseController
         //GameObject fx = ManagerLocator.Instance.LocalObjectPool.Get(shieldFxPrefab);
         //fx.transform.SetPositionAndRotation(pos, Quaternion.identity);
         //ManagerLocator.Instance.LocalObjectPool.Release(fx, hitFxLife);
-        gameEffectEvent.Invoke(new GameEffect(null, shieldFxPrefab, pos));
+        gameEffectEvent.Invoke(GameEffect.CreateFxEffect(shieldFxPrefab, pos, fxLifeTime: hitFxLife));
     }
 
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
@@ -60,7 +60,7 @@ public class NBullet : BulletBaseController
             {
                 attackBlockedEvent.Invoke(new AttackBlocked()
                 {
-                    Collector = Shooter,
+                    Collector = ResultCollector,
                     Enemy = enemy
                 });
                 // [追加] 攻撃が無効な敵に当たった場合のデバッグログ
@@ -93,7 +93,7 @@ public class NBullet : BulletBaseController
                 stats.AddShield();
                 attackBlockedEvent.Invoke(new AttackBlocked()
                 {
-                    Collector = Shooter,
+                    Collector = ResultCollector,
                     Enemy = enemy
                 });
                 //水野編集
@@ -104,12 +104,12 @@ public class NBullet : BulletBaseController
         else if(reciever is PlayerCollider player || reciever is PlayerHealth health)
         {
             //自身は無視
-            if (ResultCollector.ClientId == OwnerClientId) return;
+            if (ResultCollector.ClientId == NetworkManager.LocalClientId) return;
             // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
             Debug.Log("Shield by Player");
             attackBlockedEvent.Invoke(new AttackBlocked()
             {
-                Collector = Shooter,
+                Collector = ResultCollector,
                 Enemy = null
             });
             SpawnShieldFxClientRpc(transform.position);

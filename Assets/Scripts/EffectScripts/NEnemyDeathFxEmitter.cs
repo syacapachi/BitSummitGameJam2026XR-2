@@ -28,7 +28,7 @@ public class NEnemyDeathFxEmitter : NetworkBehaviour
         if (!IsClient) return;
         if (reachedProtectArea.Value) return;
 
-        gameEffectEvent.Invoke(new GameEffect(
+        gameEffectEvent.Invoke(GameEffect.CreateCombinedEffect(
             deathSfxAll,
             deathFxPrefabAll,
             transform.position,

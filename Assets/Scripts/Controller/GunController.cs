@@ -17,7 +17,7 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     public int MaxAmmo => weaponSettings.maxAmmo; // AmmoUIが参照できるように
     public float ReloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
 
-    protected virtual IResultCollector Collector { get; }
+    protected virtual IResultCollector Collector { get; } = null;
 
 
     private static readonly WaitForSeconds wait01 = new WaitForSeconds(0.1f);
