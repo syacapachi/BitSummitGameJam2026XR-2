@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class NetworkGameManager : NetworkBehaviour
 {
     [Header("ゲーム設定")]
-    [SerializeField] Difficulty diffculty;
+    [SerializeField] NetworkVariable<Difficulty> difficulty = new(Difficulty.Easy);
     [SerializeField] GameMode gameMode = GameMode.Protect;
     [Header("Refernce")]
     [SerializeField] GameObject protectArea;
@@ -16,29 +16,40 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] PlayerManager PlayerManager;
     
     public GameMode CurrentGameMode => gameMode;
-
-
     public ScoreManager ScoreManager => scoreManager;
     public PhaseManager PhaseManager => phaseManager;
     public GameObject ProtectArea => protectArea;
     public bool IsGamePlaying => CurrentGameState == GameState.Playing;
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
-
     
-
+    public Difficulty CurrentDifficulty
+    {
+        get => difficulty.Value;
+        private set
+        {
+            if (!IsServer) return;
+            if (difficulty.Value != value)
+            {
+                difficulty.Value = value;
+            }
+        }
+    }
     [SerializeField] NetworkVariable<GameState> gameState = new(
         GameState.Initializing,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-    public GameState CurrentGameState {
+    public GameState CurrentGameState
+    {
         get => gameState.Value;
-        private set {
+        private set
+        {
             if (!IsServer) return;
-            if(gameState.Value == value) return;
+            if (gameState.Value == value) return;
             gameState.Value = value;
         }
     }
+
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnbulletComeRpcEvent;
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
@@ -49,7 +60,7 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] VoidEvent OnAllPhaseEndedServerEvent;
     [SerializeField] DifficultyEvent difficultyEvent;
 
-
+    
     private void OnEnable()
     {
         gameState.OnValueChanged += HandleGameStateChanged;
@@ -85,7 +96,7 @@ public class NetworkGameManager : NetworkBehaviour
 
         Debug.Log("Game Start");
         scoreManager.SetScoreServerOnly();
-        phaseManager.StartPhases(diffculty);
+        phaseManager.StartPhasesRpc(CurrentDifficulty);
         gameState.Value = GameState.Playing;
     }
 
@@ -105,7 +116,7 @@ public class NetworkGameManager : NetworkBehaviour
     }
     void HandleDifficltyChange(Difficulty newDifficulty)
     {
-        diffculty = newDifficulty;
+        CurrentDifficulty = newDifficulty;
     }
 
     void HandleGameStateChanged(GameState oldState, GameState newState)

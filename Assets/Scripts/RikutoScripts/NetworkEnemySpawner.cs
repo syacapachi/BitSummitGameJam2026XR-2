@@ -101,6 +101,12 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
 
         StartCoroutine(SpawnRoutine(events));
     }
+    public void StopSpaw()
+    {
+        if (!IsServer) return;
+        StopAllCoroutines();
+        waitForSpawn = null;
+    }
 
     IEnumerator SpawnRoutine(List<SpawnEvent> spawnEvents)
     {
@@ -122,7 +128,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
             timer += Time.deltaTime;
 
             // 今の時間で出すべき敵を全部出す
-            while (spawnQueue.Count > 0 && spawnEvents[index].SpawnTime <= timer)
+            while (spawnQueue.Count > 0 && spawnQueue.Peek().SpawnTime <= timer)
             {
 
                 SpawnEvent e = spawnQueue.Dequeue();
