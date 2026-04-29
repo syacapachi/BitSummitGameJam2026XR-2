@@ -186,6 +186,8 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
 
         if (damageSender == null) return;
         if (damageSender is not BulletBaseController bullet) return;
+        // 自分と同じJobの弾は無視する
+        if (bullet.ShooterJob == nEnemy.EnemyJob) return;
 
         // 同じ弾で複数回反応しない
         if (!handledBullets.Add(bullet)) return;
@@ -205,16 +207,16 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
 
         if (playerLayerSettings.IsAttackableJob(nEnemy.EnemyJob))
         {
-            PlayValidHitClientRpc(fxPosition);
+            PlayValidHitRpc(fxPosition);
         }
         else
         {
-            PlayInvalidHitClientRpc(fxPosition);
+            PlayInvalidHitRpc(fxPosition);
         }
     }
-
+//PlayValid(Cliant消した)HitRpc
     [Rpc(SendTo.ClientsAndHost)]
-    private void PlayValidHitClientRpc(Vector3 position)
+    private void PlayValidHitRpc(Vector3 position)
     {
         Debug.Log($"Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
@@ -226,9 +228,9 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             volume: validHitVolumeAll
         ));
     }
-
+//PlayInValid(Cliant消した)HitRpc
     [Rpc(SendTo.ClientsAndHost)]
-    private void PlayInvalidHitClientRpc(Vector3 position)
+    private void PlayInvalidHitRpc(Vector3 position)
     {
         Debug.Log($"Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
