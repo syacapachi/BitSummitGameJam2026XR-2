@@ -27,10 +27,13 @@ public class PhaseUI : MonoBehaviour
 
     private UIState currentState = UIState.Idle;
 
+    
     void Start()
     {
         InitializeUI();
     }
+    
+
 
     void InitializeUI()
     {
@@ -66,6 +69,7 @@ public class PhaseUI : MonoBehaviour
     // =========================
     void ChangeState(UIState next, object payload = null)
     {
+        Debug.Log($"[State] {currentState} → {next}");
         if (currentState == next && next != UIState.Countdown) return;
         // 同じ状態は無視（必要なら消す）
         if (currentState == next) return;
@@ -111,18 +115,47 @@ public class PhaseUI : MonoBehaviour
     // =========================
     void OnPhaseChanged(int index)
     {
+        Debug.Log($"[Client] PhaseChange受信: {index}");
+
+        Debug.Log($"nGameManager null? {nGameManager == null}");
+
+        if (nGameManager != null)
+        {
+            Debug.Log($"PhaseManager null? {nGameManager.PhaseManager == null}");
+        }
+
         var manager = nGameManager.PhaseManager;
-        if (index >= 0 && index < manager.Phases.Length)
+
+        Debug.Log("ここまで来た"); // ← ここ出る？
+
+        Debug.Log($"Phases null? {manager.Phases == null}");
+        Debug.Log($"Phases Length: {manager.Phases?.Length}");
+
+        if (index >= 0 && manager.Phases != null && index < manager.Phases.Length)
         {
             string text = manager.Phases[index].PhaseDisplayName;
+            Debug.Log($"PhaseIntroへ: {text}");
             ChangeState(UIState.PhaseIntro, text);
+        }
+        else
+        {
+            Debug.Log("条件で弾かれた");
         }
     }
 
     void OnCountdownChanged(int oldValue, int newValue)
     {
+        Debug.Log($"[OnValueChanged] {oldValue} → {newValue} | IsServer: {nGameManager.IsServer} | IsClient: {nGameManager.IsClient}");
         if (currentState == UIState.GameFinish) return;
-        if (newValue <= 0) return;
+        if (newValue <= 0)
+        {
+            if (currentState == UIState.Countdown)
+            {
+                ChangeState(UIState.Idle);
+            }
+
+            return;
+        }
         if (currentState == UIState.Countdown)
         {
             phaseText.text = newValue.ToString();

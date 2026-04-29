@@ -39,6 +39,12 @@ public class PhaseManager : NetworkBehaviour
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnAllPhaseEndedServerOnly;
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
+    public NetworkVariable<Difficulty> syncedDifficulty =
+    new NetworkVariable<Difficulty>(
+        default,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
     private void CreateDic()
     {
         if (isInitialize) return;
@@ -60,18 +66,36 @@ public class PhaseManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsServer) return;
         CreateDic();
-        if (spawner == null)
-            spawner = GetComponentInChildren<NetworkEnemySpawner>();
+
+        syncedDifficulty.OnValueChanged += OnDifficultyChanged;
+        syncedPhaseIndex.OnValueChanged += OnPhaseIndexChanged;
+
+        // 初期値反映（超重要）
+        OnDifficultyChanged(default, syncedDifficulty.Value);
+        OnPhaseIndexChanged(-1, syncedPhaseIndex.Value);
+
+
+        if (IsServer)
+        {
+            if (spawner == null)
+                spawner = GetComponentInChildren<NetworkEnemySpawner>();
+        }
+    }
+
+    void OnDifficultyChanged(Difficulty oldValue, Difficulty newValue)
+    {
+        Debug.Log($"[PhaseManager] Difficulty同期: {newValue}");
+
+        currentPhaseMode = difficultToPhaseDic[newValue];
     }
     private void OnEnable()
     {
-        syncedPhaseIndex.OnValueChanged += OnPhaseChanedHaldle;
+        //syncedPhaseIndex.OnValueChanged += OnPhaseChanedHaldle;
     }
     private void OnDisable()
     {
-        syncedPhaseIndex.OnValueChanged -= OnPhaseChanedHaldle;
+        //syncedPhaseIndex.OnValueChanged -= OnPhaseChanedHaldle;
     }
     private void OnPhaseChanedHaldle(int oldValue, int newValue)
     {
@@ -85,6 +109,7 @@ public class PhaseManager : NetworkBehaviour
 #endif
         if (!IsServer) return;
         CreateDic();
+        syncedDifficulty.Value = difficulity;
         currentPhaseMode = difficultToPhaseDic[difficulity];
         syncedPhaseIndex.Value = -1;
         StartNextPhase();
@@ -128,8 +153,8 @@ public class PhaseManager : NetworkBehaviour
 
         var phase = Phases[phaseIndex];
         SpawnableHandle.SpawnFromEvent(phase.SpawnEvents.ToList());
-        OnPhaseChangeRpcEvent.Invoke(phaseIndex);
-
+        //OnPhaseChangeRpcEvent.Invoke(phaseIndex);
+        NotifyPhaseChangedClientRpc(phaseIndex);
         StartCoroutine(PhaseProgress(phase.PhaseTime));
     }
     IEnumerator PhaseProgress(float time)
@@ -211,5 +236,18 @@ public class PhaseManager : NetworkBehaviour
         phaseProgress.Value = 1f;
 
         IsCountingDown = false;
+    }
+
+    void OnPhaseIndexChanged(int oldValue, int newValue)
+    {
+        Debug.Log($"[NetworkVariable] PhaseChange: {newValue}");
+        OnPhaseChangeRpcEvent.Invoke(newValue);
+
+    }
+
+    [ClientRpc]
+    void NotifyPhaseChangedClientRpc(int index)
+    {
+        OnPhaseChangeRpcEvent.Invoke(index);
     }
 }
