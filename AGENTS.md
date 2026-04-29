@@ -7,7 +7,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Overlay UI, Water, UI, Avatar, Demon, Ghost, Both, Tutorial, Player
 - Active game object:
-  - Name: NetworkAvator
+  - Name: RG_SummonEffect
   - Tag: Untagged
-  - Layer: Default
+  - Layer: Ghost
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
