@@ -83,11 +83,9 @@ public class MarkerAudioController : NetworkBehaviour
         if (markerFxPrefabAll != null && gameEffectEvent != null)
         {
             gameEffectEvent.Invoke(
-                new GameEffect(
-                    null,
+                GameEffect.CreateFxEffect(
                     markerFxPrefabAll,
                     hitPoint,
-                    volume: 0f,
                     fxLifeTime: 4f
                 )
             );

@@ -33,7 +33,7 @@ public class NEnemySpawnFxEmitter : NetworkBehaviour
         if (spawnSfxAll != null)
         {
             gameEffectEvent.Invoke(
-                new GameEffect(
+                GameEffect.CreateCombinedEffect(
                     spawnSfxAll,
                     spawnFxPrefabAll,
                     position,

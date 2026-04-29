@@ -142,7 +142,7 @@ public class NEnemyShoot : GunController
     }
     public override void PlayShotSound()
     {
-        gameEffect.Invoke(new GameEffect(shotClip, null, transform.position));
+        gameEffect.Invoke(GameEffect.CreateAudioEffect(shotClip, transform.position));
     }
 #if UNITY_EDITOR
     private void Reset()

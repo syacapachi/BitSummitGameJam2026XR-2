@@ -67,7 +67,7 @@ public class AlertLightController : MonoBehaviour
 
             if (timer >= interval)
             {
-                gameEffectEvent.Invoke(new GameEffect(buzzerClip, null, alertObject.transform.position));
+                gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(buzzerClip,alertObject.transform.position));
 
                 timer = 0f;
             }
