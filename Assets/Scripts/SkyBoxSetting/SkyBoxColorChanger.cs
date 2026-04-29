@@ -13,7 +13,7 @@ public class SkyBoxColorChanger : MonoBehaviour
         public Color horizonColor;
         [Header("空の地平線の色")]
         public Color bottomColor;
-        [Header("空の明るさ(0~1)")]
+        [Header("空の明るさ")]
         public float intensity;
         [Header("空の真上の色の浸食度")]
         public float exponentTop;
@@ -57,6 +57,7 @@ public class SkyBoxColorChanger : MonoBehaviour
         skyboxMat.SetFloat("_Exponent1", c.exponentTop);
         skyboxMat.SetFloat("_Exponent2", c.exponentBottom);
     }
+    [OnInspectorButton("仮適応コルーチンボタン",showOnlyInPlayMode = true)]
     private void ApplyWithCorutine(int index)
     {
         if(index == 0)
