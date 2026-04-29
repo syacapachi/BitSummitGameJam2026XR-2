@@ -248,8 +248,9 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             );
         }
     }
-//PlayValid(Cliant消した)HitRpc
+
     [Rpc(SendTo.SpecifiedInParams)]
+    //PlayValid(Cliant消した)HitRpc
     private void PlayValidHitRpc(Vector3 position, RpcParams rpcParams = default)
     {
         Debug.Log($"Valid Hit FX RPC fired: {name} pos={position}");
@@ -262,18 +263,19 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             volume: validHitVolumeAll
         ));
     }
-//PlayInValid(Cliant消した)HitRpc
+
     [Rpc(SendTo.SpecifiedInParams)]
+    //PlayInValid(Cliant消した)HitRpc
     private void PlayInvalidHitRpc(Vector3 position, RpcParams rpcParams = default)
     {
         Debug.Log($"Invalid Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
 
         gameEffectEvent.Invoke(new GameEffect(
-            invalidHitSfxAll,
-            invalidHitFxPrefabAll,
-            position,
-            volume: invalidHitVolumeAll
+            // invalidHitSfxAll,
+            // invalidHitFxPrefabAll,
+            // position,
+            // volume: invalidHitVolumeAll
         ));
     }
 }

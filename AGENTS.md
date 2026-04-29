@@ -7,7 +7,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Overlay UI, Water, UI, Avatar, Demon, Ghost, Both, Tutorial, Player
 - Active game object:
-  - Name: BlueDemonNA
+  - Name: NetworkAvator
   - Tag: Untagged
-  - Layer: Demon
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
