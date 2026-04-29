@@ -12,8 +12,12 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] GameStateEvent GameStateChangeRpcEvent;
     [SerializeField] private NetworkGameManager nGameManager;
+    [SerializeField] TMP_FontAsset japaneseFont;
+    [SerializeField] TMP_FontAsset englishFont;
 
     private Coroutine currentRoutine;
+
+    bool isJapanese;
 
     enum UIState
     {
@@ -30,10 +34,15 @@ public class PhaseUI : MonoBehaviour
     
     void Start()
     {
+        isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+        ApplyFont();
         InitializeUI();
     }
-    
 
+    void ApplyFont()
+    {
+        phaseText.font = isJapanese ? japaneseFont : englishFont;
+    }
 
     void InitializeUI()
     {
@@ -85,7 +94,7 @@ public class PhaseUI : MonoBehaviour
         switch (next)
         {
             case UIState.PhaseIntro:
-                currentRoutine = StartCoroutine(PhaseIntroRoutine((string)payload));
+                currentRoutine = StartCoroutine(PhaseIntroRoutine(((int, string))payload));
                 break;
 
             case UIState.Countdown:
@@ -115,37 +124,19 @@ public class PhaseUI : MonoBehaviour
     // =========================
     void OnPhaseChanged(int index)
     {
-        Debug.Log($"[Client] PhaseChange受信: {index}");
-
-        Debug.Log($"nGameManager null? {nGameManager == null}");
-
-        if (nGameManager != null)
-        {
-            Debug.Log($"PhaseManager null? {nGameManager.PhaseManager == null}");
-        }
 
         var manager = nGameManager.PhaseManager;
 
-        Debug.Log("ここまで来た"); // ← ここ出る？
-
-        Debug.Log($"Phases null? {manager.Phases == null}");
-        Debug.Log($"Phases Length: {manager.Phases?.Length}");
 
         if (index >= 0 && manager.Phases != null && index < manager.Phases.Length)
         {
-            string text = manager.Phases[index].PhaseDisplayName;
-            Debug.Log($"PhaseIntroへ: {text}");
-            ChangeState(UIState.PhaseIntro, text);
-        }
-        else
-        {
-            Debug.Log("条件で弾かれた");
+            string text = isJapanese ? manager.Phases[index].PhaseDisplayNameJP : manager.Phases[index].PhaseDisplayNameEN;
+            ChangeState(UIState.PhaseIntro, (index, text));
         }
     }
 
     void OnCountdownChanged(int oldValue, int newValue)
     {
-        Debug.Log($"[OnValueChanged] {oldValue} → {newValue} | IsServer: {nGameManager.IsServer} | IsClient: {nGameManager.IsClient}");
         if (currentState == UIState.GameFinish) return;
         if (newValue <= 0)
         {
@@ -170,18 +161,32 @@ public class PhaseUI : MonoBehaviour
     // 🎬 各ステート処理
     // =========================
 
-    IEnumerator PhaseIntroRoutine(string text)
+    IEnumerator PhaseIntroRoutine((int index, string text) data)
     {
         SetupNormal();
 
+        int index = data.index;
+        string text = data.text;
+
         phaseText.fontSize = 120;
+
+        // ★ 最初のフェーズだけ特別表示
+        if (index == 0)
+        {
+            phaseText.text = isJapanese ? "任務開始！" : "Game Start!";
+            phaseText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1f);
+        }
+
         phaseText.text = text;
+
         phaseText.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(1f);
 
         phaseText.fontSize = 150;
-        phaseText.text = "START!!";
+        phaseText.text = isJapanese ? "スタート!!" : "START!!";
+
         yield return PopAnimation();
 
         yield return new WaitForSeconds(1.5f);
@@ -221,7 +226,7 @@ public class PhaseUI : MonoBehaviour
         SetupNormal();
 
         phaseText.fontSize = 150;
-        phaseText.text = "FINISH!";
+        phaseText.text = isJapanese ? "任務終了!" : "FINISH!";
         phaseText.gameObject.SetActive(true);
 
         yield return PopAnimation();

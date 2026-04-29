@@ -4,9 +4,11 @@
 public class PhaseSO : ScriptableObject
 {
     [Header("Phase Display Setting")]
-    [SerializeField] string phaseDisplayName;
+    [SerializeField] string phaseDisplayNameEN;
+    [SerializeField] string phaseDisplayNameJP;
 
-    public string PhaseDisplayName => phaseDisplayName;
+    public string PhaseDisplayNameEN => phaseDisplayNameEN;
+    public string PhaseDisplayNameJP => phaseDisplayNameJP;
 
     [Header("Phase Settings")]
     [SerializeField] float phaseTime = 30f;
