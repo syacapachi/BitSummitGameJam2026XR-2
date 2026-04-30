@@ -4628,6 +4628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da876ea0978b264479e3abd7123e5208, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reachAudioEffect: {fileID: 0}
   reachClipAll: {fileID: 8300000, guid: 50b01190c1d315d40947b882bd06d093, type: 3}
   reachVolumeAll: 1
   gameEffectEvent: {fileID: 0}
@@ -14948,6 +14949,10 @@ PrefabInstance:
       propertyPath: scoreManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'directionalLights.Array.data[0]'
+      value: 
+      objectReference: {fileID: 203844588}
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1133631313
@@ -15044,6 +15049,10 @@ PrefabInstance:
       propertyPath: playerCount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: playerManager
+      value: 
+      objectReference: {fileID: 1692854022}
     - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: attackBlockedEvent
       value: 
@@ -26679,7 +26688,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 12
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5678582383372892908, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
     m_RemovedGameObjects:
     - {fileID: 9159097343888091101, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
     m_AddedGameObjects:
@@ -28578,6 +28588,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1677554633}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1692854022 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8012348177458703508, guid: 07f51410c6523454580003730b31cfff, type: 3}
+  m_PrefabInstance: {fileID: 1182821280}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce7a9a87d797fb14c84592474db11d13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1708469484
 GameObject:
   m_ObjectHideFlags: 0
@@ -32501,6 +32522,7 @@ MonoBehaviour:
   rotateSpeed: 100
   interval: 3
   buzzerClip: {fileID: 8300000, guid: b09fc9b896fbdae44bd5ff26fac6c32d, type: 3}
+  buzzerEffectData: {fileID: 0}
   hpInfo: {fileID: 0}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &1979390471
@@ -34534,6 +34556,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NetworkManager
       objectReference: {fileID: 0}
+    - target: {fileID: 8131178026211072940, guid: 7005d677232779a42b99a915ce227374, type: 3}
+      propertyPath: NetworkConfig.PlayerPrefab
+      value: 
+      objectReference: {fileID: 6125224147537168939, guid: 031551ab1c474034d9d2805d6a183249, type: 3}
     - target: {fileID: 8554207979284079333, guid: 7005d677232779a42b99a915ce227374, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
