@@ -153,7 +153,7 @@ public class PhaseManager : NetworkBehaviour
         IsCountingDown = false;
 
         var phase = Phases[phaseIndex];
-        SpawnableHandle.SpawnFromEvent(phase.SpawnEvents.ToList());
+        SpawnableHandle.SpawnFromEvent(phase.SpawnEvents.ToList(), phase.UseRandomSpawn);
         syncedPhaseIndex.Value = phaseIndex;
         StartCoroutine(PhaseProgress(phase.PhaseTime));
     }
