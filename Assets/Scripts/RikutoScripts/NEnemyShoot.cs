@@ -36,7 +36,7 @@ public class NEnemyShoot : GunController
         base.OnNetworkSpawn();
 
         if (!IsServer) return;
-        weaponSO = nEnemy.EnemySO.EnemyWeapon;
+        weaponSO = nEnemy.EnemyWeaponServeronly;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
