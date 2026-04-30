@@ -616,7 +616,7 @@ MonoBehaviour:
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 1
   gameMode: 1
-  gameStartMode: 1
+  gameStartMode: 0
   protectArea: {fileID: 0}
   scoreManager: {fileID: 7622921992766210704}
   phaseManager: {fileID: 1871165705981970814}
@@ -741,6 +741,7 @@ MonoBehaviour:
   changeTime: 5
   skyboxMat: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
   skyBoxColorSettings:
+  - {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
   - {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
   - {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
   - {fileID: 11400000, guid: cdf2344405367c94e9d5aeb6eb72f5a8, type: 2}

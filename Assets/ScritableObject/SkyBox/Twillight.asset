@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: Twillight
   m_EditorClassIdentifier: 
   timeOfDay: 16
-  topColor: {r: 0, g: 0.21960786, b: 1, a: 0}
-  horizonColor: {r: 0, g: 0.909804, b: 1, a: 0}
-  bottomColor: {r: 0, g: 1, b: 0.6509804, a: 0}
-  intensity: 0.4
-  exponentTop: 0.5
-  exponentBottom: 5
+  topColor: {r: 0.078431375, g: 0.078431375, b: 0.23529412, a: 1}
+  horizonColor: {r: 0.47058824, g: 0.23529412, b: 0.39215687, a: 1}
+  bottomColor: {r: 0.23529412, g: 0.13725491, b: 0.25490198, a: 1}
+  intensity: 1.2
+  exponentTop: 1.5
+  exponentBottom: 4
+  lightColor: {r: 0.627451, g: 0.39215687, b: 0.54901963, a: 1}
+  lightRotation: {x: 170, y: 0, z: 0}
+  lightIntensity: 0.3
+  indirectMultiplier: 0.2
