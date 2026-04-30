@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a6df8e7571e05a4468818a61a1effb1a, type: 3}
-  m_Name: LongHardPhase
+  m_Name: LongHardPhase2
   m_EditorClassIdentifier: 
-  phaseName: {fileID: 11400000, guid: bbbdb7d47bb0f30419e1f77ebfa97dba, type: 2}
+  phaseDisplayNameEN: LongHardPhase
+  phaseDisplayNameJP: "\u30ED\u30F3\u30B0\u30CF\u30FC\u30C9\u30D5\u30A7\u30FC\u30BA"
+  phaseName: {fileID: 0}
   phaseTime: 200
   clearBonus: 1000
-  useRandomSpawn: 0
   spawnEvents:
   - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
     spawnPointIndex: 0
