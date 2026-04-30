@@ -16,7 +16,6 @@ public class LocalCharactorControll : MonoBehaviour
     [SerializeField] protected float normalSpeed = 5f;
     [SerializeField] protected float dashSpeed = 10f;
     [Header("Subscribe Event")]
-    [SerializeField] VoidEvent jumpEvent;
     [SerializeField] BoolEvent dashEvent;
     [SerializeField] Vector2Event moveEvent;
     public bool IsStop => moveMode == MoveMode.Stop;
@@ -26,12 +25,10 @@ public class LocalCharactorControll : MonoBehaviour
 
     private void OnEnable()
     {
-        jumpEvent.Register(OnJunp);
         dashEvent.Register(OnDashChanged);
     }
     private void OnDisable()
     {
-        jumpEvent.Unregister(OnJunp);
         dashEvent.Unregister(OnDashChanged);
     }
     private void Update()
@@ -61,11 +58,6 @@ public class LocalCharactorControll : MonoBehaviour
         //rb.linearVelocity = move;
         //相対座標で移動させる。これにより、プレイヤーの向きに応じた移動が可能になる。
         playerRootTransform.Translate(move * Time.deltaTime);    
-    }
-    private void OnJunp()
-    {
-        Debug.Log("Jump");
-        playerRootTransform.Translate(jumpForce * Time.deltaTime * Vector3.up);
     }
     private void OnDashChanged(bool isDash)
     {
