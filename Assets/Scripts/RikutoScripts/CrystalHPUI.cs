@@ -12,6 +12,7 @@ public class CrystalHPUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [Header("Subscribe Event")]
     [SerializeField] HPInfoEvent HPInfoRpcEvent;
+    [SerializeField] GameStateEvent GameStateEvent;
 
     private float maxScore;
 
@@ -42,11 +43,17 @@ public class CrystalHPUI : MonoBehaviour
         nGameManager.ScoreManager.score.OnValueChanged += OnScoreChanged;
     }
 
+    private void OnEnable()
+    {
+        GameStateEvent.Register(OnGameStateChanged);
+    }
+
     private void OnDestroy()
     {
         if (nGameManager != null)
         {
             nGameManager.ScoreManager.score.OnValueChanged -= OnScoreChanged;
+            GameStateEvent.Unregister(OnGameStateChanged);
         }
     }
 
@@ -67,6 +74,14 @@ public class CrystalHPUI : MonoBehaviour
         if (scoreText != null)
         {
             scoreText.text = $"{score} / {maxScore}";
+        }
+    }
+
+    void OnGameStateChanged(GameState state)
+    {
+        if (state == GameState.GameOver || state == GameState.GameClear)
+        {
+            gameObject.SetActive(false);
         }
     }
 }
