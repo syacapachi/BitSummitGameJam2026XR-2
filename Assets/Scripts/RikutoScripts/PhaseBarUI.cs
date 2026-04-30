@@ -74,6 +74,10 @@ public class PhaseBarUI : MonoBehaviour
             CreateBars();
             SetupBarLength();
         }
+        if (state == GameState.GameOver || state == GameState.GameClear)
+        {
+            gameObject.SetActive(false);
+        }
     }
     // =========================
     // フェーズバー生成
