@@ -23,6 +23,8 @@ namespace Syacapachi.Editor
         private readonly Dictionary<Type, MethodInfo[]> methodCache = new();
         // メソッド名と引数のキャッシュ (パフォーマンス向上のため)
         private readonly Dictionary<MethodInfo, object[]> methodParameters = new();
+        // 値更新時に自動で発火する場合、有効かどうか
+        private readonly Dictionary<MethodInfo, bool> valiedInvokeEnabled = new();
         // 抽象クラスやインターフェースと、それを実装/継承する具体的なクラスのキャッシュ (描画できない型を識別するため)
         private readonly Dictionary<string, Type> abstructToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
@@ -31,8 +33,12 @@ namespace Syacapachi.Editor
         private readonly Dictionary<UnityEngine.Object, bool> foldoutStates = new();
         // ネストしたEditorキャッシュ (パフォーマンス向上のため)
         private readonly Dictionary<UnityEngine.Object, Editor> editorCache = new();
+        // このフレームで値が更新されたか
+        private bool isValueChangedThisFrame = false;
         public override void OnInspectorGUI()
         {
+            //初期化必須(無限ループ防止)
+            isValueChangedThisFrame = false;
             serializedObject.Update();
             //base.OnInspectorGUI(); //これを呼ぶと、全てのフィールドが描画される。DrawDefaultInspector()と同様。
             //通常のインスペクター描画を行う。これを呼ばないと、通常のフィールドが表示されない。
@@ -99,10 +105,32 @@ namespace Syacapachi.Editor
             {
                 var param = parameters[i];
                 values[i] = DrawField(param.ParameterType, param.Name, values[i]);
+                //変更を検知
+                isValueChangedThisFrame |= GUI.changed;
             }
 
             if (GUILayout.Button(buttonLabel))
                 InvokeMethod(method, values);
+
+            //自動発火機能がある場合
+            if (attr.validateInvoke)
+            {
+                if (!valiedInvokeEnabled.ContainsKey(method))
+                {
+                    valiedInvokeEnabled[method] = false;
+                }
+                valiedInvokeEnabled[method] = EditorGUILayout.ToggleLeft(
+                    $"Auto Invoke{method.Name}",
+                    valiedInvokeEnabled[method]
+                    );
+
+                if (valiedInvokeEnabled[method] && isValueChangedThisFrame)
+                {
+                    InvokeMethod(method, values);
+                    //再発火防止
+                    isValueChangedThisFrame = false;
+                }
+            }
 
             EditorGUILayout.EndVertical();
         }
@@ -115,7 +143,14 @@ namespace Syacapachi.Editor
             }
             catch (Exception e)
             {
-                Debug.LogError($"[OnInspectorButton] {method.Name} failed: {e}");
+                string paramLog = LogUtility.BuildParameterLog(method, values);
+                //エラースクリプトへのリンクを載せる。
+                Debug.LogException(
+                   new Exception(
+                       $"[{nameof(NetCodeButtonEditor)}] {method.DeclaringType.FullName}.{method.Name}({values})",
+                       e),
+                   target as UnityEngine.Object
+                   );
             }
         }
 

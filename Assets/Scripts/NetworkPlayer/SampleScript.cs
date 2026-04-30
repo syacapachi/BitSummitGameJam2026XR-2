@@ -69,10 +69,21 @@ public class SampleScript : MonoBehaviour
     {
         Debug.Log("This is a sample method.");
     }
-    [OnInspectorButton]
+    [OnInspectorButton(validateInvoke = true)]
     public void SampleMethod(InlineClass lass)
     {
+        if (lass.name.Length > 100)
+        {
+            Debug.Log("Too Long Name");
+            return;
+        }
         Debug.Log("This is a sample method.");
+        lass.name = lass.name + name;
+    }
+    [OnInspectorButton(validateInvoke = true)]
+    public void SampleMethod(SampleScript script)
+    {
+        script.SampleMethod();
     }
     //[OnInspectorButton]
     //public void SampleMethodWithParameter(string message, int number)
