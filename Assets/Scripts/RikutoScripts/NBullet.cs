@@ -99,8 +99,15 @@ public class NBullet : BulletBaseController
         }
         else if(reciever is PlayerCollider player || reciever is PlayerHealth health)
         {
+            var playerObj = reciever as PlayerCollider;
+
+            if (playerObj != null && ResultCollector.ClientId == playerObj.OwnerClientId) return;
+
+            var healthObj = reciever as PlayerHealth;
+
+            if (healthObj != null && ResultCollector.ClientId == healthObj.OwnerClientId) return;
             //自身は無視
-            if (ResultCollector.ClientId == NetworkManager.LocalClientId) return;
+            //if (ResultCollector.ClientId == NetworkManager.LocalClientId) return;
             // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
             Debug.Log("Shield by Player");
             attackBlockedEvent.Invoke(new AttackBlocked()
