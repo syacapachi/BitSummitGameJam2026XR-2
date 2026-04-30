@@ -41,7 +41,6 @@ public class SkyBoxColorChanger : MonoBehaviour
     /// 即時変更用。
     /// </summary>
     /// <param name="index"></param>
-    [OnInspectorButton("適応ボタン(インデックス)")]
     void ApplyColor(int index)
     {
         if (index < 0 || index >= skyBoxColorSettings.Length) return;
@@ -112,12 +111,12 @@ public class SkyBoxColorChanger : MonoBehaviour
     }
     IEnumerator ApplyColorCorutine(int fromIndex,int toIndex,float changeTime)
     {
-        for(float timer = 0f; timer <= changeTime; timer += Time.deltaTime)
+        if(fromIndex < 0 || fromIndex >= skyBoxColorSettings.Length)
         {
-            ApplyLerp(skyBoxColorSettings[fromIndex], skyBoxColorSettings[toIndex], timer / changeTime);
-            yield return null;
+            Debug.LogWarning("fromIndex is out of range");
+            yield break;
         }
-        ApplyColor(toIndex);
+        yield return ApplyColorCorutine(skyBoxColorSettings[fromIndex], skyBoxColorSettings[toIndex], changeTime);
     }
     IEnumerator ApplyColorCorutine(SkyBoxColorSetting fromIndex, SkyBoxColorSetting toIndex, float changeTime)
     {
