@@ -4,16 +4,17 @@
 public class PhaseSO : ScriptableObject
 {
     [Header("Phase Display Setting")]
-    [SerializeField] string phaseDisplayNameEN;
-    [SerializeField] string phaseDisplayNameJP;
     [SerializeField] LocalizeSimpleText phaseName;
 
-    public string PhaseDisplayNameEN => phaseDisplayNameEN;
-    public string PhaseDisplayNameJP => phaseDisplayNameJP;
+    public string PhaseDisplayNameEN => phaseName.GetText(false);
+    public string PhaseDisplayNameJP => phaseName.GetText(true);
 
     [Header("Phase Settings")]
     [SerializeField] float phaseTime = 30f;
     [SerializeField] int clearBonus = 500;
+    [SerializeField] bool isRandomSpawn = false;
+
+    public bool IsRandomSpawn => isRandomSpawn;
 
     public float PhaseTime => phaseTime;
     public int ClearBonus => clearBonus;
