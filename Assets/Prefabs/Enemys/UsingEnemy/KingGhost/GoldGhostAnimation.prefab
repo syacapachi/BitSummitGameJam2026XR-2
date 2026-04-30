@@ -9,6 +9,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 178737952764274049, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: deathFx
+      value: 
+      objectReference: {fileID: 11400000, guid: 6bee5fe4ce6c1f048ae3bb4dc8f49966, type: 2}
+    - target: {fileID: 178737952764274049, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: deathFxPrefabAll
       value: 
       objectReference: {fileID: 278788122339841109, guid: 642a551cd9afd564488cfb9bb464c7fa, type: 3}
@@ -76,6 +80,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoldGhostAnimation
       objectReference: {fileID: 0}
+    - target: {fileID: 5548266849939351625, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: fxEffect
+      value: 
+      objectReference: {fileID: 11400000, guid: a30b3ecfb62d4114d9698f56387c58b3, type: 2}
     - target: {fileID: 5548266849939351625, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: spawnFxPrefabAll
       value: 

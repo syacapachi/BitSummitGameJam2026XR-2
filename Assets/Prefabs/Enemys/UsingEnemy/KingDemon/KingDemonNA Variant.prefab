@@ -57,6 +57,10 @@ PrefabInstance:
       value: -0.048341755
       objectReference: {fileID: 0}
     - target: {fileID: 5016991474193591491, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: deathFx
+      value: 
+      objectReference: {fileID: 11400000, guid: 7e0697200ae2da041977aaae1f4e1fd6, type: 2}
+    - target: {fileID: 5016991474193591491, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: deathFxPrefabAll
       value: 
       objectReference: {fileID: 278788122339841109, guid: 642a551cd9afd564488cfb9bb464c7fa, type: 3}
@@ -120,6 +124,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8320318173726403609, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: fxEffect
+      value: 
+      objectReference: {fileID: 11400000, guid: 06bfa8ff6ddb2604e8ba4a029eb424f4, type: 2}
     - target: {fileID: 8320318173726403609, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: spawnSfxAll
       value: 

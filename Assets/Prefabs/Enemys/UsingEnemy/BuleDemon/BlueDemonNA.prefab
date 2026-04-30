@@ -779,6 +779,10 @@ PrefabInstance:
       value: BlueDemonNA
       objectReference: {fileID: 0}
     - target: {fileID: 5660647915188911819, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: deathFx
+      value: 
+      objectReference: {fileID: 11400000, guid: d951b3012b0016146bb3d4244bcbc680, type: 2}
+    - target: {fileID: 5660647915188911819, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: deathFxPrefabAll
       value: 
       objectReference: {fileID: 8529547205874415710, guid: 9f5c7e7c50a44cb4a8ef99bc5f670265, type: 3}
@@ -830,6 +834,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8675889087316196881, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: fxEffect
+      value: 
+      objectReference: {fileID: 11400000, guid: 12a13dab3445c2c42a40031d2eb262bf, type: 2}
     - target: {fileID: 8675889087316196881, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: spawnFxPrefabAll
       value: 

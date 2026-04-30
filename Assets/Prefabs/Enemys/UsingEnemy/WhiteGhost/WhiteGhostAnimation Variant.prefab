@@ -69,6 +69,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2936583415042763542, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: deathFx
+      value: 
+      objectReference: {fileID: 11400000, guid: bc1a63f20819354449e5f148b49463ce, type: 2}
+    - target: {fileID: 2936583415042763542, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: deathFxPrefabAll
       value: 
       objectReference: {fileID: 49340787719113693, guid: 4b502f49b4ec24b4c8a667d9d6f04378, type: 3}
@@ -108,6 +112,10 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: -0.00972122
       objectReference: {fileID: 0}
+    - target: {fileID: 7369210036037199582, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: fxEffect
+      value: 
+      objectReference: {fileID: 11400000, guid: a9b773b88d01b0c43bd7180d24f6350c, type: 2}
     - target: {fileID: 7369210036037199582, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: spawnFxPrefabAll
       value: 
