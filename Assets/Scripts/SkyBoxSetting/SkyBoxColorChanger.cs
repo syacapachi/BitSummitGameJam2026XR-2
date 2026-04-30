@@ -1,4 +1,5 @@
-﻿using Syacapachi.Attribute;
+﻿using Meta.WitAi.Attributes;
+using Syacapachi.Attribute;
 using System.Collections;
 using UnityEngine;
 
@@ -27,7 +28,10 @@ public class SkyBoxColorChanger : MonoBehaviour
     [SerializeField] int defaultIndex = 0;
     [Header("Subscribe Event")]
     [SerializeField] IntEvent phaseChageEvent;
-
+    [Header("Debug")]
+    [SerializeField] bool IsDebug;
+    [SerializeField, EnableIf(nameof(IsDebug))] VoidEvent debugEvent;
+    private int currentIndex = 0;
     private void Awake()
     {
         ApplyColor(defaultIndex);
@@ -35,10 +39,18 @@ public class SkyBoxColorChanger : MonoBehaviour
     private void OnEnable()
     {
         phaseChageEvent.Register(ApplyWithCorutine);
+        if(IsDebug)
+        {
+            debugEvent.Register(DebugApply);
+        }
     }
     private void OnDisable()
     {
         phaseChageEvent.Unregister(ApplyWithCorutine);
+        if(IsDebug)
+        {
+            debugEvent.Unregister(DebugApply);
+        }
     }
     /// <summary>
     /// 即時変更用。
@@ -56,6 +68,11 @@ public class SkyBoxColorChanger : MonoBehaviour
         skyboxMat.SetFloat("_Intensity", c.intensity);
         skyboxMat.SetFloat("_Exponent1", c.exponentTop);
         skyboxMat.SetFloat("_Exponent2", c.exponentBottom);
+    }
+    private void DebugApply()
+    {
+        currentIndex = (currentIndex + 1) % skyBoxColors.Length;
+        ApplyWithCorutine(currentIndex);
     }
     [OnInspectorButton("仮適応コルーチンボタン",showOnlyInPlayMode = true)]
     private void ApplyWithCorutine(int index)

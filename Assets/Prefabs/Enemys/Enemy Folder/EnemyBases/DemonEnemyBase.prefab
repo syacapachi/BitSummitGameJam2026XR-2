@@ -362,6 +362,7 @@ GameObject:
   - component: {fileID: 2450540616462859229}
   - component: {fileID: 5637691317398501634}
   - component: {fileID: 1507100403117325063}
+  - component: {fileID: 7493623612878443819}
   m_Layer: 7
   m_Name: DemonEnemyBase
   m_TagString: Untagged
@@ -496,7 +497,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   rootTransfrom: {fileID: 1058612673815464019}
-  enemySO: {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
   enemyJobSetting: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   hpCanvas: {fileID: 960397390737484366}
   hpImage: {fileID: 2011023226203762717}
@@ -504,6 +504,7 @@ MonoBehaviour:
   enemyJob: 1
   enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   dieEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+  enemyAudio: {fileID: 7493623612878443819}
   isAttackable: 1
   jobCycle: 010000000200000004000000
 --- !u!114 &2074675331461316831
@@ -520,12 +521,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   nEnemy: {fileID: 3163972296892794398}
-  validHitFxPrefabAll: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
-  validHitSfxAll: {fileID: 8300000, guid: 28110385e59aa2a48aac031f73088dc4, type: 3}
-  validHitVolumeAll: 1
-  invalidHitFxPrefabAll: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
-  invalidHitSfxAll: {fileID: 8300000, guid: c974731f514a5964780a24ffa7825328, type: 3}
-  invalidHitVolumeAll: 1
+  validHitAudio: {fileID: 11400000, guid: 5770ca59d52061a41af6b5d10162fea7, type: 2}
+  validHitFx: {fileID: 11400000, guid: ba595eb9204057b42b34863a044e92c5, type: 2}
+  invalidHitAudio: {fileID: 11400000, guid: b074aa59bcf83d94587a78942ad10826, type: 2}
+  invalidHitFx: {fileID: 11400000, guid: 212545edf4debc149ae1cdd60895fd69, type: 2}
   JobSetting: {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!114 &2450540616462859229
@@ -541,6 +540,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  deathAudio: {fileID: 11400000, guid: aefa70d3983e5e140bcec0dcf57cdd2e, type: 2}
+  deathFx: {fileID: 11400000, guid: ff776feb9e3eed44f9cc8b28dcd92ca0, type: 2}
   deathFxPrefabAll: {fileID: 8987055145473169864, guid: 61d292a3d4be52d48b3602f211d2c501, type: 3}
   deathSfxAll: {fileID: 8300000, guid: 28110385e59aa2a48aac031f73088dc4, type: 3}
   deathVolumeAll: 1
@@ -571,9 +572,9 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
-  enemySO: {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
   nEnemy: {fileID: 3163972296892794398}
-  shotClip: {fileID: 0}
+  shotAudioEffect: {fileID: 11400000, guid: 6fb4e5230ada0f9409b390a6c5f1ddc7, type: 2}
+  shotClip: {fileID: 8300000, guid: e90dd8ec210e052498d651c120222d8a, type: 3}
   networkAnimator: {fileID: 0}
   animator: {fileID: 0}
   gameEffect: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
@@ -591,9 +592,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   spawnFxPrefabAll: {fileID: 4637477889121937913, guid: 8341f291808030a4c9c3d4709878ef8f, type: 3}
+  audioEffectData: {fileID: 11400000, guid: 21dcefe3b7e6a734caead12c0ae47cb6, type: 2}
+  fxEffect: {fileID: 11400000, guid: 348779d48a972034890a39cbf1f6d43c, type: 2}
   spawnSfxAll: {fileID: 8300000, guid: 755277c4df6a1704b91570f49b062caa, type: 3}
   spawnFxLifeTimeAll: 2
   spawnVolumeAll: 1
+  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+--- !u!114 &7493623612878443819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5081841902659819387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3526a91bd42fa8845baad658c78833f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  nEnemy: {fileID: 3163972296892794398}
+  ghostHitAudioData: {fileID: 11400000, guid: 7e3e2565791139641864af5b4ef85c93, type: 2}
+  demonHitAudioData: {fileID: 11400000, guid: dee5d268ab1316641a009a148ea49577, type: 2}
+  ghostHitClipAll: {fileID: 0}
+  demonHitClipAll: {fileID: 0}
+  defaultHitAudioData: {fileID: 11400000, guid: 5770ca59d52061a41af6b5d10162fea7, type: 2}
+  defaultHitClipAll: {fileID: 8300000, guid: d78d523e7039336419d32e747e8dd408, type: 3}
+  hitVolumeAll: 1
+  hitVoiceCooldownAll: 1
+  ghostDeathAudioData: {fileID: 11400000, guid: 58dee3341e717e943b86328288c97ad0, type: 2}
+  demonDeathAudioData: {fileID: 11400000, guid: e85a86f23243cd74496aa4fc8ef78ff1, type: 2}
+  ghostDeathClipAll: {fileID: 8300000, guid: 93c41a2f186aed54a9e13211c2d7bd37, type: 3}
+  demonDeathClipAll: {fileID: 8300000, guid: dc8f926fab434a844b493d2f6b677a58, type: 3}
+  defaultDeathAudioData: {fileID: 11400000, guid: aefa70d3983e5e140bcec0dcf57cdd2e, type: 2}
+  defaultDeathClipAll: {fileID: 8300000, guid: d78d523e7039336419d32e747e8dd408, type: 3}
+  deathVolumeAll: 1
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &5651738786085563869
 GameObject:

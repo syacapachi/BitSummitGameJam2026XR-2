@@ -586,7 +586,7 @@ namespace Syacapachi.Editor
         /// </summary>
         private void DrawNestedScriptableObjects(UnityEngine.Object obj, int depth = 0, HashSet<UnityEngine.Object> visited = null,string overrideLabel = null)
         {
-            if (obj == null || depth > 1) return;
+            if (obj == null || depth > 0) return;
 
             visited ??= new HashSet<UnityEngine.Object>();
 

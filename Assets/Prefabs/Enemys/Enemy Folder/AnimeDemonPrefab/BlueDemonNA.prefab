@@ -704,7 +704,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: d68e253c4d9af6a46a17c814581a0040, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -762,10 +762,6 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 2448170875422010872}
-    - target: {fileID: 2499958070715350036, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
-      propertyPath: shotClip
-      value: 
-      objectReference: {fileID: 8300000, guid: e90dd8ec210e052498d651c120222d8a, type: 3}
     - target: {fileID: 2499958070715350036, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: bulletPrefab
       value: 

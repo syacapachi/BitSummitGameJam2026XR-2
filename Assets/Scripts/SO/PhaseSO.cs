@@ -6,6 +6,7 @@ public class PhaseSO : ScriptableObject
     [Header("Phase Display Setting")]
     [SerializeField] string phaseDisplayNameEN;
     [SerializeField] string phaseDisplayNameJP;
+    [SerializeField] LocalizeSimpleText phaseName;
 
     public string PhaseDisplayNameEN => phaseDisplayNameEN;
     public string PhaseDisplayNameJP => phaseDisplayNameJP;

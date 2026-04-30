@@ -12,12 +12,6 @@ public class RpcGameEffectAudioManager : NetworkBehaviour
 
     [Header("Volume")]
     [SerializeField, Range(0f, 1f)] private float masterSfxVolume = 1f;
-
-    private void Awake()
-    {
-        database.Init();
-    }
-
     private void OnEnable()
     {
         networkEvent.Register(OnEventReceived);
@@ -59,7 +53,7 @@ public class RpcGameEffectAudioManager : NetworkBehaviour
     // =========================
     private void PlayLocal(GameEffectData data)
     {
-        var def = database.Get(data.Id);
+        var def = database.GetAudio(data.type);
         if (def == null || def.Clip == null) return;
 
         GameObject obj = pool.Get(audioSourcePrefab);
@@ -77,12 +71,4 @@ public class RpcGameEffectAudioManager : NetworkBehaviour
         else
             audio.PlayDelayed(data.Delay);
     }
-}
-
-public enum GameEffectId
-{
-    Shoot,
-    Hit,
-    Explosion,
-    Death
 }

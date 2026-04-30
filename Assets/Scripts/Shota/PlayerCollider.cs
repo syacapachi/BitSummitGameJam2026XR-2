@@ -4,7 +4,7 @@ public class PlayerCollider : MonoBehaviour, IDamageReciever
 {
     [SerializeField] SyncroPropaty playerProp;
     [SerializeField] PlayerHealth playerHealth;
-
+    public ulong OwnerClientId => playerProp.OwnerClientId;
     public SyncroPropaty PlayerProp => playerProp;
 
     public GameObject GameObject => this.gameObject;

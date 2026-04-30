@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Game/Effect/AudioEffect")]
+[CreateAssetMenu(menuName = "Game/Effect")]
 public class AudioEffectDefinition : ScriptableObject
 {
-    public GameEffectId Id;
+    public EffectType type;
     public AudioClip Clip;
 
     [Header("Default")]

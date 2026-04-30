@@ -669,7 +669,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: d68e253c4d9af6a46a17c814581a0040, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -815,10 +815,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 806711958879125096}
     - target: {fileID: 5637691317398501634, guid: 51c87882fbc28984083999e0612867d3, type: 3}
-      propertyPath: shotClip
-      value: 
-      objectReference: {fileID: 8300000, guid: e90dd8ec210e052498d651c120222d8a, type: 3}
-    - target: {fileID: 5637691317398501634, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: bulletPrefab
       value: 
       objectReference: {fileID: 4022916156752048900, guid: 4872dc7a8f3d11442be9d1786f6b997e, type: 3}
@@ -873,13 +869,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   nEnemy: {fileID: 5144246531111797512}
+  ghostHitAudioData: {fileID: 0}
+  demonHitAudioData: {fileID: 0}
   ghostHitClipAll: {fileID: 0}
   demonHitClipAll: {fileID: 0}
+  defaultHitAudioData: {fileID: 0}
   defaultHitClipAll: {fileID: 8300000, guid: d78d523e7039336419d32e747e8dd408, type: 3}
   hitVolumeAll: 1
   hitVoiceCooldownAll: 1
+  ghostDeathAudioData: {fileID: 0}
+  demonDeathAudioData: {fileID: 0}
   ghostDeathClipAll: {fileID: 8300000, guid: 93c41a2f186aed54a9e13211c2d7bd37, type: 3}
   demonDeathClipAll: {fileID: 8300000, guid: dc8f926fab434a844b493d2f6b677a58, type: 3}
+  defaultDeathAudioData: {fileID: 0}
   defaultDeathClipAll: {fileID: 0}
   deathVolumeAll: 1
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}

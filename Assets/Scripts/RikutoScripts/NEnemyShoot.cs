@@ -7,6 +7,7 @@ using Unity.Netcode.Components;
 public class NEnemyShoot : GunController
 {
     [SerializeField] NEnemy nEnemy;
+    [SerializeField] AudioEffectData shotAudioEffect;
     [SerializeField] AudioClip shotClip;
     [Header("Reference")]
     [SerializeField] NetworkAnimator networkAnimator;
@@ -142,6 +143,7 @@ public class NEnemyShoot : GunController
     }
     public override void PlayShotSound()
     {
+        //gameEffect.Invoke(new GameEffect(shotAudioEffect.ToRuntimeData(), transform.position));
         gameEffect.Invoke(GameEffect.CreateAudioEffect(shotClip, transform.position));
     }
 #if UNITY_EDITOR

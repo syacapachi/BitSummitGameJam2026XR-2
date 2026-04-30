@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using Unity.Netcode;
+﻿using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 public class NEnemyDespawnAudio : NetworkBehaviour
 {
@@ -7,10 +8,13 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     [SerializeField] private NEnemy nEnemy;
 
     [Header("Hit Voice / SFX")]
+    [SerializeField] AudioEffectData ghostHitAudioData;
+    [SerializeField] AudioEffectData demonHitAudioData;
     [SerializeField] private AudioClip ghostHitClipAll;
     [SerializeField] private AudioClip demonHitClipAll;
 
     [Tooltip("Ghost/Demonに該当しない場合、または専用Clipが未設定の場合に使う保険の被弾音です。")]
+    [SerializeField] AudioEffectData defaultHitAudioData;
     [SerializeField] private AudioClip defaultHitClipAll;
 
     [SerializeField, Range(0f, 1f)] private float hitVolumeAll = 1f;
@@ -19,10 +23,13 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     [SerializeField] private float hitVoiceCooldownAll = 0.25f;
 
     [Header("Death Voice / SFX")]
+    [SerializeField] AudioEffectData ghostDeathAudioData;
+    [SerializeField] AudioEffectData demonDeathAudioData;
     [SerializeField] private AudioClip ghostDeathClipAll;
     [SerializeField] private AudioClip demonDeathClipAll;
 
     [Tooltip("Ghost/Demonに該当しない場合、または専用Clipが未設定の場合に使う保険の死亡音です。")]
+    [SerializeField] AudioEffectData defaultDeathAudioData;
     [SerializeField] private AudioClip defaultDeathClipAll;
 
     [SerializeField, Range(0f, 1f)] private float deathVolumeAll = 1f;
@@ -34,6 +41,14 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     private bool playedDeathAudio = false;
     private float lastHitVoiceTimeServer = -999f;
 
+    private void Awake()
+    {
+        if (nEnemy == null)
+        {
+            nEnemy = GetComponent<NEnemy>() ?? GetComponentInParent<NEnemy>();
+        }
+    }
+
     public void MarkReachedGoalServer()
     {
         reachedGoal = true;
@@ -43,12 +58,7 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     {
         reachedGoal = false;
         playedDeathAudio = false;
-        lastHitVoiceTimeServer = -999f;
-
-        if (nEnemy == null)
-        {
-            nEnemy = GetComponent<NEnemy>() ?? GetComponentInParent<NEnemy>();
-        }
+        lastHitVoiceTimeServer = -999f; 
     }
 
     /// <summary>
@@ -81,12 +91,17 @@ public class NEnemyDespawnAudio : NetworkBehaviour
         AudioClip hitClip = GetHitClipByEnemyJob();
         if (hitClip == null) return;
 
-        gameEffectEvent.Invoke(new GameEffect(
+        gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(
             hitClip,
-            null,
             position,
             hitVolumeAll
         ));
+        //gameEffectEvent.Invoke(
+        //    new GameEffect(
+        //        ghostHitAudioData.ToRuntimeData(),
+        //        position
+        //    )
+        //);
     }
 
     public override void OnNetworkDespawn()
@@ -100,12 +115,17 @@ public class NEnemyDespawnAudio : NetworkBehaviour
         AudioClip deathClip = GetDeathClipByEnemyJob();
         if (deathClip == null) return;
 
-        gameEffectEvent.Invoke(new GameEffect(
+        gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(
             deathClip,
-            null,
             transform.position,
             deathVolumeAll
         ));
+        //gameEffectEvent.Invoke(
+        //    new GameEffect(
+        //        defaultDeathAudioData.ToRuntimeData(),
+        //        transform.position
+        //    )
+        //);
     }
 
     private AudioClip GetHitClipByEnemyJob()

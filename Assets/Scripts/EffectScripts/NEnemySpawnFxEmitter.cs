@@ -4,9 +4,12 @@ using UnityEngine;
 public class NEnemySpawnFxEmitter : NetworkBehaviour
 {
     [SerializeField] private GameObject spawnFxPrefabAll;
+    [SerializeField] AudioEffectData audioEffectData;
+    [SerializeField] FxEffectData fxEffect;
     [SerializeField] private AudioClip spawnSfxAll;
     [SerializeField] private float spawnFxLifeTimeAll = 2f;
     [SerializeField, Range(0f, 1f)] private float spawnVolumeAll = 1f;
+    [Header("Publish Event")]
     [SerializeField] private GameEffectEvent gameEffectEvent;
 
     public override void OnNetworkSpawn()
@@ -33,12 +36,7 @@ public class NEnemySpawnFxEmitter : NetworkBehaviour
         if (spawnSfxAll != null)
         {
             gameEffectEvent.Invoke(
-                GameEffect.CreateCombinedEffect(
-                    spawnSfxAll,
-                    spawnFxPrefabAll,
-                    position,
-                    volume: spawnVolumeAll
-                )
+                new GameEffect(audioEffectData.ToRuntimeData(),fxEffect.ToRuntimeData(),position)
             );
         }
     }

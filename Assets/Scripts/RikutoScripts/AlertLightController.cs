@@ -12,6 +12,7 @@ public class AlertLightController : MonoBehaviour
     float timer = 0f;
     [SerializeField] float interval = 3f;
     [SerializeField] AudioClip buzzerClip;
+    [SerializeField] AudioEffectData buzzerEffectData;
 
     [Header("Subscribe Event")]
     [SerializeField] HPInfoEvent hpInfo;
@@ -67,6 +68,7 @@ public class AlertLightController : MonoBehaviour
 
             if (timer >= interval)
             {
+                //gameEffectEvent.Invoke(new GameEffect(buzzerEffectData.ToRuntimeData(),alertObject.transform.position));
                 gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(buzzerClip,alertObject.transform.position));
 
                 timer = 0f;

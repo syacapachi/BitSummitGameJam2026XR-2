@@ -23,6 +23,7 @@ public class AvatarSyncronize : NetworkBehaviour
     [SerializeField] private Transform networkRightController;
     [Header("Setting")]
     [SerializeField] float footOffset = 0.1f;
+    [SerializeField] float footWight = 0.2f;
     [SerializeField] float kneeWight = 0.2f;
     [Header("Calibration"),Tooltip("対象のアバターのスケールを慎重に応じて拡大・縮小します。(元のアバターの身長は1m,スケールは1.1.1にして下さい。)")]
     [SerializeField] int calibrationCount = 10;
@@ -43,6 +44,7 @@ public class AvatarSyncronize : NetworkBehaviour
         {
             //初期化
             OnScaleChanged(1, 1);
+            //avatorRootTransfromからみた、頭の相対座標のY成分を、アバターの目の高さとする
             avatarEyeHeight = avatorRootTransfrom.InverseTransformPoint(animator.GetBoneTransform(HumanBodyBones.Head).position).y;
             StartCoroutine(WaitForEnable());
             NetworkManager.SceneManager.OnLoadComplete += OnSceneLoaded;
@@ -104,9 +106,10 @@ public class AvatarSyncronize : NetworkBehaviour
         float eyeHeight = 0;
         for(int i = 0;i< calibrationCount; i++)
         {
-            eyeHeight += xrOrigin.Camera.transform.position.y / calibrationCount;
+            eyeHeight += xrOrigin.Camera.transform.position.y;
             yield return null;
         }
+        eyeHeight /= calibrationCount;
         AvatarScale.Value = eyeHeight / avatarEyeHeight;
         Debug.Log($"[{nameof(AvatarSyncronize)}] Scale is {AvatarScale.Value}");
     }
@@ -178,10 +181,12 @@ public class AvatarSyncronize : NetworkBehaviour
                 Vector3.ProjectOnPlane(transform.forward, hit.normal),
                 hit.normal
             );
+            footPos += transform.right * (goal == AvatarIKGoal.LeftFoot ? -footWight : footWight);
             SetIKPositonAndRotation(goal, footPos, footRot, weight);
-            
+
             //Vector3 hintPos = animator.GetIKHintPosition(hint);
             // 🔥 Knee Hint
+            //ヒントは、0.3m+身長の0.4倍、左右にkneeWight、上に0.3mの位置にする
             Vector3 hintPos =
                 footPos
                 + transform.forward * 0.4f
@@ -215,8 +220,8 @@ public class AvatarSyncronize : NetworkBehaviour
         if (IsOwner)
         {
             if (!isfoundLocalPlayer) return;
-            //avatorRootTransfromからみた、networkHeadの相対座標
-            Vector3 headOffsetLocalY = avatorRootTransfrom.InverseTransformPoint(animator.GetBoneTransform(HumanBodyBones.Head).position);
+            //avatorRootTransfromからみた、左目の相対座標
+            Vector3 headOffsetLocalY = avatorRootTransfrom.InverseTransformPoint(animator.GetBoneTransform(HumanBodyBones.LeftEye).position);
             //カメラのY座標は、地面からの距離
             //Avatorの頭を動かす不自然になる。->rootを調整
             Vector3 cameraPos = xrOrigin.Camera.transform.position;

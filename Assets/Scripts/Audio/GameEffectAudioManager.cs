@@ -10,7 +10,7 @@
 //     [SerializeField, Range(0f, 1f)] private float masterSfxVolumeAll = 1f;
 //     [Header("Subscribe Event")]
 //     [SerializeField] GameEffectEvent gameEffectEvent;
-    
+
 //     private void OnEnable()
 //     {
 //         gameEffectEvent.Register(OnEventRecived);
@@ -85,6 +85,7 @@
 // }
 
 //水野が追加した
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -123,16 +124,16 @@ public class GameEffectAudioManager : MonoBehaviour
         //パターマッチングでAudioEffectとFxEffectを分けて処理する
         if (e.AudioEffect is AudioEffect audio)
         {
-            PlayAudioEffect(audio, e.Position, e.Delay);
+            SetUpAudioEffect(audio, e.Position, e.Delay);
         }
 
         if (e.FxEffect is FxEffect fx)
         {
-            PlayFxEffect(fx, e.Position, e.Delay);
+            SetUpFxEffect(fx, e.Position, e.Delay);
         }
     }
 
-    public void PlayAudioEffect(AudioEffect effect,Vector3 positon,float delay = 0f)
+    public void SetUpAudioEffect(AudioEffect effect,Vector3 positon,float delay = 0f)
     {
         GameObject obj = localObjectPool.Get(audioSourcePrefab);
         AudioSource audioSource = obj.GetComponent<AudioSource>();
@@ -175,7 +176,7 @@ public class GameEffectAudioManager : MonoBehaviour
         yield return PlayAndRelease(source);
     }
 
-    private void PlayFxEffect(FxEffect fxEffect, Vector3 pos, float delay = 0f)
+    private void SetUpFxEffect(FxEffect fxEffect, Vector3 pos, float delay = 0f)
     {
         GameObject obj = localObjectPool.Get(fxEffect.FxPrefab);
         obj.transform.SetPositionAndRotation(pos, Quaternion.identity);
@@ -197,8 +198,18 @@ public class GameEffectAudioManager : MonoBehaviour
             return;
         }
 
+        if(delay < 0.1f)
+        {
+            PlayFx(fxEffect, obj, particleSystems);
+        }
+        else
+        {
+            StartCoroutine(PlayFxAfterDelay(fxEffect, obj, particleSystems, delay));
+        }
+    }
+    private void PlayFx(FxEffect fxEffect,GameObject obj, ParticleSystem[] particleSystems)
+    {
         bool hasLoopParticle = false;
-
         foreach (var ps in particleSystems)
         {
             if (ps == null) continue;
@@ -223,12 +234,17 @@ public class GameEffectAudioManager : MonoBehaviour
         }
 
         // ループFXは、寿命が指定されていればその秒数後に自然停止→返却
-        if (fxEffect.FxLifeTime > 0f)
+        if (fxEffect.LoopFxLifeTime > 0f)
         {
-            Coroutine releaseCoroutine = StartCoroutine(StopLoopFxAfterLifetime(obj, particleSystems, fxEffect.FxLifeTime));
+            Coroutine releaseCoroutine = StartCoroutine(StopLoopFxAfterLifetime(obj, particleSystems, fxEffect.LoopFxLifeTime));
             fxReleaseCoroutines[obj] = releaseCoroutine;
         }
         // fxLifeTime <= 0 のときは手動停止まで残る
+    }
+    private IEnumerator PlayFxAfterDelay(FxEffect fxEffect,GameObject fxPrefab, ParticleSystem[] particleSystems, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        PlayFx(fxEffect,fxPrefab, particleSystems);
     }
 
     private IEnumerator ReleaseFxWhenFinished(GameObject obj, ParticleSystem[] particleSystems)
@@ -283,10 +299,12 @@ public class GameEffectAudioManager : MonoBehaviour
     }
 }
 
+//クラスだと、大体ポインター 一個分で、コピーが軽いから、GameEffectはクラスにしてみる
 public class GameEffect
 {
+    /// <summary>音の情報。nullなら音なし</summary>
     public readonly AudioEffect? AudioEffect;
-
+    /// <summary>FXの情報。nullならFXなし</summary>
     public readonly FxEffect? FxEffect;
 
     /// <summary>発生位置</summary>
@@ -294,7 +312,7 @@ public class GameEffect
     /// <summary>遅れ</summary>
     public readonly float Delay;
 
-    public GameEffect(
+    private GameEffect(
         AudioClip clip,
         GameObject fxPrefab,
         Vector3 positon,
@@ -308,6 +326,27 @@ public class GameEffect
         this.AudioEffect = new AudioEffect(clip, volume, pitch, loop);
         this.FxEffect = new FxEffect(fxPrefab, fxLifeTime);
         this.Position = positon;
+        this.Delay = delay;
+    }
+    public GameEffect(AudioEffect audioEffect, Vector3 position, float delay = 0f)
+    {
+        this.AudioEffect = audioEffect;
+        this.FxEffect = null;
+        this.Position = position;
+        this.Delay = delay;
+    }
+    public GameEffect(FxEffect fxEffect, Vector3 position, float delay = 0f)
+    {
+        this.AudioEffect = null;
+        this.FxEffect = fxEffect;
+        this.Position = position;
+        this.Delay = delay;
+    }
+    public GameEffect(AudioEffect audioEffect, FxEffect fxEffect, Vector3 position, float delay = 0f)
+    {
+        this.AudioEffect = audioEffect;
+        this.FxEffect = fxEffect;
+        this.Position = position;
         this.Delay = delay;
     }
     public static GameEffect CreateAudioEffect(AudioClip clip, Vector3 position, float volume = 1.0f, float pitch = 1.0f, float delay = 0.0f, bool loop = false)
@@ -340,7 +379,15 @@ public readonly struct AudioEffect
         this.Pitch = pitch;
         this.Loop = loop;
     }
+    public AudioEffect(AudioEffectData data)
+    {
+        this.Clip = data.Clip;
+        this.Volume = data.Volume;
+        this.Pitch = data.Pitch;
+        this.Loop = data.Loop;
+    }
 }
+
 public readonly struct FxEffect
 {
     /// <summary>particle</summary>
@@ -348,11 +395,29 @@ public readonly struct FxEffect
     // <summary>
     /// FX寿命
     /// 0以下なら、単発は自動返却・ループは手動停止まで残る
-    public readonly float FxLifeTime;
+    public readonly float LoopFxLifeTime;
     public FxEffect(GameObject fxPrefab, float fxLifeTime = -1f)
     {
         this.FxPrefab = fxPrefab;
-        this.FxLifeTime = fxLifeTime;
+        this.LoopFxLifeTime = fxLifeTime;
     }
+    public FxEffect(FxEffectData data)
+    {
+        this.FxPrefab = data.FxPrefab;
+        this.LoopFxLifeTime = data.LoopFxLifeTime;
+    }
+}
+// エフェクトの種類。AudioEffectDataやFxEffectDataで指定する
+//追加する場合は下に順番を変えず増やして
+public enum EffectType
+{
+    None,
+    Hit,
+    Shield,
+    Attack,
+    Death,
+    Spawn,
+    Pin,
+    Reload
 }
 //水野以上
