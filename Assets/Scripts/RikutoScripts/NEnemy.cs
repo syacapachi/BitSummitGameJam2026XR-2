@@ -43,6 +43,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     public bool IsAttackable => isAttackable;
 
+
     [SerializeField]
         private PlayerJob[] jobCycle = new PlayerJob[]
     {
@@ -50,6 +51,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         PlayerJob.Ghost,
         PlayerJob.Tutorial
     };
+
+    [SerializeField] EnemyDataBase enemyDataBase;
     public bool IsAttackableJob(PlayerJob playerJob)
     {
         if(enemyJobSetting == null)
@@ -67,6 +70,38 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         this.enemySO = enemySO;
     }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void InitEnemyRpc(int id)
+    {
+        Debug.Log($"[InitEnemyRpc] Called | IsServer:{IsServer} IsClient:{IsClient} | id:{id}");
+
+        if (enemyDataBase == null)
+        {
+            Debug.LogError("[InitEnemyRpc] enemyDataBase is NULL!");
+            return;
+        }
+
+        if (id < 0 || id >= enemyDataBase.Length)
+        {
+            Debug.LogError($"[InitEnemyRpc] Invalid ID: {id}");
+            return;
+        }
+
+        enemySO = enemyDataBase.GetEnemyDataFromId(id);
+
+        if (enemySO == null)
+        {
+            Debug.LogError($"[InitEnemyRpc] enemySO is NULL after GetEnemyDataFromId | id:{id}");
+            return;
+        }
+
+        Debug.Log($"[InitEnemyRpc] SUCCESS | Enemy: {enemySO.name}");
+
+        // 念のためUI更新
+        UpdateHPUI(currentHP.Value);
+    }
+
     private void Awake()
     {
         //水野編集
@@ -76,6 +111,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         //水野以上
     }
+
+    /*
     public override void OnNetworkSpawn()
     {
         isInitialize = false;
@@ -100,6 +137,41 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         {
             hpText.text = $"{currentHP.Value} / {enemySO.Hp}";
         }
+
+        StartCoroutine(SetupPlayerCoroutine());
+    }
+    */
+
+    public override void OnNetworkSpawn()
+    {
+        isInitialize = false;
+
+        currentHP.OnValueChanged += OnHPChanged;
+
+        StartCoroutine(WaitForEnemySO());
+    }
+
+    IEnumerator WaitForEnemySO()
+    {
+        // enemySO がセットされるまで待つ
+        yield return new WaitUntil(() => enemySO != null);
+
+        // ↓ここから安全に使える
+        if (IsServer)
+        {
+            currentHP.Value = enemySO.Hp;
+        }
+
+        UpdateHPUI(currentHP.Value);
+        ApplySettting();
+
+        if (!IsClient) yield break;
+
+        if (hpImage != null)
+            hpImage.fillAmount = 1f;
+
+        if (hpText != null)
+            hpText.text = $"{currentHP.Value} / {enemySO.Hp}";
 
         StartCoroutine(SetupPlayerCoroutine());
     }
@@ -227,8 +299,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     void UpdateHPUI(float hp)
     {
+        if (enemySO == null) return;
+
         if (hpImage != null)
-            hpImage.fillAmount = Mathf.Clamp01((float)hp / enemySO.Hp);
+            hpImage.fillAmount = hp / enemySO.Hp;
 
         if (hpText != null)
             hpText.text = $"{hp} / {enemySO.Hp}";

@@ -38632,7 +38632,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: phaseSetting.Array.data[3].phases.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phaseSetting.Array.data[3].phases.Array.data[0]'
@@ -38641,7 +38641,7 @@ PrefabInstance:
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phaseSetting.Array.data[3].phases.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
+      objectReference: {fileID: 11400000, guid: 4f4182bedf443b640ab575f946f0caca, type: 2}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phaseSetting.Array.data[3].phases.Array.data[2]'
       value: 
@@ -38795,13 +38795,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: difficulty.m_InternalValue
+      propertyPath: gameStartMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: difficulty.m_InternalValue
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5843874078436757177, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: protectArea
       value: 
       objectReference: {fileID: 1008058033}
+    - target: {fileID: 5843874078436757177, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: enemyDataBase
+      value: 
+      objectReference: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
     - target: {fileID: 5843874078436757177, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: spawnPointParent
       value: 
