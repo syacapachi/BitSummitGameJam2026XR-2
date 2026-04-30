@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Night
   m_EditorClassIdentifier: 
   timeOfDay: 20
-  topColor: {r: 0, g: 0, b: 0, a: 0}
-  horizonColor: {r: 0, g: 0.5882353, b: 1, a: 0}
-  bottomColor: {r: 0, g: 0, b: 0, a: 0}
-  intensity: 0.1
-  exponentTop: 1
-  exponentBottom: 1
-  lightColor: {r: 1, g: 1, b: 1, a: 1}
-  lightRotation: {x: 0, y: 0, z: 0}
+  topColor: {r: 0.019607844, g: 0.019607844, b: 0.078431375, a: 1}
+  horizonColor: {r: 0.039215688, g: 0.05882353, b: 0.15686275, a: 1}
+  bottomColor: {r: 0.019607844, g: 0.019607844, b: 0.05882353, a: 1}
+  intensity: 0.8
+  exponentTop: 2
+  exponentBottom: 3
+  lightColor: {r: 0.3137255, g: 0.3529412, b: 0.50980395, a: 1}
+  lightRotation: {x: 120, y: 0, z: 0}
   lightIntensity: 0.5
-  indirectMultiplier: 1
+  indirectMultiplier: 0.1

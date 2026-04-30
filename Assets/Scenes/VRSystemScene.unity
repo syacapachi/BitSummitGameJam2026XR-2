@@ -7222,8 +7222,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 0.627451, g: 0.39215687, b: 0.54901963, a: 1}
+  m_Intensity: 0.3
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -7265,7 +7265,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 0.5
+  m_BounceIntensity: 0.2
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -7285,7 +7285,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 413005061}
   serializedVersion: 2
-  m_LocalRotation: {x: 1, y: 0, z: 0, w: -0.00000004371139}
+  m_LocalRotation: {x: 0.9961947, y: 0, z: 0, w: 0.087155804}
   m_LocalPosition: {x: 0, y: 50, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -38549,6 +38549,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: changeTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: debugEvent
       value: 
       objectReference: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
@@ -38562,7 +38566,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: skyBoxColorSettings.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'directionalLights.Array.data[0]'
@@ -38571,21 +38575,25 @@ PrefabInstance:
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'skyBoxColorSettings.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
+      objectReference: {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'skyBoxColorSettings.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
+      objectReference: {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'skyBoxColorSettings.Array.data[2]'
       value: 
-      objectReference: {fileID: 11400000, guid: cdf2344405367c94e9d5aeb6eb72f5a8, type: 2}
+      objectReference: {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'skyBoxColorSettings.Array.data[3]'
       value: 
-      objectReference: {fileID: 11400000, guid: aab534e90c923dd47b02f4361b9128fb, type: 2}
+      objectReference: {fileID: 11400000, guid: cdf2344405367c94e9d5aeb6eb72f5a8, type: 2}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'skyBoxColorSettings.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: aab534e90c923dd47b02f4361b9128fb, type: 2}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'skyBoxColorSettings.Array.data[5]'
       value: 
       objectReference: {fileID: 11400000, guid: 22c980c46d86d70478b73be59f2e9fd6, type: 2}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
