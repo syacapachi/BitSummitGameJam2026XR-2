@@ -1,9 +1,9 @@
 ﻿using Syacapachi.Attribute;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
-using UnityEngine.XR;
 
 public enum TutorialStep
 {
@@ -12,6 +12,8 @@ public enum TutorialStep
 
 public class TutorialManager : NetworkBehaviour
 {
+    [Header("Reference")]
+    [SerializeField] PlayerManager playerManager;
     public NetworkVariable<TutorialStep> CurrentStep =
         new(TutorialStep.Step1);
 
@@ -23,6 +25,13 @@ public class TutorialManager : NetworkBehaviour
     [SerializeField] List<EnemySO> step2Enemies;
 
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
+    private bool isInitialized = false;
+
+    private void Start()
+    {
+        isInitialized = false;
+        StartCoroutine(WaitForAllClientConnect());
+    }
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -30,15 +39,20 @@ public class TutorialManager : NetworkBehaviour
             attackBlockedEvent.Register(OnAttackBlocked);
             NetworkManager.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
         }
-
         CurrentStep.OnValueChanged += OnStepChanged;
     }
 
     private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
     {
-        StartStep(TutorialStep.Step1);
+        if(!isInitialized) 
+            StartStep(TutorialStep.Step1);
     }
-
+    IEnumerator WaitForAllClientConnect()
+    {
+        yield return new WaitUntil(() => IsSpawned && playerManager != null && playerManager.IsAllClientReady());
+        if (!isInitialized　&& IsServer)
+            StartStep(TutorialStep.Step1);
+    }
     public override void OnNetworkDespawn()
     {
         CurrentStep.OnValueChanged -= OnStepChanged;
@@ -56,6 +70,7 @@ public class TutorialManager : NetworkBehaviour
 
     void StartStep(TutorialStep step)
     {
+        isInitialized = true;
         currentStepLogic?.OnEnd();
         int playerCount = NetworkManager.ConnectedClientsIds.Count;
 

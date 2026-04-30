@@ -83,7 +83,7 @@ public class SampleScript : MonoBehaviour
     [OnInspectorButton(validateInvoke = true)]
     public void SampleMethod(SampleScript script)
     {
-        script.SampleMethod();
+        throw new Exception($"[{nameof(SampleScript)}] Sample Exception !");
     }
     //[OnInspectorButton]
     //public void SampleMethodWithParameter(string message, int number)
