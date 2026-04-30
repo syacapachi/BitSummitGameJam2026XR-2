@@ -18,7 +18,7 @@ public class CrystalHPUI : MonoBehaviour
 
     IEnumerator Start()
     {
-        Debug.Log("[HPUI] Start begin");
+        Debug.Log("[HPUI] Start begin",gameObject);
         // GameManager待機
         while (ManagerLocator.Instance.AllGameManager == null)
         {
@@ -26,7 +26,7 @@ public class CrystalHPUI : MonoBehaviour
         }
 
         nGameManager = ManagerLocator.Instance.AllGameManager;
-        Debug.Log($"[HPUI] GameManager取得 | score:{nGameManager.ScoreManager.score.Value}");
+        Debug.Log($"[HPUI] GameManager取得 | score:{nGameManager.ScoreManager.score.Value}",gameObject);
 
 
         //  scoreの初期値が入るまで待つ（0対策）
@@ -62,13 +62,13 @@ public class CrystalHPUI : MonoBehaviour
 
     void OnScoreChanged(int oldValue, int newValue)
     {
-        Debug.Log($"[HPUI] OnScoreChanged {oldValue} → {newValue}");
+        Debug.Log($"[HPUI] OnScoreChanged {oldValue} → {newValue}",gameObject);
         UpdateScoreUI(newValue);
     }
 
     void UpdateScoreUI(int score)
     {
-        Debug.Log($"[HPUI] UpdateUI score:{score} max:{maxScore}");
+        Debug.Log($"[HPUI] UpdateUI score:{score} max:{maxScore}",gameObject);
         // バー更新
         if (scoreBar != null)
         {

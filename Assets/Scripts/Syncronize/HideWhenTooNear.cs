@@ -11,14 +11,17 @@ public class HideWhenTooNear : MonoBehaviour
     [SerializeField] Camera playerCamera;
     [Header("Playerを判定するためのLayerMask")]
     [SerializeField] LayerMask playerLayer;
-    [Header("Playerとの距離をどれくらいの頻度でチェックするか")]
+    [Header("Playerとの距離をどれくらいの頻度でチェックするか(重い処理なので、0.5秒以上)")]
     [SerializeField] float checkInterval = 0.1f;
+    [Header("Player判別距離")]
+    [SerializeField] float checkDistance = 1.0f;
     [Header("Playerがどれくらい近いときにRendererを消すか")]
-    [SerializeField] float hideThreshold = 0.2f;
+    [SerializeField] float hideThreshold = 0.8f;
     private readonly HashSet<Collider> myColliderSet = new();
-    private readonly Dictionary<Collider,Renderer[]> otherRendererCache = new();
+    private readonly Dictionary<PlayerCollider, Renderer[]> otherRendererCache = new();
     //OverlapSphereNonAllocのための配列
     readonly Collider[] hits = new Collider[10];
+    readonly HashSet<PlayerCollider> lastHitsColliders = new();
     private void Awake()
     {
         foreach (var col in myColliders)
@@ -43,26 +46,32 @@ public class HideWhenTooNear : MonoBehaviour
     }
 
     void CheckPlayer()
-    { 
-        int hitCount = Physics.OverlapSphereNonAlloc(transform.position, 0.5f, hits, playerLayer);
+    {
+        //直前を消す
+        foreach (var col in lastHitsColliders)
+        {
+            SetRendererVisible(col, true);
+        }
+        lastHitsColliders.Clear();  
+        int hitCount = Physics.OverlapSphereNonAlloc(playerCamera.transform.position, checkDistance, hits, playerLayer);
         for (int i = 0; i < hitCount; i++)
         {
             var other = hits[i];
             if (myColliderSet.Contains(other)) continue;
             if(!other.TryGetComponent<PlayerCollider>(out var playerCollider)) continue;
             if (ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.OwnerClientId == playerCollider.OwnerClientId) continue;
+            lastHitsColliders.Add(playerCollider);
             float distance = Vector3.Distance(playerCamera.transform.position, other.transform.position);
-            bool hide = distance > hideThreshold;
-            SetRendererVisible(other, !hide);
-        }
-        
+            //Debug.Log($"found collider distance = {distance}", playerCollider);
+            SetRendererVisible(playerCollider, !(distance < hideThreshold));
+        }  
     }
-    void SetRendererVisible(Collider other, bool visible)
+    void SetRendererVisible(PlayerCollider other, bool visible)
     {
         if (!otherRendererCache.TryGetValue(other, out var renderers))
         {
-            renderers = other.GetComponentsInChildren<Renderer>();
-            otherRendererCache[other] = renderers;
+            otherRendererCache[other] = other.Renderers;
+            renderers = other.Renderers;
         }
         foreach (var renderer in renderers)
         {

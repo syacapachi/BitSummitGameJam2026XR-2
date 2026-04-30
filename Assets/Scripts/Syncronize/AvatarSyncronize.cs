@@ -111,7 +111,9 @@ public class AvatarSyncronize : NetworkBehaviour
         }
         eyeHeight /= calibrationCount;
         AvatarScale.Value = eyeHeight / avatarEyeHeight;
-        Debug.Log($"[{nameof(AvatarSyncronize)}] Scale is {AvatarScale.Value}");
+#if UNITY_EDITOR
+        Debug.Log($"[{nameof(AvatarSyncronize)}] Scale is {AvatarScale.Value}",gameObject);
+#endif
     }
     public override void OnNetworkDespawn()
     {
@@ -231,18 +233,22 @@ public class AvatarSyncronize : NetworkBehaviour
             }
             // rootを補正
             cameraPos.y -= headOffsetLocalY.y;
-            avatorRootTransfrom.SetPositionAndRotation(cameraPos, xrOrigin.transform.rotation);
-
-            networkHead.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
-
             if (XRSettings.isDeviceActive)
             {
+                //位置
+                avatorRootTransfrom.SetPositionAndRotation(cameraPos, xrOrigin.transform.rotation);
+                //頭の回転
+                networkHead.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
                 // ★手
                 networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
                 networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
             }
             else
             {
+                //y部分だけを取得
+                Quaternion rot = Quaternion.Euler(0, xrOrigin.Camera.transform.rotation.eulerAngles.y, 0);
+                //　XRが無効な場合は、頭の位置を、そのままrootへ
+                avatorRootTransfrom.SetPositionAndRotation(cameraPos, rot);
                 // ★手　XRが無効の時は、頭に付けることで疑似的FPS
                 networkLeftController.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
                 networkRightController.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);

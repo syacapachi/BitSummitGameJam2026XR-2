@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Video;
 
 namespace Unity.VRTemplate
@@ -12,7 +12,7 @@ namespace Unity.VRTemplate
         const string k_ShaderName = "Unlit/Texture";
 
         [SerializeField]
-        [Tooltip("The target Renderer which will display the video.")]
+        [Tooltip("The target Renderers which will display the video.")]
         Renderer m_Renderer;
 
         [SerializeField]

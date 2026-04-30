@@ -107,7 +107,7 @@ public class MarkerController : NetworkBehaviour
     {
         if (attachServerOnly == null)
         {
-            Debug.LogWarning("Player marker not found. Cannot place marker.");
+            Debug.LogWarning("Player marker not found. Cannot place marker.",gameObject);
             return;
         }
         if (isMarkAttachedServerOnly)
@@ -155,7 +155,7 @@ public class MarkerController : NetworkBehaviour
         }
         else
         {
-            Debug.LogError($"[{gameObject.name}]AttachableBehaviour is null");
+            Debug.LogError($"[{gameObject.name}]AttachableBehaviour is null",gameObject);
             isMarkAttachedServerOnly = false;
         }
     }

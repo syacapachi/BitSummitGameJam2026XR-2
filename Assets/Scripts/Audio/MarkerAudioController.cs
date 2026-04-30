@@ -102,7 +102,7 @@ public class MarkerAudioController : NetworkBehaviour
         // 2. 音は耳元で1回だけ鳴らす
         if (markerPlacedClipAll == null)
         {
-            Debug.LogWarning($"[{nameof(MarkerAudioController)}] markerPlacedClipAll is null");
+            Debug.LogWarning($"[{nameof(MarkerAudioController)}] markerPlacedClipAll is null", gameObject);
             return;
         }
 
