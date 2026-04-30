@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   phaseDisplayNameEN: BossPhase
   phaseDisplayNameJP: "\u30DC\u30B9\u30D5\u30A7\u30FC\u30BA"
+  phaseName: {fileID: 0}
   phaseTime: 60
   clearBonus: 10000
   spawnEvents:
   - enemyType: {fileID: 11400000, guid: e629d58e157b68f49b089f0612381bd7, type: 2}
-    spawnPointIndex: 18
+    spawnPointIndex: 4
     spawnTime: 0
   - enemyType: {fileID: 11400000, guid: f082e846924567d43b428a3ccda817d9, type: 2}
-    spawnPointIndex: 19
+    spawnPointIndex: 13
     spawnTime: 0
