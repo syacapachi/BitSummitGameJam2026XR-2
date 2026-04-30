@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6df8e7571e05a4468818a61a1effb1a, type: 3}
   m_Name: Old Phase1
   m_EditorClassIdentifier: 
-  phaseDisplayNameEN: OldPhase1
-  phaseDisplayNameJP: "\u6614\u306E\u30D5\u30A7\u30FC\u30BA1"
+  phaseName: {fileID: 11400000, guid: 8c474743075ca03428a4089e260ff1e5, type: 2}
   phaseTime: 30
   clearBonus: 1000
+  useRandomSpawn: 0
   spawnEvents:
   - enemyType: {fileID: 11400000, guid: 3091726d86d0589408faa4d6a60512dc, type: 2}
     spawnPointIndex: 0
