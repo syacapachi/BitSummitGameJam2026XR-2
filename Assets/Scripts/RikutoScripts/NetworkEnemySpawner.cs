@@ -58,7 +58,6 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     [SerializeField] VoidEvent OnAllEnemyDeadRpcEvent;
     [Header("SubScribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
-
     private int remain;
     public int RemainServerOnly => remain;
     private bool isSpawnFinished = false;
@@ -83,14 +82,14 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     {
         OnEnemyKilled(killled.KilledEnemy);
     }
-    public void SpawnFromEvent(List<SpawnEvent> events)
+    public void SpawnFromEvent(List<SpawnEvent> events, bool useRandomSpawn)
     {
         if (!IsServer) return;
-        if(!ManagerLocator.Instance.AllGameManager.IsGamePlaying) return;
+        if (!ManagerLocator.Instance.AllGameManager.IsGamePlaying) return;
 
         StopAllCoroutines();
         waitForSpawn = null;
-        if(nextPhaseType == NextPhaseType.Delete)
+        if (nextPhaseType == NextPhaseType.Delete)
         {
             waitSpawnEnemyQueue.Clear();
         }
@@ -100,6 +99,19 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         isSpawnFinished = false;
 
         StartCoroutine(SpawnRoutine(events));
+        //とりあえず、入力されたリストをそれっぽくまぜまぜ
+        if (useRandomSpawn)
+        {
+            List<SpawnEvent> randomSpawnEvent = new();
+            foreach (SpawnEvent e in events)
+            {
+                int point = Random.Range(0, spawnPoints.Length);
+                float time = Random.Range(0,e.SpawnTime);
+                SpawnEvent randomEvent = new SpawnEvent(e.EnemyType,point,time);
+                randomSpawnEvent.Add(randomEvent);
+            }
+            StartCoroutine(SpawnRoutine(randomSpawnEvent));
+        }
     }
     public void StopSpaw()
     {
@@ -116,7 +128,6 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         //spawnEvents.Sort((a, b) => a.SpawnTime.CompareTo(b.SpawnTime));
         //Queueで高速に
         Queue<SpawnEvent> spawnQueue = new(spawnEvents.OrderBy(e => e.SpawnTime));
-
 
         int index = 0;
         isSpawnFinished = false; // 念のためリセット

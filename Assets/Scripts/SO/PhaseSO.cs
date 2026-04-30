@@ -12,9 +12,9 @@ public class PhaseSO : ScriptableObject
     [Header("Phase Settings")]
     [SerializeField] float phaseTime = 30f;
     [SerializeField] int clearBonus = 500;
-    [SerializeField] bool isRandomSpawn = false;
+    [SerializeField] bool useRandomSpawn = false;
 
-    public bool IsRandomSpawn => isRandomSpawn;
+    public bool UseRandomSpawn => useRandomSpawn;
 
     public float PhaseTime => phaseTime;
     public int ClearBonus => clearBonus;
@@ -35,4 +35,11 @@ public struct SpawnEvent
     public readonly EnemySO EnemyType => enemyType;
     public readonly int SpawnPointIndex => spawnPointIndex;
     public readonly float SpawnTime => spawnTime;
+
+    public SpawnEvent(EnemySO so, int spawnPointIndex, float spawnTime)
+    {
+        enemyType = so;
+        this.spawnPointIndex = spawnPointIndex;
+        this.spawnTime = spawnTime;
+    }
 }
