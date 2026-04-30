@@ -190,8 +190,11 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                     }
                     break;
             }
-            SpawnEvent e = waitSpawnEnemyQueue.Dequeue();
-            SpawnEnemy(e.EnemyType,e.SpawnPointIndex);
+            if(waitSpawnEnemyQueue.Count > 0)
+            {
+                SpawnEvent e = waitSpawnEnemyQueue.Dequeue();
+                SpawnEnemy(e.EnemyType, e.SpawnPointIndex);
+            }
         }
         waitForSpawn = null;
     }
