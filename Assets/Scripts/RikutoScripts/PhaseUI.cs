@@ -243,17 +243,17 @@ public class PhaseUI : MonoBehaviour
         SetupNormal();
 
         phaseText.fontSize = 100;
-        phaseText.text = "ALL ENEMY DEAD!";
+        phaseText.text = isJapanese ? "全敵撃破！" : "ALL ENEMY DEAD!";
         phaseText.gameObject.SetActive(true);
 
         yield return PopAnimation();
         yield return new WaitForSeconds(1f);
 
-        phaseText.text = "CLEAR BONUS";
+        phaseText.text = isJapanese ? "クリアボーナス" : "CLEAR BONUS";
         yield return PopAnimation();
         yield return new WaitForSeconds(1f);
 
-        phaseText.text = $"SCORE: +{bonus}";
+        phaseText.text = isJapanese ? $"スコア: +{bonus}" : $"SCORE: +{bonus}";
         yield return PopAnimation();
         yield return new WaitForSeconds(1f);
 

@@ -5,8 +5,9 @@ using System;
 public class ScoreManager : NetworkBehaviour
 {
     [SerializeField] int initilScore;
+    public int InitialScore => initilScore;
     public NetworkVariable<int> score = new(
-        10000,
+        0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );

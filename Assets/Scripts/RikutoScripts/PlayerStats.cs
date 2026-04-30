@@ -63,7 +63,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
 
         if (enemyId < 0 || enemyId >= killCounts.Length)
         {
-            Debug.LogWarning($"Invalid enemyso: {enemyso}");
+            Debug.LogWarning($"Invalid enemyso: {enemyso}", gameObject);
             return;
         }
 

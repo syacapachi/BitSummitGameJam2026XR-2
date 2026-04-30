@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SkyBoxColorChanger : MonoBehaviour
 {
+    [SerializeField] PhaseManager phaseManager;
     [SerializeField] float changeTime = 5f;
     [Header("SkyBox Material")]
     [SerializeField] Material skyboxMat;
@@ -13,7 +14,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     [Header("Directional Light(太陽)")]
     [SerializeField] Light[] directionalLights;
     [Header("Subscribe Event")]
-    [SerializeField] IntEvent phaseChageEvent;
+    [SerializeField] GameStateEvent gameStateEvent;
     [Header("デバックモード")]
     [SerializeField] bool IsDebug;
     [SerializeField, EnableIf(nameof(IsDebug))] VoidEvent debugEvent;
@@ -27,16 +28,16 @@ public class SkyBoxColorChanger : MonoBehaviour
     }
     private void OnEnable()
     {
-        phaseChageEvent.Register(ApplyWithCorutine);
-        if(IsDebug)
+        gameStateEvent.Register(OnGameStateChanged);
+        if (IsDebug)
         {
             debugEvent.Register(DebugApply);
         }
     }
     private void OnDisable()
     {
-        phaseChageEvent.Unregister(ApplyWithCorutine);
-        if(IsDebug)
+        gameStateEvent.Unregister(OnGameStateChanged);
+        if (IsDebug)
         {
             debugEvent.Unregister(DebugApply);
         }
@@ -54,6 +55,40 @@ public class SkyBoxColorChanger : MonoBehaviour
                 continue;
             }
             settingDic.Add(setting.timeOfDay, setting);
+        }
+    }
+    private void OnGameStateChanged(GameState newState)
+    {
+        switch (newState)
+        {
+            case GameState.Initializing:
+                ApplyColor(defaultIndex); break;
+            case GameState.Playing:
+                StartSkyBoxChange(); break;
+            case GameState.GameClear:
+                StartCoroutine(ApplyColorCorutine(skyBoxColorSettings.Length-1,0, changeTime)); break;
+            case GameState.GameOver:
+                StopAllCoroutines(); break;
+
+        }
+    }
+    private void StartSkyBoxChange()
+    {
+        float maxPhaseTime = 0f;
+        foreach (var phase in phaseManager.Phases)
+        {
+            maxPhaseTime += phase.PhaseTime;
+        }
+        StartCoroutine(SkyBoxChangeCorutine(maxPhaseTime));
+    }
+    private IEnumerator SkyBoxChangeCorutine(float maxTime)
+    {
+        float duration = maxTime / skyBoxColorSettings.Length;
+        int index = 0;
+        for(float timer = 0f; timer <= maxTime; timer += duration)
+        {
+            if(index >= skyBoxColorSettings.Length-1) yield break;
+            yield return ApplyColorCorutine(index,++index,duration);
         }
     }
     /// <summary>

@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using Syacapachi.Attribute;
+﻿using Syacapachi.Attribute;
 using System;
+using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.Events;
 public class SampleScript : MonoBehaviour
 {
@@ -52,6 +52,19 @@ public class SampleScript : MonoBehaviour
             Debug.Log($"This is an inline method. name = {name}, value = {value}");
         }
     }
+    public struct InLineStruct : IInLineInterface, IInLineGenericInterface<string>
+    {
+        string name;
+        public void InlineMethod()
+        {
+            Debug.Log($"This is an inline method. name = {name}");
+        }
+
+        public void InlineMethod(string value)
+        {
+            Debug.Log($"This is an inline method. name = {name}, value = {value}");
+        }
+    }
     public class GeneticClass<T>
     {
         public T value;
@@ -81,7 +94,7 @@ public class SampleScript : MonoBehaviour
         lass.name = lass.name + name;
     }
     [OnInspectorButton(validateInvoke = true)]
-    public void SampleMethod(SampleScript script)
+    public void SampleMethod(InLineStruct[] script)
     {
         throw new Exception($"[{nameof(SampleScript)}] Sample Exception !");
     }

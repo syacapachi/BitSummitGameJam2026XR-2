@@ -74,6 +74,10 @@ public class PhaseBarUI : MonoBehaviour
             CreateBars();
             SetupBarLength();
         }
+        if (state == GameState.GameOver || state == GameState.GameClear)
+        {
+            gameObject.SetActive(false);
+        }
     }
     // =========================
     // フェーズバー生成
@@ -117,8 +121,9 @@ public class PhaseBarUI : MonoBehaviour
             float time = phaseManager.Phases[i].PhaseTime;
             float ratio = time / maxTime;
 
-            RectTransform rt = phaseBars[i].rectTransform;
+            int visualIndex = phaseBars.Count - 1 - i;
 
+            RectTransform rt = phaseBars[visualIndex].rectTransform;
             rt.sizeDelta = new Vector2(MaxWidth * ratio, rt.sizeDelta.y);
         }
     }

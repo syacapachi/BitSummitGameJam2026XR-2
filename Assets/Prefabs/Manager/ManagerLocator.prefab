@@ -738,6 +738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e353cdde9fb192544980c182e28be148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  phaseManager: {fileID: 1871165705981970814}
   changeTime: 5
   skyboxMat: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
   skyBoxColorSettings:
@@ -750,7 +751,7 @@ MonoBehaviour:
   defaultIndex: 0
   directionalLights:
   - {fileID: 0}
-  phaseChageEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
+  gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   IsDebug: 1
   debugEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
 --- !u!1 &7146760537532538251

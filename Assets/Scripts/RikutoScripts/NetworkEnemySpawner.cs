@@ -47,6 +47,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     [SerializeField,EnableIfEnum(nameof(waitSpawnType),true, WaitSpawnType.WaitForSomeEnemyDead)] 
     int waitSpawnRemainCount = 5;
     [SerializeField] NextPhaseType nextPhaseType = NextPhaseType.Remain;
+    //[SerializeField] EnemyDataBase enemyDataBase;
     [Header("Reference")]
     [SerializeField] NetworkObjectPool networkPool;
 #if UNITY_EDITOR
@@ -58,7 +59,6 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     [SerializeField] VoidEvent OnAllEnemyDeadRpcEvent;
     [Header("SubScribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
-
     private int remain;
     public int RemainServerOnly => remain;
     private bool isSpawnFinished = false;
@@ -83,14 +83,14 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     {
         OnEnemyKilled(killled.KilledEnemy);
     }
-    public void SpawnFromEvent(List<SpawnEvent> events)
+    public void SpawnFromEvent(List<SpawnEvent> events, bool useRandomSpawn)
     {
         if (!IsServer) return;
-        if(!ManagerLocator.Instance.AllGameManager.IsGamePlaying) return;
+        if (!ManagerLocator.Instance.AllGameManager.IsGamePlaying) return;
 
         StopAllCoroutines();
         waitForSpawn = null;
-        if(nextPhaseType == NextPhaseType.Delete)
+        if (nextPhaseType == NextPhaseType.Delete)
         {
             waitSpawnEnemyQueue.Clear();
         }
@@ -100,6 +100,19 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         isSpawnFinished = false;
 
         StartCoroutine(SpawnRoutine(events));
+        //とりあえず、入力されたリストをそれっぽくまぜまぜ
+        if (useRandomSpawn)
+        {
+            List<SpawnEvent> randomSpawnEvent = new();
+            foreach (SpawnEvent e in events)
+            {
+                int point = Random.Range(0, spawnPoints.Length);
+                float time = Random.Range(0,e.SpawnTime);
+                SpawnEvent randomEvent = new SpawnEvent(e.EnemyType,point,time);
+                randomSpawnEvent.Add(randomEvent);
+            }
+            StartCoroutine(SpawnRoutine(randomSpawnEvent));
+        }
     }
     public void StopSpaw()
     {
@@ -116,7 +129,6 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         //spawnEvents.Sort((a, b) => a.SpawnTime.CompareTo(b.SpawnTime));
         //Queueで高速に
         Queue<SpawnEvent> spawnQueue = new(spawnEvents.OrderBy(e => e.SpawnTime));
-
 
         int index = 0;
         isSpawnFinished = false; // 念のためリセット
@@ -179,8 +191,11 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                     }
                     break;
             }
-            SpawnEvent e = waitSpawnEnemyQueue.Dequeue();
-            SpawnEnemy(e.EnemyType,e.SpawnPointIndex);
+            if(waitSpawnEnemyQueue.Count > 0)
+            {
+                SpawnEvent e = waitSpawnEnemyQueue.Dequeue();
+                SpawnEnemy(e.EnemyType, e.SpawnPointIndex);
+            }
         }
         waitForSpawn = null;
     }
@@ -232,7 +247,9 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         var enemy = networkObject.GetComponent<IEnemy>();
         enemy.InjectSetting(enemyData);
         spawnedEnemies.Add(enemy);
-        networkObject.Spawn();   
+        networkObject.Spawn();
+        //int id = enemyDataBase.GetIdFromEnemyData(enemyData);
+        //enemy.InitEnemyRpc(id);
     }
 
     public void OnEnemyKilled(IEnemy enemy)
