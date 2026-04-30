@@ -7222,8 +7222,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 0.627451, g: 0.39215687, b: 0.54901963, a: 1}
-  m_Intensity: 0.3
+  m_Color: {r: 0.19607843, g: 0.21568628, b: 0.3137255, a: 1}
+  m_Intensity: 0.05
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -7265,7 +7265,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 0.2
+  m_BounceIntensity: 0.05
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -7285,7 +7285,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 413005061}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.9961947, y: 0, z: 0, w: 0.087155804}
+  m_LocalRotation: {x: 0.76604444, y: 0, z: 0, w: 0.64278764}
   m_LocalPosition: {x: 0, y: 50, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -33027,7 +33027,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1788668071
 Transform:
   m_ObjectHideFlags: 0
@@ -38555,6 +38555,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DirectionalLights
       objectReference: {fileID: 0}
+    - target: {fileID: 8620195493814683290, guid: e0f82a832839a5d46bcd23dbde435105, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -38685,10 +38689,6 @@ PrefabInstance:
       propertyPath: skyBoxColors.Array.data[5].intensity
       value: 0.2
       objectReference: {fileID: 0}
-    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'directionalLights.Array.data[0]'
-      value: 
-      objectReference: {fileID: 413005064}
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3782534606
