@@ -12,5 +12,5 @@ public interface IEnemy
     public bool IsAttackable { get; }
     public void InjectSetting(EnemySO enemySO);
 
-    public void InitEnemyRpc(int id);
+    //public void InitEnemyRpc(int id);
 }

@@ -36,5 +36,11 @@ public class NEnemyDeathFxEmitter : NetworkBehaviour
             transform.position,
             deathVolumeAll
             ));
+        gameEffectEvent.Invoke(
+            new GameEffect(
+                deathAudio.ToRuntimeData(),
+                deathFx.ToRuntimeData(),
+                transform.position
+            ));
     }
 }

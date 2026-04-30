@@ -47,7 +47,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     [SerializeField,EnableIfEnum(nameof(waitSpawnType),true, WaitSpawnType.WaitForSomeEnemyDead)] 
     int waitSpawnRemainCount = 5;
     [SerializeField] NextPhaseType nextPhaseType = NextPhaseType.Remain;
-    [SerializeField] EnemyDataBase enemyDataBase;
+    //[SerializeField] EnemyDataBase enemyDataBase;
     [Header("Reference")]
     [SerializeField] NetworkObjectPool networkPool;
 #if UNITY_EDITOR
@@ -248,8 +248,8 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         enemy.InjectSetting(enemyData);
         spawnedEnemies.Add(enemy);
         networkObject.Spawn();
-        int id = enemyDataBase.GetIdFromEnemyData(enemyData);
-        enemy.InitEnemyRpc(id);
+        //int id = enemyDataBase.GetIdFromEnemyData(enemyData);
+        //enemy.InitEnemyRpc(id);
     }
 
     public void OnEnemyKilled(IEnemy enemy)
