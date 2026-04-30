@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a733a3c2f3c8240aeeb3a2e112824b, type: 3}
   m_Name: Dark
   m_EditorClassIdentifier: 
+  timeOfDay: 0
   topColor: {r: 0, g: 0, b: 0, a: 0}
   horizonColor: {r: 0, g: 0, b: 0, a: 0}
   bottomColor: {r: 0, g: 0, b: 0, a: 0}
   intensity: 0
   exponentTop: 0
   exponentBottom: 0
+  lightColor: {r: 1, g: 1, b: 1, a: 1}
+  lightRotation: {x: 90, y: 0, z: 0}
+  lightIntensity: 0.14
+  indirectMultiplier: 0.75

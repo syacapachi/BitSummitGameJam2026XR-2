@@ -4,6 +4,7 @@
 public class SkyBoxColorSetting : ScriptableObject
 {
     public TimeOfDay timeOfDay;
+    [Header("空の色の設定")]
     [Header("空の真上の色")]
     public Color topColor;
     [Header("空の基本色")]
@@ -16,6 +17,16 @@ public class SkyBoxColorSetting : ScriptableObject
     public float exponentTop;
     [Header("空の地平線の色の浸食度")]
     public float exponentBottom;
+    [Header("太陽の設定")]
+    [Header("太陽の色")]
+    public Color lightColor = Color.white;
+    [Header("太陽の角度")]
+    public Vector3 lightRotation;
+    [Header("光源の強さ")]
+    public float lightIntensity = 0.5f;
+    [Header("太陽の光の減衰率"),Tooltip("1以上の場合、光は跳ね返るたびに弱くなる。1未満の場合、光は跳ね返るたびに強くなる")]
+    public float indirectMultiplier = 1f;
+
 }
 /// <summary>
 /// 時間設定を行うための列挙体。
