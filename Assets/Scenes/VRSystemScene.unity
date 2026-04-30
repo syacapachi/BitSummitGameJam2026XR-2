@@ -94,7 +94,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: e05f746fa7d8a9f4c8af60cc54a56d86, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -3606,7 +3606,7 @@ GameObject:
   - component: {fileID: 175195012}
   - component: {fileID: 175195011}
   m_Layer: 0
-  m_Name: Directional Light (2)
+  m_Name: Spot Light (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3659,9 +3659,9 @@ Light:
   m_GameObject: {fileID: 175195009}
   m_Enabled: 1
   serializedVersion: 11
-  m_Type: 1
+  m_Type: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 0.3
+  m_Intensity: 10
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -7222,8 +7222,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 0.3
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 0.14
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -7265,7 +7265,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0.75
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -7285,13 +7285,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 413005061}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 50, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &437917952
 GameObject:
   m_ObjectHideFlags: 0
@@ -10567,7 +10567,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -13013,6 +13013,10 @@ PrefabInstance:
     - target: {fileID: 1069220841628880300, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_Layer
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1073221548419947142, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_Name
+      value: Player Light
       objectReference: {fileID: 0}
     - target: {fileID: 1073221548419947142, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_Layer
@@ -31682,7 +31686,7 @@ GameObject:
   - component: {fileID: 1701501018}
   - component: {fileID: 1701501020}
   m_Layer: 0
-  m_Name: Directional Light
+  m_Name: Shot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31697,9 +31701,9 @@ Light:
   m_GameObject: {fileID: 1701501017}
   m_Enabled: 1
   serializedVersion: 11
-  m_Type: 1
+  m_Type: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 0.3
+  m_Intensity: 10
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -32429,7 +32433,7 @@ GameObject:
   - component: {fileID: 1745780767}
   - component: {fileID: 1745780766}
   m_Layer: 0
-  m_Name: Directional Light (3)
+  m_Name: Spot Light (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32482,9 +32486,9 @@ Light:
   m_GameObject: {fileID: 1745780764}
   m_Enabled: 1
   serializedVersion: 11
-  m_Type: 1
+  m_Type: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 0.3
+  m_Intensity: 10
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -37798,7 +37802,7 @@ GameObject:
   - component: {fileID: 2089359242}
   - component: {fileID: 2089359241}
   m_Layer: 0
-  m_Name: Directional Light (1)
+  m_Name: Spot Light (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37851,9 +37855,9 @@ Light:
   m_GameObject: {fileID: 2089359239}
   m_Enabled: 1
   serializedVersion: 11
-  m_Type: 1
+  m_Type: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 0.3
+  m_Intensity: 10
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -38549,6 +38553,46 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: directionalLights.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColorSettings.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'directionalLights.Array.data[0]'
+      value: 
+      objectReference: {fileID: 413005064}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'skyBoxColorSettings.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'skyBoxColorSettings.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'skyBoxColorSettings.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: cdf2344405367c94e9d5aeb6eb72f5a8, type: 2}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'skyBoxColorSettings.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: aab534e90c923dd47b02f4361b9128fb, type: 2}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'skyBoxColorSettings.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 22c980c46d86d70478b73be59f2e9fd6, type: 2}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: skyBoxColors.Array.data[0].intensity
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: skyBoxColors.Array.data[1].intensity
       value: 0.4
       objectReference: {fileID: 0}
@@ -38568,6 +38612,10 @@ PrefabInstance:
       propertyPath: moonQuad
       value: 
       objectReference: {fileID: 2041265499}
+    - target: {fileID: 4336429192120915332, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'roomLights.Array.data[0]'
+      value: 
+      objectReference: {fileID: 413005064}
     - target: {fileID: 4336429192120915332, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'targetCameras.Array.data[0]'
       value: 
