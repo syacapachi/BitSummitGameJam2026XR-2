@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using TMPro;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.UI;
@@ -21,6 +22,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     [SerializeField] private Image hpImage; // Filled Image
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] PlayerJob enemyJob;
+    [SerializeField] NetworkAnimator networkAnimator;   
     [Header("Publish Event")]
     [SerializeField] EnemyKilledEvent enemyKilled;
     [SerializeField] GameEffectEvent dieEffectEvent;
@@ -232,6 +234,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         Debug.Log("Take damage");
         currentHP.Value -= damage;
 
+        networkAnimator?.SetTrigger("Hit");
+
         if (hpImage != null)
         {
             hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySOServertOnly.Hp);
@@ -284,6 +288,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
 
         enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
+        networkAnimator?.SetTrigger("Death");
+        //networkAnimator.Animator
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

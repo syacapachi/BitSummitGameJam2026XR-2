@@ -7084,8 +7084,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 1, g: 0.78431374, b: 0.54901963, a: 1}
-  m_Intensity: 2.5
+  m_Color: {r: 1, g: 0.5882353, b: 0.3137255, a: 1}
+  m_Intensity: 0.7
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -7147,7 +7147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 413005061}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1736482, y: 0, z: 0, w: 0.9848078}
+  m_LocalRotation: {x: 0.9659258, y: 0, z: 0, w: 0.25881907}
   m_LocalPosition: {x: 0, y: 50, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -38959,11 +38959,11 @@ PrefabInstance:
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phaseSetting.Array.data[3].phases.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: 4f4182bedf443b640ab575f946f0caca, type: 2}
+      objectReference: {fileID: 11400000, guid: 4cb90bfed44ae1c4d89ef7468a7ea227, type: 2}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phaseSetting.Array.data[3].phases.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 4f4182bedf443b640ab575f946f0caca, type: 2}
+      objectReference: {fileID: 11400000, guid: 4cb90bfed44ae1c4d89ef7468a7ea227, type: 2}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phaseSetting.Array.data[3].phases.Array.data[2]'
       value: 
@@ -38972,6 +38972,10 @@ PrefabInstance:
       propertyPath: IsDebug
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'directionalLights.Array.data[0]'
+      value: 
+      objectReference: {fileID: 413005064}
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3782534606
