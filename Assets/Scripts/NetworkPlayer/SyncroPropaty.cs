@@ -117,7 +117,7 @@ public class SyncroPropaty : NetworkBehaviour
             PlayerJob.Both => PlayerJob.Nothing,
             _ => throw new System.NotImplementedException(),
         };
-        Debug.Log("Job changed to: " + Job);
+        Debug.Log("Job changed to: " + Job, gameObject);
     }
 #if UNITY_EDITOR
     private void Reset()

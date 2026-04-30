@@ -25,13 +25,13 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
         {
             currentHP.Value = maxHP;
         }
-        Debug.Log($"PlayerHealth spawned. owner:{OwnerClientId}, NetworkId:{NetworkObjectId}");
+        Debug.Log($"PlayerHealth spawned. owner:{OwnerClientId}, NetworkId:{NetworkObjectId}",gameObject);
     }
 
     public override void OnNetworkDespawn()
     {
         currentHP.OnValueChanged -= OnServerHPChanged;
-        Debug.Log($"PlayerHealth despawned. owner:{OwnerClientId}, NetworkId:{NetworkObjectId}");
+        Debug.Log($"PlayerHealth despawned. owner:{OwnerClientId}, NetworkId:{NetworkObjectId}",gameObject);
     }
 
     public void TakeDamage(IDamageSender sender, float damage)
@@ -40,7 +40,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
 
         if (currentHP.Value <= 0)
         {
-            Debug.Log($"[PlayerHealth] Player {OwnerClientId} is already dead.");
+            Debug.Log($"[PlayerHealth] Player {OwnerClientId} is already dead.",gameObject);
             return;
         }
 
@@ -48,26 +48,26 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
 
         if (currentHP.Value <= 0)
         {
-            Debug.Log($"[PlayerHealth] Player {OwnerClientId} has died!");
+            Debug.Log($"[PlayerHealth] Player {OwnerClientId} has died!",gameObject);
             OnPlayerDead();
         }
     }
     private void OnServerHPChanged(float oldHP, float newHP)
     {
-        Debug.Log($"Player {OwnerClientId} HP changed from {oldHP} to {newHP}");
+        Debug.Log($"Player {OwnerClientId} HP changed from {oldHP} to {newHP}",gameObject);
 
         // ★追加: UIにHP変化を通知
         HpInfoRpcEvent.Invoke(new HPInfo(newHP, maxHP));
 
         if (newHP <= 0)
         {
-            Debug.Log($"Player {OwnerClientId} has died.");
+            Debug.Log($"Player {OwnerClientId} has died.",gameObject);
         }
     }
     private void OnPlayerDead()
     {
         Debug.Log($"[" +
-            $"[{nameof(PlayerHealth)}] OnPlayerDead called for Player {OwnerClientId}");
+            $"[{nameof(PlayerHealth)}] OnPlayerDead called for Player {OwnerClientId}",gameObject);
     }
 }
 public readonly struct HPInfo
