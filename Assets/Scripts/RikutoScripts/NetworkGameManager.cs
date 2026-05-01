@@ -1,4 +1,5 @@
 ﻿using Syacapachi.Attribute;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -6,9 +7,15 @@ using UnityEngine.SceneManagement;
 
 public class NetworkGameManager : NetworkBehaviour
 {
+    enum GameStartMode
+    {
+        Auto,
+        Button
+    }
     [Header("ゲーム設定")]
     [SerializeField] NetworkVariable<Difficulty> difficulty = new(Difficulty.Easy);
     [SerializeField] GameMode gameMode = GameMode.Protect;
+    [SerializeField] GameStartMode gameStartMode = GameStartMode.Button;
     [Header("Refernce")]
     [SerializeField] GameObject protectArea;
     [SerializeField] ScoreManager scoreManager;
@@ -60,7 +67,15 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] VoidEvent OnAllPhaseEndedServerEvent;
     [SerializeField] DifficultyEvent difficultyEvent;
 
-    
+    //コルーチンが使用可能なタイミングでは、サーバーかどうかはまだ確定してない。
+    private void Start()
+    {
+        if(gameStartMode == GameStartMode.Auto)
+        {
+            StartCoroutine(WaitForLoad());
+        }
+    }
+
     private void OnEnable()
     {
         gameState.OnValueChanged += HandleGameStateChanged;
@@ -86,6 +101,15 @@ public class NetworkGameManager : NetworkBehaviour
         OnAllPhaseEndedServerEvent.Unregister(HandleAllPhaseEnded);
         OnScoreReachZeroServerEvent.Unregister(HandleScoreZeroServer);
         difficultyEvent.Unregister(HandleDifficltyChange);
+    }
+
+    IEnumerator WaitForLoad()
+    {
+        yield return new WaitUntil(() => IsSpawned && PlayerManager != null && PlayerManager.IsAllClientReady());
+        if (IsServer)
+        {
+            StartGameServerOnly();
+        }
     }
 
     [OnInspectorButton("Start Game")]
@@ -146,7 +170,7 @@ public class NetworkGameManager : NetworkBehaviour
 
     public void BulletHitProtectArea(int damage)
     {
-        scoreManager.AddScoreServerOnly(damage);
+        scoreManager?.AddScoreServerOnly(damage);
         InvokeEventRpc();
     }
     [Rpc(SendTo.Everyone,InvokePermission = RpcInvokePermission.Server)]
