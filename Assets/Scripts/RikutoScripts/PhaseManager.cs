@@ -122,17 +122,18 @@ public class PhaseManager : NetworkBehaviour
         Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartNextPhases called");
 #endif
 
-        syncedPhaseIndex.Value++;
+        //syncedPhaseIndex.Value++;
+        int nextIndex = CurrentPhaseIndex + 1;
 
 
-        if (CurrentPhaseIndex >= Phases.Length)
+        if (nextIndex >= Phases.Length)
         {
             spawner.KillAll();
             OnAllPhaseEndedServerOnly.Invoke();
             return;
         }
-        scoreManager.SetBonusServerOnly(Phases[CurrentPhaseIndex].ClearBonus);
-        StartCoroutine(StartPhaseWithCountdown(CurrentPhaseIndex));
+        scoreManager.SetBonusServerOnly(Phases[nextIndex].ClearBonus);
+        StartCoroutine(StartPhaseWithCountdown(nextIndex));
     }
     IEnumerator StartPhaseWithCountdown(int phaseIndex)
     {
@@ -151,9 +152,10 @@ public class PhaseManager : NetworkBehaviour
 
         CountdownValue.Value = 0;
         IsCountingDown = false;
+        syncedPhaseIndex.Value = phaseIndex;
 
         var phase = Phases[phaseIndex];
-        SpawnableHandle.SpawnFromEvent(phase.SpawnEvents.ToList());
+        SpawnableHandle.SpawnFromEvent(phase.SpawnEvents.ToList(), phase.UseRandomSpawn);
         syncedPhaseIndex.Value = phaseIndex;
         StartCoroutine(PhaseProgress(phase.PhaseTime));
     }

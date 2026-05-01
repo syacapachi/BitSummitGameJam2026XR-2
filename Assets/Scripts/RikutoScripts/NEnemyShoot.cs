@@ -11,7 +11,6 @@ public class NEnemyShoot : GunController
     [SerializeField] AudioClip shotClip;
     [Header("Reference")]
     [SerializeField] NetworkAnimator networkAnimator;
-    [SerializeField] Animator animator;
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffect;
 
@@ -36,7 +35,7 @@ public class NEnemyShoot : GunController
         base.OnNetworkSpawn();
 
         if (!IsServer) return;
-        weaponSO = nEnemy.EnemySO.EnemyWeapon;
+        weaponSO = nEnemy.EnemyWeaponServeronly;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
@@ -71,7 +70,7 @@ public class NEnemyShoot : GunController
     private IEnumerator ShootCorutine()
     {
         //トリガー以外はこっち
-        animator?.SetFloat("Speed", 2.0f);
+        networkAnimator?.Animator.SetFloat("Speed", 2.0f);
         yield return new WaitForSeconds(weaponSO.FirstShootDelayTime);
         OnShootServer();
 

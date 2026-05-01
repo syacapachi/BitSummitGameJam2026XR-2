@@ -25,7 +25,6 @@ public class MarkerBlinkEffect : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        Debug.Log($"{nameof(MarkerBlinkEffect)},IsOwner={IsOwner},Owned by={OwnerClientId}");
         DefaultColor = IsOwner ? ownerNormalColor : nonOwnerNormalColor;
         if (targetRenderers == null || targetRenderers.Length == 0)
             targetRenderers = GetComponentsInChildren<Renderer>(true);

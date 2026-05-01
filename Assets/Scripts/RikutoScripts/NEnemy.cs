@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using TMPro;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.UI;
@@ -21,6 +22,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     [SerializeField] private Image hpImage; // Filled Image
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] PlayerJob enemyJob;
+    [SerializeField] NetworkAnimator networkAnimator;   
     [Header("Publish Event")]
     [SerializeField] EnemyKilledEvent enemyKilled;
     [SerializeField] GameEffectEvent dieEffectEvent;
@@ -29,19 +31,21 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     //水野以上
     private bool isInitialize = false;
 
-    private Transform targetPlayer;
-    private EnemySO enemySO;
+    private Transform targetPlayerServerOnly;
+    private EnemySO enemySOServertOnly;
+    private float maxHpAll = 0;
     public GameObject GameObject => this.gameObject;
     NetworkObject IEnemy.NetworkObject => this.NetworkObject;
-    public EnemySO EnemySO => enemySO;  
+    public EnemyWeaponSettingsSO EnemyWeaponServeronly => enemySOServertOnly.EnemyWeapon;  
     public float CurrentHealth => currentHP.Value;
-    public float MaxHealth => enemySO.Hp;
+    public float MaxHealth => maxHpAll;
     
     public PlayerJob EnemyJob => enemyJob;
 
     [SerializeField] private bool isAttackable = true;
 
     public bool IsAttackable => isAttackable;
+
 
     [SerializeField]
         private PlayerJob[] jobCycle = new PlayerJob[]
@@ -50,6 +54,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         PlayerJob.Ghost,
         PlayerJob.Tutorial
     };
+
+    //[SerializeField] EnemyDataBase enemyDataBase;
     public bool IsAttackableJob(PlayerJob playerJob)
     {
         if(enemyJobSetting == null)
@@ -65,8 +71,40 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     }
     public void InjectSetting(EnemySO enemySO)
     {
-        this.enemySO = enemySO;
+        this.enemySOServertOnly = enemySO;
     }
+
+    //[Rpc(SendTo.ClientsAndHost)]
+    //public void InitEnemyRpc(int id)
+    //{
+    //    Debug.Log($"[InitEnemyRpc] Called | IsServer:{IsServer} IsClient:{IsClient} | id:{id}");
+
+    //    if (enemyDataBase == null)
+    //    {
+    //        Debug.LogError("[InitEnemyRpc] enemyDataBase is NULL!");
+    //        return;
+    //    }
+
+    //    if (id < 0 || id >= enemyDataBase.Length)
+    //    {
+    //        Debug.LogError($"[InitEnemyRpc] Invalid ID: {id}");
+    //        return;
+    //    }
+
+    //    enemySOServertOnly = enemyDataBase.GetEnemyDataFromId(id);
+
+    //    if (enemySOServertOnly == null)
+    //    {
+    //        Debug.LogError($"[InitEnemyRpc] enemySOServertOnly is NULL after GetEnemyDataFromId | id:{id}");
+    //        return;
+    //    }
+
+    //    Debug.Log($"[InitEnemyRpc] SUCCESS | Enemy: {enemySOServertOnly.name}");
+
+    //    // 念のためUI更新
+    //    UpdateHPUI(currentHP.Value);
+    //}
+
     private void Awake()
     {
         //水野編集
@@ -76,13 +114,15 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         //水野以上
     }
+
     public override void OnNetworkSpawn()
     {
         isInitialize = false;
         
         if (IsServer)
         {
-            currentHP.Value = enemySO.Hp;
+            currentHP.Value = enemySOServertOnly.Hp;
+            ApplyMaxHpRpc(enemySOServertOnly.Hp);
         }
 
         currentHP.OnValueChanged += OnHPChanged;
@@ -90,6 +130,15 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         UpdateHPUI(currentHP.Value);
         ApplySettting();
 
+        
+
+        StartCoroutine(SetupPlayerCoroutine());
+    }
+    //必要な情報は、最大HPのみ
+    [Rpc(SendTo.Everyone)]
+    private void ApplyMaxHpRpc(float maxHp)
+    {
+        this.maxHpAll = maxHp;
         if (!IsClient) return;// クライアントでのみ実行
 
         if (hpImage != null)
@@ -98,11 +147,43 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         if (hpText != null)
         {
-            hpText.text = $"{currentHP.Value} / {enemySO.Hp}";
+            hpText.text = $"{currentHP.Value} / {maxHpAll}";
         }
-
-        StartCoroutine(SetupPlayerCoroutine());
     }
+
+    //public override void OnNetworkSpawn()
+    //{
+    //    isInitialize = false;
+
+    //    currentHP.OnValueChanged += OnHPChanged;
+
+    //    StartCoroutine(WaitForEnemySO());
+    //}
+
+    //IEnumerator WaitForEnemySO()
+    //{
+    //    // enemySO がセットされるまで待つ
+    //    yield return new WaitUntil(() => enemySOServertOnly != null);
+
+    //    // ↓ここから安全に使える
+    //    if (IsServer)
+    //    {
+    //        currentHP.Value = enemySOServertOnly.Hp;
+    //    }
+
+    //    UpdateHPUI(currentHP.Value);
+    //    ApplySettting();
+
+    //    if (!IsClient) yield break;
+
+    //    if (hpImage != null)
+    //        hpImage.fillAmount = 1f;
+
+    //    if (hpText != null)
+    //        hpText.text = $"{currentHP.Value} / {enemySOServertOnly.Hp}";
+
+    //    StartCoroutine(SetupPlayerCoroutine());
+    //}
     private void ApplySettting()
     {
         if(enemyJobSetting == null)
@@ -130,7 +211,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.transform != null
         );
 
-        targetPlayer = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.transform;
+        targetPlayerServerOnly = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.transform;
         isInitialize = true;
     }
 
@@ -140,9 +221,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (!isInitialize) return;
         if (rootTransfrom != null)
         {
-            rootTransfrom.LookAt(targetPlayer);
+            rootTransfrom.LookAt(targetPlayerServerOnly);
         }
-        hpCanvas.transform.LookAt(targetPlayer);
+        hpCanvas.transform.LookAt(targetPlayerServerOnly);
         hpCanvas.transform.Rotate(0, 180f, 0);
     }
     //水野編集
@@ -153,14 +234,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         Debug.Log("Take damage");
         currentHP.Value -= damage;
 
+        networkAnimator?.SetTrigger("Hit");
+
         if (hpImage != null)
         {
-            hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySO.Hp);
+            hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySOServertOnly.Hp);
         }
 
         if (hpText != null)
         {
-            hpText.text = $"{currentHP.Value} / {enemySO.Hp}";
+            hpText.text = $"{currentHP.Value} / {enemySOServertOnly.Hp}";
         }
 
         if (currentHP.Value <= 0)
@@ -175,7 +258,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             }
 
             //プレイヤーに寄ってくる
-            StartCoroutine(MoveToNextPos(sender.GameObject.transform.position));
+            if(targetPlayerServerOnly != null)
+                StartCoroutine(MoveToNextPos(targetPlayerServerOnly.position));
         }
     }
     //水野以上    
@@ -186,7 +270,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         yield return nextFixed;
         while(Vector3.Distance(transform.position, targetPos) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.fixedDeltaTime * enemySO.MoveSpeedValue);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.fixedDeltaTime * enemySOServertOnly.MoveSpeedValue);
             yield return nextFixed;
         }
     }
@@ -196,7 +280,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         if (collector != null && collector is PlayerStats stats)
         {
-            stats.AddKill(enemySO, enemySO.ScoreValue);
+            stats.AddKill(enemySOServertOnly, enemySOServertOnly.ScoreValue);
         }
         else
         {
@@ -204,6 +288,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
 
         enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
+        networkAnimator?.SetTrigger("Death");
+        //networkAnimator.Animator
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);
@@ -227,11 +313,13 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     void UpdateHPUI(float hp)
     {
+        if (enemySOServertOnly == null) return;
+
         if (hpImage != null)
-            hpImage.fillAmount = Mathf.Clamp01((float)hp / enemySO.Hp);
+            hpImage.fillAmount = hp / enemySOServertOnly.Hp;
 
         if (hpText != null)
-            hpText.text = $"{hp} / {enemySO.Hp}";
+            hpText.text = $"{hp} / {enemySOServertOnly.Hp}";
     }
 
     public void SetAttackabe(bool value)

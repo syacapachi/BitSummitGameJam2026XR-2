@@ -4,16 +4,17 @@
 public class PhaseSO : ScriptableObject
 {
     [Header("Phase Display Setting")]
-    [SerializeField] string phaseDisplayNameEN;
-    [SerializeField] string phaseDisplayNameJP;
     [SerializeField] LocalizeSimpleText phaseName;
 
-    public string PhaseDisplayNameEN => phaseDisplayNameEN;
-    public string PhaseDisplayNameJP => phaseDisplayNameJP;
+    public string PhaseDisplayNameEN => phaseName.GetText(false);
+    public string PhaseDisplayNameJP => phaseName.GetText(true);
 
     [Header("Phase Settings")]
     [SerializeField] float phaseTime = 30f;
     [SerializeField] int clearBonus = 500;
+    [SerializeField] bool useRandomSpawn = false;
+
+    public bool UseRandomSpawn => useRandomSpawn;
 
     public float PhaseTime => phaseTime;
     public int ClearBonus => clearBonus;
@@ -34,4 +35,11 @@ public struct SpawnEvent
     public readonly EnemySO EnemyType => enemyType;
     public readonly int SpawnPointIndex => spawnPointIndex;
     public readonly float SpawnTime => spawnTime;
+
+    public SpawnEvent(EnemySO so, int spawnPointIndex, float spawnTime)
+    {
+        enemyType = so;
+        this.spawnPointIndex = spawnPointIndex;
+        this.spawnTime = spawnTime;
+    }
 }
