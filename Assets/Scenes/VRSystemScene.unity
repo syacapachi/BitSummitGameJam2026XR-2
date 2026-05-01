@@ -38545,6 +38545,7 @@ PrefabInstance:
       value: ManagerLocator
       objectReference: {fileID: 0}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
+<<<<<<< HEAD
       propertyPath: IsDebug
       value: 1
       objectReference: {fileID: 0}
@@ -38612,6 +38613,11 @@ PrefabInstance:
       propertyPath: skyBoxColors.Array.data[5].intensity
       value: 0.2
       objectReference: {fileID: 0}
+=======
+      propertyPath: 'directionalLights.Array.data[0]'
+      value: 
+      objectReference: {fileID: 413005064}
+>>>>>>> develop
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3782534606
@@ -38750,6 +38756,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: gameStartMode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5843874078436757177, guid: 07f51410c6523454580003730b31cfff, type: 3}

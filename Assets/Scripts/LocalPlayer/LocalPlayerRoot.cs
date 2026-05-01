@@ -17,9 +17,10 @@ public class LocalPlayerRoot : MonoBehaviour
     [SerializeField] Transform leftController;
     [SerializeField] Transform rightController;
     [SerializeField] XROrigin xrOrigin;
-    [Header("それ以外")]
+    [Header("VR以外のプレイヤー用")]
     [SerializeField] LocalCharactorControll characterControll;
     [SerializeField] LocalCameraSetting cameraSetting;
+    [SerializeField] Canvas nonVRPlayerCanvas;
     private PlayerManager playerManager;
     public Transform PlayerRoot => playerRoot;
     public Transform LeftHand => leftHand;
@@ -35,6 +36,7 @@ public class LocalPlayerRoot : MonoBehaviour
         {
             cameraSetting.enabled = false;
             characterControll.enabled = false;
+            nonVRPlayerCanvas.enabled = false;
         }
     }
 }
