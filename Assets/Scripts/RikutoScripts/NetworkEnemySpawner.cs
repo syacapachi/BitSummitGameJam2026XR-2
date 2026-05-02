@@ -59,7 +59,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     [SerializeField] VoidEvent OnAllEnemyDeadRpcEvent;
     [Header("SubScribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
-    private int remain;
+    public int remain;
     public int RemainServerOnly => remain;
     private bool isSpawnFinished = false;
     private bool isAllDead = false;
@@ -196,7 +196,10 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
             if(waitSpawnEnemyQueue.Count > 0)
             {
                 SpawnEvent e = waitSpawnEnemyQueue.Dequeue();
-                SpawnEnemy(e.EnemyType, e.SpawnPointIndex);
+                if (SpawnEnemy(e.EnemyType, e.SpawnPointIndex))
+                {
+                    remain++;
+                }
             }
         }
         waitForSpawn = null;
