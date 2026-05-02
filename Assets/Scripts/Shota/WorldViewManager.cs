@@ -37,7 +37,11 @@ public class WorldViewManager : NetworkBehaviour
     private void Start()
     {
         // connectCanvasEvent?.Invoke(); ← 削除：Start()では呼ばない
-        if (boardCanvas != null) boardCanvas.enabled = false;
+        if (!IsSpawned)
+        {
+            if (boardCanvas != null)
+                boardCanvas.enabled = false;
+        }
     }
     //OnNetworkSpanは、ネット接続時にSetActive(true)でないと呼ばれないので、Canvsのみ無効にする。
     public override void OnNetworkSpawn()

@@ -951,7 +951,6 @@ MonoBehaviour:
   jumpForce: 5
   normalSpeed: 5
   dashSpeed: 10
-  jumpEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
   dashEvent: {fileID: 11400000, guid: cc0dabacbfea2cb4ebe216ae03444663, type: 2}
   moveEvent: {fileID: 11400000, guid: 5fc02d6a0c59226468d706cf6757d428, type: 2}
 --- !u!1 &67912617
@@ -4451,6 +4450,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1733519295838499013, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1733519295838499013, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1733519295838499013, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1733519295838513501, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -4551,6 +4562,10 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 344181356}
+    - target: {fileID: 3749159659427689939, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5097208323857855421, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_StartCorner
       value: 0
@@ -12078,6 +12093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da876ea0978b264479e3abd7123e5208, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reachAudioEffect: {fileID: 0}
   reachClipAll: {fileID: 8300000, guid: 50b01190c1d315d40947b882bd06d093, type: 3}
   reachVolumeAll: 1
   gameEffectEvent: {fileID: 0}
@@ -14255,6 +14271,7 @@ MonoBehaviour:
   xrOrigin: {fileID: 1149514644}
   characterControll: {fileID: 67004973}
   cameraSetting: {fileID: 67004972}
+  nonVRPlayerCanvas: {fileID: 0}
 --- !u!1 &1157309356
 GameObject:
   m_ObjectHideFlags: 0
@@ -20265,6 +20282,7 @@ MonoBehaviour:
   rotateSpeed: 100
   interval: 3
   buzzerClip: {fileID: 8300000, guid: b09fc9b896fbdae44bd5ff26fac6c32d, type: 3}
+  buzzerEffectData: {fileID: 0}
   hpInfo: {fileID: 0}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &1452556537
