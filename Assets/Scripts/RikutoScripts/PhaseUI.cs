@@ -168,6 +168,9 @@ public class PhaseUI : MonoBehaviour
         int index = data.index;
         string text = data.text;
 
+        var manager = nGameManager.PhaseManager;
+        int lastIndex = manager.Phases.Length - 1;
+
         phaseText.fontSize = 120;
 
         // ★ 最初のフェーズだけ特別表示
@@ -178,7 +181,18 @@ public class PhaseUI : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
 
-        phaseText.text = text;
+        if (index == lastIndex)
+        {
+            // 最終フェーズだけ元の名前
+            phaseText.text = text;
+        }
+        else
+        {
+            // 通常フェーズ
+            phaseText.text = isJapanese
+                ? $"第{index + 1}波"
+                : $"Phase {index + 1}";
+        }
 
         phaseText.gameObject.SetActive(true);
 
