@@ -38954,20 +38954,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: phaseSetting.Array.data[3].phases.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phaseSetting.Array.data[3].phases.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: 4cb90bfed44ae1c4d89ef7468a7ea227, type: 2}
+      objectReference: {fileID: 11400000, guid: 4f4182bedf443b640ab575f946f0caca, type: 2}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phaseSetting.Array.data[3].phases.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 4cb90bfed44ae1c4d89ef7468a7ea227, type: 2}
+      objectReference: {fileID: 11400000, guid: 4f4182bedf443b640ab575f946f0caca, type: 2}
     - target: {fileID: 1871165705981970814, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'phaseSetting.Array.data[3].phases.Array.data[2]'
       value: 
-      objectReference: {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
+      objectReference: {fileID: 11400000, guid: 4f4182bedf443b640ab575f946f0caca, type: 2}
     - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: IsDebug
       value: 0
@@ -39052,6 +39052,10 @@ PrefabInstance:
       propertyPath: m_CheckPointParent
       value: 
       objectReference: {fileID: 1415695849}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: checkPoints.Array.size
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'checkPoints.Array.data[0]'
       value: 
