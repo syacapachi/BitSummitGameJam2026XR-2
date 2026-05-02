@@ -52,6 +52,8 @@ public class TutorialUI : MonoBehaviour
 
     void OnStepChangedNetwork(TutorialStep oldStep, TutorialStep newStep)
     {
+        Debug.Log($"[UI] StepChangedNetwork: {oldStep} Å® {newStep} / currentState={currentState}");
+
         if (currentState == TutorialUIState.StepClear)
             return;
         ChangeState(TutorialUIState.StepIntro, newStep);
@@ -62,6 +64,7 @@ public class TutorialUI : MonoBehaviour
     // =========================
     void ChangeState(TutorialUIState next, object payload = null)
     {
+        Debug.Log($"[UI] ChangeState: {currentState} Å® {next}");
         if (currentRoutine != null)
             StopCoroutine(currentRoutine);
 
@@ -101,6 +104,7 @@ public class TutorialUI : MonoBehaviour
     // =========================
     IEnumerator StepIntroRoutine(TutorialStep step)
     {
+        Debug.Log($"[UI] StepIntro START: {step}");
         root.SetActive(true);
 
         string title = "";
