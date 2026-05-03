@@ -146,8 +146,8 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                 SpawnEvent e = spawnQueue.Dequeue();
                 //SpawnEvent e = spawnEvents[index];
 
-                //規定数以上の場合待機行列に送る
-                if (spawnedEnemies.Count >= maxEnemyCapacity)
+                //通常召喚かつ規定数以上の場合待機行列に送る
+                if (!e.ForceSpawn &&spawnedEnemies.Count >= maxEnemyCapacity)
                 {
                     waitSpawnEnemyQueue.Enqueue(e);
                     waitForSpawn ??= StartCoroutine(WaitForSpawn());
