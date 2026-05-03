@@ -1838,6 +1838,9 @@ MonoBehaviour:
   lineRenderer: {fileID: 193665783160354166}
   playerMarker: {fileID: 8123762091118261607, guid: 66b64047264b0fb408e7d6a2ebe746d9, type: 3}
   node: {fileID: 8728330705531562455}
+  markerHitLayerMask:
+    serializedVersion: 2
+    m_Bits: 385
   laserDistance: 50
   markerAudioController: {fileID: 5220367599130785473}
   markerEvent: {fileID: 11400000, guid: 4f90a0dcf15ac3346a5d4dc1ef33d19a, type: 2}

@@ -18,6 +18,7 @@ public class NEnemyShoot : GunController
     Coroutine shootCorutine;
     NetworkGameManager gameManager;
     PlayerManager playerManager;
+    float remain = 0;
 
     private IEnumerator Start()
     {
@@ -36,6 +37,7 @@ public class NEnemyShoot : GunController
 
         if (!IsServer) return;
         weaponSO = nEnemy.EnemyWeaponServeronly;
+        remain = weaponSO.maxAmmo;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
@@ -43,14 +45,14 @@ public class NEnemyShoot : GunController
     {
         shootCorutine = StartCoroutine(ShootCorutine());
     }
-
+    public void ShootFromAnimationEvent()
+    {
+        if (!IsServer) return;
+        OnShootServer();
+    }
     protected override void OnShootServer()
     {
-
         if (!TryGetTarget(out var target)) return;
-        //トリガーはこっち
-        networkAnimator?.SetTrigger("Attack");
-
         Vector3 direction = (target.position - transform.position).normalized;
 
         NetworkObject networkObject = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(
@@ -71,13 +73,22 @@ public class NEnemyShoot : GunController
     {
         //トリガー以外はこっち
         networkAnimator?.Animator.SetFloat("Speed", 2.0f);
+        WaitForSeconds waitInterval = new WaitForSeconds(weaponSO.fireInterval);
+        WaitForSeconds waitReload = new WaitForSeconds(weaponSO.reloadTime);
         yield return new WaitForSeconds(weaponSO.FirstShootDelayTime);
-        OnShootServer();
+        //トリガーはこっち
+        networkAnimator?.SetTrigger("Attack");
 
         while (true)
         {
-            yield return new WaitForSeconds(weaponSO.reloadTime);
-            OnShootServer();
+            yield return waitInterval;
+            //トリガーはこっち
+            networkAnimator?.SetTrigger("Attack");
+            if (--remain <= 0)
+            {
+                yield return waitReload;
+                remain = weaponSO.maxAmmo;
+            }
         }
     }
 

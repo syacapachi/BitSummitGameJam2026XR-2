@@ -4,6 +4,7 @@
 public class SkyBoxColorSetting : ScriptableObject
 {
     public TimeOfDay timeOfDay;
+
     [Header("空の色の設定")]
     [Header("空の真上の色")]
     public Color topColor;
@@ -17,16 +18,31 @@ public class SkyBoxColorSetting : ScriptableObject
     public float exponentTop;
     [Header("空の地平線の色の浸食度")]
     public float exponentBottom;
+
     [Header("太陽の設定")]
     [Header("太陽の色")]
-    public Color lightColor = Color.white;
-    [Header("太陽の角度")]
-    public Vector3 lightRotation;
+    public Color sunColor = Color.white;
     [Header("光源の強さ")]
-    public float lightIntensity = 0.5f;
+    public float sunIntensity = 0.5f;
     [Header("太陽の光の減衰率"),Tooltip("1以上の場合、光は跳ね返るたびに弱くなる。1未満の場合、光は跳ね返るたびに強くなる")]
-    public float indirectMultiplier = 1f;
+    public float sunMultiplier = 1f;
 
+    [Header("月の説明")]
+    [Header("月の色")]
+    public Color moonColor = Color.red;
+    [Header("月の光の強さ")]
+    public float moonIntensity = 0.1f;
+    [Header("月の光の減衰率")]
+    public float moonMultiplier = 1f;
+    private const float  onehour = 360f / 24f;
+    
+    //0時->±180
+    //6時-> -90 or 270
+    //12時 -> 0
+    //18時 -> 90
+
+    public Vector3 SkyRootEular => new Vector3((int)timeOfDay * onehour - 180f, 170, 0);
+    public Quaternion SkyRotation => Quaternion.Euler(SkyRootEular);
 }
 /// <summary>
 /// 時間設定を行うための列挙体。
@@ -35,29 +51,28 @@ public class SkyBoxColorSetting : ScriptableObject
 /// </summary>
 public enum TimeOfDay
 {
-    TwentyFour,
-    One,
-    Two,
-    Three,
-    Four,
-    Five,
-    Six,
-    Seven,
-    Eight,
-    Nine,
-    Ten,
-    Eleven,
-    Twelve,
-    Thirteen,
-    Fourteen,
-    Fifteen,
-    Sixteen,
-    Seventeen,
-    Eighteen,
-    Nineteen,
-    Twenty,
-    TwentyOne,
-    TwentyTwo,
-    TwentyThree,
-
+    TwentyFour = 0,
+    One = 1,
+    Two = 2,
+    Three = 3,
+    Four = 4,
+    Five = 5,
+    Six = 6,
+    Seven = 7,
+    Eight = 8,
+    Nine = 9,
+    Ten = 10,
+    Eleven = 11,
+    Twelve = 12,
+    Thirteen = 13,
+    Fourteen = 14,
+    Fifteen = 15,
+    Sixteen = 16,
+    Seventeen = 17,
+    Eighteen = 18,
+    Nineteen = 19,
+    Twenty = 20,
+    TwentyOne = 21,
+    TwentyTwo = 22,
+    TwentyThree = 23
 }

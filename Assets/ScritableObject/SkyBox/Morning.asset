@@ -19,7 +19,9 @@ MonoBehaviour:
   intensity: 2
   exponentTop: 5
   exponentBottom: 6
-  lightColor: {r: 1, g: 0.78431374, b: 0.54901963, a: 1}
-  lightRotation: {x: 20, y: 170, z: 0}
-  lightIntensity: 2.5
-  indirectMultiplier: 0.4
+  sunColor: {r: 1, g: 0.78431374, b: 0.54901963, a: 1}
+  sunIntensity: 2.5
+  sunMultiplier: 0.4
+  moonColor: {r: 1, g: 0, b: 0, a: 1}
+  moonIntensity: 0.1
+  moonMultiplier: 1

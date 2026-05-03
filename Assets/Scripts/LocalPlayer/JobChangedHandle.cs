@@ -35,7 +35,8 @@ public class JobChangedHandle : MonoBehaviour
     }
     private void LayerChange(PlayerLayerSettings newSetting)
     {
-        PlayerCollider.layer = newSetting.Layer;
+        //プレイヤーのコライダーは変えない
+        //PlayerCollider.layer = newSetting.Layer;
         // カメラのカリングマスクを更新
         PlayerCamera.cullingMask = newSetting.CullingMask;
     }

@@ -84,19 +84,19 @@ public class MarkerAudioController : NetworkBehaviour
         // 1. パーティクルはピン位置に1回だけ出す
         if (markerFxPrefabAll != null && gameEffectEvent != null)
         {
-            //gameEffectEvent.Invoke(
-            //    new GameEffect(
-            //        markerPlacedAudioDataAll.ToRuntimeData(),
-            //        markerPlacedFxDataAll.ToRuntimeData(),
-            //        hitPoint
-            //    ));
             gameEffectEvent.Invoke(
-                GameEffect.CreateFxEffect(
-                    markerFxPrefabAll,
-                    hitPoint,
-                    fxLifeTime: 4f
-                )
-            );
+                new GameEffect(
+                    markerPlacedAudioDataAll.ToRuntimeData(),
+                    markerPlacedFxDataAll.ToRuntimeData(),
+                    hitPoint
+                ));
+            //gameEffectEvent.Invoke(
+            //    GameEffect.CreateFxEffect(
+            //        markerFxPrefabAll,
+            //        hitPoint,
+            //        fxLifeTime: 4f
+            //    )
+            //);
         }
 
         // 2. 音は耳元で1回だけ鳴らす

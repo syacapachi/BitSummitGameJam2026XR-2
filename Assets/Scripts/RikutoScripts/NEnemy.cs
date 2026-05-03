@@ -69,6 +69,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         Debug.LogError($"LayerMask setting not found for job: {playerJob}");
         return false;
     }
+    [OnInspectorButton(showOnlyInPlayMode = true)]
     public void InjectSetting(EnemySO enemySO)
     {
         this.enemySOServertOnly = enemySO;

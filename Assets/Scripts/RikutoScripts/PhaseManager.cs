@@ -8,13 +8,6 @@ using UnityEngine;
 
 public class PhaseManager : NetworkBehaviour
 {
-    [Serializable]
-    class DifficultyToPhase
-    {
-        public Difficulty Difficulity;
-        public PhaseSO[] phases;
-    }
-    [SerializeField] DifficultyToPhase[] phaseSetting;
     [SerializeField] DifficultyDataBase database;
     [SerializeField] NetworkEnemySpawner spawner;
     [SerializeField] ScoreManager scoreManager;

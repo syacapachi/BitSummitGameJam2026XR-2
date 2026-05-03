@@ -71,6 +71,7 @@ MonoBehaviour:
   protectArea: {fileID: 0}
   OnAllEnemyDeadRpcEvent: {fileID: 11400000, guid: d48233639feb72e4ba705392d35f3c40, type: 2}
   EnemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
+  remain: 0
 --- !u!1 &1266559103897700638
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,8 +286,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
   - Difficulity: 3
     phases:
-    - {fileID: 11400000, guid: 4cb90bfed44ae1c4d89ef7468a7ea227, type: 2}
-    - {fileID: 11400000, guid: 4cb90bfed44ae1c4d89ef7468a7ea227, type: 2}
+    - {fileID: 11400000, guid: 4f4182bedf443b640ab575f946f0caca, type: 2}
+  database: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
   spawner: {fileID: 5843874078436757177}
   scoreManager: {fileID: 7622921992766210704}
   uiSettings: {fileID: 11400000, guid: 501a16477cf3ffe419cd09b562a62f7a, type: 2}
@@ -611,9 +612,9 @@ MonoBehaviour:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 3
+    m_InternalValue: 1
   gameMode: 1
-  gameStartMode: 1
+  gameStartMode: 0
   protectArea: {fileID: 0}
   scoreManager: {fileID: 7622921992766210704}
   phaseManager: {fileID: 1871165705981970814}
@@ -674,6 +675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  database: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
   initilScore: 50000
   score:
     UpdateTraits:
@@ -746,8 +748,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aab534e90c923dd47b02f4361b9128fb, type: 2}
   - {fileID: 11400000, guid: 22c980c46d86d70478b73be59f2e9fd6, type: 2}
   defaultIndex: 0
-  directionalLights:
-  - {fileID: 0}
+  sunAndMoonRoot: {fileID: 0}
+  sunLight: {fileID: 0}
   gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   IsDebug: 0
   debugEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
@@ -806,6 +808,8 @@ MonoBehaviour:
   step1Enemies: []
   step2Enemies: []
   attackBlockedEvent: {fileID: 0}
+  OnTutorialStepCleared: {fileID: 0}
+  OnTutorialStepChanged: {fileID: 0}
 --- !u!1 &7509225818068572671
 GameObject:
   m_ObjectHideFlags: 0

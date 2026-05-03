@@ -9,6 +9,7 @@ public class MarkerController : NetworkBehaviour
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] GameObject playerMarker;
     [SerializeField] AttachableNode node;
+    [SerializeField] LayerMask markerHitLayerMask;
     [SerializeField] int laserDistance = 50;
     [SerializeField] MarkerAudioController markerAudioController;
     [Header("Subscribe Event")]
@@ -95,7 +96,7 @@ public class MarkerController : NetworkBehaviour
 
         Vector3 forward = firePoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out RaycastHit hit, laserDistance))
+        if (Physics.Raycast(firePoint.position, forward, out RaycastHit hit, laserDistance, markerHitLayerMask))
         {
             MoveMarkerServerRpc(hit.point);
             markerAudioController.OnMarkerSondPlayRpc(hit.point);
