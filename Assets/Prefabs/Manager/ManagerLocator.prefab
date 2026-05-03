@@ -271,22 +271,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  phaseSetting:
-  - Difficulity: 0
-    phases:
-    - {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
-  - Difficulity: 1
-    phases:
-    - {fileID: 11400000, guid: 01e97072af31c5746aae4fc3efb30aec, type: 2}
-    - {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
-  - Difficulity: 2
-    phases:
-    - {fileID: 11400000, guid: 01e97072af31c5746aae4fc3efb30aec, type: 2}
-    - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
-    - {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
-  - Difficulity: 3
-    phases:
-    - {fileID: 11400000, guid: 4f4182bedf443b640ab575f946f0caca, type: 2}
   database: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
   spawner: {fileID: 5843874078436757177}
   scoreManager: {fileID: 7622921992766210704}
@@ -676,7 +660,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   database: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
-  initilScore: 50000
+  debugScore: 10000
+  alertScore: 5000
   score:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -693,6 +678,7 @@ MonoBehaviour:
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   OnScoreReachZeroServerEvent: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
+  aleartRpcEvent: {fileID: 11400000, guid: 432a6a4fce97a02429b981e89ed75b9b, type: 2}
 --- !u!1 &6500222626716750681
 GameObject:
   m_ObjectHideFlags: 0
@@ -738,20 +724,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   phaseManager: {fileID: 1871165705981970814}
-  changeTime: 5
   skyboxMat: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
+  sunAndMoonRoot: {fileID: 0}
+  sunLight: {fileID: 0}
+  sunMat: {fileID: 2100000, guid: 2a4258fad7be5a44ea76ecfa488e4aa9, type: 2}
+  moonLight: {fileID: 0}
+  moonMat: {fileID: 2100000, guid: ec5bcda1b3d57d849807f60b581d106f, type: 2}
   skyBoxColorSettings:
-  - {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
-  - {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
   - {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
   - {fileID: 11400000, guid: cdf2344405367c94e9d5aeb6eb72f5a8, type: 2}
   - {fileID: 11400000, guid: aab534e90c923dd47b02f4361b9128fb, type: 2}
   - {fileID: 11400000, guid: 22c980c46d86d70478b73be59f2e9fd6, type: 2}
-  defaultIndex: 0
-  sunAndMoonRoot: {fileID: 0}
-  sunLight: {fileID: 0}
+  - {fileID: 11400000, guid: ce0e06e46263c4e4c9b0bde9b09858e0, type: 2}
+  startSky: {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
+  clearSky: {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
   gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   IsDebug: 0
+  debugChangeTime: 5
   debugEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
 --- !u!1 &7146760537532538251
 GameObject:

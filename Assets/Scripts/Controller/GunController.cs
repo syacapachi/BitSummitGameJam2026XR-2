@@ -53,6 +53,10 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     [Rpc(SendTo.Server)]
     private void ShootRpc()
     {
+        //if (ManagerLocator.Instance == null 
+        //    || ManagerLocator.Instance.AllGameManager == null 
+        //    || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
+        //    ) return;
         if (isReloading) return;
         if (Time.time < nextFire) return;
         OnShootServer();

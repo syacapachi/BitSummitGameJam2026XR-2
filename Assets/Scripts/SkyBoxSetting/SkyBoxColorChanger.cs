@@ -17,8 +17,10 @@ public class SkyBoxColorChanger : MonoBehaviour
     [Header("月")]
     [SerializeField] Light moonLight;
     [SerializeField] Material moonMat;
+    [Header("時間の設定")]
     [SerializeField] SkyBoxColorSetting[] skyBoxColorSettings;
-    [SerializeField] int defaultIndex = 0;
+    [SerializeField] SkyBoxColorSetting startSky;
+    [SerializeField] SkyBoxColorSetting clearSky;
     [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
     [Header("デバックモード")]
@@ -32,7 +34,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     private void Awake()
     {
         SettingDic();
-        ApplyColor(defaultIndex);
+        ApplyColor(startSky);
     }
     private void OnEnable()
     {
@@ -70,11 +72,11 @@ public class SkyBoxColorChanger : MonoBehaviour
         switch (newState)
         {
             case GameState.Initializing:
-                ApplyColor(defaultIndex); break;
+                ApplyColor(startSky); break;
             case GameState.Playing:
                 StartSkyBoxChange(); break;
             case GameState.GameClear:
-                StartCoroutine(ApplyColorCorutine(skyBoxColorSettings.Length-1,0, debugChangeTime)); break;
+                StartCoroutine(ApplyColorCorutine(skyBoxColorSettings[^1], clearSky, debugChangeTime)); break;
             case GameState.GameOver:
                 StopAllCoroutines(); break;
 
@@ -91,12 +93,18 @@ public class SkyBoxColorChanger : MonoBehaviour
     }
     private IEnumerator SkyBoxChangeCorutine(float maxTime)
     {
-        float hourTime = maxTime / 24f;
-        int index = 0;
-        for(float timer = 0f; timer <= maxTime; timer += hourTime)
+        int startTime = (int)skyBoxColorSettings[0].timeOfDay;
+        int endTime = (int)skyBoxColorSettings[^1].timeOfDay;
+        int duratinTime = endTime - startTime > 0 
+            ? endTime - startTime
+            :(24 - startTime) + (endTime);
+
+        float hourTime = maxTime / duratinTime;
+
+        for (int index = 0; index < skyBoxColorSettings.Length; index++)
         {
-            if(index >= skyBoxColorSettings.Length-1) yield return ApplyColorCorutine(index,index = 0, hourTime);
-            yield return ApplyColorCorutine(index,++index,hourTime);
+            if (index == skyBoxColorSettings.Length - 1) yield return ApplyColorCorutine(skyBoxColorSettings[^1], clearSky, hourTime);
+            else yield return ApplyColorCorutine(index, index + 1, hourTime);
         }
     }
     /// <summary>
@@ -145,7 +153,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     {
         if(index == 0)
         {
-            StartCoroutine(ApplyColorCorutine(skyBoxColorSettings[skyBoxColorSettings.Length -1], skyBoxColorSettings[index], debugChangeTime));
+            StartCoroutine(ApplyColorCorutine(skyBoxColorSettings[^1], skyBoxColorSettings[index], debugChangeTime));
             return;
         }
         if(index < 1 || index >= skyBoxColorSettings.Length) return;

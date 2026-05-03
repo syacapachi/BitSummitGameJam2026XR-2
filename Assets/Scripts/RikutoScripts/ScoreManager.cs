@@ -5,8 +5,9 @@ using System;
 public class ScoreManager : NetworkBehaviour
 {
     [SerializeField] DifficultyDataBase database;
-    [SerializeField] int initilScore;
-    public int InitialScore => initilScore;
+    [SerializeField] int debugScore = 10000;
+    [SerializeField] int alertScore = 5000;
+    public int InitialScore => debugScore;
     public NetworkVariable<int> score = new(
         0,
         NetworkVariableReadPermission.Everyone,
@@ -14,11 +15,35 @@ public class ScoreManager : NetworkBehaviour
     );
     [SerializeField] NetworkVariable<int> totalBonus = new NetworkVariable<int>(0);
     [SerializeField] NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(0);
-    bool isGameOver = false;
+    
     public int TotalBonus => totalBonus.Value;
     public int LastClearBonus => lastClearBonus.Value;
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
+    [SerializeField] BoolEvent aleartRpcEvent;
+
+    bool isGameOver = false;
+    bool isAlert = false;
+
+    private void OnEnable()
+    {
+        score.OnValueChanged += OnScoreChanged;
+    }
+    private void OnDisable()
+    {
+        score.OnValueChanged -= OnScoreChanged;
+    }
+    private void OnScoreChanged(int oldScore, int newScore)
+    {
+        if(oldScore > alertScore && newScore <= alertScore)
+        {
+            aleartRpcEvent.Invoke(true);
+        }
+        else if(oldScore <= alertScore && newScore > alertScore)
+        {
+            aleartRpcEvent.Invoke(false);
+        }
+    }
     public void AddBonusServerOnly(int value)
     {
         if (!IsServer) return;
@@ -48,7 +73,7 @@ public class ScoreManager : NetworkBehaviour
 
     public void SetScoreServerOnly()
     {
-        score.Value = initilScore;
+        score.Value = debugScore;
     }
     public void SetScoreByDifficultyServerOnly(Difficulty difficulty)
     {
