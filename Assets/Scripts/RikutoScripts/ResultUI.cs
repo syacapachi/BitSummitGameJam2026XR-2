@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -41,6 +42,7 @@ public class ResultUI : MonoBehaviour
     [SerializeField] PlayerResultDataArrayEvent OnGameResultRpc;
 
     private bool isGameOver = false;
+    private readonly List<GameObject> spawnedUIObjects = new();
     IEnumerator Start()
     {
         InitializeUI();
@@ -124,6 +126,7 @@ public class ResultUI : MonoBehaviour
 
     void ShowDetail(PlayerResultData[] results,bool isJapanese)
     {
+        ClearSpawnedUI();
         panel.SetActive(true);
 
         titleText.text = isGameOver 
@@ -131,18 +134,14 @@ public class ResultUI : MonoBehaviour
             : gameClearText.GetText(isJapanese);
 
         // （必要なら）前回削除
-        foreach (Transform child in contentParent)
-        {
-            if (child.gameObject == resultText.gameObject || child.gameObject == titleText.gameObject) continue;
-            Destroy(child.gameObject);
-        }
 
         foreach (var playerResult in results)
         {
             var headerObj = Instantiate(playerHeaderPrefab,contentParent);
+            spawnedUIObjects.Add(headerObj);
             //headerObj.transform.SetParent(contentParent, false);
             // RectTransformの設定
-            if(!headerObj.TryGetComponent<TextMeshProUGUI>(out var headerText))
+            if (!headerObj.TryGetComponent<TextMeshProUGUI>(out var headerText))
             {
                 headerText = headerObj.AddComponent<TextMeshProUGUI>();
             }
@@ -185,6 +184,7 @@ public class ResultUI : MonoBehaviour
                 var enemy = enemyDatabase.GetEnemyDataFromId(i);
 
                 var obj = Instantiate(enemyRowPrefab, contentParent);
+                spawnedUIObjects.Add(obj);
                 var row = obj.GetComponent<EnemyResultRow>();
 
                 row.Setup(enemy.Icon, enemy.EnemyName, count);
@@ -198,6 +198,7 @@ public class ResultUI : MonoBehaviour
 
             var sepObj = new GameObject("Separator");
             sepObj.transform.SetParent(contentParent);
+            spawnedUIObjects.Add(sepObj);
             var sepText = sepObj.AddComponent<TextMeshProUGUI>();
             sepText.text = "----------------------------";
             sepText.fontSize = fontSizeKill;
@@ -236,5 +237,17 @@ public class ResultUI : MonoBehaviour
              - waste * 0.2f) * 100f;
 
         return Mathf.Clamp(cooperation, 0f, 100f);
+    }
+
+    void ClearSpawnedUI()
+    {
+        foreach (var obj in spawnedUIObjects)
+        {
+            if (obj != null)
+            {
+                Destroy(obj);
+            }
+        }
+        spawnedUIObjects.Clear();
     }
 }

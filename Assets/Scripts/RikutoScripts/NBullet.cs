@@ -54,13 +54,29 @@ public class NBullet : BulletBaseController
             );
             if (!enemy.IsAttackable)
             {
-                attackBlockedEvent.Invoke(new AttackBlocked()
+                //シールドがでなかったのと見えない敵を撃ってもstep2クリア可能だったため構造変更
+                if (layerMaskSetting.IsAttackableJob(enemy.EnemyJob))
                 {
-                    Collector = ResultCollector,
-                    Enemy = enemy
-                });
-                // [追加] 攻撃が無効な敵に当たった場合のデバッグログ
-                Debug.Log($"NotDamage");
+                    Debug.Log($"NotDamage");
+                   
+                } 
+                else
+                {
+
+                    attackBlockedEvent.Invoke(new AttackBlocked()
+                    {
+                        Collector = ResultCollector,
+                        Enemy = enemy
+                    });
+                    // [追加] 攻撃が無効な敵に当たった場合のデバッグログ
+                    SpawnShieldFxClientRpc(transform.position);
+                    Debug.Log($"NotDamage");
+                    
+                }
+                if (NetworkObject.IsSpawned)
+                {
+                    NetworkObject.Despawn(true);
+                }
                 return;
             }
 
@@ -110,11 +126,13 @@ public class NBullet : BulletBaseController
             //if (ResultCollector.ClientId == NetworkManager.LocalClientId) return;
             // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
             Debug.Log("Shield by Player");
+            /* チュートリアルstep2 プレイヤーに当ててクリア可能なため一旦コメントアウト
             attackBlockedEvent.Invoke(new AttackBlocked()
             {
                 Collector = ResultCollector,
                 Enemy = null
             });
+            */
             SpawnShieldFxClientRpc(transform.position);
             return;
         }

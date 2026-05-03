@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 143f561df1144aa42b45f6186789b04a, type: 3}
-  m_Name: BlackDemonWeapon
+  m_Name: PurpleDemonWeapon
   m_EditorClassIdentifier: 
-  fireInterval: 0.2
-  maxAmmo: 30
-  reloadTime: 2
+  fireInterval: 6
+  maxAmmo: 20
+  reloadTime: 10
   laserDistance: 50
-  speed: 20
-  damage: 1
-  FirstShootDelay: 10
+  speed: 10
+  damage: 200
+  FirstShootDelay: 6

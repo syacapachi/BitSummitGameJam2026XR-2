@@ -25,6 +25,8 @@ public class TutorialManager : NetworkBehaviour
     [SerializeField] List<EnemySO> step2Enemies;
 
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
+    [SerializeField] VoidEvent OnTutorialStepCleared;
+    [SerializeField] IntEvent OnTutorialStepChanged;
     private bool isInitialized = false;
 
     private void Start()
@@ -50,7 +52,7 @@ public class TutorialManager : NetworkBehaviour
     IEnumerator WaitForAllClientConnect()
     {
         yield return new WaitUntil(() => IsSpawned && playerManager != null && playerManager.IsAllClientReady());
-        if (!isInitialized　&& IsServer)
+        if (!isInitialized && IsServer)
             StartStep(TutorialStep.Step1);
     }
     public override void OnNetworkDespawn()
@@ -77,15 +79,15 @@ public class TutorialManager : NetworkBehaviour
         switch (step)
         {
             case TutorialStep.Step1:
-                currentStepLogic = new Step1_Target(playerCount, spawner, NextStep, step1Enemies);
+                currentStepLogic = new Step1_Target(playerCount, spawner, OnStepCompleted, step1Enemies);
                 break;
 
             case TutorialStep.Step2:
-                currentStepLogic = new Step2_Block(playerCount, spawner, NextStep, step2Enemies);
+                currentStepLogic = new Step2_Block(playerCount, spawner, OnStepCompleted, step2Enemies);
                 break;
 
             case TutorialStep.Step3:
-                currentStepLogic = new Step3_Coop(spawner, NextStep);
+                currentStepLogic = new Step3_Coop(spawner, OnStepCompleted);
                 break;
 
             case TutorialStep.Step4:
@@ -98,7 +100,36 @@ public class TutorialManager : NetworkBehaviour
                 return;
         }
 
+        OnTutorialStepChanged?.Invoke((int)step);
         currentStepLogic?.OnStart();
+    }
+
+    bool isWaitingNext = false;
+
+    void OnStepCompleted()
+    {
+        if (!IsServer) return;
+        if (isWaitingNext) return;
+
+        isWaitingNext = true;
+        StartCoroutine(StepCompleteRoutine());
+    }
+
+    IEnumerator StepCompleteRoutine()
+    {
+        // UIに通知
+        NotifyStepClearedClientRpc();
+
+        yield return new WaitForSeconds(2f);
+
+        isWaitingNext = false;
+        NextStep();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void NotifyStepClearedClientRpc()
+    {
+        OnTutorialStepCleared?.Invoke();
     }
 
     [OnInspectorButton("Next Step")]

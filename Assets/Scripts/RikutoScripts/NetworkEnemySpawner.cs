@@ -59,7 +59,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     [SerializeField] VoidEvent OnAllEnemyDeadRpcEvent;
     [Header("SubScribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
-    private int remain;
+    public int remain;
     public int RemainServerOnly => remain;
     private bool isSpawnFinished = false;
     private bool isAllDead = false;
@@ -154,9 +154,11 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                 }
                 else
                 {
-                    SpawnEnemy(e.EnemyType, e.SpawnPointIndex);
+                    if (SpawnEnemy(e.EnemyType, e.SpawnPointIndex))
+                    {
+                        remain++;
+                    }
                 }
-                remain++;
 
                 index++;
             }
@@ -194,7 +196,10 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
             if(waitSpawnEnemyQueue.Count > 0)
             {
                 SpawnEvent e = waitSpawnEnemyQueue.Dequeue();
-                SpawnEnemy(e.EnemyType, e.SpawnPointIndex);
+                if (SpawnEnemy(e.EnemyType, e.SpawnPointIndex))
+                {
+                    remain++;
+                }
             }
         }
         waitForSpawn = null;
@@ -226,12 +231,12 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     }
     */
 
-    void SpawnEnemy(EnemySO enemyData, int spawnIndex)
+    bool SpawnEnemy(EnemySO enemyData, int spawnIndex)
     {
         if (spawnIndex < 0 || spawnIndex >= spawnPoints.Length)
         {
             Debug.LogWarning("Invalid spawn index!");
-            return;
+            return false;
         }
 
         Transform point = spawnPoints[spawnIndex];
@@ -250,6 +255,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         networkObject.Spawn();
         //int id = enemyDataBase.GetIdFromEnemyData(enemyData);
         //enemy.InitEnemyRpc(id);
+        return true;
     }
 
     public void OnEnemyKilled(IEnemy enemy)
