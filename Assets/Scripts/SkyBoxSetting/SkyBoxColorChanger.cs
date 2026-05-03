@@ -162,7 +162,11 @@ public class SkyBoxColorChanger : MonoBehaviour
     }
     IEnumerator ApplyColorCorutine(SkyBoxColorSetting fromIndex, SkyBoxColorSetting toIndex, float hourTime)
     {
-        int hours = Mathf.Abs(toIndex.timeOfDay - fromIndex.timeOfDay);
+        int hours = toIndex.timeOfDay - fromIndex.timeOfDay;
+        if(hours < 0)
+        {
+            hours += 24;
+        }
         float changeTime = hourTime * hours;
         for (float timer = 0f; timer <= changeTime; timer += Time.deltaTime)
         {

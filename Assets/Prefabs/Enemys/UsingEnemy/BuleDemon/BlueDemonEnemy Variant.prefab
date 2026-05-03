@@ -53,6 +53,18 @@ PrefabInstance:
       value: 61.902267
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -91,6 +103,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8408136266233684720, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -702,7 +718,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
       propertyPath: m_Name
-      value: Daemon_black
+      value: Daemon_Bule
       objectReference: {fileID: 0}
     - target: {fileID: 1101040121056219562, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1441,11 +1457,11 @@ PrefabInstance:
     - target: {fileID: 1507100403117325063, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: fxEffect
       value: 
-      objectReference: {fileID: 11400000, guid: 159329fa5e08c234d9fa68d5c3f0f9df, type: 2}
+      objectReference: {fileID: 11400000, guid: 12a13dab3445c2c42a40031d2eb262bf, type: 2}
     - target: {fileID: 2450540616462859229, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: deathFx
       value: 
-      objectReference: {fileID: 11400000, guid: b52a2604c4bb9d94283c79a1aa36b130, type: 2}
+      objectReference: {fileID: 11400000, guid: d951b3012b0016146bb3d4244bcbc680, type: 2}
     - target: {fileID: 3163972296892794398, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: networkAnimator
       value: 
@@ -1460,7 +1476,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5081841902659819387, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: m_Name
-      value: DemonEnemyBase Variant
+      value: BlueDemonEnemy Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5597823880750522856, guid: 51c87882fbc28984083999e0612867d3, type: 3}
+      propertyPath: m_Height
+      value: 1.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 5597823880750522856, guid: 51c87882fbc28984083999e0612867d3, type: 3}
+      propertyPath: m_Radius
+      value: 0.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 5597823880750522856, guid: 51c87882fbc28984083999e0612867d3, type: 3}
+      propertyPath: m_Center.y
+      value: 0.79
       objectReference: {fileID: 0}
     - target: {fileID: 5637691317398501634, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: animator
