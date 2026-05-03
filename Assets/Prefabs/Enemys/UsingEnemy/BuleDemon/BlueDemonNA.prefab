@@ -676,7 +676,7 @@ MonoBehaviour:
   - IsCrossFadeExit: 0
     Layer: 0
     OriginatingState: 1119931081
-    DestinationState: 665554848
+    DestinationState: -1706454900
     TransitionDuration: 0.25
     TriggerNameHash: 1080829965
     TransitionIndex: 0
@@ -799,6 +799,18 @@ PrefabInstance:
       value: 612826626
       objectReference: {fileID: 0}
     - target: {fileID: 7078614501938154821, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7078614501938154821, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7078614501938154821, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7078614501938154821, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -837,6 +849,10 @@ PrefabInstance:
     - target: {fileID: 7078614501938154821, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7078614501938154821, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8675889087316196881, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: fxEffect
