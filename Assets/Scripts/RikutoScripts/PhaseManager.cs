@@ -15,6 +15,7 @@ public class PhaseManager : NetworkBehaviour
         public PhaseSO[] phases;
     }
     [SerializeField] DifficultyToPhase[] phaseSetting;
+    [SerializeField] DifficultyDataBase database;
     [SerializeField] NetworkEnemySpawner spawner;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseCountDownSettingSO uiSettings;
@@ -30,40 +31,17 @@ public class PhaseManager : NetworkBehaviour
     );
     public IKillable KillableHandle => spawner;
     public ISpawnable SpawnableHandle => spawner;
-    public PhaseSO[] Phases => currentPhaseMode.phases;
+    public PhaseSO[] Phases => currentPhaseMode.Phases;
     public int CurrentPhaseIndex => syncedPhaseIndex.Value;
-    private bool isInitialize = false;
-    private readonly Dictionary<Difficulty, DifficultyToPhase> difficultToPhaseDic = new();
     private bool IsCountingDown = false;
-    private DifficultyToPhase currentPhaseMode;
+    private DifficultySetting currentPhaseMode;
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnAllPhaseEndedServerOnly;
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] DifficultyEvent OnDifficultyChangedServerEvent;
 
-    private void CreateDic()
-    {
-        if (isInitialize) return;
-        isInitialize = true;
-        foreach (var setting in phaseSetting)
-        {
-            difficultToPhaseDic[setting.Difficulity] = setting;
-        }
-#if UNITY_EDITOR
-        foreach (var diff in Enum.GetValues(typeof(Difficulty)))
-        {
-            if (!difficultToPhaseDic.ContainsKey((Difficulty)diff))
-            {
-                Debug.LogError($"{(Difficulty)diff} is not setting");
-            }
-        }
-#endif
-    }
-
     public override void OnNetworkSpawn()
     {
-        CreateDic();
-
         // 初期値反映（超重要）
         OnPhaseChanedHaldle(-1, syncedPhaseIndex.Value);
 
@@ -85,7 +63,7 @@ public class PhaseManager : NetworkBehaviour
     {
         Debug.Log($"[PhaseManager] Difficulty同期: {newValue}");
 
-        currentPhaseMode = difficultToPhaseDic[newValue];
+        currentPhaseMode = database.GetSetting(newValue);
     }
     private void OnEnable()
     {
@@ -108,8 +86,7 @@ public class PhaseManager : NetworkBehaviour
         Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartPhasesRpc called");
 #endif
         //クライアント側でもフェーズの情報を更新する必要があるため、RPC内でフェーズのモードを切り替える
-        CreateDic();
-        currentPhaseMode = difficultToPhaseDic[difficulity];
+        currentPhaseMode = database.GetSetting(difficulity);
         if (!IsServer) return;
         //ここからサーバーOnlyの処理
         syncedPhaseIndex.Value = -1;

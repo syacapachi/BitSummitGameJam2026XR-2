@@ -290,6 +290,11 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
         networkAnimator?.SetTrigger("Death");
         //networkAnimator.Animator
+        StartCoroutine(WaitForAnimation());
+    }
+    IEnumerator WaitForAnimation()
+    {
+        yield return new WaitForSeconds(2f);
         if (NetworkObject.IsSpawned)
         {
             NetworkObject.Despawn(true);

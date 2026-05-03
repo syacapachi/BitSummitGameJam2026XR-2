@@ -4,6 +4,7 @@ using System;
 
 public class ScoreManager : NetworkBehaviour
 {
+    [SerializeField] DifficultyDataBase database;
     [SerializeField] int initilScore;
     public int InitialScore => initilScore;
     public NetworkVariable<int> score = new(
@@ -48,6 +49,10 @@ public class ScoreManager : NetworkBehaviour
     public void SetScoreServerOnly()
     {
         score.Value = initilScore;
+    }
+    public void SetScoreByDifficultyServerOnly(Difficulty difficulty)
+    {
+        score.Value = database.GetSetting(difficulty).PlayerHP;
     }
 
     public int GetScore()

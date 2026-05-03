@@ -9,4 +9,6 @@ public class SettingLoactor : MonoBehaviour
     [SerializeField] JobSettingGenerator[] setting;
     [Header("敵のデータベース")]
     [SerializeField] EnemyDataBase enemyDataBase;
+    [Header("難易度のデータベース")]
+    [SerializeField] DifficultyDataBase difficultyDataBase;
 }

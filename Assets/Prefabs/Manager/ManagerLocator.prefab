@@ -68,10 +68,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   protectArea: {fileID: 0}
   OnAllEnemyDeadRpcEvent: {fileID: 11400000, guid: d48233639feb72e4ba705392d35f3c40, type: 2}
   EnemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
@@ -121,10 +117,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CheckPointParent: {fileID: 0}
   checkPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -291,6 +283,10 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 01e97072af31c5746aae4fc3efb30aec, type: 2}
     - {fileID: 11400000, guid: 1af30ca40778cbf4d83a60730723989c, type: 2}
     - {fileID: 11400000, guid: e0f62589ad07e364187518738a1d0706, type: 2}
+  - Difficulity: 3
+    phases:
+    - {fileID: 11400000, guid: 4cb90bfed44ae1c4d89ef7468a7ea227, type: 2}
+    - {fileID: 11400000, guid: 4cb90bfed44ae1c4d89ef7468a7ea227, type: 2}
   spawner: {fileID: 5843874078436757177}
   scoreManager: {fileID: 7622921992766210704}
   uiSettings: {fileID: 11400000, guid: 501a16477cf3ffe419cd09b562a62f7a, type: 2}
@@ -459,6 +455,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   - {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
   enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
+  difficultyDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
 --- !u!1 &5655868705551815652
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,9 +611,9 @@ MonoBehaviour:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 1
+    m_InternalValue: 3
   gameMode: 1
-  gameStartMode: 0
+  gameStartMode: 1
   protectArea: {fileID: 0}
   scoreManager: {fileID: 7622921992766210704}
   phaseManager: {fileID: 1871165705981970814}
@@ -752,7 +749,7 @@ MonoBehaviour:
   directionalLights:
   - {fileID: 0}
   gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
-  IsDebug: 1
+  IsDebug: 0
   debugEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
 --- !u!1 &7146760537532538251
 GameObject:

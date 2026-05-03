@@ -119,7 +119,7 @@ public class NetworkGameManager : NetworkBehaviour
         if (CurrentGameState != GameState.Initializing) return;
 
         Debug.Log("Game Start");
-        scoreManager.SetScoreServerOnly();
+        scoreManager.SetScoreByDifficultyServerOnly(CurrentDifficulty);
         phaseManager.StartPhasesRpc(CurrentDifficulty);
         gameState.Value = GameState.Playing;
     }
@@ -232,11 +232,4 @@ public enum GameMode
 {
     Protect,   // 拠点防衛あり
     Survival   // 拠点なし（耐久）
-}
-public enum Difficulty
-{
-    Easy,
-    Normal,
-    Hard,
-    Debug
 }
