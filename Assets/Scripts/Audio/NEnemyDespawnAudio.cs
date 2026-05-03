@@ -91,11 +91,6 @@ public class NEnemyDespawnAudio : NetworkBehaviour
         AudioClip hitClip = GetHitClipByEnemyJob();
         if (hitClip == null) return;
 
-        //gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(
-        //    hitClip,
-        //    position,
-        //    hitVolumeAll
-        //));
         gameEffectEvent.Invoke(
             new GameEffect(
                 ghostHitAudioData.ToRuntimeData(),
@@ -115,11 +110,6 @@ public class NEnemyDespawnAudio : NetworkBehaviour
         AudioClip deathClip = GetDeathClipByEnemyJob();
         if (deathClip == null) return;
 
-        //gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(
-        //    deathClip,
-        //    transform.position,
-        //    deathVolumeAll
-        //));
         gameEffectEvent.Invoke(
             new GameEffect(
                 defaultDeathAudioData.ToRuntimeData(),

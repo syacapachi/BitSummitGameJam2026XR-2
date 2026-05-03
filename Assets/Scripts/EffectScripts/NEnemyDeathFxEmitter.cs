@@ -30,12 +30,12 @@ public class NEnemyDeathFxEmitter : NetworkBehaviour
         if (!IsClient) return;
         if (reachedProtectArea.Value) return;
 
-        gameEffectEvent.Invoke(GameEffect.CreateCombinedEffect(
-            deathSfxAll,
-            deathFxPrefabAll,
-            transform.position,
-            deathVolumeAll
-            ));
+        //gameEffectEvent.Invoke(GameEffect.CreateCombinedEffect(
+        //    deathSfxAll,
+        //    deathFxPrefabAll,
+        //    transform.position,
+        //    deathVolumeAll
+        //    ));
         gameEffectEvent.Invoke(
             new GameEffect(
                 deathAudio.ToRuntimeData(),

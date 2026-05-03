@@ -6,7 +6,6 @@ public class AlertLightController : MonoBehaviour
     [SerializeField] GameObject alertObject;
 
     [Header("Setting")]
-    [SerializeField] int threshold = 2000;
     [SerializeField] float rotateSpeed = 100f;
 
     float timer = 0f;
@@ -16,79 +15,72 @@ public class AlertLightController : MonoBehaviour
 
     [Header("Subscribe Event")]
     [SerializeField] HPInfoEvent hpInfo;
+    [SerializeField] BoolEvent alertRpcEvent;
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffectEvent;
 
     bool isActive = false;
-
-    ScoreManager scoreManager;
 
     void Awake()
     {
         if (alertObject != null)
             alertObject.SetActive(false);
     }
-
-    IEnumerator Start()
+    private void OnEnable()
     {
-        while (true)
-        {
-            var locator = ManagerLocator.Instance;
-
-            if (locator != null &&
-                locator.AllGameManager != null &&
-                locator.AllGameManager.ScoreManager != null)
-            {
-                scoreManager = locator.AllGameManager.ScoreManager;
-                break;
-            }
-
-            yield return null;
-        }
+        alertRpcEvent.Register(OnAlert);
     }
-
-    void Update()
+    private void OnDisable()
     {
-        if(scoreManager == null) return;
-        int score = scoreManager.GetScore();
-
-        if (score <= threshold)
+        alertRpcEvent.Unregister(OnAlert);
+    }
+    void OnAlert(bool alert)
+    {
+        if (alert)
         {
-            if (!isActive) ActivateAlert();
+            ActivateAlert();
         }
         else
         {
-            if (isActive) DeactivateAlert();
-        }
-
-        if (isActive && alertObject != null)
-        {
-            alertObject.transform.Rotate(rotateSpeed * Time.deltaTime * Vector3.up);
-            timer += Time.deltaTime;
-
-            if (timer >= interval)
-            {
-                gameEffectEvent.Invoke(new GameEffect(buzzerEffectData.ToRuntimeData(),alertObject.transform.position));
-                //gameEffectEvent.Invoke(GameEffect.CreateAudioEffect(buzzerClip,alertObject.transform.position));
-
-                timer = 0f;
-            }
+            DeactivateAlert();
         }
     }
 
     void ActivateAlert()
     {
+        if (isActive) return;
         isActive = true;
 
         if (alertObject != null)
             alertObject.SetActive(true);
+
+        StartCoroutine(BuzzerRotateCoroutine());
+        StartCoroutine(BuzzerCoroutine());
     }
 
     void DeactivateAlert()
     {
+        if(!isActive) return;
         isActive = false;
 
         if (alertObject != null)
             alertObject.SetActive(false);
+    }
+    IEnumerator BuzzerRotateCoroutine()
+    {
+        while (isActive && alertObject != null)
+        {
+            alertObject.transform.Rotate(rotateSpeed * Time.deltaTime * Vector3.up);
+            yield return null;
+        }
+    }
+    IEnumerator BuzzerCoroutine()
+    {
+        WaitForSeconds waitInterval = new WaitForSeconds(interval);
+        while (isActive)
+        {
+            gameEffectEvent.Invoke(new GameEffect(buzzerEffectData.ToRuntimeData(), alertObject.transform.position));
+            yield return waitInterval;
+        }
     }
 }

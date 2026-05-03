@@ -32,9 +32,8 @@ public class RespawnField : MonoBehaviour
     [OnInspectorButton("Respawn Objects")]
     private void Respawn(GameObject obj)
     {
-        obj.transform.position = respawnPositon;
-        obj.transform.rotation = Quaternion.Euler(Vector3.zero);
-        if(obj.TryGetComponent<Rigidbody>(out Rigidbody rb))
+        obj.transform.SetPositionAndRotation(respawnPositon, Quaternion.Euler(Vector3.zero));
+        if (obj.TryGetComponent<Rigidbody>(out Rigidbody rb))
         {
             if (!rb.isKinematic)
             {

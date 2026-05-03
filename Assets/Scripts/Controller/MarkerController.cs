@@ -9,7 +9,9 @@ public class MarkerController : NetworkBehaviour
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] GameObject playerMarker;
     [SerializeField] AttachableNode node;
+    [SerializeField] LayerMask markerHitLayerMask;
     [SerializeField] int laserDistance = 50;
+    [SerializeField] float markerBackTime = 5f;
     [SerializeField] MarkerAudioController markerAudioController;
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent markerEvent;
@@ -19,7 +21,12 @@ public class MarkerController : NetworkBehaviour
     //以上
     bool isMarkAttachedServerOnly = false;
     Coroutine markerCoroutine;
-    
+    private WaitForSeconds wait;
+
+    private void Awake()
+    {
+        wait = new WaitForSeconds(markerBackTime);
+    }
     public override void OnNetworkSpawn()
     {
         if(!IsOwner) return;
@@ -95,7 +102,7 @@ public class MarkerController : NetworkBehaviour
 
         Vector3 forward = firePoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out RaycastHit hit, laserDistance))
+        if (Physics.Raycast(firePoint.position, forward, out RaycastHit hit, laserDistance, markerHitLayerMask))
         {
             MoveMarkerServerRpc(hit.point);
             markerAudioController.OnMarkerSondPlayRpc(hit.point);
@@ -139,7 +146,7 @@ public class MarkerController : NetworkBehaviour
     }
     private IEnumerator MarkerBackCorutine()
     {
-        yield return new WaitForSeconds(5f);
+        yield return wait;
         if (attachServerOnly != null)
         {
             attachServerOnly.Attach(node);

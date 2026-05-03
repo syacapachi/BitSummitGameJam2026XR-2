@@ -111,11 +111,10 @@ public class SyncroPropaty : NetworkBehaviour
     {
         Job = Job switch
         {
-            PlayerJob.Nothing => PlayerJob.Demon,
             PlayerJob.Demon => PlayerJob.Ghost,
-            PlayerJob.Ghost => PlayerJob.Both,
-            PlayerJob.Both => PlayerJob.Nothing,
-            _ => throw new System.NotImplementedException(),
+            PlayerJob.Ghost => PlayerJob.Nothing,
+            PlayerJob.Nothing => PlayerJob.Demon,
+            _ => PlayerJob.Demon,
         };
         Debug.Log("Job changed to: " + Job, gameObject);
     }

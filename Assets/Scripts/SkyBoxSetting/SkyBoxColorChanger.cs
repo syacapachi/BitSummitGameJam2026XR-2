@@ -6,25 +6,35 @@ using UnityEngine;
 public class SkyBoxColorChanger : MonoBehaviour
 {
     [SerializeField] PhaseManager phaseManager;
-    [SerializeField] float changeTime = 5f;
+    
     [Header("SkyBox Material")]
     [SerializeField] Material skyboxMat;
-    [SerializeField] SkyBoxColorSetting[] skyBoxColorSettings;
-    [SerializeField] int defaultIndex = 0;
+    [Header("太陽と月のルート")]
+    [SerializeField] Transform sunAndMoonRoot;
     [Header("Directional Light(太陽)")]
-    [SerializeField] Light[] directionalLights;
+    [SerializeField] Light sunLight;
+    [SerializeField] Material sunMat;
+    [Header("月")]
+    [SerializeField] Light moonLight;
+    [SerializeField] Material moonMat;
+    [Header("時間の設定")]
+    [SerializeField] SkyBoxColorSetting[] skyBoxColorSettings;
+    [SerializeField] SkyBoxColorSetting startSky;
+    [SerializeField] SkyBoxColorSetting clearSky;
     [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
     [Header("デバックモード")]
     [SerializeField] bool IsDebug;
+    [SerializeField] float debugChangeTime = 5f;
     [SerializeField, EnableIf(nameof(IsDebug))] VoidEvent debugEvent;
+
     private readonly Dictionary<TimeOfDay,SkyBoxColorSetting> settingDic = new();
     private bool isInitialized = false;
     private int currentIndex = 0;
     private void Awake()
     {
         SettingDic();
-        ApplyColor(defaultIndex);
+        ApplyColor(startSky);
     }
     private void OnEnable()
     {
@@ -51,7 +61,7 @@ public class SkyBoxColorChanger : MonoBehaviour
         {
             if(settingDic.ContainsKey(setting.timeOfDay))
             {
-                Debug.LogWarning($"同じTimeOfDayの設定が複数あります。timeOfDay:{setting.timeOfDay}");
+                Debug.LogWarning($"同じTimeOfDayの設定が複数あります。timeOfDay:{setting.timeOfDay}",gameObject);
                 continue;
             }
             settingDic.Add(setting.timeOfDay, setting);
@@ -62,11 +72,11 @@ public class SkyBoxColorChanger : MonoBehaviour
         switch (newState)
         {
             case GameState.Initializing:
-                ApplyColor(defaultIndex); break;
+                ApplyColor(startSky); break;
             case GameState.Playing:
                 StartSkyBoxChange(); break;
             case GameState.GameClear:
-                StartCoroutine(ApplyColorCorutine(skyBoxColorSettings.Length-1,0, changeTime)); break;
+                StartCoroutine(ApplyColorCorutine(skyBoxColorSettings[^1], clearSky, debugChangeTime)); break;
             case GameState.GameOver:
                 StopAllCoroutines(); break;
 
@@ -83,12 +93,18 @@ public class SkyBoxColorChanger : MonoBehaviour
     }
     private IEnumerator SkyBoxChangeCorutine(float maxTime)
     {
-        float duration = maxTime / skyBoxColorSettings.Length;
-        int index = 0;
-        for(float timer = 0f; timer <= maxTime; timer += duration)
+        int startTime = (int)skyBoxColorSettings[0].timeOfDay;
+        int endTime = (int)skyBoxColorSettings[^1].timeOfDay;
+        int duratinTime = endTime - startTime > 0 
+            ? endTime - startTime
+            :(24 - startTime) + (endTime);
+
+        float hourTime = maxTime / duratinTime;
+
+        for (int index = 0; index < skyBoxColorSettings.Length; index++)
         {
-            if(index >= skyBoxColorSettings.Length-1) yield break;
-            yield return ApplyColorCorutine(index,++index,duration);
+            if (index == skyBoxColorSettings.Length - 1) yield return ApplyColorCorutine(skyBoxColorSettings[^1], clearSky, hourTime);
+            else yield return ApplyColorCorutine(index, index + 1, hourTime);
         }
     }
     /// <summary>
@@ -105,76 +121,61 @@ public class SkyBoxColorChanger : MonoBehaviour
     {
         if (setting == null)
         {
-            Debug.LogWarning("setting is null");
+            Debug.LogWarning("setting is null", gameObject);
             return;
         }
         skyboxMat.SetColor("_Color1", setting.topColor);
         skyboxMat.SetColor("_Color2", setting.horizonColor);
-        skyboxMat.SetColor("_Color3", setting.bottomColor); 
+        skyboxMat.SetColor("_Color3", setting.bottomColor);
         skyboxMat.SetFloat("_Intensity", setting.intensity);
         skyboxMat.SetFloat("_Exponent1", setting.exponentTop);
         skyboxMat.SetFloat("_Exponent2", setting.exponentBottom);
 
-        foreach(Light light in directionalLights)
-        {
-            light.color = setting.lightColor;
-            light.intensity = setting.lightIntensity;
-            light.bounceIntensity = setting.indirectMultiplier;
-            light.transform.rotation = Quaternion.Euler(setting.lightRotation);
-        }
+
+        sunLight.color = setting.sunColor;
+        sunLight.intensity = setting.sunIntensity;
+        sunLight.bounceIntensity = setting.sunMultiplier;
+        sunMat.SetColor("_EmissionColor", setting.sunColor);
+
+        moonLight.color = setting.moonColor;
+        moonLight.intensity = setting.moonIntensity;
+        moonLight.bounceIntensity = setting.moonMultiplier;
+        moonMat.SetColor("_EmissionColor", setting.moonColor);
+
+        sunAndMoonRoot.rotation = setting.SkyRotation;
     }
     private void DebugApply()
     {
         currentIndex = (currentIndex + 1) % skyBoxColorSettings.Length;
         ApplyWithCorutine(currentIndex);
     }
-    [OnInspectorButton("適応コルーチンボタン",showOnlyInPlayMode = true)]
-    private void DebugApply(int fromIndex,int toIndex,float changeTime = 5f)
-    {
-        if(fromIndex < 0 || fromIndex >= skyBoxColorSettings.Length)
-        {
-            Debug.LogWarning("fromIndex is out of range");
-            return;
-        }
-        if(toIndex < 0 || toIndex >= skyBoxColorSettings.Length)
-        {
-            Debug.LogWarning("toIndex is out of range");
-            return;
-        }
-        DebugApply(skyBoxColorSettings[fromIndex], skyBoxColorSettings[toIndex], changeTime);
-    }
-    [OnInspectorButton("適応コルーチンボタン", showOnlyInPlayMode = true)]
-    private void DebugApply(SkyBoxColorSetting fromIndex, SkyBoxColorSetting toIndex, float changeTime = 5f)
-    {
-        if(fromIndex == null || toIndex == null)
-        {
-            Debug.LogWarning("fromIndex or toIndex is null");
-            return;
-        }
-        StartCoroutine(ApplyColorCorutine(fromIndex, toIndex, changeTime));
-    }
-
     private void ApplyWithCorutine(int index)
     {
         if(index == 0)
         {
-            DebugApply(skyBoxColorSettings[skyBoxColorSettings.Length -1], skyBoxColorSettings[index], changeTime);
+            StartCoroutine(ApplyColorCorutine(skyBoxColorSettings[^1], skyBoxColorSettings[index], debugChangeTime));
             return;
         }
         if(index < 1 || index >= skyBoxColorSettings.Length) return;
-        DebugApply(skyBoxColorSettings[index-1], skyBoxColorSettings[index], changeTime);
+        StartCoroutine(ApplyColorCorutine(skyBoxColorSettings[index-1], skyBoxColorSettings[index], debugChangeTime));
     }
-    IEnumerator ApplyColorCorutine(int fromIndex,int toIndex,float changeTime)
+    IEnumerator ApplyColorCorutine(int fromIndex,int toIndex,float hourTime)
     {
         if(fromIndex < 0 || fromIndex >= skyBoxColorSettings.Length)
         {
-            Debug.LogWarning("fromIndex is out of range");
+            Debug.LogWarning("fromIndex is out of range",gameObject);
             yield break;
         }
-        yield return ApplyColorCorutine(skyBoxColorSettings[fromIndex], skyBoxColorSettings[toIndex], changeTime);
+        yield return ApplyColorCorutine(skyBoxColorSettings[fromIndex], skyBoxColorSettings[toIndex], hourTime);
     }
-    IEnumerator ApplyColorCorutine(SkyBoxColorSetting fromIndex, SkyBoxColorSetting toIndex, float changeTime)
+    IEnumerator ApplyColorCorutine(SkyBoxColorSetting fromIndex, SkyBoxColorSetting toIndex, float hourTime)
     {
+        int hours = toIndex.timeOfDay - fromIndex.timeOfDay;
+        if(hours < 0)
+        {
+            hours += 24;
+        }
+        float changeTime = hourTime * hours;
         for (float timer = 0f; timer <= changeTime; timer += Time.deltaTime)
         {
             ApplyLerp(fromIndex, toIndex, timer / changeTime);
@@ -198,12 +199,16 @@ public class SkyBoxColorChanger : MonoBehaviour
         skyboxMat.SetFloat("_Exponent1", Mathf.Lerp(a.exponentTop, b.exponentTop, t));
         skyboxMat.SetFloat("_Exponent2", Mathf.Lerp(a.exponentBottom, b.exponentBottom, t));
 
-        foreach(Light light in directionalLights)
-        {
-            light.color = Color.Lerp(a.lightColor, b.lightColor, t);
-            light.intensity = Mathf.Lerp(a.lightIntensity, b.lightIntensity, t);
-            light.bounceIntensity = Mathf.Lerp(a.indirectMultiplier, b.indirectMultiplier, t);
-            light.transform.rotation = Quaternion.Lerp(Quaternion.Euler(a.lightRotation), Quaternion.Euler(b.lightRotation), t);
-        }
+        sunLight.color = Color.Lerp(a.sunColor, b.sunColor, t);
+        sunLight.intensity = Mathf.Lerp(a.sunIntensity, b.sunIntensity, t);
+        sunLight.bounceIntensity = Mathf.Lerp(a.sunMultiplier, b.sunMultiplier, t);
+        sunMat.SetColor("Emission", Color.Lerp(a.sunColor, b.sunColor, t));
+
+        moonLight.color = Color.Lerp(a.moonColor, b.moonColor, t);
+        moonLight.intensity = Mathf.Lerp(a.moonIntensity, b.moonIntensity, t);
+        moonLight.bounceIntensity = Mathf.Lerp(a.moonMultiplier, b.moonMultiplier, t);
+        moonMat.SetColor("Emission", Color.Lerp(a.moonColor, b.moonColor, t));
+
+        sunAndMoonRoot.rotation = Quaternion.Lerp(a.SkyRotation, b.SkyRotation, t);
     }
 }

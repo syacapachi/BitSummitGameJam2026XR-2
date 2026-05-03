@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 19a733a3c2f3c8240aeeb3a2e112824b, type: 3}
-  m_Name: Twillight
+  m_Name: Four
   m_EditorClassIdentifier: 
-  timeOfDay: 16
-  topColor: {r: 0.078431375, g: 0.078431375, b: 0.23529412, a: 1}
-  horizonColor: {r: 0.47058824, g: 0.23529412, b: 0.39215687, a: 1}
-  bottomColor: {r: 0.23529412, g: 0.13725491, b: 0.25490198, a: 1}
-  intensity: 1.2
-  exponentTop: 1.5
-  exponentBottom: 4
-  sunColor: {r: 0.627451, g: 0.39215687, b: 0.54901963, a: 1}
-  sunIntensity: 0.3
-  sunMultiplier: 0.2
+  timeOfDay: 4
+  topColor: {r: 0, g: 0, b: 0.019607844, a: 1}
+  horizonColor: {r: 0.011764706, g: 0.011764706, b: 0.039215688, a: 1}
+  bottomColor: {r: 0, g: 0, b: 0.011764706, a: 1}
+  intensity: 0.2
+  exponentTop: 1
+  exponentBottom: 2
+  sunColor: {r: 0.19607843, g: 0.21568628, b: 0.3137255, a: 1}
+  sunIntensity: 0
+  sunMultiplier: 5
   moonColor: {r: 1, g: 0, b: 0, a: 1}
   moonIntensity: 0.1
-  moonMultiplier: 1
+  moonMultiplier: 2
