@@ -36,8 +36,7 @@ public class AlertLightController : MonoBehaviour
     }
     void OnAlert(bool alert)
     {
-        isActive = alert;
-        if (isActive)
+        if (alert)
         {
             ActivateAlert();
         }

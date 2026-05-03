@@ -1,6 +1,7 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 using System;
+using Syacapachi.Attribute;
 
 public class ScoreManager : NetworkBehaviour
 {
@@ -44,6 +45,7 @@ public class ScoreManager : NetworkBehaviour
             aleartRpcEvent.Invoke(false);
         }
     }
+    [OnInspectorButton(showOnlyInPlayMode = true)]
     public void AddBonusServerOnly(int value)
     {
         if (!IsServer) return;
