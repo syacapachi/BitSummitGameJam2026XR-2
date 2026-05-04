@@ -131,8 +131,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         UpdateHPUI(currentHP.Value);
         ApplySettting();
 
-        
 
+        isAttackable = true;
         StartCoroutine(SetupPlayerCoroutine());
     }
     //必要な情報は、最大HPのみ
@@ -296,6 +296,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         //networkAnimator.Animator
         if (enemyJob == PlayerJob.Tutorial) Die();
         StartCoroutine(WaitForAnimation());
+        //アニメーション終了を待つため
+        isAttackable = false;
     }
     IEnumerator WaitForAnimation()
     {
