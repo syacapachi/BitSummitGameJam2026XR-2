@@ -179,7 +179,6 @@ Transform:
   - {fileID: 4322182251488153399}
   - {fileID: 4746944526076724239}
   - {fileID: 8180314942974675238}
-  - {fileID: 7532219791915829058}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &577900837676337283
@@ -666,7 +665,7 @@ MonoBehaviour:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 50000
+    m_InternalValue: 0
   totalBonus:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -679,69 +678,6 @@ MonoBehaviour:
     m_InternalValue: 0
   OnScoreReachZeroServerEvent: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
   aleartRpcEvent: {fileID: 11400000, guid: 432a6a4fce97a02429b981e89ed75b9b, type: 2}
---- !u!1 &6500222626716750681
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7532219791915829058}
-  - component: {fileID: 4214020285422082898}
-  m_Layer: 0
-  m_Name: SkyBoxColorChange
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7532219791915829058
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6500222626716750681}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4908882465109089120}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4214020285422082898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6500222626716750681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e353cdde9fb192544980c182e28be148, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  phaseManager: {fileID: 1871165705981970814}
-  skyboxMat: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
-  sunAndMoonRoot: {fileID: 0}
-  sunLight: {fileID: 0}
-  sunMat: {fileID: 2100000, guid: 2a4258fad7be5a44ea76ecfa488e4aa9, type: 2}
-  moonLight: {fileID: 0}
-  moonMat: {fileID: 2100000, guid: ec5bcda1b3d57d849807f60b581d106f, type: 2}
-  skyBoxColorSettings:
-  - {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
-  - {fileID: 11400000, guid: cdf2344405367c94e9d5aeb6eb72f5a8, type: 2}
-  - {fileID: 11400000, guid: aab534e90c923dd47b02f4361b9128fb, type: 2}
-  - {fileID: 11400000, guid: 22c980c46d86d70478b73be59f2e9fd6, type: 2}
-  - {fileID: 11400000, guid: ce0e06e46263c4e4c9b0bde9b09858e0, type: 2}
-  startSky: {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
-  clearSky: {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
-  gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
-  IsDebug: 0
-  debugChangeTime: 5
-  debugEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
 --- !u!1 &7146760537532538251
 GameObject:
   m_ObjectHideFlags: 0

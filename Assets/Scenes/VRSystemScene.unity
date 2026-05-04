@@ -11720,11 +11720,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2468839802231415938, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
   m_PrefabInstance: {fileID: 2078580346}
   m_PrefabAsset: {fileID: 0}
---- !u!108 &716911719 stripped
-Light:
-  m_CorrespondingSourceObject: {fileID: 3996921205603557167, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
-  m_PrefabInstance: {fileID: 1319343631}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &726402239
 GameObject:
   m_ObjectHideFlags: 0
@@ -17009,6 +17004,10 @@ PrefabInstance:
     - target: {fileID: 4213721548973085026, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_Layer
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4213721548973085026, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4217610134472910205, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_Layer
@@ -28282,6 +28281,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 448783273181898590, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: phaseManager
+      value: 
+      objectReference: {fileID: 1824497172}
     - target: {fileID: 4947028098112727187, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_Name
       value: SunAndMoon
@@ -30721,11 +30724,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1497957335}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1505444951 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
-  m_PrefabInstance: {fileID: 1319343631}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1508753010 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
@@ -37465,7 +37463,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2664482819135993740, guid: 51223c2bb15dbe24b96db6a53b3afe63, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2664482819135993740, guid: 51223c2bb15dbe24b96db6a53b3afe63, type: 3}
       propertyPath: m_LocalPosition.z
@@ -40150,18 +40148,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManagerLocator
       objectReference: {fileID: 0}
-    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: sunLight
-      value: 
-      objectReference: {fileID: 413005064}
-    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: moonLight
-      value: 
-      objectReference: {fileID: 716911719}
-    - target: {fileID: 4214020285422082898, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: sunAndMoonRoot
-      value: 
-      objectReference: {fileID: 1505444951}
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3782534606
@@ -40362,10 +40348,6 @@ PrefabInstance:
       propertyPath: 'spawnPoints.Array.data[15]'
       value: 
       objectReference: {fileID: 661439564}
-    - target: {fileID: 7622921992766210704, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: score.m_InternalValue
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8012348177458703508, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: localRoot
       value: 
