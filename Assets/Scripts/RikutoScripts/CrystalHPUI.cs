@@ -51,12 +51,13 @@ public class CrystalHPUI : MonoBehaviour
         GameStateEvent.Register(OnGameStateChanged);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
+        GameStateEvent.Unregister(OnGameStateChanged);
+
         if (nGameManager != null)
         {
             nGameManager.ScoreManager.score.OnValueChanged -= OnScoreChanged;
-            GameStateEvent.Unregister(OnGameStateChanged);
         }
     }
 
@@ -84,6 +85,7 @@ public class CrystalHPUI : MonoBehaviour
 
     void OnGameStateChanged(GameState state)
     {
+        if (this == null) return;
         if (state == GameState.GameOver || state == GameState.GameClear)
         {
             gameObject.SetActive(false);

@@ -117,4 +117,18 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
             killCounts = (int[])killCounts.Clone() // 重要：コピー
         };
     }
+
+    public void ResetStats()
+    {
+        score = 0;
+        shotsFired = 0;
+        hits = 0;
+        shield = 0;
+        damageDealt = 0;
+
+        for (int i = 0; i < killCounts.Length; i++)
+        {
+            killCounts[i] = 0;
+        }
+    }
 }

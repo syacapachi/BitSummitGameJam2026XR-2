@@ -146,6 +146,12 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                 SpawnEvent e = spawnQueue.Dequeue();
                 //SpawnEvent e = spawnEvents[index];
 
+                if (e.EnemyType == null)
+                {
+                    //EnemySO が null のためスキップ
+                    continue;
+                }
+
                 //通常召喚かつ規定数以上の場合待機行列に送る
                 if (!e.ForceSpawn &&spawnedEnemies.Count >= maxEnemyCapacity)
                 {
@@ -162,9 +168,11 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
 
                 index++;
             }
+            //Debug.Log($"[SpawnRoutine] queue:{spawnQueue.Count} waitQueue:{waitSpawnEnemyQueue.Count}");
 
             yield return null;
         }
+        Debug.Log("SpawnRoutine END");
         isSpawnFinished = true;
     }
     private IEnumerator WaitForSpawn()
@@ -196,6 +204,10 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
             if(waitSpawnEnemyQueue.Count > 0)
             {
                 SpawnEvent e = waitSpawnEnemyQueue.Dequeue();
+                if (e.EnemyType == null)
+                {
+                    continue;
+                }
                 if (SpawnEnemy(e.EnemyType, e.SpawnPointIndex))
                 {
                     remain++;
@@ -262,7 +274,8 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     {
         if (!IsServer) return;
         remain--;
-        if(remain == 0 && isSpawnFinished)
+        Debug.Log($"[OnEnemyKilled] remain:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}");
+        if (remain == 0 && isSpawnFinished && waitSpawnEnemyQueue.Count == 0)
         {
             isAllDead = true;
             InvokeAllEnemyDeadRpc();
@@ -298,6 +311,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
 
         remain = 0;
         isSpawnFinished = false;
+        isAllDead = false;
     }
 #if UNITY_EDITOR
     private void OnValidate()

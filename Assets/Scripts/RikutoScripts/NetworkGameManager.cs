@@ -136,6 +136,13 @@ public class NetworkGameManager : NetworkBehaviour
         phaseManager.ResetPhase();
         phaseManager.KillableHandle.KillAll();
         scoreManager.ResetScore();
+        foreach (var player in PlayerManager.AllPlayers)
+        {
+            if (player != null && player.stats != null)
+            {
+                player.stats.ResetStats();
+            }
+        }
         MoveScene();
     }
     void HandleDifficltyChange(Difficulty newDifficulty)
@@ -145,6 +152,7 @@ public class NetworkGameManager : NetworkBehaviour
 
     void HandleGameStateChanged(GameState oldState, GameState newState)
     {
+        Debug.Log($"GameState Changed: {oldState} -> {newState}");
         OnGameStateChangeRpcEvent.Invoke(newState);
     }
     void HandleScoreZeroServer()
@@ -160,8 +168,10 @@ public class NetworkGameManager : NetworkBehaviour
 
     void HandleAllPhaseEnded()
     {
+        Debug.Log($"GAME CLEAR 呼ばれた | before:{CurrentGameState}");
         Debug.Log("GAME CLEAR");
         CurrentGameState = GameState.GameClear;
+        Debug.Log($"GAME CLEAR 設定後 | after:{CurrentGameState}");
         phaseManager.KillableHandle.KillAll();
         phaseManager.StopAllCoroutines();
 

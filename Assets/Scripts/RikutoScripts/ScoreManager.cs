@@ -89,6 +89,7 @@ public class ScoreManager : NetworkBehaviour
 
     public void ResetScore()
     {
+        isGameOver = false;
         SetScoreServerOnly();
     }
 
