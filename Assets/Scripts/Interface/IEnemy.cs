@@ -7,7 +7,7 @@ public interface IEnemy
 
     public PlayerJob EnemyJob { get; }
     /// <summary>
-    /// こいつの存在意義は？
+    /// システム的に倒せない、もしくは、死亡アニメーション中にfalseにする。
     /// </summary>
     public bool IsAttackable { get; }
     public void InjectSetting(EnemySO enemySO);

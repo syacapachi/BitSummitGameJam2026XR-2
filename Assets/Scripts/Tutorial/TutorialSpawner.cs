@@ -13,6 +13,7 @@ public class TutorialSpawner : NetworkBehaviour
 
     int remain;
     bool isSpawnFinished;
+    [Header("Subscribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] NetworkObjectPool networkPool;
