@@ -46,6 +46,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     public bool IsAttackable => isAttackable;
 
+    [SerializeField] Renderer[] renderers;
+
+    private int originalLayer;
+
 
     [SerializeField]
         private PlayerJob[] jobCycle = new PlayerJob[]
@@ -114,6 +118,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             enemyAudio = GetComponent<NEnemyDespawnAudio>() ?? GetComponentInParent<NEnemyDespawnAudio>();
         }
         //水野以上
+        renderers = GetComponentsInChildren<Renderer>();
     }
 
     public override void OnNetworkSpawn()
@@ -192,11 +197,13 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             Debug.LogError("enemyJonSetting is null!");
             return;
         }
-        if(enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)){
+
+        if (enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)){
             foreach (Transform childs in transform.GetComponentsInChildren<Transform>())
             {
-                childs.gameObject.layer = setting.Layer;
+                childs.gameObject.layer = setting.Layer;                
             }
+            originalLayer = setting.Layer;
         }
     }
     public override void OnNetworkDespawn()
@@ -292,16 +299,17 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
 
         enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
-        networkAnimator?.SetTrigger("Death");
         //networkAnimator.Animator
         if (enemyJob == PlayerJob.Tutorial) Die();
+        networkAnimator?.SetTrigger("Death");
+        SetVisibleRpc();
         StartCoroutine(WaitForAnimation());
         //アニメーション終了を待つため
         isAttackable = false;
     }
     IEnumerator WaitForAnimation()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(5f);
         Die();
     }
     void DieOnspector()
@@ -311,7 +319,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     }
 
     [OnInspectorButton("Die")]
-    void Die()
+    public void Die()
     {
         if (NetworkObject.IsSpawned)
         {
@@ -408,5 +416,43 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         ApplySettting(); // ← 既存のLayer変更処理
 
         Debug.Log($"[Enemy] Job Changed: {oldJob} → {enemyJob}");
+    }
+
+    public void SetVisibleServer()
+    {
+        if (!IsServer) return;
+        SetVisibleRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void SetVisibleRpc()
+    {
+        ApplyVisible(true);
+    }
+
+    public void RestoreLayerServer()
+    {
+        if (!IsServer) return;
+        RestoreLayerRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void RestoreLayerRpc()
+    {
+        ApplyVisible(false);
+    }
+
+    void ApplyVisible(bool visible)
+    {
+        Debug.Log($"[Enemy] ApplyVisible called | visible:{visible}");
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            Debug.Log($"  before: {renderers[i].name} layer:{renderers[i].gameObject.layer}");
+
+            renderers[i].gameObject.layer = visible ? 0 : originalLayer;
+
+            Debug.Log($"  after : {renderers[i].name} layer:{renderers[i].gameObject.layer}");
+        }
     }
 }

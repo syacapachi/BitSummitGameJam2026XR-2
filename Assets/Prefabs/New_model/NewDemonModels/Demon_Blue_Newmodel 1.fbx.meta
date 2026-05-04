@@ -1,0 +1,951 @@
+fileFormatVersion: 2
+guid: b8108604354a34542b7e5d73921721be
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Body
+    second: {fileID: 2100000, guid: 9b215426eb8bf5b4a82947ead2de3324, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Face
+    second: {fileID: 2100000, guid: c7cbc83c814c4724a9558f6a6cb4835a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: nose
+    second: {fileID: 2100000, guid: c446bcf3381868e439e225ceeebd095a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: teeth
+    second: {fileID: 2100000, guid: 7a9dd3a8aa3755749890a0f8a2381ee9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wing
+    second: {fileID: 2100000, guid: 861636a256b3a2b42925909d013d202e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u30DE\u30C6\u30EA\u30A2\u30EB.001"
+    second: {fileID: 2100000, guid: 6dbc86465efe4e44898e3659a0778628, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u30DE\u30C6\u30EA\u30A2\u30EB.005"
+    second: {fileID: 2100000, guid: cffe4b1215642554bb5105d6422b317c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u30DE\u30C6\u30EA\u30A2\u30EB.015"
+    second: {fileID: 2100000, guid: 92b858566b0b7c641b6aae59b48902f6, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_daemon_die"
+      takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_daemon_die"
+      internalID: 8721344983367323163
+      firstFrame: 0
+      lastFrame: 74
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/ik.left_leg."
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/ik.left_leg./ik.left_leg._end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/ik.right_leg."
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/ik.right_leg./ik.right_leg._end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/left_handpole"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/left_handpole/left_handpole_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/left_leg.014"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/left_leg.014/left_leg.014_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/right.hane.pole"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/right.hane.pole/right.hane.pole_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/right_leg.013"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/right_leg.013/right_leg.013_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.001"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.001/\u30DC\u30FC\u30F3.001_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.002/ik.left.hand"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.002/ik.left.hand/ik.left.hand_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.003"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.003/left_leg.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.003/left_leg.004/left_leg.004_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.005"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.005/left_leg.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.005/left_leg.006/left_leg.006_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.007"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.007/left_leg.008"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.007/left_leg.008/left_leg.008_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.009"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.009/left_leg.010"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.009/left_leg.010/left_leg.010_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.011"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.011/left_leg.012"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.011/left_leg.012/left_leg.012_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.003"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.003/right_leg.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.003/right_leg.004/right_leg.004_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.005"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.005/right_leg.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.005/right_leg.006/right_leg.006_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.007"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.007/right_leg.008"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.007/right_leg.008/right_leg.008_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.009"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.009/right_leg.010"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.009/right_leg.010/right_leg.010_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.011"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.011/right_leg.012"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.011/right_leg.012/right_leg.012_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger/left_finger.001"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger/left_finger.001/left_finger.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger/left_finger.001/left_finger.002/left_finger.002_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger.004/left_finger.005"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger.004/left_finger.005/left_finger.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger.004/left_finger.005/left_finger.006/left_finger.006_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.006/left_hand01.007"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.006/left_hand01.007/left_hand01.008"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.006/left_hand01.007/left_hand01.008/left_hand01.008_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.009"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.009/left_hand01.010"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.009/left_hand01.010/left_hand01.011"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.009/left_hand01.010/left_hand01.011/left_hand01.011_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.012"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.012/left_hand01.013"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.012/left_hand01.013/left_hand01.014"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.012/left_hand01.013/left_hand01.014/left_hand01.014_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01.015"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01.015/left_hand01.015_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger/right_finger.001"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger/right_finger.001/right_finger.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger/right_finger.001/right_finger.002/right_finger.002_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger.004/right_finger.005"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger.004/right_finger.005/right_finger.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger.004/right_finger.005/right_finger.006/right_finger.006_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.006/right_hand01.007"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.006/right_hand01.007/right_hand01.008"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.006/right_hand01.007/right_hand01.008/right_hand01.008_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.009"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.009/right_hand01.010"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.009/right_hand01.010/right_hand01.011"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.009/right_hand01.010/right_hand01.011/right_hand01.011_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.012"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.012/right_hand01.013"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.012/right_hand01.013/right_hand01.014"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.012/right_hand01.013/right_hand01.014/right_hand01.014_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.008"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.008/\u30DC\u30FC\u30F3.009"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.008/\u30DC\u30FC\u30F3.009/\u30DC\u30FC\u30F3.009_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.011"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.011/\u30DC\u30FC\u30F3.012"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.011/\u30DC\u30FC\u30F3.012/\u30DC\u30FC\u30F3.012_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.013"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.013/\u30DC\u30FC\u30F3.014"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.013/\u30DC\u30FC\u30F3.014/\u30DC\u30FC\u30F3.014_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.024"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.024/\u30DC\u30FC\u30F3.025"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.024/\u30DC\u30FC\u30F3.025/\u30DC\u30FC\u30F3.026"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.024/\u30DC\u30FC\u30F3.025/\u30DC\u30FC\u30F3.026/\u30DC\u30FC\u30F3.027"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.024/\u30DC\u30FC\u30F3.025/\u30DC\u30FC\u30F3.026/\u30DC\u30FC\u30F3.027/\u30DC\u30FC\u30F3.027_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.028"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.028/\u30DC\u30FC\u30F3.029"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.028/\u30DC\u30FC\u30F3.029/\u30DC\u30FC\u30F3.030"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.028/\u30DC\u30FC\u30F3.029/\u30DC\u30FC\u30F3.030/\u30DC\u30FC\u30F3.030_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017/\u30DC\u30FC\u30F3.018"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017/\u30DC\u30FC\u30F3.018/\u30DC\u30FC\u30F3.019"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017/\u30DC\u30FC\u30F3.018/\u30DC\u30FC\u30F3.019/\u30DC\u30FC\u30F3.020"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017/\u30DC\u30FC\u30F3.018/\u30DC\u30FC\u30F3.019/\u30DC\u30FC\u30F3.020/\u30DC\u30FC\u30F3.021"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017/\u30DC\u30FC\u30F3.018/\u30DC\u30FC\u30F3.019/\u30DC\u30FC\u30F3.020/\u30DC\u30FC\u30F3.021/\u30DC\u30FC\u30F3.021_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.015"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.015/ik.right.hand"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.015/ik.right.hand/ik.right.hand_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.022"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.022/\u30DC\u30FC\u30F3.022_end"
+        weight: 1
+      - path: "\u5186\u67F1"
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_daemon_die.ver2"
+      takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_daemon_die.ver2"
+      internalID: 2786242431893962953
+      firstFrame: 0
+      lastFrame: 58
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/ik.left_leg."
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/ik.left_leg./ik.left_leg._end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/ik.right_leg."
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/ik.right_leg./ik.right_leg._end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/left_handpole"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/left_handpole/left_handpole_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/left_leg.014"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/left_leg.014/left_leg.014_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/right.hane.pole"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/right.hane.pole/right.hane.pole_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/right_leg.013"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/right_leg.013/right_leg.013_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.001"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.001/\u30DC\u30FC\u30F3.001_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.002/ik.left.hand"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.002/ik.left.hand/ik.left.hand_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.003"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.003/left_leg.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.003/left_leg.004/left_leg.004_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.005"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.005/left_leg.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.005/left_leg.006/left_leg.006_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.007"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.007/left_leg.008"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.007/left_leg.008/left_leg.008_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.009"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.009/left_leg.010"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.009/left_leg.010/left_leg.010_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.011"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.011/left_leg.012"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/left_leg/left_leg.001/left_leg.002/left_leg.011/left_leg.012/left_leg.012_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.003"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.003/right_leg.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.003/right_leg.004/right_leg.004_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.005"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.005/right_leg.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.005/right_leg.006/right_leg.006_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.007"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.007/right_leg.008"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.007/right_leg.008/right_leg.008_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.009"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.009/right_leg.010"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.009/right_leg.010/right_leg.010_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.011"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.011/right_leg.012"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/right_leg/right_leg.001/right_leg.002/right_leg.011/right_leg.012/right_leg.012_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger/left_finger.001"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger/left_finger.001/left_finger.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger/left_finger.001/left_finger.002/left_finger.002_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger.004/left_finger.005"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger.004/left_finger.005/left_finger.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_finger.004/left_finger.005/left_finger.006/left_finger.006_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.006/left_hand01.007"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.006/left_hand01.007/left_hand01.008"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.006/left_hand01.007/left_hand01.008/left_hand01.008_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.009"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.009/left_hand01.010"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.009/left_hand01.010/left_hand01.011"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.009/left_hand01.010/left_hand01.011/left_hand01.011_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.012"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.012/left_hand01.013"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.012/left_hand01.013/left_hand01.014"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01/left_hand01.002/left_hand01.003/left_hand01.004/left_hand01.012/left_hand01.013/left_hand01.014/left_hand01.014_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01.015"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/left_hand01.015/left_hand01.015_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger/right_finger.001"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger/right_finger.001/right_finger.002"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger/right_finger.001/right_finger.002/right_finger.002_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger.004"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger.004/right_finger.005"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger.004/right_finger.005/right_finger.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_finger.004/right_finger.005/right_finger.006/right_finger.006_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.006"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.006/right_hand01.007"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.006/right_hand01.007/right_hand01.008"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.006/right_hand01.007/right_hand01.008/right_hand01.008_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.009"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.009/right_hand01.010"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.009/right_hand01.010/right_hand01.011"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.009/right_hand01.010/right_hand01.011/right_hand01.011_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.012"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.012/right_hand01.013"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.012/right_hand01.013/right_hand01.014"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/right_hand01/right_hand01.002/right_hand01.003/right_hand01.004/right_hand01.012/right_hand01.013/right_hand01.014/right_hand01.014_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.008"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.008/\u30DC\u30FC\u30F3.009"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.008/\u30DC\u30FC\u30F3.009/\u30DC\u30FC\u30F3.009_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.011"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.011/\u30DC\u30FC\u30F3.012"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.011/\u30DC\u30FC\u30F3.012/\u30DC\u30FC\u30F3.012_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.013"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.013/\u30DC\u30FC\u30F3.014"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.010/\u30DC\u30FC\u30F3.013/\u30DC\u30FC\u30F3.014/\u30DC\u30FC\u30F3.014_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.024"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.024/\u30DC\u30FC\u30F3.025"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.024/\u30DC\u30FC\u30F3.025/\u30DC\u30FC\u30F3.026"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.024/\u30DC\u30FC\u30F3.025/\u30DC\u30FC\u30F3.026/\u30DC\u30FC\u30F3.027"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.024/\u30DC\u30FC\u30F3.025/\u30DC\u30FC\u30F3.026/\u30DC\u30FC\u30F3.027/\u30DC\u30FC\u30F3.027_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.028"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.028/\u30DC\u30FC\u30F3.029"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.028/\u30DC\u30FC\u30F3.029/\u30DC\u30FC\u30F3.030"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.004/\u30DC\u30FC\u30F3.005/\u30DC\u30FC\u30F3.006/\u30DC\u30FC\u30F3.007/\u30DC\u30FC\u30F3.028/\u30DC\u30FC\u30F3.029/\u30DC\u30FC\u30F3.030/\u30DC\u30FC\u30F3.030_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017/\u30DC\u30FC\u30F3.018"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017/\u30DC\u30FC\u30F3.018/\u30DC\u30FC\u30F3.019"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017/\u30DC\u30FC\u30F3.018/\u30DC\u30FC\u30F3.019/\u30DC\u30FC\u30F3.020"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017/\u30DC\u30FC\u30F3.018/\u30DC\u30FC\u30F3.019/\u30DC\u30FC\u30F3.020/\u30DC\u30FC\u30F3.021"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.003/\u30DC\u30FC\u30F3.016/\u30DC\u30FC\u30F3.017/\u30DC\u30FC\u30F3.018/\u30DC\u30FC\u30F3.019/\u30DC\u30FC\u30F3.020/\u30DC\u30FC\u30F3.021/\u30DC\u30FC\u30F3.021_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.015"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.015/ik.right.hand"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.015/ik.right.hand/ik.right.hand_end"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.022"
+        weight: 1
+      - path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/\u30DC\u30FC\u30F3/\u30DC\u30FC\u30F3.022/\u30DC\u30FC\u30F3.022_end"
+        weight: 1
+      - path: "\u5186\u67F1"
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_daemon_wait"
+      takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_daemon_wait"
+      internalID: 6444942732782382683
+      firstFrame: 0
+      lastFrame: 120
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_deamon_attack"
+      takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_deamon_attack"
+      internalID: 7007716698029325537
+      firstFrame: 0
+      lastFrame: 120
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_deamon_hit"
+      takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_deamon_hit"
+      internalID: 2617346500520830567
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_deamon_hit.ver2"
+      takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_deamon_hit.ver2"
+      internalID: 5878180852004438635
+      firstFrame: 0
+      lastFrame: 44
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|\u5186|\u5186\u30A2\u30AF\u30B7\u30E7\u30F3"
+      takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|\u5186|\u5186\u30A2\u30AF\u30B7\u30E7\u30F3"
+      internalID: 1476780341684571172
+      firstFrame: 0
+      lastFrame: 0
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|\u5186|\u5186\u67F1\u30A2\u30AF\u30B7\u30E7\u30F3"
+      takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|\u5186|\u5186\u67F1\u30A2\u30AF\u30B7\u30E7\u30F3"
+      internalID: -3223667330412637429
+      firstFrame: 0
+      lastFrame: 0
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2"
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

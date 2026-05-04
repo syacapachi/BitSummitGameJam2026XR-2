@@ -4,6 +4,7 @@ using UnityEngine;
 public class AnimationEventController : NetworkBehaviour
 {
     [SerializeField] NEnemyShoot shooter;
+    [SerializeField] NEnemy enemy;
     [SerializeField] Renderer[] renderers;
 
     //アニメーションイベントはAnimationControllerと同じところでないと呼ばれない。
@@ -14,14 +15,25 @@ public class AnimationEventController : NetworkBehaviour
     }
     //アニメーションイベントはAnimationControllerと同じところでないと呼ばれない。
     //アニメーションは全てで呼ばれる
-    void OnDeath()
+    void OnVisible()
     {
-        //レイヤーをデフォルトに設定
-        foreach(var render in renderers)
-        {
-            render.gameObject.layer = 0;
-        }
+        Debug.Log("OnVisible");
+        if (!IsServer) return;
+        enemy.SetVisibleServer();
     }
+
+    void OnInvisible()
+    {
+        if (!IsServer) return;
+        enemy.RestoreLayerServer();
+    }
+
+    void OnDie()
+    {
+        if (!IsServer) return;
+        enemy.Die();
+    }
+
 #if UNITY_EDITOR
     void Reset()
     {
