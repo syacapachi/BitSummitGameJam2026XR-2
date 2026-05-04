@@ -2802,6 +2802,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DemonEnemyBase Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 936894702766740473, guid: 4794981bedeccaf4c9a30bb177c3cecd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 976820664547449533, guid: 4794981bedeccaf4c9a30bb177c3cecd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 9.804709
@@ -10296,7 +10300,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3796503264184880231, guid: 409a87008920c764aa40eea7b1966205, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.79
+      value: -8.59
       objectReference: {fileID: 0}
     - target: {fileID: 3796503264184880231, guid: 409a87008920c764aa40eea7b1966205, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11291,7 +11295,7 @@ Transform:
   m_GameObject: {fileID: 661439563}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.27, y: 3.135, z: 4.031}
+  m_LocalPosition: {x: 0.199, y: 2.559, z: 5.346}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11596,7 +11600,7 @@ Transform:
   m_GameObject: {fileID: 697224364}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.411, y: 2.757, z: -3.672}
+  m_LocalPosition: {x: 0.411, y: 2.757, z: -3.535}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -31597,7 +31601,7 @@ Transform:
   m_GameObject: {fileID: 1607416040}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.172, y: 0.051, z: 3.25}
+  m_LocalPosition: {x: 0.172, y: -0.214, z: 3.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

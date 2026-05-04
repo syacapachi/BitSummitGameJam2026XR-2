@@ -20278,12 +20278,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alertObject: {fileID: 1284263918}
-  threshold: 25000
   rotateSpeed: 100
   interval: 3
   buzzerClip: {fileID: 8300000, guid: b09fc9b896fbdae44bd5ff26fac6c32d, type: 3}
   buzzerEffectData: {fileID: 0}
   hpInfo: {fileID: 0}
+  alertRpcEvent: {fileID: 0}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &1452556537
 GameObject:
