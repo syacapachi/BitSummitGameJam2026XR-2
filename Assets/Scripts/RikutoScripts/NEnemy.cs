@@ -233,7 +233,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (!IsServer) return;
 
         Debug.Log("Take damage");
-        currentHP.Value -= damage;
+        if(currentHP.Value > 0)  currentHP.Value -= damage;
+        else return;
+
+        if(currentHP.Value < 0) currentHP.Value = 0;
 
         networkAnimator?.SetTrigger("Hit");
 
@@ -291,21 +294,27 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
         networkAnimator?.SetTrigger("Death");
         //networkAnimator.Animator
+        if (enemyJob == PlayerJob.Tutorial) Die();
         StartCoroutine(WaitForAnimation());
     }
     IEnumerator WaitForAnimation()
     {
         yield return new WaitForSeconds(2f);
-        if (NetworkObject.IsSpawned)
-        {
-            NetworkObject.Despawn(true);
-        }
+        Die();
     }
-    [OnInspectorButton("Die")]
     void DieOnspector()
     {
         DieOnServer(null);
         isInitialize = true;
+    }
+
+    [OnInspectorButton("Die")]
+    void Die()
+    {
+        if (NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn(true);
+        }
     }
     void OnHPChanged(float oldValue, float newValue)
     {

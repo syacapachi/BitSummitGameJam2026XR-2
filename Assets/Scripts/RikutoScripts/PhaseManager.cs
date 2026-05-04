@@ -165,7 +165,7 @@ public class PhaseManager : NetworkBehaviour
             yield return AllDeadSequence();
         }
 
-
+        Debug.Log("StartNextPhase呼ぶ");
 
         StartNextPhase();
     }
