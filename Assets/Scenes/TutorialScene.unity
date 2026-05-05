@@ -32236,13 +32236,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alertObject: {fileID: 683428663}
-  threshold: 25000
   rotateSpeed: 100
   interval: 3
   buzzerClip: {fileID: 8300000, guid: b09fc9b896fbdae44bd5ff26fac6c32d, type: 3}
   buzzerEffectData: {fileID: 0}
   hpInfo: {fileID: 0}
+  alertRpcEvent: {fileID: 0}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+  WarningStateEvent: {fileID: 0}
 --- !u!1 &1979390471
 GameObject:
   m_ObjectHideFlags: 0
@@ -34281,7 +34282,7 @@ PrefabInstance:
     - target: {fileID: 8131178026211072940, guid: 7005d677232779a42b99a915ce227374, type: 3}
       propertyPath: NetworkConfig.PlayerPrefab
       value: 
-      objectReference: {fileID: 6125224147537168939, guid: 031551ab1c474034d9d2805d6a183249, type: 3}
+      objectReference: {fileID: 6125224147537168939, guid: 7090b5756119fd6428105c1176b596dc, type: 3}
     - target: {fileID: 8554207979284079333, guid: 7005d677232779a42b99a915ce227374, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

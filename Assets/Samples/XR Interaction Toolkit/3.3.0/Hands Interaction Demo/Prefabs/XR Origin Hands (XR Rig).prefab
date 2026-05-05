@@ -849,19 +849,25 @@ MonoBehaviour:
   panel: {fileID: 2161841049187310131}
   resultText: {fileID: 2146494623966518773}
   titleText: {fileID: 5799543662521325008}
-  enemyDatabase:
-  - {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
-  - {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
-  - {fileID: 11400000, guid: 6b6089d75f0b0e948aa95150ecc1b657, type: 2}
-  - {fileID: 11400000, guid: 063f043ca2580314394ed7eefd53c7b9, type: 2}
-  - {fileID: 11400000, guid: f4f5d5bc426dc4549ba7f2a186c570f1, type: 2}
-  - {fileID: 11400000, guid: 46de6dc1c82b9ce4eb12e4f1f3bada05, type: 2}
+  coopText: {fileID: 0}
+  enemyDatabase: {fileID: 0}
   enemyRowPrefab: {fileID: 7564282548659285637, guid: 02a6914768318384f8c04a8b56331dc9, type: 3}
+  playerHeaderPrefab: {fileID: 0}
   contentParent: {fileID: 8390328107548424382}
   textFont: {fileID: 0}
   fontSizeHeader: 28
   fontSizeStats: 22
   fontSizeKill: 20
+  gameClearText: {fileID: 0}
+  gameOverText: {fileID: 0}
+  youText: {fileID: 0}
+  otherText: {fileID: 0}
+  scoreText: {fileID: 0}
+  killsText: {fileID: 0}
+  HitsText: {fileID: 0}
+  bonusText: {fileID: 0}
+  shieldText: {fileID: 0}
+  damageText: {fileID: 0}
   gameStateEvent: {fileID: 0}
   OnGameResultRpc: {fileID: 0}
 --- !u!1 &1493670098258745465
@@ -1857,6 +1863,7 @@ MonoBehaviour:
   separatorPrefab: {fileID: 7588150835802480204, guid: ecb63a1604d8a1044be16b3669b27af3, type: 3}
   container: {fileID: 669713274472240747}
   rect: {fileID: 0}
+  GameStateEvent: {fileID: 0}
 --- !u!114 &4782263247683993900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3572,7 +3579,12 @@ MonoBehaviour:
   AllEnemyDeadRpcEvent: {fileID: 0}
   OnPhaseChangeRpcEvent: {fileID: 0}
   GameStateChangeRpcEvent: {fileID: 0}
+  WarningEvent: {fileID: 0}
   nGameManager: {fileID: 0}
+  japaneseFont: {fileID: 0}
+  englishFont: {fileID: 0}
+  warningFont: {fileID: 0}
+  warningScrollers: []
 --- !u!1 &8166779040729396302
 GameObject:
   m_ObjectHideFlags: 0
@@ -3692,6 +3704,7 @@ MonoBehaviour:
   scoreBar: {fileID: 3576468417639192362}
   scoreText: {fileID: 3445684143409032173}
   HPInfoRpcEvent: {fileID: 0}
+  GameStateEvent: {fileID: 0}
 --- !u!1 &9093216621800783078
 GameObject:
   m_ObjectHideFlags: 0
@@ -4299,6 +4312,7 @@ MonoBehaviour:
   xrOrigin: {fileID: 1820897918385990095}
   characterControll: {fileID: 0}
   cameraSetting: {fileID: 0}
+  nonVRPlayerCanvas: {fileID: 0}
 --- !u!114 &5096715979615469045 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5739245880472075158, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}

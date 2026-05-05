@@ -11,9 +11,12 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] VoidEvent AllEnemyDeadRpcEvent;
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] GameStateEvent GameStateChangeRpcEvent;
+    [SerializeField] BoolEvent WarningStateEvent;
     [SerializeField] private NetworkGameManager nGameManager;
     [SerializeField] TMP_FontAsset japaneseFont;
     [SerializeField] TMP_FontAsset englishFont;
+    [SerializeField] TMP_FontAsset warningFont;
+    [SerializeField] LoopScrollUI[] warningScrollers;
 
     private Coroutine currentRoutine;
 
@@ -26,7 +29,8 @@ public class PhaseUI : MonoBehaviour
         Countdown,
         PhaseFinish,
         GameFinish,
-        AllEnemyDead
+        AllEnemyDead,
+        Warning
     }
 
     private UIState currentState = UIState.Idle;
@@ -47,6 +51,7 @@ public class PhaseUI : MonoBehaviour
     void InitializeUI()
     {
         phaseText.gameObject.SetActive(false);
+        phaseBoard.gameObject.SetActive(false);
 
         nGameManager.PhaseManager.CountdownValue.OnValueChanged += OnCountdownChanged; 
     }
@@ -55,12 +60,14 @@ public class PhaseUI : MonoBehaviour
         AllEnemyDeadRpcEvent.Register(OnAllEnemyKilled);
         OnPhaseChangeRpcEvent.Register(OnPhaseChanged);
         GameStateChangeRpcEvent.Register(OnGameStateChanged);
+        WarningStateEvent.Register(OnWarningChanged);
     }
     private void OnDisable()
     {
         AllEnemyDeadRpcEvent.Unregister(OnAllEnemyKilled);
         OnPhaseChangeRpcEvent.Unregister(OnPhaseChanged);
         GameStateChangeRpcEvent.Unregister(OnGameStateChanged);
+        WarningStateEvent.Unregister(OnWarningChanged);
     }
     private void OnGameStateChanged(GameState newState)
     {
@@ -113,6 +120,10 @@ public class PhaseUI : MonoBehaviour
                 currentRoutine = StartCoroutine(AllEnemyDeadRoutine());
                 break;
 
+            case UIState.Warning:
+                currentRoutine = StartCoroutine(WarningRoutine());
+                break;
+
             case UIState.Idle:
                 Hide();
                 break;
@@ -138,6 +149,7 @@ public class PhaseUI : MonoBehaviour
     void OnCountdownChanged(int oldValue, int newValue)
     {
         if (currentState == UIState.GameFinish) return;
+
         if (newValue <= 0)
         {
             if (currentState == UIState.Countdown)
@@ -212,8 +224,8 @@ public class PhaseUI : MonoBehaviour
     {
         SetupNormal();
 
-
         phaseText.text = index.ToString();
+
         phaseText.gameObject.SetActive(true);
         yield return PopAnimation();
 
@@ -282,11 +294,14 @@ public class PhaseUI : MonoBehaviour
     {
         phaseText.fontMaterial.SetFloat("_UnderlayOffsetX", 0f);
         phaseText.fontMaterial.SetFloat("_UnderlayOffsetY", 0f);
+        phaseText.font = isJapanese ? japaneseFont : englishFont;
+        phaseText.color = Color.white;
     }
 
     void Hide()
     {
         phaseText.gameObject.SetActive(false);
+        phaseBoard.gameObject.SetActive(false);
     }
 
     IEnumerator PopAnimation()
@@ -311,5 +326,57 @@ public class PhaseUI : MonoBehaviour
         }
 
         phaseText.transform.localScale = normal;
+    }
+
+    IEnumerator WarningRoutine()
+    {
+
+        phaseText.font = warningFont;
+        phaseText.fontSize = 180;
+        phaseText.color = Color.black;
+        phaseText.text = "WARNING!";
+        phaseText.gameObject.SetActive(true);
+        phaseBoard.gameObject.SetActive(true);
+
+        foreach (var scroller in warningScrollers)
+        {
+            scroller.StartScroll();
+        }
+
+        for (int i = 0; i < 5; i++)
+        {
+            phaseText.enabled = false;
+            yield return new WaitForSeconds(0.4f);
+
+            phaseText.enabled = true;
+            yield return new WaitForSeconds(0.4f);
+        }
+
+        phaseText.enabled = true;
+        yield return new WaitForSeconds(0.5f);
+
+        foreach (var scroller in warningScrollers)
+        {
+            scroller.StopScroll();
+        }
+
+        // ★ 終わったらカウントダウンへ
+        ChangeState(UIState.Idle);
+    }
+
+    void OnWarningChanged(bool active)
+    {
+        if (active)
+        {
+            ChangeState(UIState.Warning);
+        }
+        else
+        {
+            // Countdown中なら触らない
+            if (currentState != UIState.Countdown)
+            {
+                ChangeState(UIState.Idle);
+            }
+        }
     }
 }
