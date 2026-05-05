@@ -15755,7 +15755,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1225731393}
-    PlayerPrefab: {fileID: 6125224147537168939, guid: 031551ab1c474034d9d2805d6a183249, type: 3}
+    PlayerPrefab: {fileID: 6125224147537168939, guid: 7090b5756119fd6428105c1176b596dc, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 9e30410611228d94780d79e328c501ed, type: 2}
@@ -20285,6 +20285,7 @@ MonoBehaviour:
   hpInfo: {fileID: 11400000, guid: 4dc65a2fed759be4795b3a96e4d604c8, type: 2}
   alertRpcEvent: {fileID: 11400000, guid: 432a6a4fce97a02429b981e89ed75b9b, type: 2}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+  WarningStateEvent: {fileID: 0}
 --- !u!1 &1452556537
 GameObject:
   m_ObjectHideFlags: 0

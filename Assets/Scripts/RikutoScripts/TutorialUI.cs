@@ -146,6 +146,7 @@ public class TutorialUI : MonoBehaviour
     // =========================
     IEnumerator StepClearRoutine()
     {
+        yield return new WaitForSeconds(1f);
         root.SetActive(true);
 
         text.text = "SUCCEED!";

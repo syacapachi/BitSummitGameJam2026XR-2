@@ -18,6 +18,7 @@ public class AlertLightController : MonoBehaviour
     [SerializeField] BoolEvent alertRpcEvent;
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffectEvent;
+    [SerializeField] BoolEvent WarningStateEvent;
 
     bool isActive = false;
 
@@ -29,10 +30,12 @@ public class AlertLightController : MonoBehaviour
     private void OnEnable()
     {
         alertRpcEvent.Register(OnAlert);
+        WarningStateEvent.Register(OnWarningState);
     }
     private void OnDisable()
     {
         alertRpcEvent.Unregister(OnAlert);
+        WarningStateEvent.Unregister(OnWarningState);
     }
     void OnAlert(bool alert)
     {
@@ -82,5 +85,13 @@ public class AlertLightController : MonoBehaviour
             gameEffectEvent.Invoke(new GameEffect(buzzerEffectData.ToRuntimeData(), alertObject.transform.position));
             yield return waitInterval;
         }
+    }
+
+    void OnWarningState(bool active)
+    {
+        if (active)
+            ActivateAlert();
+        else
+            DeactivateAlert();
     }
 }

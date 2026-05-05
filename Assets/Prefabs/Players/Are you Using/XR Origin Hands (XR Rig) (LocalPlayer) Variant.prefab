@@ -1742,9 +1742,12 @@ MonoBehaviour:
   AllEnemyDeadRpcEvent: {fileID: 11400000, guid: d48233639feb72e4ba705392d35f3c40, type: 2}
   OnPhaseChangeRpcEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
   GameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
+  WarningEvent: {fileID: 0}
   nGameManager: {fileID: 0}
   japaneseFont: {fileID: 0}
   englishFont: {fileID: 0}
+  warningFont: {fileID: 0}
+  warningScrollers: []
 --- !u!1 &8805889176675939562
 GameObject:
   m_ObjectHideFlags: 0

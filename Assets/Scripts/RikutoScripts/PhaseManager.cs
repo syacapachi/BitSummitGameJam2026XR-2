@@ -14,8 +14,8 @@ public class PhaseManager : NetworkBehaviour
     [SerializeField] PhaseCountDownSettingSO uiSettings;
     [SerializeField] NetworkVariable<int> syncedPhaseIndex = new(-1);
     public NetworkVariable<int> CountdownValue = new(0);
-    
-    public NetworkVariable<bool> phaseFinished = new (false);
+
+    public NetworkVariable<bool> phaseFinished = new(false);
 
     public NetworkVariable<float> phaseProgress = new(
         1f,
@@ -32,6 +32,7 @@ public class PhaseManager : NetworkBehaviour
     [SerializeField] VoidEvent OnAllPhaseEndedServerOnly;
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] DifficultyEvent OnDifficultyChangedServerEvent;
+    [SerializeField] BoolEvent WarningStateEvent;
 
     public override void OnNetworkSpawn()
     {
@@ -48,7 +49,7 @@ public class PhaseManager : NetworkBehaviour
     }
     public override void OnNetworkDespawn()
     {
-        if(IsServer)
+        if (IsServer)
             OnDifficultyChangedServerEvent.Unregister(OnDifficultyChanged);
     }
 
@@ -109,7 +110,17 @@ public class PhaseManager : NetworkBehaviour
     {
         yield return new WaitWhile(() => IsCountingDown); // カウントダウン中は待機
         IsCountingDown = true;
-        
+
+        if (phaseIndex == Phases.Length - 1)
+        {
+            yield return new WaitForSeconds(1f);
+            WarningStateRpc(true); // ★全員に開始通知
+
+            yield return new WaitForSeconds(5f);
+
+            WarningStateRpc(false); // ★全員に終了通知
+        }
+
         int count = uiSettings.CountdownStart;
         //キャッシュを作ることでGCを減らす
         var waitBase = new WaitForSeconds(uiSettings.CountDownBaseDuration);
@@ -154,7 +165,7 @@ public class PhaseManager : NetworkBehaviour
 
             yield return EndPhaseWithCountdown();
         }
-        
+
         else if (spawner.IsAllDeadServerOnly)
         {
 
@@ -173,7 +184,7 @@ public class PhaseManager : NetworkBehaviour
     IEnumerator AllDeadSequence()
     {
         IsCountingDown = true;
-        
+
         yield return new WaitForSeconds(3.1f);
 
         IsCountingDown = false;
@@ -201,7 +212,7 @@ public class PhaseManager : NetworkBehaviour
 
     public void ResetPhase()
     {
-        if(!IsServer) return;
+        if (!IsServer) return;
         StopAllCoroutines();
 
         syncedPhaseIndex.Value = -1;
@@ -209,5 +220,11 @@ public class PhaseManager : NetworkBehaviour
         phaseProgress.Value = 1f;
 
         IsCountingDown = false;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void WarningStateRpc(bool active)
+    {
+        WarningStateEvent.Invoke(active);
     }
 }

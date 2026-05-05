@@ -120,7 +120,7 @@ public class TutorialManager : NetworkBehaviour
         // UIに通知
         NotifyStepClearedClientRpc();
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3.1f);
 
         isWaitingNext = false;
         NextStep();
