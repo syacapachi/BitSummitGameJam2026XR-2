@@ -59,7 +59,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     [SerializeField] VoidEvent OnAllEnemyDeadRpcEvent;
     [Header("SubScribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
-    public int remain;
+    private int remain;
     public int RemainServerOnly => remain;
     private bool isSpawnFinished = false;
     private bool isAllDead = false;
@@ -68,6 +68,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     private readonly List<IEnemy> spawnedEnemies = new ();
     private readonly Queue<SpawnEvent> waitSpawnEnemyQueue = new();
     Coroutine waitForSpawn;
+    private int runningSpawnCount = 0;
 
     public override void OnNetworkSpawn()
     {
@@ -99,6 +100,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         isAllDead = false;
         isSpawnFinished = false;
 
+        runningSpawnCount++;
         StartCoroutine(SpawnRoutine(events));
         //とりあえず、入力されたリストをそれっぽくまぜまぜ
         if (useRandomSpawn)
@@ -111,6 +113,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                 SpawnEvent randomEvent = new SpawnEvent(e.EnemyType,point,time);
                 randomSpawnEvent.Add(randomEvent);
             }
+            runningSpawnCount++;
             StartCoroutine(SpawnRoutine(randomSpawnEvent));
         }
     }
@@ -173,7 +176,11 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
             yield return null;
         }
         Debug.Log("SpawnRoutine END");
-        isSpawnFinished = true;
+        runningSpawnCount--;
+        if (runningSpawnCount <= 0)
+        {
+            isSpawnFinished = true;
+        }
     }
     private IEnumerator WaitForSpawn()
     {
