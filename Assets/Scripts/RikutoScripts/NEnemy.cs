@@ -301,10 +301,14 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
         enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
         //networkAnimator.Animator
-        if (enemyJob == PlayerJob.Tutorial) Die();
-        networkAnimator?.SetTrigger("Death");
-        SetVisibleRpc();
-        StartCoroutine(WaitForAnimation());
+        if (enemyJob == PlayerJob.Tutorial) 
+            Die();
+        else
+        {
+            networkAnimator?.SetTrigger("Death");
+            SetVisibleRpc();
+            StartCoroutine(WaitForAnimation());
+        }
         //アニメーション終了を待つため
         isAttackable = false;
     }
@@ -421,8 +425,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     public void SetVisibleServer()
     {
-        if (!IsServer) return;
-        SetVisibleRpc();
+        ApplyVisible(true);
+        //if (!IsServer) return;
+        //SetVisibleRpc();
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -433,8 +438,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     public void RestoreLayerServer()
     {
-        if (!IsServer) return;
-        RestoreLayerRpc();
+        ApplyVisible(false);
+        //if (!IsServer) return;
+        //RestoreLayerRpc();
     }
 
     [Rpc(SendTo.ClientsAndHost)]

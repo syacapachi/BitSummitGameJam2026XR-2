@@ -21,12 +21,13 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] PlayerManager PlayerManager;
+    [SerializeField] TutorialManager tutorialManager;
     
     public GameMode CurrentGameMode => gameMode;
     public ScoreManager ScoreManager => scoreManager;
     public PhaseManager PhaseManager => phaseManager;
     public GameObject ProtectArea => protectArea;
-    public bool IsGamePlaying => CurrentGameState == GameState.Playing;
+    public bool IsGamePlaying => CurrentGameState == GameState.Playing || CurrentGameState == GameState.Tutorial;
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
     
     public Difficulty CurrentDifficulty
@@ -61,6 +62,7 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] VoidEvent OnbulletComeRpcEvent;
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     [SerializeField] PlayerResultDataArrayEvent RecieveResultRpcEvent;
+    [SerializeField] BoolEvent gunEnableRpcEvent;
 
     [Header("SubscribeEvent")]
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
@@ -70,10 +72,30 @@ public class NetworkGameManager : NetworkBehaviour
     //コルーチンが使用可能なタイミングでは、サーバーかどうかはまだ確定してない。
     private void Start()
     {
-        if(gameStartMode == GameStartMode.Auto)
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName.Equals("VRSystemScene"))
         {
-            StartCoroutine(WaitForLoad());
+            if (gameStartMode == GameStartMode.Auto)
+            {
+                StartCoroutine(WaitForLoad());
+            }
+            gunEnableRpcEvent.Invoke(true);
+        } 
+        else if (sceneName.Equals("TutorialScene")){
+            StartCoroutine(WaitForAllClientConnect());
+            gameState.Value = GameState.Tutorial;
+            gunEnableRpcEvent.Invoke(true);
         }
+        else
+        {
+            gunEnableRpcEvent.Invoke(false);
+        }
+    }
+    IEnumerator WaitForAllClientConnect()
+    {
+        yield return new WaitUntil(() => IsSpawned && PlayerManager != null && PlayerManager.IsAllClientReady());
+        if (IsServer)
+            tutorialManager.OnTutorialStart();
     }
 
     private void OnEnable()
@@ -93,6 +115,7 @@ public class NetworkGameManager : NetworkBehaviour
         OnAllPhaseEndedServerEvent.Register(HandleAllPhaseEnded);
         OnScoreReachZeroServerEvent.Register(HandleScoreZeroServer);
         difficultyEvent.Register(HandleDifficltyChange);
+        NetworkManager.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
     }
     public override void OnNetworkDespawn()
     {
@@ -101,6 +124,7 @@ public class NetworkGameManager : NetworkBehaviour
         OnAllPhaseEndedServerEvent.Unregister(HandleAllPhaseEnded);
         OnScoreReachZeroServerEvent.Unregister(HandleScoreZeroServer);
         difficultyEvent.Unregister(HandleDifficltyChange);
+        NetworkManager.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
     }
 
     IEnumerator WaitForLoad()
@@ -111,7 +135,14 @@ public class NetworkGameManager : NetworkBehaviour
             StartGameServerOnly();
         }
     }
-
+    private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+    {
+        if (sceneName.Equals("TutorialScene"))
+        {
+            tutorialManager.OnTutorialStart();
+            gameState.Value = GameState.Tutorial;
+        }
+    }
     [OnInspectorButton("Start Game")]
     public void StartGameServerOnly()
     {
@@ -234,7 +265,8 @@ public enum GameState
     Initializing,// 開始前
     Playing,     // プレイ中
     GameClear,   // クリア
-    GameOver     // ゲームオーバー
+    GameOver,    // ゲームオーバー
+    Tutorial     //チュートリアル(統合を見据えて置いておく)
 }
 
 public enum GameMode

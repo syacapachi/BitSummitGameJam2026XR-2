@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.XR;
 public class NGun : GunController
 {
+    [Header("Fps")]
+    [SerializeField] Transform playerHead;
+    [Header("gun")]
     [SerializeField] LineRenderer laserLine;
     [SerializeField] NGunAudioObserver audioObserver;
     [SerializeField] AmmoUI ammoUI;
@@ -10,11 +14,23 @@ public class NGun : GunController
     [SerializeField] GameEffectDataEvent networkEvent;
 
     protected override IResultCollector Collector => playerStats;
+    public override Transform FirePoint 
+    {
+        get
+        {
+            if (!XRSettings.isDeviceActive)
+            {
+                return playerHead;
+            }
+            return base.FirePoint;
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
         {
+            Debug.Log($"[{nameof(NGun)}] Spawn", gameObject);
             fireEvent.Register(base.Activate);
         }
     }
@@ -25,10 +41,21 @@ public class NGun : GunController
             fireEvent.Unregister(base.Activate);
         }
     }
-    
-    public override void OnLostOwnership()
+    private void OnEnable()
     {
-
+        if (IsSpawned && IsOwner)
+        {
+            Debug.Log($"[{nameof(NGun)}] Enable", gameObject);
+            fireEvent.Register(base.Activate);
+        }
+    }
+    private void OnDisable()
+    {
+        if (IsSpawned && IsOwner)
+        {
+            Debug.Log($"[{nameof(NGun)}] Disable", gameObject);
+            fireEvent.Unregister(base.Activate);
+        }
     }
     void Update()
     {

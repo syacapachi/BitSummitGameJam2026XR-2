@@ -1,7 +1,6 @@
-﻿using Unity.Netcode;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.XR;
-
+[RequireComponent(typeof(LocalCameraSetting))]
 public class LocalCharactorControll : MonoBehaviour 
 { 
     public enum MoveMode { Normal, Dash, Stop}
@@ -70,4 +69,10 @@ public class LocalCharactorControll : MonoBehaviour
             moveMode = MoveMode.Normal;
         }
     }
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        cameraSetting = GetComponent<LocalCameraSetting>();
+    }
+#endif
 }

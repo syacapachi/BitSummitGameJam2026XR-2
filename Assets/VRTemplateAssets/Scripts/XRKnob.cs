@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -99,7 +99,7 @@ namespace Unity.VRTemplate
         float m_Value = 0.5f;
 
         [SerializeField]
-        [Tooltip("Whether this knob's rotation should be clamped by the angle limits")]
+        [Tooltip("Whether this knob's rotation should be clamped by the handOffsetAngle limits")]
         bool m_ClampedMotion = true;
 
         [SerializeField]

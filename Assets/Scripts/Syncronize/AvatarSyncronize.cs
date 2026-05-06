@@ -22,9 +22,13 @@ public class AvatarSyncronize : NetworkBehaviour
     [SerializeField] private Transform networkLeftController;
     [SerializeField] private Transform networkRightController;
     [Header("Setting")]
+    [Header("Foot")]
     [SerializeField] float footOffset = 0.1f;
     [SerializeField] float footWight = 0.2f;
     [SerializeField] float kneeWight = 0.2f;
+    [Header("Hand")]
+    [SerializeField] float armOffset = 0.5f;
+    [SerializeField] float handOffsetAngle = 90;
     [Header("Calibration"),Tooltip("対象のアバターのスケールを慎重に応じて拡大・縮小します。(元のアバターの身長は1m,スケールは1.1.1にして下さい。)")]
     [SerializeField] int calibrationCount = 10;
     [Header("Debug")]
@@ -144,11 +148,12 @@ public class AvatarSyncronize : NetworkBehaviour
             animator.SetLookAtPosition(ownerCamera.transform.position + ownerCamera.transform.forward * 2);
 
             //左手
-            SetIKPositonAndRotation(AvatarIKGoal.LeftHand, leftController);
+            //手を傾けるために補正
+            SetIKPositonAndRotation(AvatarIKGoal.LeftHand, leftController.position - leftController.forward * armOffset, Quaternion.AngleAxis(handOffsetAngle, leftController.forward) * leftController.rotation);
 
             //右手
-            SetIKPositonAndRotation(AvatarIKGoal.RightHand, rightController);
-
+            //手を傾けるために補正
+            SetIKPositonAndRotation(AvatarIKGoal.RightHand, rightController.position - rightController.forward * armOffset, Quaternion.AngleAxis(-handOffsetAngle, rightController.forward) * rightController.rotation);
         }
         //非オーナーは、同期されているアバターの位置をAnimatorに反映させる
         //注意 AvatorにNetworkTransform付きオブジェクトを付けるとAnimationが狂う
@@ -160,10 +165,10 @@ public class AvatarSyncronize : NetworkBehaviour
             animator.SetLookAtPosition(networkHead.position + networkHead.forward * 2);
 
             //左手
-            SetIKPositonAndRotation(AvatarIKGoal.LeftHand, networkLeftController);
+            SetIKPositonAndRotation(AvatarIKGoal.LeftHand, networkLeftController.position - networkLeftController.forward * armOffset, Quaternion.AngleAxis(handOffsetAngle, networkLeftController.forward)* networkLeftController.rotation);
 
             //右手
-            SetIKPositonAndRotation(AvatarIKGoal.RightHand, networkRightController);
+            SetIKPositonAndRotation(AvatarIKGoal.RightHand, networkRightController.position - networkRightController.forward * armOffset, Quaternion.AngleAxis(handOffsetAngle, networkRightController.forward) * networkRightController.rotation);
         }
         //足は共通
         AdjustIKToPlane(AvatarIKGoal.LeftFoot, AvatarIKHint.LeftKnee);
@@ -239,7 +244,7 @@ public class AvatarSyncronize : NetworkBehaviour
                 avatorRootTransfrom.SetPositionAndRotation(cameraPos, xrOrigin.transform.rotation);
                 //頭の回転
                 networkHead.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
-                // ★手
+                // ★手(手を傾けるために補正)
                 networkLeftController.SetPositionAndRotation(leftController.position, leftController.rotation);
                 networkRightController.SetPositionAndRotation(rightController.position, rightController.rotation);
             }
@@ -249,9 +254,11 @@ public class AvatarSyncronize : NetworkBehaviour
                 Quaternion rot = Quaternion.Euler(0, xrOrigin.Camera.transform.rotation.eulerAngles.y, 0);
                 //　XRが無効な場合は、頭の位置を、そのままrootへ
                 avatorRootTransfrom.SetPositionAndRotation(cameraPos, rot);
+                //頭の回転
+                networkHead.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
                 // ★手　XRが無効の時は、頭に付けることで疑似的FPS
-                networkLeftController.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
-                networkRightController.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
+                //networkLeftController.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
+                //networkRightController.SetPositionAndRotation(xrOrigin.Camera.transform.position, xrOrigin.Camera.transform.rotation);
             }
         }
     }

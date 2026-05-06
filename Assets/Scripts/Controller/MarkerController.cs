@@ -98,6 +98,10 @@ public class MarkerController : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void PlaceMarkerRpc()
     {
+        if (ManagerLocator.Instance == null
+            || ManagerLocator.Instance.AllGameManager == null
+            || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
+            ) return;
         if (firePoint == null) return;
 
         Vector3 forward = firePoint.forward;

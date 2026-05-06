@@ -64,5 +64,10 @@ public class LocalCameraSetting : MonoBehaviour
     {
         localCamera.transform.rotation = Quaternion.Euler(y, x, 0);
     }
-    
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        characterControll = GetComponent<LocalCharactorControll>();
+    }
+#endif
 }
