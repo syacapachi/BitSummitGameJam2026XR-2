@@ -78,19 +78,15 @@ public class AvatarSyncronize : NetworkBehaviour
     }
     private IEnumerator WaitForEnable()
     {
-        while (true)
+        var Locator = ManagerLocator.Instance;
+        while (Locator == null
+                || Locator.AllPlayerManager == null
+                || Locator.AllPlayerManager.LocalPlayerRoot == null)
         {
-            var Locator = ManagerLocator.Instance;
-            if (   Locator != null
-                && Locator.AllPlayerManager != null
-                && Locator.AllPlayerManager.LocalPlayerRoot != null)
-            {
-                ResistLocalPlayer();
-                yield return CalcHeight();
-                yield break;
-            }
             yield return null;
         }
+        ResistLocalPlayer();
+        yield return CalcHeight();
     }
     private void ResistLocalPlayer()
     {

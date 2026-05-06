@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class LoopScrollUI : MonoBehaviour
@@ -16,7 +16,7 @@ public class LoopScrollUI : MonoBehaviour
 
     IEnumerator Start()
     {
-        // UIƒŒƒCƒAƒEƒgŠm’è‘Ò‚¿i’´d—vj
+        // UIãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆç¢ºå®šå¾…ã¡ï¼ˆè¶…é‡è¦ï¼‰
         yield return null;
         yield return null;
 
@@ -38,28 +38,31 @@ public class LoopScrollUI : MonoBehaviour
         initialized = true;
     }
 
-    void Update()
+    IEnumerator ScrollCoruinte()
     {
-        if (!isRunning || !initialized) return;
-
-        float move = speed * Time.deltaTime;
-
-        Move(imageA, move);
-        Move(imageB, move);
-
-        // ƒ‹[ƒv
-        if (imageA.anchoredPosition.x >= width)
+        if (!initialized) yield break;
+        while (isRunning)
         {
-            SetPos(imageA, imageB.anchoredPosition.x - width);
-        }
+            float move = speed * Time.deltaTime;
 
-        if (imageB.anchoredPosition.x >= width)
-        {
-            SetPos(imageB, imageA.anchoredPosition.x - width);
+            Move(imageA, move);
+            Move(imageB, move);
+
+            // ãƒ«ãƒ¼ãƒ—
+            if (imageA.anchoredPosition.x >= width)
+            {
+                SetPos(imageA, imageB.anchoredPosition.x - width);
+            }
+
+            if (imageB.anchoredPosition.x >= width)
+            {
+                SetPos(imageB, imageA.anchoredPosition.x - width);
+            }
+            yield return null;
         }
     }
 
-    // X‚¾‚¯“®‚©‚·
+    // Xã ã‘å‹•ã‹ã™
     void Move(RectTransform rect, float move)
     {
         var pos = rect.anchoredPosition;
@@ -67,7 +70,7 @@ public class LoopScrollUI : MonoBehaviour
         rect.anchoredPosition = pos;
     }
 
-    // Y‚ğ•Û‚µ‚ÄX‚¾‚¯ƒZƒbƒg
+    // Yã‚’ä¿æŒã—ã¦Xã ã‘ã‚»ãƒƒãƒˆ
     void SetPos(RectTransform rect, float x)
     {
         var pos = rect.anchoredPosition;
@@ -79,17 +82,18 @@ public class LoopScrollUI : MonoBehaviour
     {
         if (!initialized)
         {
-            Debug.LogWarning("[LoopScrollUI] Init‘O‚ÉStartScrollŒÄ‚Î‚ê‚½ ¨ Init‹­§");
+            Debug.LogWarning("[LoopScrollUI] Initå‰ã«StartScrollå‘¼ã°ã‚ŒãŸ â†’ Initå¼·åˆ¶");
             Init();
         }
 
         isRunning = true;
-        Debug.Log("[LoopScrollUI] ƒXƒNƒ[ƒ‹ŠJn");
+        StartCoroutine(ScrollCoruinte());
+        Debug.Log("[LoopScrollUI] ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«é–‹å§‹");
     }
 
     public void StopScroll()
     {
         isRunning = false;
-        Debug.Log("[LoopScrollUI] ƒXƒNƒ[ƒ‹’â~");
+        Debug.Log("[LoopScrollUI] ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«åœæ­¢");
     }
 }

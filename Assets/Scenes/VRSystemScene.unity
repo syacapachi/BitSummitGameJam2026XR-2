@@ -40823,6 +40823,26 @@ PrefabInstance:
       propertyPath: phaseManager
       value: 
       objectReference: {fileID: 1824497172}
+    - target: {fileID: 4382631628304796848, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: m_Color.b
+      value: 0.5275926
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382631628304796848, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: m_Color.g
+      value: 0.37072986
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382631628304796848, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: m_Color.r
+      value: 0.45603484
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382631628304796848, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: m_Intensity
+      value: 0.13608329
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382631628304796848, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 0.1453611
+      objectReference: {fileID: 0}
     - target: {fileID: 4947028098112727187, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_Name
       value: SunAndMoon
@@ -40841,19 +40861,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.033353083
+      value: 0.6385766
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.080521464
+      value: 0.73849434
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.3812272
+      value: 0.14156903
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.9203639
+      value: -0.16372025
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -54596,7 +54616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1917126890
 MonoBehaviour:
   m_ObjectHideFlags: 0
