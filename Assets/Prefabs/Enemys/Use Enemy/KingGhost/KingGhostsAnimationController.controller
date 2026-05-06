@@ -10,9 +10,6 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-    m_State: {fileID: 246246103410729127}
-    m_Position: {x: 620, y: 70, z: 0}
-  - serializedVersion: 1
     m_State: {fileID: 5959775813872566682}
     m_Position: {x: 355.1651, y: 136.22644, z: 0}
   - serializedVersion: 1
@@ -57,7 +54,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 5878180852004438635, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
+  m_Motion: {fileID: 901689829902699899, guid: 350ca061da6b56442acb0d31c89d1802, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -98,7 +95,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2_N_deamon_attack"
-  m_Speed: 2
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 618961034416698679}
@@ -111,7 +108,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: e77ba6d096f995b449fc93bff00b106a, type: 2}
+  m_Motion: {fileID: 5172584210488341904, guid: 350ca061da6b56442acb0d31c89d1802, type: 3}
   m_Tag: 
   m_SpeedParameter: Speed
   m_MirrorParameter: 
@@ -148,7 +145,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DemonsAnimationController
+  m_Name: KingGhostsAnimationController
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Speed
@@ -215,32 +212,6 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
---- !u!1102 &246246103410729127
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|N_daemon_die_ver2"
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 2786242431893962953, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1101 &618961034416698679
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -447,7 +418,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 6444942732782382683, guid: 814c0376dfc7b614b8f6d60386ee1c0f, type: 3}
+  m_Motion: {fileID: 8829148476263669782, guid: 0868c3bb445331b46bf64f67081f7c6b, type: 3}
   m_Tag: 
   m_SpeedParameter: Speed
   m_MirrorParameter: 
@@ -474,7 +445,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 0eb3e327d4aa3d642ab7e1f59679c67d, type: 2}
+  m_Motion: {fileID: 1752334060668333663, guid: 350ca061da6b56442acb0d31c89d1802, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
