@@ -8,7 +8,6 @@ public class AlertLightController : MonoBehaviour
     [Header("Setting")]
     [SerializeField] float rotateSpeed = 100f;
 
-    float timer = 0f;
     [SerializeField] float interval = 3f;
     [SerializeField] AudioClip buzzerClip;
     [SerializeField] AudioEffectData buzzerEffectData;

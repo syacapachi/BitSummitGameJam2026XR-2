@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19a733a3c2f3c8240aeeb3a2e112824b, type: 3}
+  m_Name: currentSky
+  m_EditorClassIdentifier: 
+  timeOfDay: 18
+  topColor: {r: 0.04629084, g: 0.04629084, b: 0.14958604, a: 1}
+  horizonColor: {r: 0.234891, g: 0.13887252, b: 0.26359475, a: 1}
+  bottomColor: {r: 0.1174455, g: 0.07297384, b: 0.14776686, a: 1}
+  intensity: 0.9814444
+  exponentTop: 1.7731946
+  exponentBottom: 3.453611
+  sunColor: {r: 0.45603484, g: 0.37072986, b: 0.5275926, a: 1}
+  sunIntensity: 0.13608329
+  sunMultiplier: 0.1453611
+  moonColor: {r: 1, g: 0, b: 0, a: 1}
+  moonIntensity: 0.1
+  moonMultiplier: 1
+  skyRootEular: {x: 90, y: 170, z: 0}

@@ -18,13 +18,13 @@ public class AnimationEventController : NetworkBehaviour
     void OnVisible()
     {
         Debug.Log("OnVisible");
-        if (!IsServer) return;
+        //if (!IsServer) return;
         enemy.SetVisibleServer();
     }
 
     void OnInvisible()
     {
-        if (!IsServer) return;
+        //if (!IsServer) return;
         enemy.RestoreLayerServer();
     }
 
@@ -38,6 +38,7 @@ public class AnimationEventController : NetworkBehaviour
     void Reset()
     {
         shooter = GetComponentInParent<NEnemyShoot>();
+        enemy = GetComponentInParent<NEnemy>();
         renderers = GetComponentsInChildren<Renderer>();
     }
 #endif

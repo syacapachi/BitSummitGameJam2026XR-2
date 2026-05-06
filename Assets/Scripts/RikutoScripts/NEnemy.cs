@@ -50,6 +50,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     private int originalLayer;
 
+    private int spawnPointIndexServerOnly;
+
 
     [SerializeField]
         private PlayerJob[] jobCycle = new PlayerJob[]
@@ -74,9 +76,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         return false;
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
-    public void InjectSetting(EnemySO enemySO)
+    public void InjectSetting(EnemySO enemySO,int spawnPointIndex)
     {
         this.enemySOServertOnly = enemySO;
+        spawnPointIndexServerOnly = spawnPointIndex;
     }
 
     //[Rpc(SendTo.ClientsAndHost)]
@@ -268,10 +271,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             {
                 enemyAudio.PlayHitVoiceServer();
             }
+            var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
+            if (CheckPointManager == null) return;
+            //次へ移動
+            spawnPointIndexServerOnly++;
+            if (spawnPointIndexServerOnly >= CheckPointManager.SpawnPoints.Length) spawnPointIndexServerOnly = 0;
 
-            //プレイヤーに寄ってくる
-            if(targetPlayerServerOnly != null)
-                StartCoroutine(MoveToNextPos(targetPlayerServerOnly.position));
+            StartCoroutine(MoveToNextPos(
+                CheckPointManager.SpawnPoints[spawnPointIndexServerOnly].transform.position
+            ));
+            
         }
     }
     //水野以上    
@@ -301,10 +310,14 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
         enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
         //networkAnimator.Animator
-        if (enemyJob == PlayerJob.Tutorial) Die();
-        networkAnimator?.SetTrigger("Death");
-        SetVisibleRpc();
-        StartCoroutine(WaitForAnimation());
+        if (enemyJob == PlayerJob.Tutorial) 
+            Die();
+        else
+        {
+            networkAnimator?.SetTrigger("Death");
+            SetVisibleRpc();
+            StartCoroutine(WaitForAnimation());
+        }
         //アニメーション終了を待つため
         isAttackable = false;
     }
@@ -421,8 +434,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     public void SetVisibleServer()
     {
-        if (!IsServer) return;
-        SetVisibleRpc();
+        ApplyVisible(true);
+        //if (!IsServer) return;
+        //SetVisibleRpc();
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -433,8 +447,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     public void RestoreLayerServer()
     {
-        if (!IsServer) return;
-        RestoreLayerRpc();
+        ApplyVisible(false);
+        //if (!IsServer) return;
+        //RestoreLayerRpc();
     }
 
     [Rpc(SendTo.ClientsAndHost)]

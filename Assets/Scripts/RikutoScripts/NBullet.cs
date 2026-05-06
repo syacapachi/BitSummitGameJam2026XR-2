@@ -10,9 +10,6 @@ public class NBullet : BulletBaseController
     [Header("shieldFx Setting")]
     [SerializeField] AudioEffectData shieldAudio;
     [SerializeField] FxEffectData shieldFx;
-    [SerializeField] GameObject hitFxPrefab;
-    [SerializeField] GameObject shieldFxPrefab;
-    [SerializeField] float hitFxLife = 2f;
     [Header("Publis Event")]
     [SerializeField] GameEffectEvent gameEffectEvent;
     private void OnDisable()
@@ -23,16 +20,13 @@ public class NBullet : BulletBaseController
     [Rpc(SendTo.ClientsAndHost)]
     void SpawnHitFxClientRpc(Vector3 pos)
     {
-        //バグが起きたときのために、Prefabから生成する方法も残しておく
         gameEffectEvent.Invoke(new GameEffect(hitAudio.ToRuntimeData(),hitFx.ToRuntimeData(), pos));
-        //gameEffectEvent.Invoke(GameEffect.CreateFxEffect(hitFxPrefab, pos, fxLifeTime: hitFxLife));
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     void SpawnShieldFxClientRpc(Vector3 pos)
     {
         gameEffectEvent.Invoke(new GameEffect(shieldAudio.ToRuntimeData(),shieldFx.ToRuntimeData(), pos));
-        //gameEffectEvent.Invoke(GameEffect.CreateFxEffect(shieldFxPrefab, pos, fxLifeTime: hitFxLife));
     }
 
     protected override void OnHitServer(IDamageReciever reciever, GameObject other)
@@ -41,7 +35,7 @@ public class NBullet : BulletBaseController
         {
             if (!setting.TryGetPlayerLayerSettings(ShooterJob, out var layerMaskSetting))
             {
-                Debug.LogError($"LayerMask setting not found for job: {ShooterJob}");
+                Debug.LogError($"LayerMask setting not found for job: {ShooterJob}",other);
                 NetworkObject.Despawn(true);
                 return;
             }
@@ -51,13 +45,14 @@ public class NBullet : BulletBaseController
                 $"EnemyJob={enemy.EnemyJob}, " +
                 $"AttackableJob={layerMaskSetting.AttackableJob}, " +
                 $"IsAttackable={layerMaskSetting.IsAttackableJob(enemy.EnemyJob)}"
+                ,other
             );
             if (!enemy.IsAttackable)
             {
                 //シールドがでなかったのと見えない敵を撃ってもstep2クリア可能だったため構造変更
                 if (layerMaskSetting.IsAttackableJob(enemy.EnemyJob))
                 {
-                    Debug.Log($"NotDamage");
+                    Debug.Log($"NotDamage",other);
                    
                 } 
                 else
@@ -70,7 +65,7 @@ public class NBullet : BulletBaseController
                     });
                     // [追加] 攻撃が無効な敵に当たった場合のデバッグログ
                     SpawnShieldFxClientRpc(transform.position);
-                    Debug.Log($"NotDamage");
+                    Debug.Log($"NotDamage",other);
                     
                 }
                 if (NetworkObject.IsSpawned)
@@ -90,7 +85,7 @@ public class NBullet : BulletBaseController
             if (layerMaskSetting.IsAttackableJob(enemy.EnemyJob))
             {
                 //ダメージが通る
-                Debug.Log("Damage");
+                Debug.Log("Damage",other);
                 stats.AddHit();
                 stats.AddDamage(Damage);
                 reciever.TakeDamage(this, Damage);
@@ -101,7 +96,7 @@ public class NBullet : BulletBaseController
             else
             {
                 // シールド
-                Debug.Log("Shield");
+                Debug.Log("Shield",other);
                 stats.AddShield();
                 attackBlockedEvent.Invoke(new AttackBlocked()
                 {
@@ -125,7 +120,7 @@ public class NBullet : BulletBaseController
             //自身は無視
             //if (ResultCollector.ClientId == NetworkManager.LocalClientId) return;
             // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
-            Debug.Log("Shield by Player");
+            Debug.Log("Shield by Player",other);
             /* チュートリアルstep2 プレイヤーに当ててクリア可能なため一旦コメントアウト
             attackBlockedEvent.Invoke(new AttackBlocked()
             {
@@ -138,7 +133,7 @@ public class NBullet : BulletBaseController
         }
         else
         {
-            Debug.Log($"Unkown type");
+            Debug.Log($"Unkown type",other);
             return;
         }
 

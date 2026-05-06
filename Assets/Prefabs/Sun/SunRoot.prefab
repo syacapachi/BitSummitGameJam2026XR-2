@@ -255,6 +255,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   phaseManager: {fileID: 0}
+  timeOffset: 15
+  clearChangeTime: 5
   skyboxMat: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
   sunAndMoonRoot: {fileID: 7565055580231618159}
   sunLight: {fileID: 4382631628304796848}
@@ -267,11 +269,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aab534e90c923dd47b02f4361b9128fb, type: 2}
   - {fileID: 11400000, guid: 22c980c46d86d70478b73be59f2e9fd6, type: 2}
   - {fileID: 11400000, guid: ce0e06e46263c4e4c9b0bde9b09858e0, type: 2}
+  - {fileID: 11400000, guid: ca98012adb5c8f14c94b798da5ae9df8, type: 2}
   startSky: {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
   clearSky: {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
+  noonSky: {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
+  gameOverSky: {fileID: 11400000, guid: dd51ec17ce49ad34aae6d4bdc7296619, type: 2}
+  currentSky: {fileID: 11400000, guid: 4ea2e62182cceac4b84e3c79b996b16e, type: 2}
   gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   IsDebug: 0
-  debugChangeTime: 5
   debugEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
 --- !u!1 &8893774260936343903
 GameObject:
@@ -403,8 +408,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 0.3137255, g: 0.3529412, b: 0.50980395, a: 1}
-  m_Intensity: 0
+  m_Color: {r: 0.45603484, g: 0.37072986, b: 0.5275926, a: 1}
+  m_Intensity: 0.13608329
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -446,7 +451,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 0.1
+  m_BounceIntensity: 0.1453611
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}

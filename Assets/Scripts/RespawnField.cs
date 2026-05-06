@@ -22,11 +22,12 @@ public class RespawnField : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        Respawn(collision.gameObject);
-        
+        Debug.Log($"Collison {collision.gameObject.name} to {collision.body}", collision.gameObject);
+        Respawn(collision.gameObject);  
     }
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log($"Trigger {other.name}", other);
         Respawn(other.gameObject);
     }
     [OnInspectorButton("Respawn Objects")]

@@ -3,13 +3,13 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Scripting;
 
-public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotSound, IReloadSound
+public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotSound, IReloadSound,IGun
 {
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform firePoint;
     [SerializeField] WeaponSettingsSO weaponSettings;
     public GameObject BulletPrefab => bulletPrefab; // NBulletから参照できるように
-    public Transform FirePoint => firePoint; // NBulletから参照できるように
+    public virtual Transform FirePoint => firePoint; // NBulletから参照できるように
     public WeaponSettingsSO WeaponSettings => weaponSettings; // NBulletから参照できるように
     public NetworkVariable<int> syncedAmmo = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     
@@ -53,10 +53,10 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     [Rpc(SendTo.Server)]
     private void ShootRpc()
     {
-        //if (ManagerLocator.Instance == null 
-        //    || ManagerLocator.Instance.AllGameManager == null 
-        //    || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
-        //    ) return;
+        if (ManagerLocator.Instance == null
+            || ManagerLocator.Instance.AllGameManager == null
+            || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
+            ) return;
         if (isReloading) return;
         if (Time.time < nextFire) return;
         OnShootServer();
@@ -68,10 +68,9 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     {
         nextFire = Time.time + weaponSettings.fireInterval;
         syncedAmmo.Value--;
-
         // ① 弾を生成
         //GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        NetworkObject obj = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(bulletPrefab,firePoint.position,firePoint.rotation);
+        NetworkObject obj = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(bulletPrefab,FirePoint.position,FirePoint.rotation);
 
         // ② 弾のLayerをプレイヤーのJobに合わせる
         GameObject go = obj.gameObject;
@@ -91,7 +90,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         {
             PlayReloadSound();
         }
-        // ここでリロードのアニメーションやエフェクトを再生することができます。
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         for (float t = 0; t < ReloadTime; t += 0.1f)
         {
@@ -116,7 +114,7 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     /// <param name="newVal"></param>
     private void OnAmmoChanged(int oldVal, int newVal)
     {
-        if(isReloading) return;
+        if (isReloading) return;
         if(oldVal < newVal) return;
         UpdateCount(newVal, MaxAmmo);
         if (IsClient)

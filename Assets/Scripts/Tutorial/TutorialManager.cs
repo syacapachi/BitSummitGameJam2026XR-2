@@ -10,10 +10,9 @@ public enum TutorialStep
     Step1, Step2, Step3, Step4, End
 }
 
-public class TutorialManager : NetworkBehaviour
+public class TutorialManager : NetworkBehaviour,ITutorialStart
 {
     [Header("Reference")]
-    [SerializeField] PlayerManager playerManager;
     public NetworkVariable<TutorialStep> CurrentStep =
         new(TutorialStep.Step1);
 
@@ -27,42 +26,31 @@ public class TutorialManager : NetworkBehaviour
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
     [SerializeField] VoidEvent OnTutorialStepCleared;
     [SerializeField] IntEvent OnTutorialStepChanged;
-    private bool isInitialized = false;
-
-    private void Start()
-    {
-        isInitialized = false;
-        StartCoroutine(WaitForAllClientConnect());
-    }
+    private bool isTutorlalStarted;
+    
     public override void OnNetworkSpawn()
     {
+        isTutorlalStarted = false;
         if (IsServer)
         {
-            attackBlockedEvent.Register(OnAttackBlocked);
-            NetworkManager.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
+            attackBlockedEvent.Register(OnAttackBlocked);  
         }
         CurrentStep.OnValueChanged += OnStepChanged;
-    }
-
-    private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
-    {
-        if(!isInitialized) 
-            StartStep(TutorialStep.Step1);
-    }
-    IEnumerator WaitForAllClientConnect()
-    {
-        yield return new WaitUntil(() => IsSpawned && playerManager != null && playerManager.IsAllClientReady());
-        if (!isInitialized && IsServer)
-            StartStep(TutorialStep.Step1);
-    }
+    }    
     public override void OnNetworkDespawn()
     {
         CurrentStep.OnValueChanged -= OnStepChanged;
         if (IsServer)
         {
-            NetworkManager.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
+            
             attackBlockedEvent.Unregister(OnAttackBlocked);
         }
+    }
+    public void OnTutorialStart()
+    {
+        if (isTutorlalStarted) return;
+        isTutorlalStarted = true;
+        StartStep(TutorialStep.Step1);
     }
 
     void OnStepChanged(TutorialStep oldStep, TutorialStep newStep)
@@ -72,7 +60,6 @@ public class TutorialManager : NetworkBehaviour
 
     void StartStep(TutorialStep step)
     {
-        isInitialized = true;
         currentStepLogic?.OnEnd();
         int playerCount = NetworkManager.ConnectedClientsIds.Count;
 
@@ -156,6 +143,7 @@ public class TutorialManager : NetworkBehaviour
     private void OnAttackBlocked(AttackBlocked blocked)
     {
         if (!IsServer) return;
+        if(!isTutorlalStarted) return;
         currentStepLogic?.OnAttackBlocked(blocked.Collector.ClientId);
     }
 
@@ -183,4 +171,6 @@ public class TutorialManager : NetworkBehaviour
         );
         Debug.Log("Move To VRSystemScene");
     }
+
+
 }
