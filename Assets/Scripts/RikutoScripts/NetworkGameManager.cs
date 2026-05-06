@@ -168,10 +168,8 @@ public class NetworkGameManager : NetworkBehaviour
 
     void HandleAllPhaseEnded()
     {
-        Debug.Log($"GAME CLEAR 呼ばれた | before:{CurrentGameState}");
-        Debug.Log("GAME CLEAR");
+        Debug.Log("ALL PHASE ENDED CALLED");
         CurrentGameState = GameState.GameClear;
-        Debug.Log($"GAME CLEAR 設定後 | after:{CurrentGameState}");
         phaseManager.KillableHandle.KillAll();
         phaseManager.StopAllCoroutines();
 
@@ -203,6 +201,7 @@ public class NetworkGameManager : NetworkBehaviour
     void SendResults()
     {
         var list = new List<PlayerResultData>();
+        Debug.Log($"AllPlayers Count = {PlayerManager.AllPlayers.Count}");
 
         foreach (var player in PlayerManager.AllPlayers)
         {
