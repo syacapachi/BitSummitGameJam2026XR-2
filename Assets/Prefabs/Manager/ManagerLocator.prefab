@@ -50,28 +50,10 @@ MonoBehaviour:
   waitSpawnRemainCount: 5
   nextPhaseType: 0
   networkPool: {fileID: 4084111059737820316}
-  spawnPointParent: {fileID: 0}
-  spawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  checkPointManager: {fileID: 4441792715120167192}
   protectArea: {fileID: 0}
   OnAllEnemyDeadRpcEvent: {fileID: 11400000, guid: d48233639feb72e4ba705392d35f3c40, type: 2}
   EnemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
-  remain: 0
 --- !u!1 &1266559103897700638
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,6 +279,7 @@ MonoBehaviour:
   OnAllPhaseEndedServerOnly: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
   OnPhaseChangeRpcEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
   OnDifficultyChangedServerEvent: {fileID: 11400000, guid: e641f2abcabb4f8449947c45a980c10f, type: 2}
+  WarningStateEvent: {fileID: 11400000, guid: ea950463a1b029947b246f4c310fcef4, type: 2}
 --- !u!1 &2223224338536376484
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,13 +578,14 @@ MonoBehaviour:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 1
+    m_InternalValue: 0
   gameMode: 1
   gameStartMode: 0
   protectArea: {fileID: 0}
   scoreManager: {fileID: 7622921992766210704}
   phaseManager: {fileID: 1871165705981970814}
   PlayerManager: {fileID: 8012348177458703508}
+  tutorialManager: {fileID: 8343285116251111980}
   gameState:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -610,6 +594,7 @@ MonoBehaviour:
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
   OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   RecieveResultRpcEvent: {fileID: 11400000, guid: b1254d9a30b83b44ca1aa9f037d0a8fc, type: 2}
+  gunEnableRpcEvent: {fileID: 11400000, guid: c8ec81be65a3f1b459a48651324647bc, type: 2}
   OnScoreReachZeroServerEvent: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
   OnAllPhaseEndedServerEvent: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
   difficultyEvent: {fileID: 11400000, guid: e641f2abcabb4f8449947c45a980c10f, type: 2}
@@ -723,7 +708,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  playerManager: {fileID: 8012348177458703508}
   CurrentStep:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -732,9 +716,9 @@ MonoBehaviour:
   spawner: {fileID: 0}
   step1Enemies: []
   step2Enemies: []
-  attackBlockedEvent: {fileID: 0}
-  OnTutorialStepCleared: {fileID: 0}
-  OnTutorialStepChanged: {fileID: 0}
+  attackBlockedEvent: {fileID: 11400000, guid: 29e4db13b8933e44b8dfd9df362fd1d2, type: 2}
+  OnTutorialStepCleared: {fileID: 11400000, guid: 64f3ed58da1abd54bb4e2c3464685d38, type: 2}
+  OnTutorialStepChanged: {fileID: 11400000, guid: 4cdbcd5da1b58d048a39f9a786419768, type: 2}
 --- !u!1 &7509225818068572671
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,6 +973,7 @@ MonoBehaviour:
   clearBGM: {fileID: 8300000, guid: a1762ede81c1dd843856850bd746c8ea, type: 3}
   gameOverBGM: {fileID: 8300000, guid: f9071797b02d0914abf12510ba5b3899, type: 3}
   OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
+  WarningStateEvent: {fileID: 11400000, guid: ea950463a1b029947b246f4c310fcef4, type: 2}
 --- !u!82 &2769098139247376968
 AudioSource:
   m_ObjectHideFlags: 0

@@ -6,9 +6,6 @@ public class NEnemySpawnFxEmitter : NetworkBehaviour
     [SerializeField] private GameObject spawnFxPrefabAll;
     [SerializeField] AudioEffectData audioEffectData;
     [SerializeField] FxEffectData fxEffect;
-    [SerializeField] private AudioClip spawnSfxAll;
-    [SerializeField] private float spawnFxLifeTimeAll = 2f;
-    [SerializeField, Range(0f, 1f)] private float spawnVolumeAll = 1f;
     [Header("Publish Event")]
     [SerializeField] private GameEffectEvent gameEffectEvent;
 
@@ -33,11 +30,8 @@ public class NEnemySpawnFxEmitter : NetworkBehaviour
         //);
 
         // 音
-        if (spawnSfxAll != null)
-        {
-            gameEffectEvent.Invoke(
-                new GameEffect(audioEffectData.ToRuntimeData(),fxEffect.ToRuntimeData(),position)
-            );
-        }
+        gameEffectEvent.Invoke(
+            new GameEffect(audioEffectData.ToRuntimeData(), fxEffect.ToRuntimeData(), position)
+        );
     }
 }

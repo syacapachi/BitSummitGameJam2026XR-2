@@ -50,6 +50,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     private int originalLayer;
 
+    private int spawnPointIndexServerOnly;
+
 
     [SerializeField]
         private PlayerJob[] jobCycle = new PlayerJob[]
@@ -74,9 +76,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         return false;
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
-    public void InjectSetting(EnemySO enemySO)
+    public void InjectSetting(EnemySO enemySO,int spawnPointIndex)
     {
         this.enemySOServertOnly = enemySO;
+        spawnPointIndexServerOnly = spawnPointIndex;
     }
 
     //[Rpc(SendTo.ClientsAndHost)]
@@ -268,10 +271,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             {
                 enemyAudio.PlayHitVoiceServer();
             }
+            var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
+            if (CheckPointManager == null) return;
+            //次へ移動
+            spawnPointIndexServerOnly++;
+            if (spawnPointIndexServerOnly >= CheckPointManager.SpawnPoints.Length) spawnPointIndexServerOnly = 0;
 
-            //プレイヤーに寄ってくる
-            if(targetPlayerServerOnly != null)
-                StartCoroutine(MoveToNextPos(targetPlayerServerOnly.position));
+            StartCoroutine(MoveToNextPos(
+                CheckPointManager.SpawnPoints[spawnPointIndexServerOnly].transform.position
+            ));
+            
         }
     }
     //水野以上    

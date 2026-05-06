@@ -50,10 +50,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     //[SerializeField] EnemyDataBase enemyDataBase;
     [Header("Reference")]
     [SerializeField] NetworkObjectPool networkPool;
-#if UNITY_EDITOR
-    [SerializeField] Transform spawnPointParent;
-#endif
-    [SerializeField] Transform[] spawnPoints;
+    [SerializeField] CheckPointManager checkPointManager;
     [SerializeField] Transform protectArea;
     [Header("PublishEvent")]
     [SerializeField] VoidEvent OnAllEnemyDeadRpcEvent;
@@ -108,7 +105,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
             List<SpawnEvent> randomSpawnEvent = new();
             foreach (SpawnEvent e in events)
             {
-                int point = Random.Range(0, spawnPoints.Length);
+                int point = Random.Range(0, checkPointManager.SpawnPoints.Length);
                 float time = Random.Range(0,e.SpawnTime);
                 SpawnEvent randomEvent = new SpawnEvent(e.EnemyType,point,time);
                 randomSpawnEvent.Add(randomEvent);
@@ -252,13 +249,12 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
 
     bool SpawnEnemy(EnemySO enemyData, int spawnIndex)
     {
-        if (spawnIndex < 0 || spawnIndex >= spawnPoints.Length)
+        if (spawnIndex < 0 || spawnIndex >= checkPointManager.SpawnPoints.Length)
         {
             Debug.LogWarning("Invalid spawn index!");
             return false;
         }
-
-        Transform point = spawnPoints[spawnIndex];
+        var point = checkPointManager.SpawnPoints[spawnIndex].transform;
 
         Vector3 dir = protectArea.position - point.position;
         Quaternion rot = Quaternion.LookRotation(dir);
@@ -269,7 +265,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                rot);
 
         var enemy = networkObject.GetComponent<IEnemy>();
-        enemy.InjectSetting(enemyData);
+        enemy.InjectSetting(enemyData,spawnIndex);
         spawnedEnemies.Add(enemy);
         networkObject.Spawn();
         //int id = enemyDataBase.GetIdFromEnemyData(enemyData);
@@ -320,18 +316,6 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         isSpawnFinished = false;
         isAllDead = false;
     }
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (spawnPointParent == null) return; 
-        var childs = spawnPointParent.GetComponentsInChildren<Transform>();
-        if(childs != null)
-        {
-            spawnPoints = childs.Skip(1).ToArray();
-        }
-        
-    }
-#endif
 }
 [GenerateEvent(typeof(GameEventSOBase<>))]
 public class EnemyKilled 

@@ -10,7 +10,7 @@ using static CheckPointManager;
 public class CheckPointManager : MonoBehaviour
 {
     [Serializable]
-    public readonly struct IndexToTransform
+    public readonly struct IndexToTransform : IEquatable<IndexToTransform>
     {
         public readonly int id;
         public readonly Transform transform;
@@ -19,6 +19,11 @@ public class CheckPointManager : MonoBehaviour
             this.id = id;
             this.transform = transform;
         }
+
+        public bool Equals(IndexToTransform other)
+        {
+            return id == other.id;
+        }
     }
 #if UNITY_EDITOR
     [SerializeField] GameObject m_CheckPointParent;
@@ -26,6 +31,8 @@ public class CheckPointManager : MonoBehaviour
     [SerializeField] Transform[] checkPoints;
     IndexToTransform[] indexToTransformArr;
     readonly Dictionary<IndexToTransform, int> transformToIndexDic = new();
+
+    public IndexToTransform[] SpawnPoints => indexToTransformArr;
     private void Awake()
     {
         transformToIndexDic.Clear();
@@ -96,8 +103,12 @@ public class CheckPointManager : MonoBehaviour
         if(index < 0 || index >= checkPoints.Length)
         {
             Debug.LogError("List out Range");
-            return default;
+            return GetRandomPoint();
         }
         return (index == checkPoints.Length - 1) ? indexToTransformArr[0] : indexToTransformArr[index+1];
+    }
+    public IndexToTransform GetRandomPoint()
+    {
+        return indexToTransformArr[UnityEngine.Random.Range(0, checkPoints.Length)];
     }
 }

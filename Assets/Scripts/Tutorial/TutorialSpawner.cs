@@ -84,7 +84,7 @@ public class TutorialSpawner : NetworkBehaviour
 
         if (obj.TryGetComponent<IEnemy>(out var enemy))
         {
-            enemy.InjectSetting(enemyData);
+            enemy.InjectSetting(enemyData,spawnIndex);
             spawnedEnemies.Add(enemy);
         }
         obj.Spawn(true);

@@ -1,6 +1,5 @@
 ﻿using Syacapachi.Attribute;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SkyBoxColorChanger : MonoBehaviour
@@ -33,7 +32,6 @@ public class SkyBoxColorChanger : MonoBehaviour
     [SerializeField] bool IsDebug;
     [SerializeField, EnableIf(nameof(IsDebug))] VoidEvent debugEvent;
 
-    private bool isInitialized = false;
     private int currentIndex = 0;
     private void Awake()
     {

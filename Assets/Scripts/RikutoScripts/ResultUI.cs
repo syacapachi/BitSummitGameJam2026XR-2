@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
-using static UnityEngine.Rendering.HDROutputUtils;
 
 public class ResultUI : MonoBehaviour
 {

@@ -24,7 +24,6 @@ public class ScoreManager : NetworkBehaviour
     [SerializeField] BoolEvent aleartRpcEvent;
 
     bool isGameOver = false;
-    bool isAlert = false;
 
     private void OnEnable()
     {
