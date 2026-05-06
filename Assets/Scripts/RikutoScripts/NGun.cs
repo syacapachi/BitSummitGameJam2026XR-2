@@ -30,7 +30,6 @@ public class NGun : GunController
     {
         if (IsOwner)
         {
-            Debug.Log($"[{nameof(NGun)}] Spawn", gameObject);
             fireEvent.Register(base.Activate);
         }
     }
@@ -38,22 +37,6 @@ public class NGun : GunController
     {
         if (IsOwner) 
         {
-            fireEvent.Unregister(base.Activate);
-        }
-    }
-    private void OnEnable()
-    {
-        if (IsSpawned && IsOwner)
-        {
-            Debug.Log($"[{nameof(NGun)}] Enable", gameObject);
-            fireEvent.Register(base.Activate);
-        }
-    }
-    private void OnDisable()
-    {
-        if (IsSpawned && IsOwner)
-        {
-            Debug.Log($"[{nameof(NGun)}] Disable", gameObject);
             fireEvent.Unregister(base.Activate);
         }
     }

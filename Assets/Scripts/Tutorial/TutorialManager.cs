@@ -143,6 +143,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     private void OnAttackBlocked(AttackBlocked blocked)
     {
         if (!IsServer) return;
+        if(!isTutorlalStarted) return;
         currentStepLogic?.OnAttackBlocked(blocked.Collector.ClientId);
     }
 

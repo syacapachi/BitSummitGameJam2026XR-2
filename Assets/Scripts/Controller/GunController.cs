@@ -68,7 +68,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     {
         nextFire = Time.time + weaponSettings.fireInterval;
         syncedAmmo.Value--;
-
         // ① 弾を生成
         //GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         NetworkObject obj = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(bulletPrefab,FirePoint.position,FirePoint.rotation);
@@ -91,7 +90,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         {
             PlayReloadSound();
         }
-        // ここでリロードのアニメーションやエフェクトを再生することができます。
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         for (float t = 0; t < ReloadTime; t += 0.1f)
         {
@@ -116,7 +114,7 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     /// <param name="newVal"></param>
     private void OnAmmoChanged(int oldVal, int newVal)
     {
-        if(isReloading) return;
+        if (isReloading) return;
         if(oldVal < newVal) return;
         UpdateCount(newVal, MaxAmmo);
         if (IsClient)

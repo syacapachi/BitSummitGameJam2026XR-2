@@ -60890,6 +60890,18 @@ PrefabInstance:
       propertyPath: localRoot
       value: 
       objectReference: {fileID: 663060509}
+    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: attackBlockedEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 29e4db13b8933e44b8dfd9df362fd1d2, type: 2}
+    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: OnTutorialStepChanged
+      value: 
+      objectReference: {fileID: 11400000, guid: 4cdbcd5da1b58d048a39f9a786419768, type: 2}
+    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: OnTutorialStepCleared
+      value: 
+      objectReference: {fileID: 11400000, guid: 64f3ed58da1abd54bb4e2c3464685d38, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
