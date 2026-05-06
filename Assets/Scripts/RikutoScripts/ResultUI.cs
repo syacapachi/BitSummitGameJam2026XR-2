@@ -73,6 +73,7 @@ public class ResultUI : MonoBehaviour
 
     void OnGameFinished(PlayerResultData[] resultData)
     {
+        Debug.Log($"OnGameFinished called: {Time.frameCount}");
         foreach (var r in resultData)
         {
             Debug.Log($"Player {r.clientId} Score:{r.score} Kills:{string.Join(",", r.killCounts)}");

@@ -15,6 +15,8 @@ public class PlayerManager : MonoBehaviour
 
     public void ResistPlayer(NetworkPlayerRoot playerRoot)
     {
+        if (playerList.Contains(playerRoot)) return;
+        
         playerList.Add(playerRoot);
         if (!playerReadyDict.ContainsKey(playerRoot.OwnerClientId))
         {
