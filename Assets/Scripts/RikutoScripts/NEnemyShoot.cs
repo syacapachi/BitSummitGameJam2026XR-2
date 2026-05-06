@@ -53,7 +53,7 @@ public class NEnemyShoot : GunController
     protected override void OnShootServer()
     {
         if (!TryGetTarget(out var target)) return;
-        Vector3 direction = (target.position - transform.position).normalized;
+        Vector3 direction = (target.position - FirePoint.position).normalized;
 
         NetworkObject networkObject = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(
             BulletPrefab,

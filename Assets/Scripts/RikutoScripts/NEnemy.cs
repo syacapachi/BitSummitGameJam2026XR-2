@@ -227,6 +227,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         if (hpCanvas == null) return;
         if (!isInitialize) return;
+        if (!isAttackable) return;
         if (rootTransfrom != null)
         {
             rootTransfrom.LookAt(targetPlayerServerOnly);
