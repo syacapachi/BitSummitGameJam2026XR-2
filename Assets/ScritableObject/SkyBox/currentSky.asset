@@ -10,19 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 19a733a3c2f3c8240aeeb3a2e112824b, type: 3}
-  m_Name: Night
+  m_Name: currentSky
   m_EditorClassIdentifier: 
-  timeOfDay: 20
-  topColor: {r: 0.019607844, g: 0.019607844, b: 0.078431375, a: 1}
-  horizonColor: {r: 0.039215688, g: 0.05882353, b: 0.15686275, a: 1}
-  bottomColor: {r: 0.019607844, g: 0.019607844, b: 0.05882353, a: 1}
-  intensity: 0.8
-  exponentTop: 2
-  exponentBottom: 3
-  sunColor: {r: 0.3137255, g: 0.3529412, b: 0.50980395, a: 1}
+  timeOfDay: 2
+  topColor: {r: 0, g: 0, b: 0.019607844, a: 1}
+  horizonColor: {r: 0.011764706, g: 0.011764706, b: 0.039215688, a: 1}
+  bottomColor: {r: 0, g: 0, b: 0.011764706, a: 1}
+  intensity: 0.2
+  exponentTop: 1
+  exponentBottom: 2
+  sunColor: {r: 0.19607843, g: 0.21568628, b: 0.3137255, a: 1}
   sunIntensity: 0
-  sunMultiplier: 0.1
+  sunMultiplier: 5
   moonColor: {r: 1, g: 0, b: 0, a: 1}
   moonIntensity: 0.1
-  moonMultiplier: 1
-  skyRootEular: {x: 120, y: 170, z: 0}
+  moonMultiplier: 2

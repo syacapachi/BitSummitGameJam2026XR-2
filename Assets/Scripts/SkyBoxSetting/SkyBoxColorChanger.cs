@@ -21,6 +21,9 @@ public class SkyBoxColorChanger : MonoBehaviour
     [SerializeField] SkyBoxColorSetting[] skyBoxColorSettings;
     [SerializeField] SkyBoxColorSetting startSky;
     [SerializeField] SkyBoxColorSetting clearSky;
+    [SerializeField] SkyBoxColorSetting gameOverSky;
+    [Header("書き込み専用")]
+    [SerializeField] SkyBoxColorSetting currentSky;
     [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
     [Header("デバックモード")]
@@ -76,9 +79,11 @@ public class SkyBoxColorChanger : MonoBehaviour
             case GameState.Playing:
                 StartSkyBoxChange(); break;
             case GameState.GameClear:
-                StartCoroutine(ApplyColorCorutine(skyBoxColorSettings[^1], clearSky, debugChangeTime)); break;
+                StartCoroutine(ApplyColorCorutine(currentSky, clearSky, debugChangeTime)); break;
             case GameState.GameOver:
-                StopAllCoroutines(); break;
+                StopAllCoroutines();
+                StartCoroutine(ApplyColorCorutine(currentSky, gameOverSky, debugChangeTime));
+                break;
 
         }
     }
@@ -103,7 +108,7 @@ public class SkyBoxColorChanger : MonoBehaviour
 
         for (int index = 0; index < skyBoxColorSettings.Length; index++)
         {
-            if (index == skyBoxColorSettings.Length - 1) yield return ApplyColorCorutine(skyBoxColorSettings[^1], clearSky, hourTime);
+            if (index == skyBoxColorSettings.Length - 1) yield return ApplyColorCorutine(skyBoxColorSettings[^1], clearSky, hourTime * 2);
             else yield return ApplyColorCorutine(index, index + 1, hourTime);
         }
     }
@@ -191,6 +196,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     /// <param name="t"></param>
     void ApplyLerp(SkyBoxColorSetting a, SkyBoxColorSetting b, float t)
     {
+        currentSky.UpdateLerpSky(a, b, t);
         skyboxMat.SetColor("_Color1", Color.Lerp(a.topColor, b.topColor, t));
         skyboxMat.SetColor("_Color2", Color.Lerp(a.horizonColor, b.horizonColor, t));
         skyboxMat.SetColor("_Color3", Color.Lerp(a.bottomColor, b.bottomColor, t));

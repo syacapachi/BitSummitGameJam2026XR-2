@@ -131,7 +131,7 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 0.1
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -173,7 +173,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 10
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -269,6 +269,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ce0e06e46263c4e4c9b0bde9b09858e0, type: 2}
   startSky: {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
   clearSky: {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
+  gameOverSky: {fileID: 11400000, guid: dd51ec17ce49ad34aae6d4bdc7296619, type: 2}
+  currentSky: {fileID: 11400000, guid: 4ea2e62182cceac4b84e3c79b996b16e, type: 2}
   gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   IsDebug: 0
   debugChangeTime: 5
@@ -403,7 +405,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 0.3137255, g: 0.3529412, b: 0.50980395, a: 1}
+  m_Color: {r: 0.19607843, g: 0.21568628, b: 0.3137255, a: 1}
   m_Intensity: 0
   m_Range: 10
   m_SpotAngle: 30
@@ -446,7 +448,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 0.1
+  m_BounceIntensity: 5
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}

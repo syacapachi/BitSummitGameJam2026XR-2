@@ -34,15 +34,43 @@ public class SkyBoxColorSetting : ScriptableObject
     public float moonIntensity = 0.1f;
     [Header("月の光の減衰率")]
     public float moonMultiplier = 1f;
-    private const float  onehour = 360f / 24f;
-    
+    private const float onehour = 360f / 24f;
+
     //0時->±180
     //6時-> -90 or 270
     //12時 -> 0
     //18時 -> 90
+    [SerializeField] private Vector3 skyRootEular;
+    public Vector3 SkyRootEular => skyRootEular;
+    public Quaternion SkyRotation => Quaternion.Euler(skyRootEular);
 
-    public Vector3 SkyRootEular => new Vector3((int)timeOfDay * onehour - 180f, 170, 0);
-    public Quaternion SkyRotation => Quaternion.Euler(SkyRootEular);
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        skyRootEular = new Vector3((int)timeOfDay * onehour - 180f, 170, 0);
+    }
+#endif
+
+    public void UpdateLerpSky(SkyBoxColorSetting fromSky,SkyBoxColorSetting toSky, float t)
+    {
+        topColor = Color.Lerp(fromSky.topColor, toSky.topColor, t);
+        horizonColor = Color.Lerp(fromSky.horizonColor, toSky.horizonColor, t);
+        bottomColor = Color.Lerp(fromSky.bottomColor, toSky.bottomColor, t);
+
+        intensity = Mathf.Lerp(fromSky.intensity, toSky.intensity, t);
+        exponentBottom = Mathf.Lerp(fromSky.exponentBottom, toSky.exponentBottom, t);
+        exponentTop = Mathf.Lerp(fromSky.exponentTop, toSky.exponentTop, t);
+
+        sunColor = Color.Lerp(fromSky.sunColor, toSky.sunColor, t);
+        sunIntensity = Mathf.Lerp(fromSky.sunIntensity, toSky.sunIntensity, t);
+        sunMultiplier = Mathf.Lerp(fromSky.sunMultiplier, toSky.sunMultiplier, t);
+        
+        moonColor = Color.Lerp(fromSky.moonColor, toSky.moonColor, t);
+        moonIntensity = Mathf.Lerp(fromSky.moonIntensity, toSky.moonIntensity, t);
+        moonMultiplier = Mathf.Lerp(fromSky.moonMultiplier, toSky.moonMultiplier, t);
+
+        skyRootEular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular, t);
+    }
 }
 /// <summary>
 /// 時間設定を行うための列挙体。

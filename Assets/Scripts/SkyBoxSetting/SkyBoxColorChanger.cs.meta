@@ -4,8 +4,19 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - skyboxMat: {instanceID: 0}
-  - phaseChageEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
+  - phaseManager: {instanceID: 0}
+  - skyboxMat: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
+  - sunAndMoonRoot: {instanceID: 0}
+  - sunLight: {instanceID: 0}
+  - sunMat: {fileID: 2100000, guid: 2a4258fad7be5a44ea76ecfa488e4aa9, type: 2}
+  - moonLight: {instanceID: 0}
+  - moonMat: {fileID: 2100000, guid: ec5bcda1b3d57d849807f60b581d106f, type: 2}
+  - startSky: {instanceID: 0}
+  - clearSky: {instanceID: 0}
+  - gameOverSky: {instanceID: 0}
+  - currentSky: {fileID: 11400000, guid: 4ea2e62182cceac4b84e3c79b996b16e, type: 2}
+  - gameStateEvent: {instanceID: 0}
+  - debugEvent: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
