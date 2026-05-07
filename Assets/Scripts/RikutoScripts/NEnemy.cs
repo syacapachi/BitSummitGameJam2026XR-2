@@ -270,16 +270,20 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             {
                 enemyAudio.PlayHitVoiceServer();
             }
-            var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
-            if (CheckPointManager == null) return;
-            //次へ移動
-            currentPointIndexServerOnly++;
-            if (currentPointIndexServerOnly >= CheckPointManager.SpawnPoints.Length) currentPointIndexServerOnly = 0;
-
-            moveCorutine = StartCoroutine(MoveToNextPos(
-                CheckPointManager.SpawnPoints[currentPointIndexServerOnly].transform.position
-            ));
         }
+    }
+    public void MovePosition()
+    {
+        if(!IsServer) return ;
+        var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
+        if (CheckPointManager == null) return;
+        //次へ移動
+        currentPointIndexServerOnly++;
+        if (currentPointIndexServerOnly >= CheckPointManager.SpawnPoints.Length) currentPointIndexServerOnly = 0;
+
+        moveCorutine = StartCoroutine(MoveToNextPos(
+            CheckPointManager.SpawnPoints[currentPointIndexServerOnly].transform.position
+        ));
     }
     //水野以上    
     IEnumerator MoveToNextPos(Vector3 targetPos)

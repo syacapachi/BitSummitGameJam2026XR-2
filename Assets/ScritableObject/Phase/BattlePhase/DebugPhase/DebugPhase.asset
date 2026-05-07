@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DebugPhase
   m_EditorClassIdentifier: 
   phaseName: {fileID: 11400000, guid: 03b4b18bd09a2ff4eb87576c2ff05581, type: 2}
-  phaseTime: 30
+  phaseTime: 60
   clearBonus: 500
   useRandomSpawn: 0
   spawnEvents:
@@ -21,7 +21,7 @@ MonoBehaviour:
     spawnPointIndex: 0
     spawnTime: 0
     forceSpawn: 0
-  - enemyType: {fileID: 11400000, guid: 8b33d00441f07324e8c059f244887f2b, type: 2}
+  - enemyType: {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
     spawnPointIndex: 1
     spawnTime: 0
     forceSpawn: 0
