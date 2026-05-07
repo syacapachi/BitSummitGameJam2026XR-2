@@ -129,7 +129,6 @@ public class NetworkGameManager : NetworkBehaviour
     {
         tutorialManager.OnTutorialStart();
         gameState.Value = GameState.Tutorial;
-        gunEnableRpcEvent.Invoke(true);
     }
     [OnInspectorButton("Start Game")]
     public void StartGameServerOnly()
@@ -141,7 +140,6 @@ public class NetworkGameManager : NetworkBehaviour
         scoreManager.SetScoreByDifficultyServerOnly(CurrentDifficulty);
         phaseManager.StartPhasesRpc(CurrentDifficulty);
         gameState.Value = GameState.Playing;
-        gunEnableRpcEvent.Invoke(true);
     }
 
     [OnInspectorButton("Reset")]
@@ -174,6 +172,14 @@ public class NetworkGameManager : NetworkBehaviour
     {
         Debug.Log($"GameState Changed: {oldState} -> {newState}");
         OnGameStateChangeRpcEvent.Invoke(newState);
+        if(newState == GameState.Tutorial || newState == GameState.Playing)
+        {
+            gunEnableRpcEvent.Invoke(true);
+        }
+        else
+        {
+            gunEnableRpcEvent.Invoke(false);
+        }
     }
     void HandleScoreZeroServer()
     {
