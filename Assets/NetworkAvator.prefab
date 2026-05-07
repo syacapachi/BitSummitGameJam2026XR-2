@@ -2035,7 +2035,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5854976514433775905, guid: 3dd730b3b24f3fe4b9f000ebcda6be8f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -1.575
       objectReference: {fileID: 0}
     - target: {fileID: 5854976514433775905, guid: 3dd730b3b24f3fe4b9f000ebcda6be8f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5653,7 +5653,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4667826402908098960, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1.563
       objectReference: {fileID: 0}
     - target: {fileID: 4667826402908098960, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9486,19 +9486,7 @@ MonoBehaviour:
   m_Animator: {fileID: 7811071689496165750}
   TransitionStateInfoList: []
   AnimatorParameterEntries:
-    ParameterEntries:
-    - name: Attack
-      NameHash: 1080829965
-      Synchronize: 1
-      ParameterType: 9
-    - name: Move
-      NameHash: 1326225478
-      Synchronize: 1
-      ParameterType: 1
-    - name: New Bool
-      NameHash: -2085996487
-      Synchronize: 1
-      ParameterType: 4
+    ParameterEntries: []
   AnimatorParametersExpanded: 0
 --- !u!114 &644507580902073845
 MonoBehaviour:
