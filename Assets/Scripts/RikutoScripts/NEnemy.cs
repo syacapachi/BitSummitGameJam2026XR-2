@@ -48,9 +48,13 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     [SerializeField] Renderer[] renderers;
 
-    private int originalLayer;
+    private int originalLayerServerOnly;
 
     private int spawnPointIndexServerOnly;
+
+    private int currentPointIndexServerOnly;
+
+    public int SpawnPointIndexServerOnly => spawnPointIndexServerOnly;
 
 
     [SerializeField]
@@ -80,6 +84,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         this.enemySOServertOnly = enemySO;
         spawnPointIndexServerOnly = spawnPointIndex;
+        currentPointIndexServerOnly = spawnPointIndex;
     }
 
     //[Rpc(SendTo.ClientsAndHost)]
@@ -206,7 +211,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             {
                 childs.gameObject.layer = setting.Layer;                
             }
-            originalLayer = setting.Layer;
+            originalLayerServerOnly = setting.Layer;
         }
     }
     public override void OnNetworkDespawn()
@@ -274,11 +279,11 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
             if (CheckPointManager == null) return;
             //次へ移動
-            spawnPointIndexServerOnly++;
-            if (spawnPointIndexServerOnly >= CheckPointManager.SpawnPoints.Length) spawnPointIndexServerOnly = 0;
+            currentPointIndexServerOnly++;
+            if (currentPointIndexServerOnly >= CheckPointManager.SpawnPoints.Length) currentPointIndexServerOnly = 0;
 
             StartCoroutine(MoveToNextPos(
-                CheckPointManager.SpawnPoints[spawnPointIndexServerOnly].transform.position
+                CheckPointManager.SpawnPoints[currentPointIndexServerOnly].transform.position
             ));
             
         }
@@ -352,13 +357,12 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     void UpdateHPUI(float hp)
     {
-        if (enemySOServertOnly == null) return;
 
         if (hpImage != null)
-            hpImage.fillAmount = hp / enemySOServertOnly.Hp;
+            hpImage.fillAmount = hp / maxHpAll;
 
         if (hpText != null)
-            hpText.text = $"{hp} / {enemySOServertOnly.Hp}";
+            hpText.text = $"{hp} / {maxHpAll}";
     }
 
     public void SetAttackabe(bool value)
@@ -466,7 +470,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         {
             Debug.Log($"  before: {renderers[i].name} layer:{renderers[i].gameObject.layer}");
 
-            renderers[i].gameObject.layer = visible ? 0 : originalLayer;
+            renderers[i].gameObject.layer = visible ? 0 : originalLayerServerOnly;
 
             Debug.Log($"  after : {renderers[i].name} layer:{renderers[i].gameObject.layer}");
         }

@@ -12,5 +12,7 @@ public interface IEnemy
     public bool IsAttackable { get; }
     public void InjectSetting(EnemySO enemySO, int spawnPointIndex);
 
+    public int SpawnPointIndexServerOnly { get; }
+
     //public void InitEnemyRpc(int id);
 }

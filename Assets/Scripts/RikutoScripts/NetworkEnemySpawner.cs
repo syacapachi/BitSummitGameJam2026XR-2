@@ -42,6 +42,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         Delete
     }
     [Header("Setting")]
+    [Tooltip("スポーンポイントの数とこの数値の内、小さいほうの値が使われる")]
     [SerializeField] int maxEnemyCapacity = 10;
     [SerializeField] WaitSpawnType waitSpawnType = WaitSpawnType.WaitForNext;
     [SerializeField,EnableIfEnum(nameof(waitSpawnType),true, WaitSpawnType.WaitForSomeEnemyDead)] 
@@ -65,8 +66,17 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     private readonly List<IEnemy> spawnedEnemies = new ();
     private readonly Queue<SpawnEvent> waitSpawnEnemyQueue = new();
     Coroutine waitForSpawn;
-    private int runningSpawnCount = 0;
+    bool[] useSpawnPointArr;
 
+    void Start()
+    {
+        useSpawnPointArr = new bool[checkPointManager.SpawnPoints.Length];
+        for(int i = 0;i<useSpawnPointArr.Length; i++)
+        {
+            useSpawnPointArr[i] = false;
+        }
+        maxEnemyCapacity = Mathf.Min(maxEnemyCapacity, useSpawnPointArr.Length);
+    }
     public override void OnNetworkSpawn()
     {
         if(!IsServer) return;
@@ -96,9 +106,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
         // 追加（次のフェーズでリセット）　
         isAllDead = false;
         isSpawnFinished = false;
-
-        runningSpawnCount++;
-        StartCoroutine(SpawnRoutine(events));
+        
         //とりあえず、入力されたリストをそれっぽくまぜまぜ
         if (useRandomSpawn)
         {
@@ -110,9 +118,9 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                 SpawnEvent randomEvent = new SpawnEvent(e.EnemyType,point,time);
                 randomSpawnEvent.Add(randomEvent);
             }
-            runningSpawnCount++;
-            StartCoroutine(SpawnRoutine(randomSpawnEvent));
+            events.AddRange(randomSpawnEvent);
         }
+        StartCoroutine(SpawnRoutine(events));
     }
     public void StopSpaw()
     {
@@ -142,9 +150,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
             // 今の時間で出すべき敵を全部出す
             while (spawnQueue.Count > 0 && spawnQueue.Peek().SpawnTime <= timer)
             {
-
                 SpawnEvent e = spawnQueue.Dequeue();
-                //SpawnEvent e = spawnEvents[index];
 
                 if (e.EnemyType == null)
                 {
@@ -153,31 +159,33 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
                 }
 
                 //通常召喚かつ規定数以上の場合待機行列に送る
-                if (!e.ForceSpawn &&spawnedEnemies.Count >= maxEnemyCapacity)
+                if (!e.ForceSpawn && spawnedEnemies.Count >= maxEnemyCapacity)
                 {
                     waitSpawnEnemyQueue.Enqueue(e);
                     waitForSpawn ??= StartCoroutine(WaitForSpawn());
                 }
                 else
                 {
-                    if (SpawnEnemy(e.EnemyType, e.SpawnPointIndex))
+                    int spawnIndex = e.SpawnPointIndex;
+                    if (useSpawnPointArr[spawnIndex])
+                    {
+                        for (int i = 0; i < useSpawnPointArr.Length; i++)
+                        {
+                            if (useSpawnPointArr[i]) continue;
+                            spawnIndex = i;
+                            break;
+                        }
+                    }
+                    if (SpawnEnemy(e.EnemyType, spawnIndex))
                     {
                         remain++;
                     }
                 }
-
                 index++;
             }
-            //Debug.Log($"[SpawnRoutine] queue:{spawnQueue.Count} waitQueue:{waitSpawnEnemyQueue.Count}");
-
             yield return null;
         }
-        Debug.Log("SpawnRoutine END");
-        runningSpawnCount--;
-        if (runningSpawnCount <= 0)
-        {
-            isSpawnFinished = true;
-        }
+        isSpawnFinished = true;
     }
     private IEnumerator WaitForSpawn()
     {
@@ -251,9 +259,10 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     {
         if (spawnIndex < 0 || spawnIndex >= checkPointManager.SpawnPoints.Length)
         {
-            Debug.LogWarning("Invalid spawn index!");
+            Debug.LogWarning("Invalid spawn index!",gameObject);
             return false;
         }
+        useSpawnPointArr[spawnIndex] = true;
         var point = checkPointManager.SpawnPoints[spawnIndex].transform;
 
         Vector3 dir = protectArea.position - point.position;
@@ -277,13 +286,14 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     {
         if (!IsServer) return;
         remain--;
-        Debug.Log($"[OnEnemyKilled] remain:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}");
+        Debug.Log($"[OnEnemyKilled] remain:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}",gameObject);
         if (remain == 0 && isSpawnFinished && waitSpawnEnemyQueue.Count == 0)
         {
             isAllDead = true;
             InvokeAllEnemyDeadRpc();
         }
         spawnedEnemies.Remove(enemy);
+        useSpawnPointArr[enemy.SpawnPointIndexServerOnly] = false;
     }
     [Rpc(SendTo.ClientsAndHost)]
     private void InvokeAllEnemyDeadRpc()
