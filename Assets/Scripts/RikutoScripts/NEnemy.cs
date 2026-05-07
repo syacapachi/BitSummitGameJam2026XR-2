@@ -43,7 +43,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public PlayerJob EnemyJob => enemyJob;
 
     [SerializeField] private bool isAttackable = true;
-    private bool isDie = false;
+    private bool isDieServerOnly = false;
+    Coroutine moveCorutine;
 
     public bool IsAttackable => isAttackable;
 
@@ -133,7 +134,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public override void OnNetworkSpawn()
     {
         isInitialize = false;
-        isDie = false;
+        isDieServerOnly = false;
 
         if (IsServer)
         {
@@ -248,15 +249,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public void TakeDamage(IDamageSender sender, float damage)
     {
         if (!IsServer) return;
-        if (isDie) return;
+        if (isDieServerOnly) return;
         Debug.Log("Take damage");
         if(currentHP.Value > 0)  currentHP.Value -= damage;
 
         if (currentHP.Value <= 0)
         {
             currentHP.Value = 0;
+            StopCoroutine(moveCorutine);
             DieOnServer(sender.ResultCollector);
-            isDie = true;
+            isDieServerOnly = true;
         }
         else
         {
@@ -271,7 +273,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             currentPointIndexServerOnly++;
             if (currentPointIndexServerOnly >= CheckPointManager.SpawnPoints.Length) currentPointIndexServerOnly = 0;
 
-            StartCoroutine(MoveToNextPos(
+            moveCorutine = StartCoroutine(MoveToNextPos(
                 CheckPointManager.SpawnPoints[currentPointIndexServerOnly].transform.position
             ));
         }
