@@ -14954,6 +14954,46 @@ PrefabInstance:
       propertyPath: 'setting.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: m_CheckPointParent
+      value: 
+      objectReference: {fileID: 1211469111}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: checkPoints.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1561710060}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 491501111}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[2]'
+      value: 
+      objectReference: {fileID: 731895939}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[3]'
+      value: 
+      objectReference: {fileID: 78299513}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1044049287}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[5]'
+      value: 
+      objectReference: {fileID: 1947953078}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[6]'
+      value: 
+      objectReference: {fileID: 2146439542}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'checkPoints.Array.data[7]'
+      value: 
+      objectReference: {fileID: 299362174}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -15010,6 +15050,10 @@ PrefabInstance:
       propertyPath: gunEnableRpcEvent
       value: 
       objectReference: {fileID: 11400000, guid: c8ec81be65a3f1b459a48651324647bc, type: 2}
+    - target: {fileID: 5843874078436757177, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: checkPointManager
+      value: 
+      objectReference: {fileID: 1182821282}
     - target: {fileID: 6898520360399316063, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: phaseManager
       value: 
@@ -15100,11 +15144,10 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: f594e91d59269df42abf37e34d18e45f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
-    - {fileID: 1266559103897700638, guid: 07f51410c6523454580003730b31cfff, type: 3}
     - {fileID: 6159796624332967230, guid: 07f51410c6523454580003730b31cfff, type: 3}
     - {fileID: 2109035453968692558, guid: 07f51410c6523454580003730b31cfff, type: 3}
     - {fileID: 8596286252487718755, guid: 07f51410c6523454580003730b31cfff, type: 3}
-    - {fileID: 4356537594463182225, guid: 07f51410c6523454580003730b31cfff, type: 3}
+    - {fileID: 0}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5418814566632101354, guid: 07f51410c6523454580003730b31cfff, type: 3}
       insertIndex: -1
@@ -15120,6 +15163,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 804485981a37aa144bd3724b7714fe6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1182821282 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+  m_PrefabInstance: {fileID: 1182821280}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 236cd14e1e5783c468e66a2f1d2dd8f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1193802910
