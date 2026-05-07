@@ -256,7 +256,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (currentHP.Value <= 0)
         {
             currentHP.Value = 0;
-            StopCoroutine(moveCorutine);
+            if(moveCorutine != null)
+            {
+                StopCoroutine(moveCorutine);
+            }
             DieOnServer(sender.ResultCollector);
             isDieServerOnly = true;
         }
