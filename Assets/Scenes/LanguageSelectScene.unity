@@ -7436,6 +7436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da876ea0978b264479e3abd7123e5208, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reachAudioEffect: {fileID: 0}
   reachClipAll: {fileID: 8300000, guid: 50b01190c1d315d40947b882bd06d093, type: 3}
   reachVolumeAll: 1
   gameEffectEvent: {fileID: 0}
@@ -13477,12 +13478,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alertObject: {fileID: 1884437}
-  threshold: 25000
   rotateSpeed: 100
   interval: 3
   buzzerClip: {fileID: 8300000, guid: b09fc9b896fbdae44bd5ff26fac6c32d, type: 3}
-  hpInfo: {fileID: 0}
+  buzzerEffectData: {fileID: 11400000, guid: 23c19a4e96248ac4491ad08ac455867a, type: 2}
+  hpInfo: {fileID: 11400000, guid: 4dc65a2fed759be4795b3a96e4d604c8, type: 2}
+  alertRpcEvent: {fileID: 11400000, guid: 432a6a4fce97a02429b981e89ed75b9b, type: 2}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+  WarningStateEvent: {fileID: 11400000, guid: ea950463a1b029947b246f4c310fcef4, type: 2}
 --- !u!1 &1104963366
 GameObject:
   m_ObjectHideFlags: 0

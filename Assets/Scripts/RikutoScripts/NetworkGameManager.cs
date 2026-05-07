@@ -73,29 +73,21 @@ public class NetworkGameManager : NetworkBehaviour
     private void Start()
     {
         string sceneName = SceneManager.GetActiveScene().name;
+        StartCoroutine(WaitForAllClientConnect(sceneName));
+    }
+    IEnumerator WaitForAllClientConnect(string sceneName)
+    {
+        yield return new WaitUntil(() => IsSpawned && PlayerManager != null && PlayerManager.IsAllClientReady());
+        if (!IsServer) yield break;
         if (sceneName.Equals("VRSystemScene"))
         {
             if (gameStartMode == GameStartMode.Auto)
-            {
-                StartCoroutine(WaitForLoad());
-            }
-            gunEnableRpcEvent.Invoke(true);
-        } 
-        else if (sceneName.Equals("TutorialScene")){
-            StartCoroutine(WaitForAllClientConnect());
-            gameState.Value = GameState.Tutorial;
-            gunEnableRpcEvent.Invoke(true);
+                StartGameServerOnly();
         }
-        else
+        else if (sceneName.Equals("TutorialScene"))
         {
-            gunEnableRpcEvent.Invoke(false);
-        }
-    }
-    IEnumerator WaitForAllClientConnect()
-    {
-        yield return new WaitUntil(() => IsSpawned && PlayerManager != null && PlayerManager.IsAllClientReady());
-        if (IsServer)
-            tutorialManager.OnTutorialStart();
+            StartTutorialServerOnly();
+        }  
     }
 
     private void OnEnable()
@@ -115,7 +107,7 @@ public class NetworkGameManager : NetworkBehaviour
         OnAllPhaseEndedServerEvent.Register(HandleAllPhaseEnded);
         OnScoreReachZeroServerEvent.Register(HandleScoreZeroServer);
         difficultyEvent.Register(HandleDifficltyChange);
-        NetworkManager.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
+        //NetworkManager.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
     }
     public override void OnNetworkDespawn()
     {
@@ -124,24 +116,20 @@ public class NetworkGameManager : NetworkBehaviour
         OnAllPhaseEndedServerEvent.Unregister(HandleAllPhaseEnded);
         OnScoreReachZeroServerEvent.Unregister(HandleScoreZeroServer);
         difficultyEvent.Unregister(HandleDifficltyChange);
-        NetworkManager.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
+        //NetworkManager.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
     }
-
-    IEnumerator WaitForLoad()
+    //private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+    //{
+    //    if (sceneName.Equals("TutorialScene"))
+    //    {
+    //        StartTutorial();
+    //    }
+    //}
+    void StartTutorialServerOnly()
     {
-        yield return new WaitUntil(() => IsSpawned && PlayerManager != null && PlayerManager.IsAllClientReady());
-        if (IsServer)
-        {
-            StartGameServerOnly();
-        }
-    }
-    private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
-    {
-        if (sceneName.Equals("TutorialScene"))
-        {
-            tutorialManager.OnTutorialStart();
-            gameState.Value = GameState.Tutorial;
-        }
+        tutorialManager.OnTutorialStart();
+        gameState.Value = GameState.Tutorial;
+        gunEnableRpcEvent.Invoke(true);
     }
     [OnInspectorButton("Start Game")]
     public void StartGameServerOnly()
@@ -153,6 +141,7 @@ public class NetworkGameManager : NetworkBehaviour
         scoreManager.SetScoreByDifficultyServerOnly(CurrentDifficulty);
         phaseManager.StartPhasesRpc(CurrentDifficulty);
         gameState.Value = GameState.Playing;
+        gunEnableRpcEvent.Invoke(true);
     }
 
     [OnInspectorButton("Reset")]
