@@ -43,6 +43,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public PlayerJob EnemyJob => enemyJob;
 
     [SerializeField] private bool isAttackable = true;
+    private bool isDie = false;
 
     public bool IsAttackable => isAttackable;
 
@@ -132,7 +133,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public override void OnNetworkSpawn()
     {
         isInitialize = false;
-        
+        isDie = false;
+
         if (IsServer)
         {
             currentHP.Value = enemySOServertOnly.Hp;
@@ -235,7 +237,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         if (hpCanvas == null) return;
         if (!isInitialize) return;
-        if (!isAttackable) return;
         if (rootTransfrom != null)
         {
             rootTransfrom.LookAt(targetPlayerServerOnly);
@@ -247,31 +248,19 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public void TakeDamage(IDamageSender sender, float damage)
     {
         if (!IsServer) return;
-
+        if (isDie) return;
         Debug.Log("Take damage");
         if(currentHP.Value > 0)  currentHP.Value -= damage;
-        else return;
-
-        if(currentHP.Value < 0) currentHP.Value = 0;
-
-        networkAnimator?.SetTrigger("Hit");
-
-        if (hpImage != null)
-        {
-            hpImage.fillAmount = Mathf.Clamp01((float)currentHP.Value / enemySOServertOnly.Hp);
-        }
-
-        if (hpText != null)
-        {
-            hpText.text = $"{currentHP.Value} / {enemySOServertOnly.Hp}";
-        }
 
         if (currentHP.Value <= 0)
         {
+            currentHP.Value = 0;
             DieOnServer(sender.ResultCollector);
+            isDie = true;
         }
         else
         {
+            networkAnimator?.SetTrigger("Hit");
             if (enemyAudio != null)
             {
                 enemyAudio.PlayHitVoiceServer();
@@ -285,7 +274,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             StartCoroutine(MoveToNextPos(
                 CheckPointManager.SpawnPoints[currentPointIndexServerOnly].transform.position
             ));
-            
         }
     }
     //水野以上    
@@ -310,26 +298,21 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         else
         {
-            Debug.LogError("collector is null!");
+            Debug.LogError("collector is null!",gameObject);
         }
 
         enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
-        //networkAnimator.Animator
-        if (enemyJob == PlayerJob.Tutorial) 
+        if (enemyJob == PlayerJob.Tutorial)
+        {
             Die();
+        }
         else
         {
             networkAnimator?.SetTrigger("Death");
             SetVisibleRpc();
-            StartCoroutine(WaitForAnimation());
         }
         //アニメーション終了を待つため
         isAttackable = false;
-    }
-    IEnumerator WaitForAnimation()
-    {
-        yield return new WaitForSeconds(5f);
-        Die();
     }
     void DieOnspector()
     {
@@ -348,11 +331,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     void OnHPChanged(float oldValue, float newValue)
     {
         UpdateHPUI(newValue);
-        // 死亡エフェクトの発火
-        if (newValue <= 0)
-        {
-            //dieEffectEvent.Invoke(new GameEffect() {  });
-        }
     }
 
     void UpdateHPUI(float hp)
