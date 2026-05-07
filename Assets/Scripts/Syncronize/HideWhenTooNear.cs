@@ -59,7 +59,9 @@ public class HideWhenTooNear : MonoBehaviour
             var other = hits[i];
             if (myColliderSet.Contains(other)) continue;
             if(!other.TryGetComponent<PlayerCollider>(out var playerCollider)) continue;
-            if (ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.OwnerClientId == playerCollider.OwnerClientId) continue;
+            var locator = ManagerLocator.Instance;
+            if (locator == null) return;
+            if (locator.AllPlayerManager.NetworkOwnerPlayer.OwnerClientId == playerCollider.OwnerClientId) continue;
             lastHitsColliders.Add(playerCollider);
             float distance = Vector3.Distance(playerCamera.transform.position, other.transform.position);
             //Debug.Log($"found collider distance = {distance}", playerCollider);
