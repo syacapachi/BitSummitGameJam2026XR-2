@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: deathFxPrefabAll
       value: 
       objectReference: {fileID: 278788122339841109, guid: 642a551cd9afd564488cfb9bb464c7fa, type: 3}
+    - target: {fileID: 2732699724969779013, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: networkAnimator
+      value: 
+      objectReference: {fileID: 6703713428367933465}
     - target: {fileID: 3220148849704102723, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.06
@@ -128,6 +132,10 @@ PrefabInstance:
       propertyPath: weaponSettings
       value: 
       objectReference: {fileID: 11400000, guid: c888351ad86b0b541a1f5b3c6f93969a, type: 2}
+    - target: {fileID: 6078566534491158516, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: networkAnimator
+      value: 
+      objectReference: {fileID: 6703713428367933465}
     - target: {fileID: 8109445922640224305, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: m_Height
       value: 5.419359
