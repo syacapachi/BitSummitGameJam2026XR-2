@@ -21,8 +21,6 @@ public class StartButton : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        startUI.SetActive(true);
-        resetUI.SetActive(false);
         UpdateLanguageText();
     }
 
@@ -65,7 +63,9 @@ public class StartButton : NetworkBehaviour
             case GameState.Initializing:
                 OnGameInitialize(); break;
             case GameState.Playing:
-                startUI.SetActive(false); break;
+                GameStartHandle(); break;
+            case GameState.Tutorial:
+                GameStartHandle(); break;
             case GameState.GameClear:
                 GameEndHandle(); break;
             case GameState.GameOver:
@@ -97,13 +97,20 @@ public class StartButton : NetworkBehaviour
         resetUI.SetActive(false);
     }
 
+    private void GameStartHandle()
+    {
+        startUI.SetActive(false);
+        resetUI.SetActive(false);
+    }
     private void GameEndHandle()
     {
+        startUI.SetActive(false);
         resetUI.SetActive(true);
     }
 
     private void OnGameInitialize()
     {
         startUI.SetActive(true);
+        resetUI.SetActive(false);
     }
 }

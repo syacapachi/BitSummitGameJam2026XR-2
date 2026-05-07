@@ -34,6 +34,12 @@ public class AnimationEventController : NetworkBehaviour
         enemy.Die();
     }
 
+    void StartMove()
+    {
+        if (!IsServer) return;
+        enemy.MovePosition();
+    }
+
 #if UNITY_EDITOR
     void Reset()
     {

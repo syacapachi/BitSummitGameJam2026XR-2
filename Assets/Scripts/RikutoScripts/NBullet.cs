@@ -23,8 +23,7 @@ public class NBullet : BulletBaseController
         gameEffectEvent.Invoke(new GameEffect(hitAudio.ToRuntimeData(),hitFx.ToRuntimeData(), pos));
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
-    void SpawnShieldFxClientRpc(Vector3 pos)
+    void SpawnShieldFxLocal(Vector3 pos)
     {
         gameEffectEvent.Invoke(new GameEffect(shieldAudio.ToRuntimeData(),shieldFx.ToRuntimeData(), pos));
     }
@@ -64,7 +63,7 @@ public class NBullet : BulletBaseController
                         Enemy = enemy
                     });
                     // [追加] 攻撃が無効な敵に当たった場合のデバッグログ
-                    SpawnShieldFxClientRpc(transform.position);
+                    SpawnShieldFxLocal(transform.position);
                     Debug.Log($"NotDamage",other);
                     
                 }
@@ -104,7 +103,7 @@ public class NBullet : BulletBaseController
                     Enemy = enemy
                 });
                 //水野編集
-                SpawnShieldFxClientRpc(transform.position);
+                SpawnShieldFxLocal(transform.position);
                 //水野以上
             }
         }
@@ -128,7 +127,7 @@ public class NBullet : BulletBaseController
                 Enemy = null
             });
             */
-            SpawnShieldFxClientRpc(transform.position);
+            SpawnShieldFxLocal(transform.position);
             return;
         }
         else
