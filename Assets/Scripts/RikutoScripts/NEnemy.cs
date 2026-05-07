@@ -266,15 +266,19 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         else
         {
             networkAnimator?.SetTrigger("Hit");
+            //アニメーションで見えてる間は無敵
+            isAttackable = false;
             if (enemyAudio != null)
             {
                 enemyAudio.PlayHitVoiceServer();
             }
         }
     }
-    public void MovePosition()
+    public void MovePositionFromAnimationEvent()
     {
         if(!IsServer) return ;
+        //無敵解除
+        isAttackable = true;
         var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
         if (CheckPointManager == null) return;
         //次へ移動
@@ -313,7 +317,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
         if (enemyJob == PlayerJob.Tutorial)
         {
-            Die();
+            DieFromAnimationEvent();
         }
         else
         {
@@ -329,8 +333,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         isInitialize = true;
     }
 
-    [OnInspectorButton("Die")]
-    public void Die()
+    [OnInspectorButton("DieFromAnimationEvent")]
+    public void DieFromAnimationEvent()
     {
         if (NetworkObject.IsSpawned)
         {
