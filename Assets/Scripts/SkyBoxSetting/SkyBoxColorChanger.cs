@@ -176,6 +176,20 @@ public class SkyBoxColorChanger : MonoBehaviour
         }
         ApplyColor(toIndex);
     }
+    [OnInspectorButton(showOnlyInPlayMode: true)]
+    void DebugSkyChange(SkyBoxColorSetting fromIndex, SkyBoxColorSetting toIndex, float changeTime)
+    {
+        StartCoroutine(ApplyColorCorutineByTime(fromIndex, toIndex, changeTime));
+    }
+    IEnumerator ApplyColorCorutineByTime(SkyBoxColorSetting fromIndex, SkyBoxColorSetting toIndex, float changeTime)
+    {
+        for (float timer = 0f; timer <= changeTime; timer += Time.deltaTime)
+        {
+            ApplyLerp(fromIndex, toIndex, timer / changeTime);
+            yield return null;
+        }
+        ApplyColor(toIndex);
+    }
     /// <summary>
     /// 徐々に変化させる用。Update等で呼び出すことを想定。
     /// </summary>

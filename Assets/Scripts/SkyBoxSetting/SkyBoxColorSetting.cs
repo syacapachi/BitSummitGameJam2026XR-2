@@ -47,7 +47,7 @@ public class SkyBoxColorSetting : ScriptableObject
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        skyRootEular = new Vector3((int)timeOfDay * onehour - 180f, 170, 0);
+        //skyRootEular = new Vector3((int)timeOfDay * onehour - 180f, 170, 0);
     }
 #endif
 
