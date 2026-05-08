@@ -50,7 +50,7 @@ public class NEnemyBullet : BulletBaseController
 
         // SyncroPropaty（ジョブ情報）を取得
         var playerProp = playerCollider.PlayerProp;
-        
+
         if (playerProp == null)
         {
             Debug.LogWarning("[NEnemyBullet] SyncroPropaty not found on player.");

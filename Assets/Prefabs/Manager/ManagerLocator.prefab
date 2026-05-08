@@ -266,11 +266,6 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
-  phaseFinished:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
   phaseProgress:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -351,6 +346,8 @@ MonoBehaviour:
     PrewarmCount: 3
   - Prefab: {fileID: 7872818705598725113, guid: 55efbe935c1407746b4427fcb8ec3b29, type: 3}
     PrewarmCount: 3
+  - Prefab: {fileID: 2632902684132212087, guid: d6485a41623cfe44e97d30a8770a5a14, type: 3}
+    PrewarmCount: 1
 --- !u!1 &2827320418798051780
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,6 +578,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5383516842637931275}
+  - {fileID: 7953140068688855862}
   m_Father: {fileID: 4908882465109089120}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5542295562281695918
@@ -608,7 +606,10 @@ MonoBehaviour:
   phaseManager: {fileID: 1871165705981970814}
   PlayerManager: {fileID: 8012348177458703508}
   tutorialManager: {fileID: 8343285116251111980}
+  resultDataCreater: {fileID: 5193210326732251977}
   homeScene: {fileID: 102900000, guid: 163666d43b155d647855c6a9c5d11bc6, type: 3}
+  gameScene: {fileID: 102900000, guid: 9976ecc257800ba4db4059546c0bc04c, type: 3}
+  tutorialScene: {fileID: 102900000, guid: c6c9a3ca826b22742a678a2328847735, type: 3}
   gameState:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -617,7 +618,6 @@ MonoBehaviour:
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
   OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   gunEnableRpcEvent: {fileID: 11400000, guid: c8ec81be65a3f1b459a48651324647bc, type: 2}
-  resultDataRpcEvent: {fileID: 11400000, guid: f938f5fd3bfa6e949a8637e657b4cb88, type: 2}
   OnScoreReachZeroServerEvent: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
   OnAllPhaseEndedServerEvent: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
   difficultyEvent: {fileID: 11400000, guid: e641f2abcabb4f8449947c45a980c10f, type: 2}
@@ -667,18 +667,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   database: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
-  debugScore: 10000
   alertScore: 5000
   score:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
-  totalBonus:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
+  totalBonusServerOnly: 0
   lastClearBonus:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -888,6 +883,52 @@ MonoBehaviour:
   - action: {fileID: 1218294735510755974, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
     setting: 1
+--- !u!1 &7718049192321448518
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7953140068688855862}
+  - component: {fileID: 5193210326732251977}
+  m_Layer: 0
+  m_Name: ResultDataCreater
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7953140068688855862
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7718049192321448518}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8007406186421599437}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5193210326732251977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7718049192321448518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 437134c24a8191d4e8202c9db4efc140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerManager: {fileID: 8012348177458703508}
+  resultDataRpcEvent: {fileID: 11400000, guid: f938f5fd3bfa6e949a8637e657b4cb88, type: 2}
 --- !u!1 &8596286252487718755
 GameObject:
   m_ObjectHideFlags: 0

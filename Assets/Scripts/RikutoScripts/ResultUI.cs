@@ -78,7 +78,7 @@ public class ResultUI : MonoBehaviour
     void ShowResult(ResultData data, bool isJapanese)
     {
         panel.SetActive(true);
-        
+
         // ⭐タイトル分岐
         if (data.IsGameOver)
         {
@@ -97,7 +97,7 @@ public class ResultUI : MonoBehaviour
             $"{scoreText.GetText(isJapanese)} : {data.TotalScore}\n" +
             $"{bonusText.GetText(isJapanese)} : {data.TotalBonus}";
     }
-    void ShowDetail(ResultData results,bool isJapanese)
+    void ShowDetail(ResultData results, bool isJapanese)
     {
         foreach (var r in results.detail)
         {
@@ -108,18 +108,18 @@ public class ResultUI : MonoBehaviour
         panel.SetActive(true);
 
         titleText.text = results.IsGameOver
-            ? gameOverText.GetText(isJapanese) 
+            ? gameOverText.GetText(isJapanese)
             : gameClearText.GetText(isJapanese);
 
-        
+
         foreach (var playerResult in results.detail)
         {
-            var headerObj = Instantiate(playerHeaderPrefab,contentParent);
+            var headerObj = Instantiate(playerHeaderPrefab, contentParent);
             spawnedUIObjects.Add(headerObj);
             if (!headerObj.TryGetComponent<TextMeshProUGUI>(out var headerText))
             {
                 headerText = headerObj.AddComponent<TextMeshProUGUI>();
-            } 
+            }
             headerText.fontSize = fontSizeHeader;
             headerText.alignment = TextAlignmentOptions.TopLeft;
             headerText.enableAutoSizing = false;
@@ -177,38 +177,6 @@ public class ResultUI : MonoBehaviour
             sepText.alignment = TextAlignmentOptions.Center;
         }
     }
-
-    public static float CalculateCooperation(PlayerResultData[] results)
-    {
-        float totalShots = 0;
-        float totalHits = 0;
-        float totalKills = 0;
-        float totalShield = 0;
-
-        foreach (var r in results)
-        {
-            totalShots += r.shotsFired;
-            totalHits += r.hits;
-            totalShield += r.shield;
-
-            foreach (var k in r.killCounts)
-            {
-                totalKills += k;
-            }
-        }
-
-        float accuracy = totalHits / Mathf.Max(1, totalShots);
-        float killEfficiency = totalKills / Mathf.Max(1, totalHits);
-        float waste = totalShield / Mathf.Max(1, totalShots);
-
-        float cooperation =
-            (accuracy * 0.5f +
-             killEfficiency * 0.5f
-             - waste * 0.2f) * 100f;
-
-        return Mathf.Clamp(cooperation, 0f, 100f);
-    }
-
     void ClearSpawnedUI()
     {
         foreach (var obj in spawnedUIObjects)

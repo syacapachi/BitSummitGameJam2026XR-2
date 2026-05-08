@@ -1,29 +1,29 @@
-﻿using Unity.Netcode;
+﻿using Syacapachi.Attribute;
+using Unity.Netcode;
 using UnityEngine;
-using System;
-using Syacapachi.Attribute;
 
 public class ScoreManager : NetworkBehaviour
 {
     [SerializeField] DifficultyDataBase database;
-    [SerializeField] int debugScore = 10000;
     [SerializeField] int alertScore = 5000;
-    public int InitialScore => debugScore;
+    
     public NetworkVariable<int> score = new(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-    [SerializeField] NetworkVariable<int> totalBonus = new NetworkVariable<int>(0);
+    [SerializeField] int totalBonusServerOnly = 0;
     [SerializeField] NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(0);
     
-    public int TotalBonus => totalBonus.Value;
+    public int TotalBonusServerOnly => totalBonusServerOnly;
     public int LastClearBonus => lastClearBonus.Value;
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
     [SerializeField] BoolEvent aleartRpcEvent;
 
+    int currentMaxScore = 10000;
     bool isGameOver = false;
+    public int InitialScore => currentMaxScore;
 
     private void OnEnable()
     {
@@ -49,7 +49,7 @@ public class ScoreManager : NetworkBehaviour
     {
         if (!IsServer) return;
         //lastClearBonus.Value = value;
-        totalBonus.Value += value;
+        totalBonusServerOnly += value;
         AddScoreServerOnly(value);
         //Debug.Log("Bonus Added: " + value + ", Total Score: " + score.Value);
     }
@@ -71,14 +71,11 @@ public class ScoreManager : NetworkBehaviour
             OnScoreReachZeroServerEvent?.Invoke();
         }
     }
-
-    public void SetScoreServerOnly()
-    {
-        score.Value = debugScore;
-    }
     public void SetScoreByDifficultyServerOnly(Difficulty difficulty)
     {
-        score.Value = database.GetSetting(difficulty).PlayerHP;
+        int hp = database.GetSetting(difficulty).PlayerHP;
+        score.Value = hp;
+        currentMaxScore = hp;
     }
 
     public int GetScore()
@@ -89,7 +86,7 @@ public class ScoreManager : NetworkBehaviour
     public void ResetScore()
     {
         isGameOver = false;
-        SetScoreServerOnly();
+        totalBonusServerOnly = 0;
     }
 
     public void SetBonusServerOnly(int value)

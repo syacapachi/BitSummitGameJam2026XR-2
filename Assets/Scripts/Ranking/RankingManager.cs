@@ -1,5 +1,4 @@
 ﻿using Syacapachi.Data;
-using System;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -31,7 +30,6 @@ namespace Syacapachi.Manager
         {
             resultEvent.Unregister(SaveJson);
         }
-
         private void SaveJson(ResultData data)
         {
             Debug.Log($"[{nameof(RankingManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(data, true)}", gameObject);
@@ -88,7 +86,7 @@ namespace Syacapachi.Manager
         private void SortJson(RankingListWrapper wrapper)
         {
             // スコアの降順にソート（高いほど上位）
-            wrapper.Rankings = rankingList.Rankings
+            wrapper.Rankings = wrapper.Rankings
                 .OrderByDescending(r => r.Cooperation)
                 .ThenBy(r => r.Time) // 同点ならタイム順
                 .Take(rankingMaxCount) //上位以外は消す。

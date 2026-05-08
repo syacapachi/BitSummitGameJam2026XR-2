@@ -1,9 +1,5 @@
 ﻿using Syacapachi.Attribute;
-using Syacapachi.Data;
-using Syacapachi.Manager;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
@@ -26,8 +22,11 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] PlayerManager PlayerManager;
     [SerializeField] TutorialManager tutorialManager;
-    [Header("Back Scene")]
+    [SerializeField] ResultDataCreater resultDataCreater;
+    [Header("Scene Setting")]
     [SerializeField] SceneAsset homeScene;
+    [SerializeField] SceneAsset gameScene;
+    [SerializeField] SceneAsset tutorialScene;
     
     public GameMode CurrentGameMode => gameMode;
     public ScoreManager ScoreManager => scoreManager;
@@ -68,7 +67,6 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] VoidEvent OnbulletComeRpcEvent;
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     [SerializeField] BoolEvent gunEnableRpcEvent;
-    [SerializeField] ResultDataEvent resultDataRpcEvent;
 
     [Header("SubscribeEvent")]
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
@@ -85,12 +83,12 @@ public class NetworkGameManager : NetworkBehaviour
     {
         yield return new WaitUntil(() => IsSpawned && PlayerManager != null && PlayerManager.IsAllClientReady());
         if (!IsServer) yield break;
-        if (sceneName.Equals("VRSystemScene"))
+        if (sceneName.Equals(gameScene.name))
         {
             if (gameStartMode == GameStartMode.Auto)
                 StartGameServerOnly();
         }
-        else if (sceneName.Equals("TutorialScene"))
+        else if (sceneName.Equals(tutorialScene.name))
         {
             StartTutorialServerOnly();
         }  
@@ -99,12 +97,10 @@ public class NetworkGameManager : NetworkBehaviour
     private void OnEnable()
     {
         gameState.OnValueChanged += HandleGameStateChanged;
-        
     }
     private void OnDisable()
     {
         gameState.OnValueChanged -= HandleGameStateChanged;
-        
     }
     public override void OnNetworkSpawn()
     {
@@ -124,13 +120,6 @@ public class NetworkGameManager : NetworkBehaviour
         difficultyEvent.Unregister(HandleDifficltyChange);
         //NetworkManager.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
     }
-    //private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
-    //{
-    //    if (sceneName.Equals("TutorialScene"))
-    //    {
-    //        StartTutorial();
-    //    }
-    //}
     void StartTutorialServerOnly()
     {
         tutorialManager.OnTutorialStart();
@@ -192,22 +181,26 @@ public class NetworkGameManager : NetworkBehaviour
         if (!IsServer) return;
         Debug.Log("GAME OVER");
         CurrentGameState = GameState.GameOver;
-        phaseManager.KillableHandle.KillAll();
-        phaseManager.StopAllCoroutines();
 
-        SendResults();
+        OnGameEnd();
     }
 
     void HandleAllPhaseEnded()
     {
         Debug.Log("ALL PHASE ENDED CALLED");
         CurrentGameState = GameState.GameClear;
+
+        OnGameEnd();
+    }
+    void OnGameEnd()
+    {
         phaseManager.KillableHandle.KillAll();
         phaseManager.StopAllCoroutines();
-
-        SendResults();
+        resultDataCreater.CreateAndSendResultData(
+            IsGameOver,
+            ScoreManager.GetScore(),
+            ScoreManager.TotalBonusServerOnly);
     }
-
     public void BulletHitProtectArea(int damage)
     {
         scoreManager?.AddScoreServerOnly(damage);
@@ -218,42 +211,6 @@ public class NetworkGameManager : NetworkBehaviour
     {
         OnbulletComeRpcEvent.Invoke();
     }
-
-    [Rpc(SendTo.ClientsAndHost)]
-    void OnSendResultRpc(ResultData result)
-    {
-        resultDataRpcEvent.Invoke(result);
-        Debug.Log($"[{nameof(NetworkGameManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(result, true)}", gameObject);
-    }
-    void SendResults()
-    {
-        var list = new List<PlayerResultData>();
-        Debug.Log($"AllPlayers Count = {PlayerManager.AllPlayers.Count}");
-
-        foreach (var player in PlayerManager.AllPlayers)
-        {
-            if (player == null) continue;
-
-            var stats = player.stats;
-            if (stats == null) continue;
-
-            list.Add(stats.CreateResultDataServerOnly());
-        }
-        PlayerResultData[] datas = list.ToArray();
-        float cooporate = ResultUI.CalculateCooperation(datas);
-        ResultData data = new ResultData()
-        {
-            Time = DateTime.Now.ToString(),
-            TotalScore = ScoreManager.GetScore(),
-            TotalBonus = ScoreManager.TotalBonus,
-            Cooperation = cooporate,
-            IsGameOver = IsGameOver,
-            GameSeed = -1,
-            detail = datas
-        };
-        OnSendResultRpc(data);
-    }
-
     void MoveScene()
     {
         if (!IsServer) return;

@@ -26,7 +26,7 @@ namespace Syacapachi.Editor
         // 値更新時に自動で発火する場合、有効かどうか
         private readonly Dictionary<MethodInfo, bool> valiedInvokeEnabled = new();
         // 抽象クラスやインターフェースと、それを実装/継承する具体的なクラスのキャッシュ (描画できない型を識別するため)
-        private readonly Dictionary<string,Type> abstructToClass = new();
+        private readonly Dictionary<string, Type> abstructToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<object, bool> foldouts = new();
         // パラメータのFoldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
@@ -177,19 +177,19 @@ namespace Syacapachi.Editor
             }
             if (t == typeof(int))
                 return EditorGUILayout.IntField(name, currentValue != null ? (int)currentValue : 0);
-            if(t == typeof(byte))
+            if (t == typeof(byte))
                 return (byte)EditorGUILayout.IntField(name, currentValue != null ? (byte)currentValue : 0);
-            if(t == typeof(short))
+            if (t == typeof(short))
                 return (short)EditorGUILayout.IntField(name, currentValue != null ? (short)currentValue : 0);
-            if(t == typeof(ushort))
+            if (t == typeof(ushort))
                 return (ushort)EditorGUILayout.IntField(name, currentValue != null ? (ushort)currentValue : 0);
-            if(t == typeof(uint))
+            if (t == typeof(uint))
                 return (uint)EditorGUILayout.IntField(name, currentValue != null ? (int)(uint)currentValue : 0);
-            if(t == typeof(ulong))
+            if (t == typeof(ulong))
                 return (ulong)EditorGUILayout.LongField(name, currentValue != null ? (long)(ulong)currentValue : 0);
-            if(t == typeof(sbyte))
+            if (t == typeof(sbyte))
                 return (sbyte)EditorGUILayout.IntField(name, currentValue != null ? (sbyte)currentValue : 0);
-            if(t == typeof(decimal))
+            if (t == typeof(decimal))
                 return (decimal)EditorGUILayout.FloatField(name, currentValue != null ? (float)(decimal)currentValue : 0f);
             if (t == typeof(float))
                 return EditorGUILayout.FloatField(name, currentValue != null ? (float)currentValue : 0f);
@@ -199,19 +199,19 @@ namespace Syacapachi.Editor
                 return EditorGUILayout.LongField(name, currentValue != null ? (long)currentValue : 0);
             if (t == typeof(string))
                 return EditorGUILayout.TextField(name, currentValue as string ?? "");
-            if(t == typeof(char))
+            if (t == typeof(char))
             {
                 string str = EditorGUILayout.TextField(name, currentValue != null ? ((char)currentValue).ToString() : "");
                 return string.IsNullOrEmpty(str) ? '\0' : str[0];
             }
-            if(t == typeof(DateTime))
+            if (t == typeof(DateTime))
             {
                 string str = EditorGUILayout.TextField(name, currentValue != null ? ((DateTime)currentValue).ToString("o") : DateTime.Now.ToString("o"));
                 if (DateTime.TryParse(str, null, System.Globalization.DateTimeStyles.RoundtripKind, out var result))
                     return result;
                 return currentValue ?? DateTime.Now;
             }
-            if(t == typeof(TimeSpan))
+            if (t == typeof(TimeSpan))
             {
                 string str = EditorGUILayout.TextField(name, currentValue != null ? ((TimeSpan)currentValue).ToString() : TimeSpan.Zero.ToString());
                 if (TimeSpan.TryParse(str, out var result))
@@ -234,32 +234,32 @@ namespace Syacapachi.Editor
                 return EditorGUILayout.ColorField(name, currentValue != null ? (Color)currentValue : Color.white);
             if (t == typeof(Rect))
                 return EditorGUILayout.RectField(name, currentValue != null ? (Rect)currentValue : new Rect());
-            if(t == typeof(RectInt))
+            if (t == typeof(RectInt))
                 return EditorGUILayout.RectIntField(name, currentValue != null ? (RectInt)currentValue : new RectInt());
             if (t == typeof(Bounds))
                 return EditorGUILayout.BoundsField(name, currentValue != null ? (Bounds)currentValue : new Bounds());
-            if(t == typeof(BoundsInt))
+            if (t == typeof(BoundsInt))
                 return EditorGUILayout.BoundsIntField(name, currentValue != null ? (BoundsInt)currentValue : new BoundsInt());
             if (t == typeof(AnimationCurve))
                 return EditorGUILayout.CurveField(name, currentValue as AnimationCurve ?? new AnimationCurve());
             if (t == typeof(Gradient))
                 return EditorGUILayout.GradientField(name, currentValue as Gradient ?? new Gradient());
-            if(t == typeof(LayerMask))
+            if (t == typeof(LayerMask))
                 return (LayerMask)EditorGUILayout.MaskField(name, currentValue != null ? ((LayerMask)currentValue).value : 0, UnityEditorInternal.InternalEditorUtility.layers);
             if (t == typeof(Quaternion))
                 return Quaternion.Euler(EditorGUILayout.Vector3Field(name, ((Quaternion?)currentValue)?.eulerAngles ?? Vector3.zero));
-            if(t == typeof(UnityEvent))
+            if (t == typeof(UnityEvent))
             {
                 // UnityEventは専用のプロパティドローアーが必要なので、ここでは描画できないことを示すメッセージを表示する。
                 EditorGUILayout.HelpBox($"UnityEvent type is not supported for field {name}.", MessageType.Error);
                 return currentValue;
             }
-            
+
             // Enum
             if (t.IsEnum)
             {
                 currentValue ??= Enum.GetValues(t).GetValue(0);
-                if(t.GetCustomAttribute<FlagsAttribute>() != null)
+                if (t.GetCustomAttribute<FlagsAttribute>() != null)
                 {
                     // [Flags]属性がある場合はEnumFlagsFieldで描画
                     return EditorGUILayout.EnumFlagsField(name, (Enum)currentValue);
@@ -302,12 +302,12 @@ namespace Syacapachi.Editor
             // 抽象クラスやインターフェースは直接描画できないので、実装/継承する具体的なクラスを選択して描画する。選択されていない場合は、選択ボタンを表示する。
             if (t.IsAbstract || t.IsInterface)
             {
-                return DrawAbstructOrInterface(name, t, currentValue,$"{target.name}({target.GetInstanceID()}).{name}");
+                return DrawAbstructOrInterface(name, t, currentValue, $"{target.name}({target.GetInstanceID()}).{name}");
             }
             //リスト、辞書、抽象クラス/インターフェース以外のジェネリック型
             if (t.IsGenericType)
             {
-                if(t.IsGenericTypeDefinition)
+                if (t.IsGenericTypeDefinition)
                 {
                     //Generic<> やGeneric<,>など、ジェネリック型の定義自体の場合は、描画できないので、エラーメッセージを表示する
                     // ジェネリック型の定義自体は描画できないので、エラーメッセージを表示する
@@ -431,7 +431,7 @@ namespace Syacapachi.Editor
 
             bool fold = GetFoldout(dict);
 
-            fold = EditorGUILayout.Foldout(fold, $"{name} [{dict.Count}]",true);
+            fold = EditorGUILayout.Foldout(fold, $"{name} [{dict.Count}]", true);
             SetFoldout(dict, fold);
 
             if (!fold)
@@ -475,8 +475,8 @@ namespace Syacapachi.Editor
             if (GUILayout.Button("Add"))
             {
                 var key = GetDefault(keyType);
-                if(key == null) 
-                { 
+                if (key == null)
+                {
                     EditorUtility.DisplayDialog("No Concrete Class Found", $"Cannot add entry with null key for type {keyType.Name}.", "OK");
                     return dict;
                 }
@@ -487,14 +487,14 @@ namespace Syacapachi.Editor
 
             return dict;
         }
-        
+
         object DrawObject(string name, Type type, object value)
         {
             value ??= Activator.CreateInstance(type);
 
             bool fold = GetFoldout(value);
 
-            fold = EditorGUILayout.Foldout(fold, name,true);
+            fold = EditorGUILayout.Foldout(fold, name, true);
 
             SetFoldout(value, fold);
 
@@ -512,7 +512,7 @@ namespace Syacapachi.Editor
             foreach (var f in fields)
             {
                 var fieldValue = f.GetValue(value);
-                
+
                 var newValue = DrawField(f.FieldType, f.Name, fieldValue);
                 if (!Equals(fieldValue, newValue))
                     f.SetValue(value, newValue);
@@ -529,7 +529,7 @@ namespace Syacapachi.Editor
         /// <param name="type"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        object DrawAbstructOrInterface(string name, Type type, object value,string path)
+        object DrawAbstructOrInterface(string name, Type type, object value, string path)
         {
             if (abstructToClass.TryGetValue(path, out var concreteType))
             {
@@ -594,7 +594,7 @@ namespace Syacapachi.Editor
         }
         object GetDefault(Type t)
         {
-            if(t == null)
+            if (t == null)
                 return null;
             if (t.IsValueType)
                 return Activator.CreateInstance(t);
@@ -628,7 +628,7 @@ namespace Syacapachi.Editor
         /// <summary>
         /// ScriptableObjectのネストされたフィールドを再帰的に描画
         /// </summary>
-        private void DrawNestedScriptableObjects(UnityEngine.Object obj, int depth = 0, HashSet<UnityEngine.Object> visited = null,string overrideLabel = null)
+        private void DrawNestedScriptableObjects(UnityEngine.Object obj, int depth = 0, HashSet<UnityEngine.Object> visited = null, string overrideLabel = null)
         {
             if (obj == null || depth > 0) return;
 
@@ -654,7 +654,7 @@ namespace Syacapachi.Editor
                 {
                     DrawSOReference(prop, depth, visited, overrideLabel);
                 }
-                else if(prop.isArray && prop.propertyType != SerializedPropertyType.String)
+                else if (prop.isArray && prop.propertyType != SerializedPropertyType.String)
                 {
                     //配列の中身もチェックする
                     for (int i = 0; i < prop.arraySize; i++)
@@ -662,7 +662,7 @@ namespace Syacapachi.Editor
                         var elementProp = prop.GetArrayElementAtIndex(i);
                         if (elementProp.propertyType == SerializedPropertyType.ObjectReference)
                         {
-                            DrawSOReference(elementProp, depth, visited, overrideLabel+$"{prop.displayName}[{i}]");
+                            DrawSOReference(elementProp, depth, visited, overrideLabel + $"{prop.displayName}[{i}]");
                         }
                     }
                 }
@@ -673,11 +673,11 @@ namespace Syacapachi.Editor
         private void DrawSOReference(SerializedProperty prop, int depth, HashSet<UnityEngine.Object> visited, string overrideLabel = null)
         {
             UnityEngine.Object refObj = prop.objectReferenceValue;
-            if(refObj == null) return;
+            if (refObj == null) return;
             if (refObj is not ScriptableObject nestedSO)
             {
                 // ScriptableObjectじゃない場合は再帰
-                DrawNestedScriptableObjects(refObj, depth + 1, visited,$"{refObj.name} ");
+                DrawNestedScriptableObjects(refObj, depth + 1, visited, $"{refObj.name} ");
                 return;
             }
             //非永続オブジェクト(一時オブジェクト)を拒否

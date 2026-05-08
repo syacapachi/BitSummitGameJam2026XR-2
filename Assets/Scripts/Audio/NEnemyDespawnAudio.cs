@@ -49,7 +49,7 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     {
         reachedGoal = false;
         playedDeathAudio = false;
-        lastHitVoiceTimeServer = -999f; 
+        lastHitVoiceTimeServer = -999f;
     }
 
     /// <summary>

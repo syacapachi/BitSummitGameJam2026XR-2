@@ -173,6 +173,4 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
         );
         Debug.Log($"Move To {moveScene.name}");
     }
-
-
 }
