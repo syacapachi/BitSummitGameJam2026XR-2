@@ -55,7 +55,6 @@ public class ResultUI : MonoBehaviour
     void InitializeUI()
     {
         panel.SetActive(false);
-
     }
     private void OnEnable()
     {
@@ -77,7 +76,8 @@ public class ResultUI : MonoBehaviour
             Debug.Log($"Player {r.clientId} Score:{r.score} Kills:{string.Join(",", r.killCounts)}");
         }
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
-        ShowResult(resultData, isJapanese);
+        float cooperation = CalculateCooperation(resultData);
+        ShowResult(cooperation, isJapanese);
         ShowDetail(resultData, isJapanese);
     }
     private void OnGameStateChanged(GameState state)
@@ -90,17 +90,16 @@ public class ResultUI : MonoBehaviour
                 isGameOver = false; break;
             case GameState.GameOver:
                 isGameOver = true; break;
-
         }
     }
-    void ShowResult(PlayerResultData[] results, bool isJapanese)
+    void ShowResult(float cooperation, bool isJapanese)
     {
         panel.SetActive(true);
 
         int score = nGameManager.ScoreManager.GetScore();
         int bonus = nGameManager.ScoreManager.TotalBonus;
 
-        float cooperation = CalculateCooperation(results);
+        
 
         // ⭐タイトル分岐
         if (isGameOver)
@@ -120,9 +119,6 @@ public class ResultUI : MonoBehaviour
             $"{scoreText.GetText(isJapanese)} : {score}\n" +
             $"{bonusText.GetText(isJapanese)} : {bonus}";
     }
-
-    
-
     void ShowDetail(PlayerResultData[] results,bool isJapanese)
     {
         ClearSpawnedUI();
@@ -133,7 +129,6 @@ public class ResultUI : MonoBehaviour
             : gameClearText.GetText(isJapanese);
 
         // （必要なら）前回削除
-
         foreach (var playerResult in results)
         {
             var headerObj = Instantiate(playerHeaderPrefab,contentParent);
@@ -152,7 +147,6 @@ public class ResultUI : MonoBehaviour
             headerText.text = NetworkManager.Singleton.LocalClientId == playerResult.clientId
                 ? $"{youText.GetText(isJapanese)} : {playerResult.playerName}\n"
                 : $"{otherText.GetText(isJapanese)} : {playerResult.playerName}\n";
-
 
             // 統計情報（2項目ずつ改行）
             string[] stats = new string[]
@@ -205,10 +199,8 @@ public class ResultUI : MonoBehaviour
         }
     }
 
-    float CalculateCooperation(PlayerResultData[] results)
+    public static float CalculateCooperation(PlayerResultData[] results)
     {
-        //if (results == null || results.Length < 2) return 0f;
-
         float totalShots = 0;
         float totalHits = 0;
         float totalKills = 0;

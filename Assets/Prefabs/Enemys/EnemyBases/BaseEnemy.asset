@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
   m_Name: BaseEnemy
   m_EditorClassIdentifier: 
-  ID: 12
   Name: Enemy
   icon: {fileID: 0}
   HP: 100
   scoreValue: 100
+  isMovable: 1
   MoveSpeed: 100
   prefab: {fileID: 7921933964387478276, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
   enemyWeapon: {fileID: 0}

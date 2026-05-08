@@ -1,4 +1,6 @@
 ﻿using Syacapachi.Attribute;
+using Syacapachi.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -63,6 +65,7 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     [SerializeField] PlayerResultDataArrayEvent RecieveResultRpcEvent;
     [SerializeField] BoolEvent gunEnableRpcEvent;
+    [SerializeField] ResultDataEvent resultDataRpcEvent;
 
     [Header("SubscribeEvent")]
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
@@ -219,6 +222,11 @@ public class NetworkGameManager : NetworkBehaviour
     {
         RecieveResultRpcEvent.Invoke(result);
     }
+    [Rpc(SendTo.ClientsAndHost)]
+    void OnSendResultRpc(ResultData result)
+    {
+        resultDataRpcEvent.Invoke(result);
+    }
     [OnInspectorButton]
     void SendMockData(PlayerResultData[] data)
     {
@@ -238,8 +246,18 @@ public class NetworkGameManager : NetworkBehaviour
 
             list.Add(stats.CreateResultDataServerOnly());
         }
-
+        PlayerResultData[] datas = list.ToArray();
         OnSendResultRpc(list.ToArray());
+        float cooporate = ResultUI.CalculateCooperation(datas);
+        ResultData data = new ResultData()
+        {
+            Time = DateTime.Now.ToString(),
+            Cooperation = cooporate,
+            IsGameOver = IsGameOver,
+            GameSeed = -1,
+            detail = datas
+        };
+        OnSendResultRpc(data);
     }
 
     void MoveScene()

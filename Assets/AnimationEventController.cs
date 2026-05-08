@@ -37,7 +37,7 @@ public class AnimationEventController : NetworkBehaviour
     void StartMove()
     {
         if (!IsServer) return;
-        enemy.MovePositionFromAnimationEvent();
+        enemy.MovePositionFromAnimationServerEvent();
     }
 
 #if UNITY_EDITOR

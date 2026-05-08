@@ -163,15 +163,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   rootTransfrom: {fileID: 5344536923362964064}
-  enemySO: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
   enemyJobSetting: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   hpCanvas: {fileID: 0}
   hpImage: {fileID: 0}
   hpText: {fileID: 0}
   enemyJob: 4
+  networkAnimator: {fileID: 0}
   enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   dieEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+  enemyAudio: {fileID: 0}
   isAttackable: 1
+  renderers:
+  - {fileID: 5244395042533235047}
+  - {fileID: 6178887384712247595}
+  - {fileID: 5078571708542657302}
+  - {fileID: 7109117736037156688}
+  - {fileID: 7692325639871480898}
   jobCycle: 010000000200000004000000
 --- !u!1 &2217898824923003709
 GameObject:

@@ -9,12 +9,9 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     [Header("Hit Voice / SFX")]
     [SerializeField] AudioEffectData ghostHitAudioData;
     [SerializeField] AudioEffectData demonHitAudioData;
-    [SerializeField] private AudioClip ghostHitClipAll;
-    [SerializeField] private AudioClip demonHitClipAll;
 
     [Tooltip("Ghost/Demonに該当しない場合、または専用Clipが未設定の場合に使う保険の被弾音です。")]
     [SerializeField] AudioEffectData defaultHitAudioData;
-    [SerializeField] private AudioClip defaultHitClipAll;
 
     [SerializeField, Range(0f, 1f)] private float hitVolumeAll = 1f;
 
@@ -24,14 +21,9 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     [Header("Death Voice / SFX")]
     [SerializeField] AudioEffectData ghostDeathAudioData;
     [SerializeField] AudioEffectData demonDeathAudioData;
-    [SerializeField] private AudioClip ghostDeathClipAll;
-    [SerializeField] private AudioClip demonDeathClipAll;
 
     [Tooltip("Ghost/Demonに該当しない場合、または専用Clipが未設定の場合に使う保険の死亡音です。")]
     [SerializeField] AudioEffectData defaultDeathAudioData;
-    [SerializeField] private AudioClip defaultDeathClipAll;
-
-    [SerializeField, Range(0f, 1f)] private float deathVolumeAll = 1f;
 
     [Header("Publish Event")]
     [SerializeField] private GameEffectEvent gameEffectEvent;
@@ -87,9 +79,6 @@ public class NEnemyDespawnAudio : NetworkBehaviour
     {
         if (gameEffectEvent == null) return;
 
-        AudioClip hitClip = GetHitClipByEnemyJob();
-        if (hitClip == null) return;
-
         gameEffectEvent.Invoke(
             new GameEffect(
                 ghostHitAudioData.ToRuntimeData(),
@@ -106,9 +95,6 @@ public class NEnemyDespawnAudio : NetworkBehaviour
 
         if (gameEffectEvent == null) return;
 
-        AudioClip deathClip = GetDeathClipByEnemyJob();
-        if (deathClip == null) return;
-
         gameEffectEvent.Invoke(
             new GameEffect(
                 defaultDeathAudioData.ToRuntimeData(),
@@ -117,48 +103,48 @@ public class NEnemyDespawnAudio : NetworkBehaviour
         );
     }
 
-    private AudioClip GetHitClipByEnemyJob()
+    private AudioEffectData GetHitClipByEnemyJob()
     {
         if (nEnemy == null)
         {
-            return defaultHitClipAll;
+            return defaultHitAudioData;
         }
 
         PlayerJob enemyJob = nEnemy.EnemyJob;
 
-        if ((enemyJob & PlayerJob.Ghost) != PlayerJob.Nothing && ghostHitClipAll != null)
+        if ((enemyJob & PlayerJob.Ghost) != PlayerJob.Nothing && ghostHitAudioData != null)
         {
-            return ghostHitClipAll;
+            return ghostHitAudioData;
         }
 
-        if ((enemyJob & PlayerJob.Demon) != PlayerJob.Nothing && demonHitClipAll != null)
+        if ((enemyJob & PlayerJob.Demon) != PlayerJob.Nothing && demonHitAudioData != null)
         {
-            return demonHitClipAll;
+            return demonHitAudioData;
         }
 
-        return defaultHitClipAll;
+        return defaultHitAudioData;
     }
 
-    private AudioClip GetDeathClipByEnemyJob()
+    private AudioEffectData GetDeathClipByEnemyJob()
     {
         if (nEnemy == null)
         {
-            return defaultDeathClipAll;
+            return defaultDeathAudioData;
         }
 
         PlayerJob enemyJob = nEnemy.EnemyJob;
 
-        if ((enemyJob & PlayerJob.Ghost) != PlayerJob.Nothing && ghostDeathClipAll != null)
+        if ((enemyJob & PlayerJob.Ghost) != PlayerJob.Nothing && ghostDeathAudioData != null)
         {
-            return ghostDeathClipAll;
+            return ghostDeathAudioData;
         }
 
-        if ((enemyJob & PlayerJob.Demon) != PlayerJob.Nothing && demonDeathClipAll != null)
+        if ((enemyJob & PlayerJob.Demon) != PlayerJob.Nothing && demonDeathAudioData != null)
         {
-            return demonDeathClipAll;
+            return demonDeathAudioData;
         }
 
-        return defaultDeathClipAll;
+        return defaultDeathAudioData;
     }
 
 #if UNITY_EDITOR

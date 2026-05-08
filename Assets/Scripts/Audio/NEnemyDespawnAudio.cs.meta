@@ -4,7 +4,13 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - deathClipAll: {instanceID: 0}
+  - nEnemy: {instanceID: 0}
+  - ghostHitAudioData: {instanceID: 0}
+  - demonHitAudioData: {instanceID: 0}
+  - defaultHitAudioData: {fileID: 11400000, guid: 5770ca59d52061a41af6b5d10162fea7, type: 2}
+  - ghostDeathAudioData: {instanceID: 0}
+  - demonDeathAudioData: {instanceID: 0}
+  - defaultDeathAudioData: {fileID: 11400000, guid: aefa70d3983e5e140bcec0dcf57cdd2e, type: 2}
   - gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}

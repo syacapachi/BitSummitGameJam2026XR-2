@@ -80,6 +80,18 @@ PrefabInstance:
       propertyPath: networkAnimator
       value: 
       objectReference: {fileID: 6671246319438270643}
+    - target: {fileID: 5509396122104189184, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: renderers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5509396122104189184, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: 'renderers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 407501788085674124}
+    - target: {fileID: 5509396122104189184, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
+      propertyPath: 'renderers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 407501788085674124}
     - target: {fileID: 6441764854625807580, guid: b424f0114801e5143a433f73ee5433f4, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2957230015
@@ -335,9 +347,23 @@ MonoBehaviour:
     Layer: 0
     OriginatingState: -1167698442
     DestinationState: -994616398
-    TransitionDuration: 2.6039271
+    TransitionDuration: 1
     TriggerNameHash: 1080829965
     TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1167698442
+    DestinationState: 1669584845
+    TransitionDuration: 0
+    TriggerNameHash: 1654612129
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -994616398
+    DestinationState: 1669584845
+    TransitionDuration: 0
+    TriggerNameHash: 1654612129
+    TransitionIndex: 1
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Speed

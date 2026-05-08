@@ -718,6 +718,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 76bcf8e94d0460b4db8a7dc0c17a015a, type: 3}
   m_PrefabInstance: {fileID: 579034941570431728}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &5153916015186577173 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5732878336233618917, guid: 76bcf8e94d0460b4db8a7dc0c17a015a, type: 3}
+  m_PrefabInstance: {fileID: 579034941570431728}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8539623382615728446
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -786,6 +791,22 @@ PrefabInstance:
       propertyPath: enemyDataBase
       value: 
       objectReference: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
+    - target: {fileID: 5144246531111797512, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: networkAnimator
+      value: 
+      objectReference: {fileID: 3667374688630486346}
+    - target: {fileID: 5144246531111797512, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: renderers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5144246531111797512, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: 'renderers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 5153916015186577173}
+    - target: {fileID: 5144246531111797512, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
+      propertyPath: 'renderers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 5153916015186577173}
     - target: {fileID: 5660647915188911819, guid: 198861590b5d95f4d91ad08c37968c8b, type: 3}
       propertyPath: deathFx
       value: 
