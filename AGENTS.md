@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Overlay UI, Water, UI, Avatar, Demon, Ghost, Both, Tutorial, Player
 - Active game object:
-  - Name: XR Game
+  - Name: SunAndMoon
   - Tag: Untagged
-  - Layer: Player
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
