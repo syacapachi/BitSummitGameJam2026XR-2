@@ -1,5 +1,6 @@
 ﻿using Syacapachi.Attribute;
 using Syacapachi.Data;
+using Syacapachi.Manager;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -226,6 +227,7 @@ public class NetworkGameManager : NetworkBehaviour
     void OnSendResultRpc(ResultData result)
     {
         resultDataRpcEvent.Invoke(result);
+        Debug.Log($"[{nameof(NetworkGameManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(result, true)}", gameObject);
     }
     [OnInspectorButton]
     void SendMockData(PlayerResultData[] data)
