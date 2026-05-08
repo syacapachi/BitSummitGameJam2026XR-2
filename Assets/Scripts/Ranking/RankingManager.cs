@@ -34,6 +34,7 @@ namespace Syacapachi.Manager
 
         private void SaveJson(ResultData data)
         {
+            Debug.Log($"[{nameof(RankingManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(data, true)}",gameObject);
             if (!isSaveJson) return;
             RankingListWrapper wrapper = LoadJson(FilePath);
             wrapper.Rankings.Add(data);
@@ -78,7 +79,7 @@ namespace Syacapachi.Manager
             if (!System.IO.File.Exists(filepath))
             {
                 Debug.LogError("[Ranking Manager]No ranking file found",gameObject);
-                return null;
+                return new RankingListWrapper();
             }
 
             string json = File.ReadAllText(filepath);

@@ -578,7 +578,7 @@ MonoBehaviour:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
+    m_InternalValue: 3
   gameMode: 1
   gameStartMode: 0
   protectArea: {fileID: 0}
@@ -595,6 +595,7 @@ MonoBehaviour:
   OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   RecieveResultRpcEvent: {fileID: 11400000, guid: b1254d9a30b83b44ca1aa9f037d0a8fc, type: 2}
   gunEnableRpcEvent: {fileID: 11400000, guid: c8ec81be65a3f1b459a48651324647bc, type: 2}
+  resultDataRpcEvent: {fileID: 11400000, guid: f938f5fd3bfa6e949a8637e657b4cb88, type: 2}
   OnScoreReachZeroServerEvent: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
   OnAllPhaseEndedServerEvent: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
   difficultyEvent: {fileID: 11400000, guid: e641f2abcabb4f8449947c45a980c10f, type: 2}
@@ -898,11 +899,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dac3cdd3a02a52943ac14c05ae7a2af7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSaveJson: 0
+  isSaveJson: 1
   FileName: Ranking
   rankingMaxCount: 10
   useDailyFile: 0
   DaylyFileName: DailyRanking
+  resultEvent: {fileID: 11400000, guid: f938f5fd3bfa6e949a8637e657b4cb88, type: 2}
   rankingList:
     Rankings: []
 --- !u!1 &8974977137299023905
