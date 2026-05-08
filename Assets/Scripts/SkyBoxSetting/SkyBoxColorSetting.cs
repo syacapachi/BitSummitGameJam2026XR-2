@@ -41,7 +41,7 @@ public class SkyBoxColorSetting : ScriptableObject
     //6時-> -90 or 270
     //12時 -> 0
     //18時 -> 90
-    [SerializeField,ReadOnly] private Vector3 skyRootEular;
+    [SerializeField] private Vector3 skyRootEular;
     public Vector3 SkyRootEular => skyRootEular;
     public Quaternion SkyRotation => Quaternion.Euler(skyRootEular);
 
