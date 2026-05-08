@@ -29,6 +29,8 @@ namespace Syacapachi.Editor
         private readonly Dictionary<string, Type> abstructToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<object, bool> foldouts = new();
+        // パラメータのFoldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
+        private readonly Dictionary<MethodInfo, bool> parametersfoldouts = new();
         // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<UnityEngine.Object, bool> foldoutStates = new();
         // ネストしたEditorキャッシュ (パフォーマンス向上のため)
@@ -96,19 +98,27 @@ namespace Syacapachi.Editor
             if (!methodParameters.ContainsKey(method))
                 methodParameters[method] = new object[parameters.Length];
 
+            if (!parametersfoldouts.ContainsKey(method))
+            {
+                parametersfoldouts[method] = true;
+            }
+
             var values = methodParameters[method];
 
             EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField($"{method.Name} Parameters", EditorStyles.boldLabel);
-
-            for (int i = 0; i < parameters.Length; i++)
+            parametersfoldouts[method] = EditorGUILayout.Foldout(parametersfoldouts[method], $"{method.Name} Parameters", true);
+            if (parametersfoldouts[method])
             {
-                var param = parameters[i];
-                values[i] = DrawField(param.ParameterType, param.Name, values[i]);
-                //変更を検知
-                isValueChangedThisFrame |= GUI.changed;
+                EditorGUI.indentLevel++;
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    var param = parameters[i];
+                    values[i] = DrawField(param.ParameterType, param.Name, values[i]);
+                    //変更を検知
+                    isValueChangedThisFrame |= GUI.changed;
+                }
+                EditorGUI.indentLevel--;
             }
-
             if (GUILayout.Button(buttonLabel))
                 InvokeMethod(method, values);
 
@@ -612,7 +622,7 @@ namespace Syacapachi.Editor
         /// </summary>
         private void DrawNestedScriptableObjects(UnityEngine.Object obj, int depth = 0, HashSet<UnityEngine.Object> visited = null, string overrideLabel = null)
         {
-            if (obj == null || depth > 1) return;
+            if (obj == null || depth > 0) return;
 
             visited ??= new HashSet<UnityEngine.Object>();
 
