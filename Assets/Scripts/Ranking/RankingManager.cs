@@ -34,7 +34,7 @@ namespace Syacapachi.Manager
 
         private void SaveJson(ResultData data)
         {
-            Debug.Log($"[{nameof(RankingManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(data, true)}",gameObject);
+            Debug.Log($"[{nameof(RankingManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(data, true)}", gameObject);
             if (!isSaveJson) return;
             RankingListWrapper wrapper = LoadJson(FilePath);
             wrapper.Rankings.Add(data);
@@ -65,20 +65,20 @@ namespace Syacapachi.Manager
                 daylyRankingList = dailyWrapper;
             }
         }
-        private void ExportJson(RankingListWrapper wrapper,string filePath)
+        private void ExportJson(RankingListWrapper wrapper, string filePath)
         {
             string jsonText = JsonUtility.ToJson(wrapper, true);
             //ファイルがない場合は作成。そして書き込む。
             File.WriteAllText(filePath, jsonText);
 #if UNITY_EDITOR
-            Debug.Log($"ExportedJson:\n{jsonText}at{filePath}",gameObject);
+            Debug.Log($"ExportedJson:\n{jsonText}at{filePath}", gameObject);
 #endif
         }
         private RankingListWrapper LoadJson(string filepath)
         {
             if (!System.IO.File.Exists(filepath))
             {
-                Debug.LogError("[Ranking Manager]No ranking file found",gameObject);
+                Debug.LogError("[Ranking Manager]No ranking file found", gameObject);
                 return new RankingListWrapper();
             }
 

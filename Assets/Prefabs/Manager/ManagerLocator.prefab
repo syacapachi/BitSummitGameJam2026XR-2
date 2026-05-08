@@ -325,10 +325,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pooledPrefabsList:
-  - Prefab: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
-    PrewarmCount: 10
   - Prefab: {fileID: 8369679245763667583, guid: 48336ae6e56cca440ae3e0237126786e, type: 3}
     PrewarmCount: 10
+  - Prefab: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
+    PrewarmCount: 10
+  - Prefab: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
+    PrewarmCount: 10
+  - Prefab: {fileID: 5700615233903148315, guid: af07261fd5c4ddf4f98fe93838dfbb64, type: 3}
+    PrewarmCount: 5
+  - Prefab: {fileID: 8529547205874415710, guid: 9f5c7e7c50a44cb4a8ef99bc5f670265, type: 3}
+    PrewarmCount: 5
+  - Prefab: {fileID: 49340787719113693, guid: 4b502f49b4ec24b4c8a667d9d6f04378, type: 3}
+    PrewarmCount: 5
+  - Prefab: {fileID: 278788122339841109, guid: 642a551cd9afd564488cfb9bb464c7fa, type: 3}
+    PrewarmCount: 5
+  - Prefab: {fileID: 7629155156942977378, guid: 703de710b50021e44a289a05ef237aef, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 5047653985756365193, guid: f1b326d782d62e84a9f500fe1b2e665a, type: 3}
+    PrewarmCount: 1
+  - Prefab: {fileID: 931573579279546627, guid: bc83d999e522f224c92e4e26fb1ccd85, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 1045464419668790773, guid: 87fc57fbbdc4a874d8323c11b2b7c287, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 1389866778582299859, guid: 892ddf1b837759b4a9994414e91b2cc0, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 7872818705598725113, guid: 55efbe935c1407746b4427fcb8ec3b29, type: 3}
+    PrewarmCount: 3
 --- !u!1 &2827320418798051780
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,6 +608,7 @@ MonoBehaviour:
   phaseManager: {fileID: 1871165705981970814}
   PlayerManager: {fileID: 8012348177458703508}
   tutorialManager: {fileID: 8343285116251111980}
+  homeScene: {fileID: 102900000, guid: 163666d43b155d647855c6a9c5d11bc6, type: 3}
   gameState:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -593,7 +616,6 @@ MonoBehaviour:
     m_InternalValue: 0
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
   OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
-  RecieveResultRpcEvent: {fileID: 11400000, guid: b1254d9a30b83b44ca1aa9f037d0a8fc, type: 2}
   gunEnableRpcEvent: {fileID: 11400000, guid: c8ec81be65a3f1b459a48651324647bc, type: 2}
   resultDataRpcEvent: {fileID: 11400000, guid: f938f5fd3bfa6e949a8637e657b4cb88, type: 2}
   OnScoreReachZeroServerEvent: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
@@ -715,11 +737,22 @@ MonoBehaviour:
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   spawner: {fileID: 0}
-  step1Enemies: []
-  step2Enemies: []
+  step1Enemies:
+  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  step2Enemies:
+  - {fileID: 11400000, guid: e46a108a5137e2840b992565f1659bcf, type: 2}
+  - {fileID: 11400000, guid: f594e91d59269df42abf37e34d18e45f, type: 2}
   attackBlockedEvent: {fileID: 11400000, guid: 29e4db13b8933e44b8dfd9df362fd1d2, type: 2}
   OnTutorialStepCleared: {fileID: 11400000, guid: 64f3ed58da1abd54bb4e2c3464685d38, type: 2}
   OnTutorialStepChanged: {fileID: 11400000, guid: 4cdbcd5da1b58d048a39f9a786419768, type: 2}
+  moveScene: {fileID: 102900000, guid: 9976ecc257800ba4db4059546c0bc04c, type: 3}
 --- !u!1 &7509225818068572671
 GameObject:
   m_ObjectHideFlags: 0
@@ -901,7 +934,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSaveJson: 1
   FileName: Ranking
-  rankingMaxCount: 10
+  rankingMaxCount: 5
   useDailyFile: 0
   DaylyFileName: DailyRanking
   resultEvent: {fileID: 11400000, guid: f938f5fd3bfa6e949a8637e657b4cb88, type: 2}

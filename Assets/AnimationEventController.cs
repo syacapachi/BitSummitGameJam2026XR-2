@@ -17,7 +17,6 @@ public class AnimationEventController : NetworkBehaviour
     //アニメーションは全てで呼ばれる
     void OnVisible()
     {
-        Debug.Log("OnVisible");
         //if (!IsServer) return;
         enemy.SetVisibleServer();
     }

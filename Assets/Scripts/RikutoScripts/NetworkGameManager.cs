@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,6 +26,8 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] PlayerManager PlayerManager;
     [SerializeField] TutorialManager tutorialManager;
+    [Header("Back Scene")]
+    [SerializeField] SceneAsset homeScene;
     
     public GameMode CurrentGameMode => gameMode;
     public ScoreManager ScoreManager => scoreManager;
@@ -64,7 +67,6 @@ public class NetworkGameManager : NetworkBehaviour
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnbulletComeRpcEvent;
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
-    [SerializeField] PlayerResultDataArrayEvent RecieveResultRpcEvent;
     [SerializeField] BoolEvent gunEnableRpcEvent;
     [SerializeField] ResultDataEvent resultDataRpcEvent;
 
@@ -217,22 +219,11 @@ public class NetworkGameManager : NetworkBehaviour
         OnbulletComeRpcEvent.Invoke();
     }
 
-
-    [Rpc(SendTo.ClientsAndHost)]
-    void OnSendResultRpc(PlayerResultData[] result)
-    {
-        RecieveResultRpcEvent.Invoke(result);
-    }
     [Rpc(SendTo.ClientsAndHost)]
     void OnSendResultRpc(ResultData result)
     {
         resultDataRpcEvent.Invoke(result);
         Debug.Log($"[{nameof(NetworkGameManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(result, true)}", gameObject);
-    }
-    [OnInspectorButton]
-    void SendMockData(PlayerResultData[] data)
-    {
-        OnSendResultRpc(data);
     }
     void SendResults()
     {
@@ -249,11 +240,12 @@ public class NetworkGameManager : NetworkBehaviour
             list.Add(stats.CreateResultDataServerOnly());
         }
         PlayerResultData[] datas = list.ToArray();
-        OnSendResultRpc(list.ToArray());
         float cooporate = ResultUI.CalculateCooperation(datas);
         ResultData data = new ResultData()
         {
             Time = DateTime.Now.ToString(),
+            TotalScore = ScoreManager.GetScore(),
+            TotalBonus = ScoreManager.TotalBonus,
             Cooperation = cooporate,
             IsGameOver = IsGameOver,
             GameSeed = -1,
@@ -266,10 +258,10 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (!IsServer) return;
         {
-            Debug.Log("[VRSystemScene] Loading WorldViewScene");
+            Debug.Log($"[{SceneManager.GetActiveScene().name}] Loading {homeScene.name}");
 
             NetworkManager.SceneManager.LoadScene(
-                "WorldViewScene",
+                homeScene.name,
                 LoadSceneMode.Single
             );
         }

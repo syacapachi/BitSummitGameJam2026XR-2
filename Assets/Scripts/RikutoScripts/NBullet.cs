@@ -52,8 +52,7 @@ public class NBullet : BulletBaseController
                 //シールドがでなかったのと見えない敵を撃ってもstep2クリア可能だったため構造変更
                 if (layerMaskSetting.IsAttackableJob(enemy.EnemyJob))
                 {
-                    Debug.Log($"NotDamage",other);
-                   
+                    Debug.Log($"NotDamage",other);  
                 } 
                 else
                 {
@@ -85,7 +84,6 @@ public class NBullet : BulletBaseController
             if (layerMaskSetting.IsAttackableJob(enemy.EnemyJob))
             {
                 //ダメージが通る
-                Debug.Log("Damage",other);
                 stats.AddHit();
                 stats.AddDamage(Damage);
                 reciever.TakeDamage(this, Damage);
@@ -96,7 +94,6 @@ public class NBullet : BulletBaseController
             else
             {
                 // シールド
-                Debug.Log("Shield",other);
                 stats.AddShield();
                 attackBlockedEvent.Invoke(new AttackBlocked()
                 {

@@ -21,6 +21,8 @@ namespace Syacapachi.Data
     {
         //共通情報
         public string Time;
+        public int TotalScore;
+        public int TotalBonus;
         public int GameSeed;
         public bool IsGameOver;
         public float Cooperation;
@@ -30,6 +32,8 @@ namespace Syacapachi.Data
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref Time);
+            serializer.SerializeValue(ref TotalScore);
+            serializer.SerializeValue(ref TotalBonus);
             serializer.SerializeValue(ref GameSeed);
             serializer.SerializeValue(ref IsGameOver);
             serializer.SerializeValue(ref Cooperation);

@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -33,6 +34,10 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] LocalizeSimpleText nextButtonText;
     [SerializeField] LocalizeSimpleText closeText;
     [SerializeField] LocalizeSimpleText backText;
+
+    [Header("シーン設定")]
+    [SerializeField] SceneAsset tutorialScene;
+    [SerializeField] SceneAsset gameScene;
 
     private void Start()
     {
@@ -115,13 +120,13 @@ public class WorldViewManager : NetworkBehaviour
         if (!IsServer) return;
         if (isTutorialSkip)
         {
-            Debug.Log($"[{nameof(WorldViewManager)}] Loading VRSystemScene");
-            NetworkManager.Singleton.SceneManager.LoadScene("VRSystemScene", LoadSceneMode.Single);
+            Debug.Log($"[{nameof(WorldViewManager)}] Loading {gameScene.name}");
+            NetworkManager.Singleton.SceneManager.LoadScene(gameScene.name, LoadSceneMode.Single);
         }
         else
         {
-            Debug.Log($"[{nameof(WorldViewManager)}] Loading TutorialScene");
-            NetworkManager.Singleton.SceneManager.LoadScene("TutorialScene", LoadSceneMode.Single);
+            Debug.Log($"[{nameof(WorldViewManager)}] Loading {tutorialScene.name}");
+            NetworkManager.Singleton.SceneManager.LoadScene(tutorialScene.name, LoadSceneMode.Single);
         }
     }
 }

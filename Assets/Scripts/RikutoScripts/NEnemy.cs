@@ -241,7 +241,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         if (!IsServer) return;
         if (isDieServerOnly) return;
-        Debug.Log("Take damage",gameObject);
         if(currentHP.Value > 0)  currentHP.Value -= damage;
 
         if (currentHP.Value <= 0)
@@ -323,7 +322,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         DieOnServer(null);
         isInitialize = true;
     }
-    [OnInspectorButton("DieFromAnimationEvent")]
+    [OnInspectorButton]
     public void DieFromAnimationEvent()
     {
         if (NetworkObject.IsSpawned)
@@ -349,7 +348,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         isAttackable = value;
     }
 
-    [OnInspectorButton("NextJob")]
+    [OnInspectorButton]
     public void NextJob()
     {
         if (!IsServer) return;
@@ -439,15 +438,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     void ApplyVisible(bool visible)
     {
-        Debug.Log($"[Enemy] ApplyVisible called | visible:{visible}");
-
         for (int i = 0; i < renderers.Length; i++)
         {
-            Debug.Log($"  before: {renderers[i].name} layer:{renderers[i].gameObject.layer}");
-
             renderers[i].gameObject.layer = visible ? 0 : originalLayerServerOnly;
-
-            Debug.Log($"  after : {renderers[i].name} layer:{renderers[i].gameObject.layer}");
         }
     }
 #if UNITY_EDITOR

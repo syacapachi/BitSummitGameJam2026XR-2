@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,6 +27,8 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
     [SerializeField] VoidEvent OnTutorialStepCleared;
     [SerializeField] IntEvent OnTutorialStepChanged;
+    [Header("Move Scene")]
+    [SerializeField] SceneAsset moveScene;
     private bool isTutorlalStarted;
     
     public override void OnNetworkSpawn()
@@ -155,7 +158,6 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
 
     private void StartMainSimulation()
     {
-        Debug.Log("Main Simulation Start");
         //応急処置
         MoveScene();
     }
@@ -166,10 +168,10 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
         if (!IsServer) return;
 
         NetworkManager.Singleton.SceneManager.LoadScene(
-            "VRSystemScene",
+            moveScene.name,
             LoadSceneMode.Single
         );
-        Debug.Log("Move To VRSystemScene");
+        Debug.Log($"Move To {moveScene.name}");
     }
 
 

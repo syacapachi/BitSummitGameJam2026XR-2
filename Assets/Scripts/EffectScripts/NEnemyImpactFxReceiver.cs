@@ -134,7 +134,6 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
     //PlayValid(Cliant消した)HitRpc
     private void PlayValidHitRpc(Vector3 position, RpcParams rpcParams = default)
     {
-        Debug.Log($"Valid Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
 
         //gameEffectEvent.Invoke(new GameEffect(
@@ -149,7 +148,6 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
     //PlayInValid(Cliant消した)HitRpc
     private void PlayInvalidHitRpc(Vector3 position, RpcParams rpcParams = default)
     {
-        Debug.Log($"Invalid Hit FX RPC fired: {name} pos={position}");
         if (gameEffectEvent == null) return;
 
         //gameEffectEvent.Invoke(new GameEffect(
