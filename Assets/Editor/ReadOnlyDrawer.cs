@@ -1,4 +1,5 @@
-﻿namespace Syacapachi.Editor
+﻿#if UNITY_EDITOR
+namespace Syacapachi.Editor
 {
     using Syacapachi.Attribute;
     using UnityEditor;
@@ -9,6 +10,8 @@
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            ReadOnlyAttribute attr = (ReadOnlyAttribute)attribute;
+            if (attr.showOnlyPlayMode && !Application.isPlaying) return;
             bool enabled = GUI.enabled;
             GUI.enabled = false;
             //描画中GUIを無効化
@@ -18,3 +21,4 @@
         }
     }
 }
+#endif
