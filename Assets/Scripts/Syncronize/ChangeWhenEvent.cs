@@ -23,23 +23,23 @@ public class ChangeWhenEvent : MonoBehaviour
     }
     [SerializeField] protected State[] _state;
     [Header("Subscribe Event")]
-    [SerializeField] BoolEvent connectionEvent;
+    [SerializeField] BoolEvent boolEvent;
 
     void Awake()
     {
         foreach(var state in _state)
         {
-            state.ApplyWithInverse(connectionEvent.CurrentValue);
+            state.ApplyWithInverse(boolEvent.CurrentValue);
         }
     }
 
     void OnEnable()
     {
-        connectionEvent.Register(OnEvent);
+        boolEvent.Register(OnEvent);
     }
     void OnDisable()
     {
-        connectionEvent.Unregister(OnEvent);
+        boolEvent.Unregister(OnEvent);
     }
     private void OnEvent(bool enable)
     {
