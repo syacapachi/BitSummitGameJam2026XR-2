@@ -12,6 +12,8 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] GameStateEvent GameStateChangeRpcEvent;
     [SerializeField] BoolEvent WarningStateEvent;
+    [Header("Reference")]
+    [SerializeField] DifficultyDataBase dataBase;
     [SerializeField] private NetworkGameManager nGameManager;
     [SerializeField] TMP_FontAsset japaneseFont;
     [SerializeField] TMP_FontAsset englishFont;

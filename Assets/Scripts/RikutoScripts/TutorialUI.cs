@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using TMPro;
 using System.Collections;
 
@@ -7,7 +7,7 @@ public class TutorialUI : MonoBehaviour
     [SerializeField] private TutorialManager tutorialManager;
     [Header("UI")]
     [SerializeField] GameObject root;
-    [SerializeField] TextMeshProUGUI text; // © 1‚Â‚¾‚¯
+    [SerializeField] TextMeshProUGUI text; // â† 1ã¤ã ã‘
 
     [Header("Event")]
     [SerializeField] IntEvent OnTutorialStepChanged;
@@ -52,7 +52,7 @@ public class TutorialUI : MonoBehaviour
 
     void OnStepChangedNetwork(TutorialStep oldStep, TutorialStep newStep)
     {
-        Debug.Log($"[UI] StepChangedNetwork: {oldStep} ¨ {newStep} / currentState={currentState}");
+        Debug.Log($"[UI] StepChangedNetwork: {oldStep} â†’ {newStep} / currentState={currentState}");
 
         if (currentState == TutorialUIState.StepClear)
             return;
@@ -60,11 +60,10 @@ public class TutorialUI : MonoBehaviour
     }
 
     // =========================
-    // ó‘ÔŠÇ—
+    // çŠ¶æ…‹ç®¡ç†
     // =========================
     void ChangeState(TutorialUIState next, object payload = null)
     {
-        Debug.Log($"[UI] ChangeState: {currentState} ¨ {next}");
         if (currentRoutine != null)
             StopCoroutine(currentRoutine);
 
@@ -87,7 +86,7 @@ public class TutorialUI : MonoBehaviour
     }
 
     // =========================
-    // ƒCƒxƒ“ƒg
+    // ã‚¤ãƒ™ãƒ³ãƒˆ
     // =========================
     void OnStepChanged(int stepIndex)
     {
@@ -100,7 +99,7 @@ public class TutorialUI : MonoBehaviour
     }
 
     // =========================
-    // ƒXƒeƒbƒvŠJn
+    // ã‚¹ãƒ†ãƒƒãƒ—é–‹å§‹
     // =========================
     IEnumerator StepIntroRoutine(TutorialStep step)
     {
@@ -113,26 +112,26 @@ public class TutorialUI : MonoBehaviour
         switch (step)
         {
             case TutorialStep.Step1:
-                title = isJapanese ? "ƒ`ƒ…[ƒgƒŠƒAƒ‹1" : "Tutorial 1";
-                desc = isJapanese ? "‘S‚Ä‚Ì“I‚ğ”j‰ó‚¹‚æI" : "Destroy all targets!";
+                title = isJapanese ? "ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«1" : "Tutorial 1";
+                desc = isJapanese ? "å…¨ã¦ã®çš„ã‚’ç ´å£Šã›ã‚ˆï¼" : "Destroy all targets!";
                 break;
 
             case TutorialStep.Step2:
-                title = isJapanese ? "ƒ`ƒ…[ƒgƒŠƒAƒ‹2" : "Tutorial 2";
-                desc = isJapanese ? "Œ©‚¦‚Ä‚¢‚é“G‚ğ3‰ñUŒ‚‚µ‚ëI" : "Attack visible enemies 3 times!";
+                title = isJapanese ? "ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«2" : "Tutorial 2";
+                desc = isJapanese ? "è¦‹ãˆã¦ã„ã‚‹æ•µã‚’3å›æ”»æ’ƒã—ã‚ï¼" : "Attack visible enemies 3 times!";
                 break;
 
             case TutorialStep.Step3:
-                title = isJapanese ? "ƒ`ƒ…[ƒgƒŠƒAƒ‹3" : "Tutorial 3";
-                desc = isJapanese ? "Œ©‚¦‚È‚¢“G‚ğ“|‚¹I" : "Defeat invisible enemies!";
+                title = isJapanese ? "ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«3" : "Tutorial 3";
+                desc = isJapanese ? "è¦‹ãˆãªã„æ•µã‚’å€’ã›ï¼" : "Defeat invisible enemies!";
                 break;
         }
 
-        // --- ƒ^ƒCƒgƒ‹•\¦i1•bj ---
+        // --- ã‚¿ã‚¤ãƒˆãƒ«è¡¨ç¤ºï¼ˆ1ç§’ï¼‰ ---
         text.text = title;
         yield return new WaitForSeconds(1f);
 
-        // --- “à—e•\¦i1.5•bj ---
+        // --- å†…å®¹è¡¨ç¤ºï¼ˆ1.5ç§’ï¼‰ ---
         text.transform.localScale = Vector3.one;
         text.text = desc;
         yield return GrowAnimation();
@@ -142,7 +141,7 @@ public class TutorialUI : MonoBehaviour
     }
 
     // =========================
-    // ƒNƒŠƒA•\¦
+    // ã‚¯ãƒªã‚¢è¡¨ç¤º
     // =========================
     IEnumerator StepClearRoutine()
     {
@@ -156,7 +155,7 @@ public class TutorialUI : MonoBehaviour
     }
 
     // =========================
-    // ‹¤’Ê
+    // å…±é€š
     // =========================
     void Hide()
     {
@@ -187,9 +186,9 @@ public class TutorialUI : MonoBehaviour
     IEnumerator GrowAnimation()
     {
         Vector3 start = Vector3.one;
-        Vector3 end = Vector3.one * 1.1f; // ÅIƒTƒCƒY
+        Vector3 end = Vector3.one * 1.1f; // æœ€çµ‚ã‚µã‚¤ã‚º
 
-        float duration = 2f; // ‚ä‚Á‚­‚èŠ´‚Í‚±‚±‚Å’²®
+        float duration = 2f; // ã‚†ã£ãã‚Šæ„Ÿã¯ã“ã“ã§èª¿æ•´
         float t = 0f;
 
         text.transform.localScale = start;
@@ -200,7 +199,7 @@ public class TutorialUI : MonoBehaviour
 
             float progress = t / duration;
 
-            // ‚È‚ß‚ç‚©‚ÉiƒC[ƒWƒ“ƒOj
+            // ãªã‚ã‚‰ã‹ã«ï¼ˆã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ï¼‰
             float ease = Mathf.SmoothStep(0f, 1f, progress);
 
             text.transform.localScale = Vector3.Lerp(start, end, ease);

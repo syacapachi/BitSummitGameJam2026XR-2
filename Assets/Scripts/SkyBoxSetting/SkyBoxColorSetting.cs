@@ -1,5 +1,4 @@
-﻿using Syacapachi.Attribute;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "SkyBoxColorSetting", menuName = "Game/SkyBoxColorSetting")]
 public class SkyBoxColorSetting : ScriptableObject

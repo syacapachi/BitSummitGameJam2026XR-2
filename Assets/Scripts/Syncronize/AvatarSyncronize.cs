@@ -28,13 +28,12 @@ public class AvatarSyncronize : NetworkBehaviour
     [Header("Hand")]
     [SerializeField] float armOffset = 0.5f;
     [SerializeField] float handOffsetAngle = 90;
-    [Header("Calibration"),Tooltip("対象のアバターのスケールを慎重に応じて拡大・縮小します。(元のアバターの身長は1m,スケールは1.1.1にして下さい。)")]
+    [Header("Calibration"), Tooltip("対象のアバターのスケールを慎重に応じて拡大・縮小します。(元のアバターの身長は1m,スケールは1.1.1にして下さい。)")]
     [SerializeField] int calibrationCount = 10;
     [Header("Debug")]
     [SerializeField] bool isDebugMode = false;
-    public readonly NetworkVariable<int> JumpCount = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private readonly NetworkVariable<float> AvatarScale = new(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    [SerializeField,ReadOnly] float avatarEyeHeight = 0;
+    [SerializeField, ReadOnly] float avatarEyeHeight = 0;
     [SerializeField, ReadOnly] float avatarScale = 0;
     /// <summary>
     /// 更新が可能かのフラグ、オーナーがわで、ローカルプレイヤーを取得したかのために使う
@@ -71,7 +70,7 @@ public class AvatarSyncronize : NetworkBehaviour
     /// <param name="clientId"></param>
     /// <param name="name"></param>
     /// <param name="loadMode"></param>
-    private void OnSceneLoaded(ulong clientId,string name,UnityEngine.SceneManagement.LoadSceneMode loadMode)
+    private void OnSceneLoaded(ulong clientId, string name, UnityEngine.SceneManagement.LoadSceneMode loadMode)
     {
         StartCoroutine(WaitForEnable());
     }
@@ -100,10 +99,10 @@ public class AvatarSyncronize : NetworkBehaviour
     }
     private IEnumerator CalcHeight()
     {
-        if(isCalibrationed) yield break;
+        if (isCalibrationed) yield break;
         isCalibrationed = true;
         float eyeHeight = 0;
-        for(int i = 0;i< calibrationCount; i++)
+        for (int i = 0; i < calibrationCount; i++)
         {
             eyeHeight += xrOrigin.Camera.transform.position.y;
             yield return null;
@@ -111,7 +110,7 @@ public class AvatarSyncronize : NetworkBehaviour
         eyeHeight /= calibrationCount;
         AvatarScale.Value = eyeHeight / avatarEyeHeight;
 #if UNITY_EDITOR
-        Debug.Log($"[{nameof(AvatarSyncronize)}] Scale is {AvatarScale.Value}",gameObject);
+        Debug.Log($"[{nameof(AvatarSyncronize)}] Scale is {AvatarScale.Value}", gameObject);
 #endif
     }
     public override void OnNetworkDespawn()
@@ -132,7 +131,7 @@ public class AvatarSyncronize : NetworkBehaviour
     /// Animatorと同じGameObjectにないと呼ばれない。
     /// </summary>
     private void OnAnimatorIK()
-    {   
+    {
         if (animator == null) return;
         if (IsOwner)
         {
@@ -160,7 +159,7 @@ public class AvatarSyncronize : NetworkBehaviour
             animator.SetLookAtPosition(networkHead.position + networkHead.forward * 2);
 
             //左手
-            SetIKPositonAndRotation(AvatarIKGoal.LeftHand, networkLeftController.position - networkLeftController.forward * armOffset, Quaternion.AngleAxis(handOffsetAngle, networkLeftController.forward)* networkLeftController.rotation);
+            SetIKPositonAndRotation(AvatarIKGoal.LeftHand, networkLeftController.position - networkLeftController.forward * armOffset, Quaternion.AngleAxis(handOffsetAngle, networkLeftController.forward) * networkLeftController.rotation);
 
             //右手
             SetIKPositonAndRotation(AvatarIKGoal.RightHand, networkRightController.position - networkRightController.forward * armOffset, Quaternion.AngleAxis(handOffsetAngle, networkRightController.forward) * networkRightController.rotation);
@@ -169,9 +168,9 @@ public class AvatarSyncronize : NetworkBehaviour
         AdjustIKToPlane(AvatarIKGoal.LeftFoot, AvatarIKHint.LeftKnee);
         AdjustIKToPlane(AvatarIKGoal.RightFoot, AvatarIKHint.RightKnee);
     }
-    private void AdjustIKToPlane(AvatarIKGoal goal,AvatarIKHint hint, float weight = 1.0f)
+    private void AdjustIKToPlane(AvatarIKGoal goal, AvatarIKHint hint, float weight = 1.0f)
     {
-        
+
         Vector3 ikPos = animator.GetIKPosition(goal);
         //プレイヤーの真下にRayを飛ばす。
         if (Physics.Raycast(ikPos, -transform.up, out RaycastHit hit))
@@ -194,7 +193,7 @@ public class AvatarSyncronize : NetworkBehaviour
                 + transform.forward * 0.4f
                 + transform.right * (goal == AvatarIKGoal.LeftFoot || goal == AvatarIKGoal.LeftHand ? -kneeWight : kneeWight)
                 + Vector3.up * 0.3f;
-            SetIKHintPosition(hint,hintPos);
+            SetIKHintPosition(hint, hintPos);
         }
     }
     private void SetIKPositonAndRotation(AvatarIKGoal goal, Transform targetTransform, float weight = 1.0f)
@@ -211,7 +210,7 @@ public class AvatarSyncronize : NetworkBehaviour
     }
     private void SetIKHintPosition(AvatarIKHint hint, Vector3 targetPos, float weight = 1.0f)
     {
-        animator.SetIKHintPositionWeight(hint ,weight);
+        animator.SetIKHintPositionWeight(hint, weight);
         animator.SetIKHintPosition(hint, targetPos);
     }
     /// <summary>

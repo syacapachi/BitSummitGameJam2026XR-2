@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Syacapachi.Data;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
@@ -6,8 +7,6 @@ using UnityEngine;
 
 public class ResultUI : MonoBehaviour
 {
-    private NetworkGameManager nGameManager;
-
     [SerializeField] GameObject panel;
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI titleText;
@@ -37,19 +36,12 @@ public class ResultUI : MonoBehaviour
 
     [Header("SubscribeEvent")]
     [SerializeField] GameStateEvent gameStateEvent;
-    [SerializeField] PlayerResultDataArrayEvent OnGameResultRpc;
+    [SerializeField] ResultDataEvent OnGameResultRpc;
 
-    private bool isGameOver = false;
     private readonly List<GameObject> spawnedUIObjects = new();
-    IEnumerator Start()
+    void Start()
     {
         InitializeUI();
-        // GameManager待機
-        while (ManagerLocator.Instance.AllGameManager == null)
-        {
-            yield return null;
-        }
-        nGameManager = ManagerLocator.Instance.AllGameManager;
     }
 
     void InitializeUI()
@@ -68,16 +60,11 @@ public class ResultUI : MonoBehaviour
         gameStateEvent.Unregister(OnGameStateChanged);
     }
 
-    void OnGameFinished(PlayerResultData[] resultData)
+    void OnGameFinished(ResultData resultData)
     {
         Debug.Log($"OnGameFinished called: {Time.frameCount}");
-        foreach (var r in resultData)
-        {
-            Debug.Log($"Player {r.clientId} Score:{r.score} Kills:{string.Join(",", r.killCounts)}");
-        }
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
-        float cooperation = CalculateCooperation(resultData);
-        ShowResult(cooperation, isJapanese);
+        ShowResult(resultData, isJapanese);
         ShowDetail(resultData, isJapanese);
     }
     private void OnGameStateChanged(GameState state)
@@ -86,23 +73,14 @@ public class ResultUI : MonoBehaviour
         {
             case GameState.Initializing:
                 InitializeUI(); break;
-            case GameState.GameClear:
-                isGameOver = false; break;
-            case GameState.GameOver:
-                isGameOver = true; break;
         }
     }
-    void ShowResult(float cooperation, bool isJapanese)
+    void ShowResult(ResultData data, bool isJapanese)
     {
         panel.SetActive(true);
 
-        int score = nGameManager.ScoreManager.GetScore();
-        int bonus = nGameManager.ScoreManager.TotalBonus;
-
-        
-
         // ⭐タイトル分岐
-        if (isGameOver)
+        if (data.IsGameOver)
         {
             titleText.text = gameOverText.GetText(isJapanese);
         }
@@ -112,35 +90,36 @@ public class ResultUI : MonoBehaviour
         }
 
         coopText.text = isJapanese
-            ? $"協力度 : {cooperation:F1}%"
-            : $"Cooperation : {cooperation:F1}%";
+            ? $"協力度 : {data.Cooperation:F1}%"
+            : $"Cooperation : {data.Cooperation:F1}%";
 
         resultText.text =
-            $"{scoreText.GetText(isJapanese)} : {score}\n" +
-            $"{bonusText.GetText(isJapanese)} : {bonus}";
+            $"{scoreText.GetText(isJapanese)} : {data.TotalScore}\n" +
+            $"{bonusText.GetText(isJapanese)} : {data.TotalBonus}";
     }
-    void ShowDetail(PlayerResultData[] results,bool isJapanese)
+    void ShowDetail(ResultData results, bool isJapanese)
     {
+        foreach (var r in results.detail)
+        {
+            Debug.Log($"Player {r.clientId} Score:{r.score} Kills:{string.Join(",", r.killCounts)}");
+        }
+        // （必要なら）前回削除
         ClearSpawnedUI();
         panel.SetActive(true);
 
-        titleText.text = isGameOver 
-            ? gameOverText.GetText(isJapanese) 
+        titleText.text = results.IsGameOver
+            ? gameOverText.GetText(isJapanese)
             : gameClearText.GetText(isJapanese);
 
-        // （必要なら）前回削除
-        foreach (var playerResult in results)
+
+        foreach (var playerResult in results.detail)
         {
-            var headerObj = Instantiate(playerHeaderPrefab,contentParent);
+            var headerObj = Instantiate(playerHeaderPrefab, contentParent);
             spawnedUIObjects.Add(headerObj);
-            //headerObj.transform.SetParent(contentParent, false);
-            // RectTransformの設定
             if (!headerObj.TryGetComponent<TextMeshProUGUI>(out var headerText))
             {
                 headerText = headerObj.AddComponent<TextMeshProUGUI>();
             }
-            //var rect = headerObj.GetComponent<RectTransform>();
-            //rect.sizeDelta = new Vector2(400, 120); // 高さを120に固定。横は0で親に合わせる 
             headerText.fontSize = fontSizeHeader;
             headerText.alignment = TextAlignmentOptions.TopLeft;
             headerText.enableAutoSizing = false;
@@ -198,38 +177,6 @@ public class ResultUI : MonoBehaviour
             sepText.alignment = TextAlignmentOptions.Center;
         }
     }
-
-    public static float CalculateCooperation(PlayerResultData[] results)
-    {
-        float totalShots = 0;
-        float totalHits = 0;
-        float totalKills = 0;
-        float totalShield = 0;
-
-        foreach (var r in results)
-        {
-            totalShots += r.shotsFired;
-            totalHits += r.hits;
-            totalShield += r.shield;
-
-            foreach (var k in r.killCounts)
-            {
-                totalKills += k;
-            }
-        }
-
-        float accuracy = totalHits / Mathf.Max(1, totalShots);
-        float killEfficiency = totalKills / Mathf.Max(1, totalHits);
-        float waste = totalShield / Mathf.Max(1, totalShots);
-
-        float cooperation =
-            (accuracy * 0.5f +
-             killEfficiency * 0.5f
-             - waste * 0.2f) * 100f;
-
-        return Mathf.Clamp(cooperation, 0f, 100f);
-    }
-
     void ClearSpawnedUI()
     {
         foreach (var obj in spawnedUIObjects)

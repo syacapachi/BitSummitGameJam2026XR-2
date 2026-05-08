@@ -298,7 +298,7 @@ namespace Syacapachi.Editor
             }
             if (t.IsAbstract || t.IsInterface)
             {
-                return DrawAbstructOrInterface(name, t, currentValue,target.name+"."+name);
+                return DrawAbstructOrInterface(name, t, currentValue, target.name + "." + name);
             }
             //リスト、辞書、抽象クラス/インターフェース以外のジェネリック型
             if (t.IsGenericType)
@@ -328,7 +328,7 @@ namespace Syacapachi.Editor
 
             bool fold = GetFoldout(list);
 
-            fold = EditorGUILayout.Foldout(fold, $"{name} [{list.Count}]",true);
+            fold = EditorGUILayout.Foldout(fold, $"{name} [{list.Count}]", true);
             SetFoldout(list, fold);
 
             if (!fold)
@@ -422,7 +422,7 @@ namespace Syacapachi.Editor
 
             bool fold = GetFoldout(dict);
 
-            fold = EditorGUILayout.Foldout(fold, $"{name} [{dict.Count}]",true);
+            fold = EditorGUILayout.Foldout(fold, $"{name} [{dict.Count}]", true);
             SetFoldout(dict, fold);
 
             if (!fold)
@@ -485,7 +485,7 @@ namespace Syacapachi.Editor
 
             bool fold = GetFoldout(value);
 
-            fold = EditorGUILayout.Foldout(fold, name,true);
+            fold = EditorGUILayout.Foldout(fold, name, true);
 
             SetFoldout(value, fold);
 
@@ -520,7 +520,7 @@ namespace Syacapachi.Editor
         /// <param name="type"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        object DrawAbstructOrInterface(string name, Type type, object value,string path)
+        object DrawAbstructOrInterface(string name, Type type, object value, string path)
         {
             if (abstructToClass.TryGetValue(path, out var concreteType))
             {
@@ -545,7 +545,7 @@ namespace Syacapachi.Editor
         /// 具象クラスの選択メニューを表示する。選択されたクラスは、抽象クラスやインターフェースのキャッシュに保存される。次回以降は直接描画されるようになる。
         /// </summary>
         /// <param name="baseType"></param>
-        private void ShowTypeMenu(Type baseType,string path)
+        private void ShowTypeMenu(Type baseType, string path)
         {
             var menu = new GenericMenu();
             var types = AppDomain.CurrentDomain.GetAssemblies()

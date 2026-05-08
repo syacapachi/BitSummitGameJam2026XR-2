@@ -1,5 +1,4 @@
-﻿using Oculus.Interaction.Locomotion;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 public class StatusViewer : NetworkBehaviour
@@ -22,7 +21,6 @@ public class StatusViewer : NetworkBehaviour
             Vector3 positon = mainCamera.WorldToScreenPoint(playerRootTransform.position);
             if (positon.z < 0) return; // カメラの前にいる場合のみ表示
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 120, 100, 20), $"{OwnerClientId}");
-            GUI.Label(new Rect(positon.x, Screen.height - positon.y - 100, 100, 20), $"jump: {syncro.JumpCount}");
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 80, 100, 20), $"HP: {playerHealth.CurrentHealth}/{playerHealth.MaxHealth}");
             return;
         }
@@ -32,7 +30,6 @@ public class StatusViewer : NetworkBehaviour
             Vector3 positon = mainCamera.WorldToScreenPoint(playerRootTransform.position);
             if (positon.z < 0) return; // カメラの前にいる場合のみ表示
             GUI.Label(new Rect(positon.x, Screen.height - positon.y - 60, 100, 20), "You");
-            GUI.Label(new Rect(positon.x, Screen.height - positon.y - 30, 100, 20), $"jump: {syncro.JumpCount}");
             GUI.Label(new Rect(positon.x, Screen.height - positon.y, 100, 20), $"HP: {playerHealth.CurrentHealth}/{playerHealth.MaxHealth}");
         }
 

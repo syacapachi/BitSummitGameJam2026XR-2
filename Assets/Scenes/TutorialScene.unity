@@ -15071,6 +15071,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 885924280}
     - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: objects
+      value: 
+      objectReference: {fileID: 102900000, guid: 163666d43b155d647855c6a9c5d11bc6, type: 3}
+    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: spawner
       value: 
       objectReference: {fileID: 1367694067}
@@ -15082,66 +15086,6 @@ PrefabInstance:
       propertyPath: playerManager
       value: 
       objectReference: {fileID: 1692854022}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: attackBlockedEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 29e4db13b8933e44b8dfd9df362fd1d2, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: OnTutorialStepChanged
-      value: 
-      objectReference: {fileID: 11400000, guid: 4cdbcd5da1b58d048a39f9a786419768, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: OnTutorialStepCleared
-      value: 
-      objectReference: {fileID: 11400000, guid: 64f3ed58da1abd54bb4e2c3464685d38, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: step1Enemies.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: step2Enemies.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'step1Enemies.Array.data[0]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'step1Enemies.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'step1Enemies.Array.data[2]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'step1Enemies.Array.data[3]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'step1Enemies.Array.data[4]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'step1Enemies.Array.data[5]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'step1Enemies.Array.data[6]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'step1Enemies.Array.data[7]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'step2Enemies.Array.data[0]'
-      value: 
-      objectReference: {fileID: 11400000, guid: e46a108a5137e2840b992565f1659bcf, type: 2}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'step2Enemies.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: f594e91d59269df42abf37e34d18e45f, type: 2}
     - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'step2Enemies.Array.data[2]'
       value: 

@@ -1,7 +1,4 @@
-﻿
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
@@ -14,8 +11,6 @@ public class PhaseManager : NetworkBehaviour
     [SerializeField] PhaseCountDownSettingSO uiSettings;
     [SerializeField] NetworkVariable<int> syncedPhaseIndex = new(-1);
     public NetworkVariable<int> CountdownValue = new(0);
-
-    public NetworkVariable<bool> phaseFinished = new(false);
 
     public NetworkVariable<float> phaseProgress = new(
         1f,
@@ -55,7 +50,7 @@ public class PhaseManager : NetworkBehaviour
 
     void OnDifficultyChanged(Difficulty newValue)
     {
-        Debug.Log($"[PhaseManager] Difficulty同期: {newValue}");
+        Debug.Log($"[PhaseManager] Difficulty同期: {newValue}", gameObject);
 
         currentPhaseMode = database.GetSetting(newValue);
     }
@@ -69,7 +64,7 @@ public class PhaseManager : NetworkBehaviour
     }
     private void OnPhaseChanedHaldle(int oldValue, int newValue)
     {
-        Debug.Log($"[NetworkVariable] PhaseChange: {newValue}");
+        Debug.Log($"[NetworkVariable] PhaseChange: {newValue}", gameObject);
         OnPhaseChangeRpcEvent.Invoke(newValue);
     }
 
@@ -77,7 +72,7 @@ public class PhaseManager : NetworkBehaviour
     public void StartPhasesRpc(Difficulty difficulity)
     {
 #if UNITY_EDITOR
-        Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartPhasesRpc called");
+        Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartPhasesRpc called", gameObject);
 #endif
         //クライアント側でもフェーズの情報を更新する必要があるため、RPC内でフェーズのモードを切り替える
         currentPhaseMode = database.GetSetting(difficulity);
