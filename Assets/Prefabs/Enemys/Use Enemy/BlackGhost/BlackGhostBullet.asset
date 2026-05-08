@@ -9,14 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 143f561df1144aa42b45f6186789b04a, type: 3}
-  m_Name: KingDemonWeapon
+  m_Script: {fileID: 11500000, guid: d6379476ef6d98642a2076ee389028e1, type: 3}
+  m_Name: BlackGhostBullet
   m_EditorClassIdentifier: 
-  fireInterval: 3
-  maxAmmo: 30
-  reloadTime: 0
-  laserDistance: 50
-  speed: 15
-  bulletSetting: {fileID: 11400000, guid: f98ce52ae01851a4ea9df97e89c0b6e6, type: 2}
+  speed: 10
   damage: 200
-  FirstShootDelay: 3

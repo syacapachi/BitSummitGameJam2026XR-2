@@ -79,7 +79,7 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
 
         var bullet = obj.GetComponent<BulletBaseController>();
 
-        bullet.BulletInit(Collector, job,weaponSettings);
+        bullet.BulletInit(Collector, job,weaponSettings.bulletSetting);
         // ③ ネットワークでSpawn
         obj.SpawnWithOwnership(OwnerClientId);
     }

@@ -1906,9 +1906,23 @@ MonoBehaviour:
     Layer: 0
     OriginatingState: -1167698442
     DestinationState: -994616398
-    TransitionDuration: 2.6039271
+    TransitionDuration: 1
     TriggerNameHash: 1080829965
     TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1167698442
+    DestinationState: 1669584845
+    TransitionDuration: 0
+    TriggerNameHash: 1654612129
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -994616398
+    DestinationState: 1669584845
+    TransitionDuration: 0
+    TriggerNameHash: 1654612129
+    TransitionIndex: 1
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Attack
@@ -2051,6 +2065,18 @@ PrefabInstance:
       propertyPath: networkAnimator
       value: 
       objectReference: {fileID: 4455940530001110043}
+    - target: {fileID: 3163972296892794398, guid: 51c87882fbc28984083999e0612867d3, type: 3}
+      propertyPath: renderers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3163972296892794398, guid: 51c87882fbc28984083999e0612867d3, type: 3}
+      propertyPath: 'renderers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7154691694138739070}
+    - target: {fileID: 3163972296892794398, guid: 51c87882fbc28984083999e0612867d3, type: 3}
+      propertyPath: 'renderers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 7154691694138739070}
     - target: {fileID: 4537448773534006210, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3663700184
@@ -2118,63 +2144,25 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1058612673815464019, guid: 51c87882fbc28984083999e0612867d3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3120833137829090160}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5081841902659819387, guid: 51c87882fbc28984083999e0612867d3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8154610475075693234}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51c87882fbc28984083999e0612867d3, type: 3}
 --- !u!114 &2499958070715350036 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5637691317398501634, guid: 51c87882fbc28984083999e0612867d3, type: 3}
   m_PrefabInstance: {fileID: 7821830047732106518}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3029493964516840045}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30664a8f0db04b349ae60bc4a046931c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &3029493964516840045 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5081841902659819387, guid: 51c87882fbc28984083999e0612867d3, type: 3}
-  m_PrefabInstance: {fileID: 7821830047732106518}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8154610475075693234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3029493964516840045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3526a91bd42fa8845baad658c78833f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  nEnemy: {fileID: 5144246531111797512}
-  ghostHitAudioData: {fileID: 0}
-  demonHitAudioData: {fileID: 0}
-  ghostHitClipAll: {fileID: 0}
-  demonHitClipAll: {fileID: 0}
-  defaultHitAudioData: {fileID: 0}
-  defaultHitClipAll: {fileID: 8300000, guid: d78d523e7039336419d32e747e8dd408, type: 3}
-  hitVolumeAll: 1
-  hitVoiceCooldownAll: 1
-  ghostDeathAudioData: {fileID: 0}
-  demonDeathAudioData: {fileID: 0}
-  ghostDeathClipAll: {fileID: 8300000, guid: 93c41a2f186aed54a9e13211c2d7bd37, type: 3}
-  demonDeathClipAll: {fileID: 8300000, guid: dc8f926fab434a844b493d2f6b677a58, type: 3}
-  defaultDeathAudioData: {fileID: 0}
-  defaultDeathClipAll: {fileID: 0}
-  deathVolumeAll: 1
-  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!114 &5144246531111797512 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3163972296892794398, guid: 51c87882fbc28984083999e0612867d3, type: 3}
   m_PrefabInstance: {fileID: 7821830047732106518}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3029493964516840045}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0524e63ef5ed9c147a5ee84c8312ae66, type: 3}

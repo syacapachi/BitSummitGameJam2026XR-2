@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/WeaponSettings")]
+[CreateAssetMenu(menuName = "Weapons/WeaponSettings")]
 public class WeaponSettingsSO : ScriptableObject
 {
     [Header("Gun Setting")]
@@ -13,8 +13,5 @@ public class WeaponSettingsSO : ScriptableObject
     public float laserDistance = 50f;
 
     [Header("Bullet Setting")]
-    public float speed = 20f;
-    [Header("Damage")]
-    [SerializeField] float damage = 1;
-    public float Damage => damage;
+    public BulletSetting bulletSetting;
 }

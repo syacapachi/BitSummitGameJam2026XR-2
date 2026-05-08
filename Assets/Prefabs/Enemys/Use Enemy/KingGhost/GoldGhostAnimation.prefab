@@ -20,6 +20,30 @@ PrefabInstance:
       propertyPath: networkAnimator
       value: 
       objectReference: {fileID: 6703713428367933465}
+    - target: {fileID: 2732699724969779013, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: renderers.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2732699724969779013, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: 'renderers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1573711675445777893}
+    - target: {fileID: 2732699724969779013, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: 'renderers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8550703078343534487}
+    - target: {fileID: 2732699724969779013, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: 'renderers.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8035062540274862302}
+    - target: {fileID: 2732699724969779013, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: 'renderers.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2932882260394619769}
+    - target: {fileID: 2732699724969779013, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
+      propertyPath: 'renderers.Array.data[4]'
+      value: 
+      objectReference: {fileID: 2932882260394619769}
     - target: {fileID: 3220148849704102723, guid: 3dc7d616633e96b44bdd756ebe945aca, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.06
@@ -358,9 +382,23 @@ MonoBehaviour:
     Layer: 0
     OriginatingState: -1167698442
     DestinationState: -994616398
-    TransitionDuration: 2.6039271
+    TransitionDuration: 1
     TriggerNameHash: 1080829965
     TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1167698442
+    DestinationState: 1669584845
+    TransitionDuration: 0
+    TriggerNameHash: 1654612129
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -994616398
+    DestinationState: 1669584845
+    TransitionDuration: 0
+    TriggerNameHash: 1654612129
+    TransitionIndex: 1
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Speed

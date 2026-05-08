@@ -14,7 +14,7 @@ public class NEnemyShoot : GunController
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffect;
 
-    private EnemyWeaponSettingsSO weaponSO;
+    private EnemyWeaponSettingsSO weaponSOServerOnly;
     Coroutine shootCorutine;
     NetworkGameManager gameManager;
     PlayerManager playerManager;
@@ -36,8 +36,8 @@ public class NEnemyShoot : GunController
         base.OnNetworkSpawn();
 
         if (!IsServer) return;
-        weaponSO = nEnemy.EnemyWeaponServeronly;
-        remain = weaponSO.maxAmmo;
+        weaponSOServerOnly = nEnemy.EnemyWeaponServeronly;
+        remain = weaponSOServerOnly.maxAmmo;
         shootCorutine = StartCoroutine(ShootCorutine());
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
@@ -64,7 +64,7 @@ public class NEnemyShoot : GunController
         networkObject.gameObject.layer = this.gameObject.layer;
 
         var bullet = networkObject.GetComponent<BulletBaseController>();
-        bullet.BulletInit(null, nEnemy.EnemyJob, weaponSO);
+        bullet.BulletInit(null, nEnemy.EnemyJob, weaponSOServerOnly.bulletSetting);
 
         networkObject.Spawn();
     }
@@ -72,10 +72,10 @@ public class NEnemyShoot : GunController
     private IEnumerator ShootCorutine()
     {
         //トリガー以外はこっち
-        networkAnimator?.Animator.SetFloat("Speed", 2.0f);
-        WaitForSeconds waitInterval = new WaitForSeconds(weaponSO.fireInterval);
-        WaitForSeconds waitReload = new WaitForSeconds(weaponSO.reloadTime);
-        yield return new WaitForSeconds(weaponSO.FirstShootDelayTime);
+        //networkAnimator?.Animator.SetFloat("Speed", 2.0f);
+        WaitForSeconds waitInterval = new WaitForSeconds(weaponSOServerOnly.fireInterval);
+        WaitForSeconds waitReload = new WaitForSeconds(weaponSOServerOnly.reloadTime);
+        yield return new WaitForSeconds(weaponSOServerOnly.FirstShootDelayTime);
         //トリガーはこっち
         networkAnimator?.SetTrigger("Attack");
 
@@ -87,7 +87,7 @@ public class NEnemyShoot : GunController
             if (--remain <= 0)
             {
                 yield return waitReload;
-                remain = weaponSO.maxAmmo;
+                remain = weaponSOServerOnly.maxAmmo;
             }
         }
     }
@@ -132,7 +132,7 @@ public class NEnemyShoot : GunController
 
             var playerJob = prop.Job;
             
-            bool canTarget = (nEnemy.EnemyJob & playerJob) == 0;
+            bool canTarget = nEnemy.IsAttackableJob(playerJob);
 
             //Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {nEnemy.EnemyJob}, canTarget: {canTarget}");
 
@@ -147,7 +147,7 @@ public class NEnemyShoot : GunController
             break;
         }
 
-        Debug.Log($"[{nameof(NEnemyShoot)},{nEnemy.EnemyJob}] nearest target: {(nearest != null ? nearest.name : "null")}");
+        Debug.Log($"[{nameof(NEnemyShoot)},{nEnemy.EnemyJob}] nearest target: {(nearest != null ? nearest.name : "null")}",gameObject);
 
         return nearest != null;
     }

@@ -7,7 +7,7 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     [SerializeField] float lifeTime = 5f;
     [SerializeField] Rigidbody rb;
     [SerializeField] protected JobSettingGenerator setting;
-    private WeaponSettingsSO gunSO;
+    private BulletSetting bulletSettingServerOnly;
     private PlayerJob shooterJob = PlayerJob.Both;
     private IResultCollector shooterId;
     protected Coroutine despawnTimer;
@@ -15,11 +15,11 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
 
     public PlayerJob ShooterJob => shooterJob;
 
-    public float Damage => gunSO.Damage;
+    public float Damage => bulletSettingServerOnly.Damage;
 
     public IResultCollector ResultCollector => shooterId;
 
-    protected WeaponSettingsSO GunSO => gunSO;
+    protected BulletSetting BulletServerOnly => bulletSettingServerOnly;
 
 
     void Start()
@@ -28,19 +28,19 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     }
     public override void OnNetworkSpawn()
     {
-        if (IsServer && gunSO != null)
+        if (IsServer && bulletSettingServerOnly != null)
         {
             rb ??= GetComponent<Rigidbody>();
             rb.isKinematic = false;
-            rb.linearVelocity = transform.forward * gunSO.speed;
+            rb.linearVelocity = transform.forward * bulletSettingServerOnly.Speed;
             despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
         }
     }
-    public void BulletInit(IResultCollector shooter, PlayerJob shooterJob, WeaponSettingsSO so, bool isApplyLayer = false)
+    public void BulletInit(IResultCollector shooter, PlayerJob shooterJob, BulletSetting bulletSetting, bool isApplyLayer = false)
     {
         shooterId = shooter;
         this.shooterJob = shooterJob;
-        gunSO = so;
+        this.bulletSettingServerOnly = bulletSetting;
         if (isApplyLayer)
         {
             ApplySetting();

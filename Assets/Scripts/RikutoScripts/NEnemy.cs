@@ -72,13 +72,13 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         if(enemyJobSetting == null)
         {
-            Debug.LogError("enemyJobSetting is null!");
+            Debug.LogError("enemyJobSetting is null!",gameObject);
             return false;
         }
         if(enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)){
             return setting.IsAttackableJob(playerJob);
         }
-        Debug.LogError($"LayerMask setting not found for job: {playerJob}");
+        Debug.LogError($"LayerMask setting not found for job: {playerJob}",gameObject);
         return false;
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
@@ -120,16 +120,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     //    UpdateHPUI(currentHP.Value);
     //}
 
-    private void Awake()
-    {
-        //水野編集
-        if (enemyAudio == null)
-        {
-            enemyAudio = GetComponent<NEnemyDespawnAudio>() ?? GetComponentInParent<NEnemyDespawnAudio>();
-        }
-        //水野以上
-        renderers = GetComponentsInChildren<Renderer>();
-    }
 
     public override void OnNetworkSpawn()
     {
@@ -223,14 +213,15 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     }
     private IEnumerator SetupPlayerCoroutine()
     {
+        ManagerLocator locator = ManagerLocator.Instance;
         yield return new WaitUntil(() =>
-            ManagerLocator.Instance != null &&
-            ManagerLocator.Instance.AllPlayerManager != null &&
-            ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer != null &&
-            ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.transform != null
+            locator != null &&
+            locator.AllPlayerManager != null &&
+            locator.AllPlayerManager.NetworkOwnerPlayer != null &&
+            locator.AllPlayerManager.NetworkOwnerPlayer.transform != null
         );
 
-        targetPlayerServerOnly = ManagerLocator.Instance.AllPlayerManager.NetworkOwnerPlayer.transform;
+        targetPlayerServerOnly = locator.AllPlayerManager.NetworkOwnerPlayer.transform;
         isInitialize = true;
     }
 
@@ -250,7 +241,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         if (!IsServer) return;
         if (isDieServerOnly) return;
-        Debug.Log("Take damage");
+        Debug.Log("Take damage",gameObject);
         if(currentHP.Value > 0)  currentHP.Value -= damage;
 
         if (currentHP.Value <= 0)
@@ -265,7 +256,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         else
         {
-            networkAnimator?.SetTrigger("Hit");
+            networkAnimator.SetTrigger("Hit");
             //アニメーションで見えてる間は無敵
             isAttackable = false;
             if (enemyAudio != null)
@@ -274,11 +265,12 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             }
         }
     }
-    public void MovePositionFromAnimationEvent()
+    public void MovePositionFromAnimationServerEvent()
     {
         if(!IsServer) return ;
         //無敵解除
         isAttackable = true;
+        if (!enemySOServertOnly.IsMovable) return;
         var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
         if (CheckPointManager == null) return;
         //次へ移動
@@ -302,7 +294,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
     }
     
-
     void DieOnServer(IResultCollector collector)
     {
         if (collector != null && collector is PlayerStats stats)
@@ -321,7 +312,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         else
         {
-            networkAnimator?.SetTrigger("Death");
+            networkAnimator.SetTrigger("Death");
             SetVisibleRpc();
         }
         //アニメーション終了を待つため
@@ -332,7 +323,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         DieOnServer(null);
         isInitialize = true;
     }
-
     [OnInspectorButton("DieFromAnimationEvent")]
     public void DieFromAnimationEvent()
     {
@@ -345,7 +335,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         UpdateHPUI(newValue);
     }
-
     void UpdateHPUI(float hp)
     {
 
@@ -355,14 +344,12 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (hpText != null)
             hpText.text = $"{hp} / {maxHpAll}";
     }
-
     public void SetAttackabe(bool value)
     {
         isAttackable = value;
     }
 
     [OnInspectorButton("NextJob")]
-    // =========================
     public void NextJob()
     {
         if (!IsServer) return;
@@ -389,7 +376,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
         ChangeJobServer(jobCycle[nextIndex]);
     }
-
     // =========================
     // 🌐 サーバー専用：Job変更
     // =========================
@@ -398,11 +384,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (!IsServer) return;
 
         ApplyJobInternal(newJob);
-
         // 全クライアントへ同期
         ChangeJobRpc(newJob);
     }
-
     // =========================
     // 🌐 クライアント同期
     // =========================
@@ -424,7 +408,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
         ApplySettting(); // ← 既存のLayer変更処理
 
-        Debug.Log($"[Enemy] Job Changed: {oldJob} → {enemyJob}");
+        Debug.Log($"[Enemy] Job Changed: {oldJob} → {enemyJob}",gameObject);
     }
 
     public void SetVisibleServer()
@@ -466,4 +450,17 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             Debug.Log($"  after : {renderers[i].name} layer:{renderers[i].gameObject.layer}");
         }
     }
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        FindRefernce();
+    }
+    [OnInspectorButton]
+    void FindRefernce()
+    {
+        renderers = GetComponentsInChildren<Renderer>();
+        enemyAudio = GetComponentInChildren<NEnemyDespawnAudio>();
+        networkAnimator = GetComponentInChildren<NetworkAnimator>();
+    }
+#endif
 }

@@ -20,6 +20,26 @@ PrefabInstance:
       propertyPath: networkAnimator
       value: 
       objectReference: {fileID: 8871521487563348261}
+    - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: 'renderers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 6135507161841451373}
+    - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: 'renderers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 4538740386107575773}
+    - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: 'renderers.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8023291293355779090}
+    - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: 'renderers.Array.data[3]'
+      value: 
+      objectReference: {fileID: 8534322420965985115}
+    - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: 'renderers.Array.data[4]'
+      value: 
+      objectReference: {fileID: 3549389737140187388}
     - target: {fileID: 1626770062420064645, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.25
@@ -327,9 +347,23 @@ MonoBehaviour:
     Layer: 0
     OriginatingState: -1167698442
     DestinationState: -994616398
-    TransitionDuration: 2.6039271
+    TransitionDuration: 0.02
     TriggerNameHash: 1080829965
     TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1167698442
+    DestinationState: 1669584845
+    TransitionDuration: 0.02
+    TriggerNameHash: 1654612129
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -994616398
+    DestinationState: 1669584845
+    TransitionDuration: 0.02
+    TriggerNameHash: 1654612129
+    TransitionIndex: 1
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Speed

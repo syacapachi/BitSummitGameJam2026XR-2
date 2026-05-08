@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/EnemyWeaponSettings")]
+[CreateAssetMenu(menuName = "Weapons/EnemyWeaponSettings")]
 public class EnemyWeaponSettingsSO : WeaponSettingsSO
 {
     [Header("Enemy Wait Times")]

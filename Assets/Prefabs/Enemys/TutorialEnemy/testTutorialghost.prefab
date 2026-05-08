@@ -407,15 +407,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   rootTransfrom: {fileID: 1540549378645820342}
-  enemySO: {fileID: 11400000, guid: e46a108a5137e2840b992565f1659bcf, type: 2}
   enemyJobSetting: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   hpCanvas: {fileID: 8115059269520921985}
   hpImage: {fileID: 6392055257079718664}
   hpText: {fileID: 7872890923030782825}
   enemyJob: 4
+  networkAnimator: {fileID: 0}
   enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   dieEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+  enemyAudio: {fileID: 0}
   isAttackable: 1
+  renderers:
+  - {fileID: 984271367505881240}
+  - {fileID: 7055824040725011868}
   jobCycle: 010000000200000004000000
 --- !u!120 &984271367505881240
 LineRenderer:
@@ -538,12 +542,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   nEnemy: {fileID: 0}
-  validHitFxPrefabAll: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
-  validHitSfxAll: {fileID: 8300000, guid: c337d469678aa0d4fb70415fb29fb25d, type: 3}
-  validHitVolumeAll: 1
-  invalidHitFxPrefabAll: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
-  invalidHitSfxAll: {fileID: 8300000, guid: c974731f514a5964780a24ffa7825328, type: 3}
-  invalidHitVolumeAll: 1
+  validHitAudio: {fileID: 0}
+  validHitFx: {fileID: 0}
+  invalidHitAudio: {fileID: 0}
+  invalidHitFx: {fileID: 0}
   JobSetting: {fileID: 0}
   gameEffectEvent: {fileID: 0}
 --- !u!114 &-1831760746074150659
@@ -559,6 +561,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  deathAudio: {fileID: 0}
+  deathFx: {fileID: 0}
   deathFxPrefabAll: {fileID: 8987055145473169864, guid: 61d292a3d4be52d48b3602f211d2c501, type: 3}
   deathSfxAll: {fileID: 8300000, guid: 28110385e59aa2a48aac031f73088dc4, type: 3}
   deathVolumeAll: 1
@@ -695,9 +699,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   spawnFxPrefabAll: {fileID: 2424596171460707547, guid: c2928ca8c149c5040a6db6668e597ad5, type: 3}
-  spawnSfxAll: {fileID: 8300000, guid: 755277c4df6a1704b91570f49b062caa, type: 3}
-  spawnFxLifeTimeAll: 2
-  spawnVolumeAll: 1
+  audioEffectData: {fileID: 0}
+  fxEffect: {fileID: 0}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &2789469182908074600
 GameObject:
