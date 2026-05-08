@@ -58702,7 +58702,7 @@ PrefabInstance:
       objectReference: {fileID: 1479436516}
     - target: {fileID: 6510073436301680388, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6811614544963947594, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       propertyPath: m_Name
@@ -58716,6 +58716,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6752754359177759359, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
     - targetCorrespondingSourceObject: {fileID: 4597446155573577808, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
@@ -60888,6 +60891,10 @@ PrefabInstance:
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: gameStartMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: difficulty.m_InternalValue
