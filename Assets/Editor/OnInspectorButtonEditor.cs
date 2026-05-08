@@ -29,6 +29,8 @@ namespace Syacapachi.Editor
         private readonly Dictionary<string,Type> abstructToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<object, bool> foldouts = new();
+        // パラメータのFoldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
+        private readonly Dictionary<MethodInfo, bool> parametersfoldouts = new();
         // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<UnityEngine.Object, bool> foldoutStates = new();
         // ネストしたEditorキャッシュ (パフォーマンス向上のため)
@@ -76,7 +78,6 @@ namespace Syacapachi.Editor
                 if (attr.showOnlyInPlayMode && !Application.isPlaying)
                     continue;
 
-                EditorGUILayout.LabelField($"{targetType.FullName}$ Parameters", EditorStyles.boldLabel);
                 DrawButtonForMethod(method, attr);
             }
         }
@@ -96,21 +97,31 @@ namespace Syacapachi.Editor
             }
             //初回は辞書に登録することで次回以降の検索の手間を省く
             if (!methodParameters.ContainsKey(method))
+            {
                 methodParameters[method] = new object[parameters.Length];
+            }
+            if (!parametersfoldouts.ContainsKey(method))
+            {
+                parametersfoldouts[method] = true;
+            }
 
             var values = methodParameters[method];
 
             EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField($"{method.Name} Parameters", EditorStyles.boldLabel);
+            parametersfoldouts[method] = EditorGUILayout.Foldout(parametersfoldouts[method], $"{method.Name} Parameters", true);
 
-            for (int i = 0; i < parameters.Length; i++)
+            if (parametersfoldouts[method])
             {
-                var param = parameters[i];
-                values[i] = DrawField(param.ParameterType, param.Name, values[i]);
-                //変更を検知
-                isValueChangedThisFrame |= GUI.changed;
+                EditorGUI.indentLevel++;
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    var param = parameters[i];
+                    values[i] = DrawField(param.ParameterType, param.Name, values[i]);
+                    //変更を検知
+                    isValueChangedThisFrame |= GUI.changed;
+                }
+                EditorGUI.indentLevel--;
             }
-
             if (GUILayout.Button(buttonLabel))
                 InvokeMethod(method, values);
 
@@ -323,7 +334,7 @@ namespace Syacapachi.Editor
             bool fold = GetFoldout(list);
 
             // Foldoutを描画して状態を更新
-            fold = EditorGUILayout.Foldout(fold, $"{name} [{list.Count}]",true);
+            fold = EditorGUILayout.Foldout(fold, $"{name} [{list.Count}]", true);
             SetFoldout(list, fold);
 
             if (!fold)
@@ -372,7 +383,7 @@ namespace Syacapachi.Editor
             array ??= Array.CreateInstance(elementType, 0);
             // nullの場合は新しいリストを作成
             bool fold = GetFoldout(array);
-            fold = EditorGUILayout.Foldout(fold, $"{name} [{array.Length}]",true);
+            fold = EditorGUILayout.Foldout(fold, $"{name} [{array.Length}]", true);
             SetFoldout(array, fold);
 
 
@@ -382,7 +393,7 @@ namespace Syacapachi.Editor
             //展開されている場合は要素を描画
             EditorGUI.indentLevel++;
 
-            
+
             int newSize = EditorGUILayout.IntField("Size", array.Length);
 
             if (array == null || newSize != array.Length)

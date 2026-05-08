@@ -31,13 +31,13 @@ public class AnimationEventController : NetworkBehaviour
     void OnDie()
     {
         if (!IsServer) return;
-        enemy.Die();
+        enemy.DieFromAnimationEvent();
     }
 
     void StartMove()
     {
         if (!IsServer) return;
-        enemy.MovePosition();
+        enemy.MovePositionFromAnimationEvent();
     }
 
 #if UNITY_EDITOR

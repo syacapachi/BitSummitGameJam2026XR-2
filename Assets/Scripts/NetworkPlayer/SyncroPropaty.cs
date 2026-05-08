@@ -6,6 +6,7 @@ using Unity.Netcode;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using ReadOnlyAttribute = Syacapachi.Attribute.ReadOnlyAttribute;
 
 public class SyncroPropaty : NetworkBehaviour
 {
