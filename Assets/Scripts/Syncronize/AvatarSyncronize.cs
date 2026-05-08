@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR;
@@ -126,7 +125,7 @@ public class AvatarSyncronize : NetworkBehaviour
     private void OnScaleChanged(float oldScale, float newScale)
     {
         avatarScale = newScale;
-        avatorRootTransfrom.localScale = Vector3.one * newScale;
+        this.gameObject.transform.localScale = Vector3.one * newScale;
     }
     /// <summary>
     /// アニメーションを計算するタイミングで更新
