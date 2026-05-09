@@ -28,8 +28,8 @@ public class ResultDataCreater : NetworkBehaviour
         ResultData data = new ResultData()
         {
             Time = DateTime.Now.ToString(),
-            TotalScore = totalScore,
-            TotalBonus = totalBonus,
+            RemainHP = totalScore,
+            TotalBonusHP = totalBonus,
             Cooperation = cooporate,
             IsGameOver = isGameOver,
             GameSeed = -1,

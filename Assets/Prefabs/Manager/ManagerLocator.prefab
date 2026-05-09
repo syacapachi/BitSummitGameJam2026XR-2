@@ -601,7 +601,7 @@ MonoBehaviour:
   gameMode: 1
   gameStartMode: 0
   protectArea: {fileID: 0}
-  scoreManager: {fileID: 7622921992766210704}
+  hpManager: {fileID: 7622921992766210704}
   phaseManager: {fileID: 1871165705981970814}
   PlayerManager: {fileID: 8012348177458703508}
   tutorialManager: {fileID: 8343285116251111980}
@@ -632,7 +632,7 @@ GameObject:
   - component: {fileID: 1495769789674046969}
   - component: {fileID: 7622921992766210704}
   m_Layer: 0
-  m_Name: ScoreManager
+  m_Name: HPManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -667,14 +667,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   rpcDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
-  alertScore: 5000
-  score:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
-  totalBonusServerOnly: 0
-  lastClearBonus:
+  alertHP: 5000
+  remainHP:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
@@ -927,6 +921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 437134c24a8191d4e8202c9db4efc140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   PlayerManager: {fileID: 8012348177458703508}
   resultDataRpcEvent: {fileID: 11400000, guid: f938f5fd3bfa6e949a8637e657b4cb88, type: 2}
 --- !u!1 &8596286252487718755

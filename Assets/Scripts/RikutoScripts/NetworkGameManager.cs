@@ -18,7 +18,7 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] GameStartMode gameStartMode = GameStartMode.Button;
     [Header("Refernce")]
     [SerializeField] GameObject protectArea;
-    [SerializeField] ScoreManager scoreManager;
+    [SerializeField] HPManager hpManager;
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] PlayerManager PlayerManager;
     [SerializeField] TutorialManager tutorialManager;
@@ -31,7 +31,7 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] DifficultyDataBase difficultyRpcDataBase;
 
     public GameMode CurrentGameMode => gameMode;
-    public ScoreManager ScoreManager => scoreManager;
+    public HPManager HPManager => hpManager;
     public PhaseManager PhaseManager => phaseManager;
     public GameObject ProtectArea => protectArea;
     public bool IsGamePlaying => CurrentGameState == GameState.Playing || CurrentGameState == GameState.Tutorial;
@@ -138,7 +138,7 @@ public class NetworkGameManager : NetworkBehaviour
 
         Debug.Log("Game Start", gameObject);
         //関数内部でデータベースを参照しているので、引数をとらなくても同期されているはず...
-        scoreManager.SetScoreByDifficultyServerOnly(CurrentDifficulty);
+        hpManager.SetHPByDifficultyServerOnly(CurrentDifficulty);
         phaseManager.StartPhasesServerOnly(CurrentDifficulty);
         //ここを更新すると、クライアントにイベントが飛ぶ。
         gameState.Value = GameState.Playing;
@@ -156,7 +156,7 @@ public class NetworkGameManager : NetworkBehaviour
 
         phaseManager.ResetPhase();
         phaseManager.KillableHandle.KillAll();
-        scoreManager.ResetScore();
+        hpManager.ResetHP();
         foreach (var player in PlayerManager.AllPlayers)
         {
             if (player != null && player.stats != null)
@@ -212,13 +212,13 @@ public class NetworkGameManager : NetworkBehaviour
         phaseManager.StopAllCoroutines();
         resultDataCreater.CreateAndSendResultData(
             IsGameOver,
-            ScoreManager.GetScore(),
-            ScoreManager.TotalBonusServerOnly,
+            HPManager.GetHP(),
+            HPManager.TotalBonusHPServerOnly,
             CurrentDifficulty);
     }
     public void BulletHitProtectArea(int damage)
     {
-        scoreManager?.AddScoreServerOnly(damage);
+        hpManager?.AddHPServerOnly(damage);
         InvokeEventRpc();
     }
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Server)]

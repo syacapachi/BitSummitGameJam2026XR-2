@@ -26,13 +26,13 @@ public class CrystalHPUI : MonoBehaviour
         maxScore = Mathf.Max(1f, maxScore);
 
         // 初期表示
-        UpdateScoreUI(nGameManager.ScoreManager.score.Value);
+        UpdateScoreUI(nGameManager.HPManager.remainHP.Value);
     }
 
     private void OnEnable()
     {
         // 変更監視
-        nGameManager.ScoreManager.score.OnValueChanged += OnScoreChanged;
+        nGameManager.HPManager.remainHP.OnValueChanged += OnScoreChanged;
         GameStateEvent.Register(OnGameStateChanged);
     }
 
@@ -42,19 +42,19 @@ public class CrystalHPUI : MonoBehaviour
 
         if (nGameManager != null)
         {
-            nGameManager.ScoreManager.score.OnValueChanged -= OnScoreChanged;
+            nGameManager.HPManager.remainHP.OnValueChanged -= OnScoreChanged;
         }
     }
 
     void OnScoreChanged(int oldValue, int newValue)
     {
-        Debug.Log($"[HPUI] OnScoreChanged {oldValue} → {newValue}",gameObject);
+        Debug.Log($"[HPUI] OnHPChanged {oldValue} → {newValue}",gameObject);
         UpdateScoreUI(newValue);
     }
 
     void UpdateScoreUI(int score)
     {
-        Debug.Log($"[HPUI] UpdateUI score:{score} max:{maxScore}",gameObject);
+        Debug.Log($"[HPUI] UpdateUI remainHP:{score} max:{maxScore}",gameObject);
         // バー更新
         if (scoreBar != null)
         {

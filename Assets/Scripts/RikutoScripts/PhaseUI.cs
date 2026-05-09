@@ -245,7 +245,7 @@ public class PhaseUI : MonoBehaviour
 
     IEnumerator PhaseFinishRoutine()
     {
-        int score = nGameManager.ScoreManager.GetScore();
+        int score = nGameManager.HPManager.GetHP();
 
         SetupNormal();
 

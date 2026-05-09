@@ -7,7 +7,7 @@ public class PhaseManager : NetworkBehaviour
 {
     [SerializeField] DifficultyDataBase rpcDataBase;
     [SerializeField] NetworkEnemySpawner spawner;
-    [SerializeField] ScoreManager scoreManager;
+    [SerializeField] HPManager scoreManager;
     [SerializeField] PhaseCountDownSettingSO uiSettings;
     [SerializeField] NetworkVariable<int> syncedPhaseIndex = new(-1);
     public NetworkVariable<int> CountdownValue = new(0);
@@ -150,7 +150,7 @@ public class PhaseManager : NetworkBehaviour
 
             int bonus = Phases[CurrentPhaseIndex].ClearBonus;
 
-            scoreManager.AddBonusServerOnly(bonus); // ← ここ重要
+            scoreManager.AddBonusHPServerOnly(bonus); // ← ここ重要
 
             yield return AllDeadSequence();
         }

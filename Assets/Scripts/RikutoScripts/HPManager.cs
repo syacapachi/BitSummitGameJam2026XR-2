@@ -2,89 +2,89 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class ScoreManager : NetworkBehaviour
+public class HPManager : NetworkBehaviour
 {
     [SerializeField] DifficultyDataBase rpcDataBase;
-    [SerializeField] int alertScore = 5000;
+    [SerializeField] int alertHP = 5000;
     
-    public NetworkVariable<int> score = new(
+    public NetworkVariable<int> remainHP = new(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-    [SerializeField] int totalBonusServerOnly = 0;
+    int totalBonusHPServerOnly = 0;
     
-    public int TotalBonusServerOnly => totalBonusServerOnly;
+    public int TotalBonusHPServerOnly => totalBonusHPServerOnly;
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
     [SerializeField] BoolEvent aleartRpcEvent;
 
-    int currentMaxScore = 10000;
+    int currentMaxHP = 10000;
     bool isGameOver = false;
-    public int InitialScore => currentMaxScore;
+    public int InitialHP => currentMaxHP;
 
     private void OnEnable()
     {
-        score.OnValueChanged += OnScoreChanged;
+        remainHP.OnValueChanged += OnHPChanged;
     }
     private void OnDisable()
     {
-        score.OnValueChanged -= OnScoreChanged;
+        remainHP.OnValueChanged -= OnHPChanged;
     }
-    private void OnScoreChanged(int oldScore, int newScore)
+    private void OnHPChanged(int oldHP, int newHP)
     {
-        if(oldScore > alertScore && newScore <= alertScore)
+        if(oldHP > alertHP && newHP <= alertHP)
         {
             aleartRpcEvent.Invoke(true);
         }
-        else if(oldScore <= alertScore && newScore > alertScore)
+        else if(oldHP <= alertHP && newHP > alertHP)
         {
             aleartRpcEvent.Invoke(false);
         }
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
-    public void AddBonusServerOnly(int value)
+    public void AddBonusHPServerOnly(int value)
     {
         if (!IsServer) return;
         //lastClearBonus.Value = value;
-        totalBonusServerOnly += value;
-        AddScoreServerOnly(value);
+        totalBonusHPServerOnly += value;
+        AddHPServerOnly(value);
         //Debug.Log("Bonus Added: " + value + ", Total Score: " + score.Value);
     }
-    public void AddScoreServerOnly(int value)
+    public void AddHPServerOnly(int value)
     {
         if (!IsServer) return;
 
-        score.Value += value;
+        remainHP.Value += value;
 
-        if (score.Value < 0)
-            score.Value = 0;
+        if (remainHP.Value < 0)
+            remainHP.Value = 0;
 
         //Debug.Log("Score: " + score.Value);
 
-        if (score.Value <= 0 && !isGameOver)
+        if (remainHP.Value <= 0 && !isGameOver)
         {
             isGameOver = true;
-            Debug.Log("GAME OVER (ScoreManager)", gameObject);
+            Debug.Log("GAME OVER (HPManager)", gameObject);
             OnScoreReachZeroServerEvent.Invoke();
         }
     }
-    public void SetScoreByDifficultyServerOnly(Difficulty difficulty)
+    public void SetHPByDifficultyServerOnly(Difficulty difficulty)
     {
         int hp = rpcDataBase.CurrentSetting.PlayerHP;
         Debug.Log($"arg diff = {difficulty}, rpcDataBase diff = {rpcDataBase.CurrectDifficulty} ", gameObject);
-        score.Value = hp;
-        currentMaxScore = hp;
+        remainHP.Value = hp;
+        currentMaxHP = hp;
     }
 
-    public int GetScore()
+    public int GetHP()
     {
-        return score.Value;
+        return remainHP.Value;
     }
 
-    public void ResetScore()
+    public void ResetHP()
     {
         isGameOver = false;
-        totalBonusServerOnly = 0;
+        totalBonusHPServerOnly = 0;
     }
 }

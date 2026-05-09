@@ -27,11 +27,11 @@ namespace Syacapachi.Data
         /// <summary>
         /// 残りスコア
         /// </summary>
-        public int TotalScore;
+        public int RemainHP;
         /// <summary>
         /// フェイズボーナスの合計
         /// </summary>
-        public int TotalBonus;
+        public int TotalBonusHP;
         /// <summary>
         /// シード値(ランダム性を入れる場合)
         /// </summary>
@@ -57,8 +57,8 @@ namespace Syacapachi.Data
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref Time);
-            serializer.SerializeValue(ref TotalScore);
-            serializer.SerializeValue(ref TotalBonus);
+            serializer.SerializeValue(ref RemainHP);
+            serializer.SerializeValue(ref TotalBonusHP);
             serializer.SerializeValue(ref GameSeed);
             serializer.SerializeValue(ref IsGameOver);
             serializer.SerializeValue(ref Cooperation);

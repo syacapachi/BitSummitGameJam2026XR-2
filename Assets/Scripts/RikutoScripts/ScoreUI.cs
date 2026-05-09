@@ -13,16 +13,16 @@ public class ScoreUI : MonoBehaviour
         ManagerLocator locator = ManagerLocator.Instance;
         while (locator == null
             || locator.AllGameManager == null
-            || locator.AllGameManager.ScoreManager == null)
+            || locator.AllGameManager.HPManager == null)
         {
             yield return null;
         }
         gameManager = locator.AllGameManager;
         // 初期表示
-        UpdateScore(gameManager.ScoreManager.score.Value);
+        UpdateScore(gameManager.HPManager.remainHP.Value);
 
         // スコア変更イベント
-        gameManager.ScoreManager.score.OnValueChanged += OnScoreChanged;
+        gameManager.HPManager.remainHP.OnValueChanged += OnScoreChanged;
     }
 
     void OnScoreChanged(int oldValue, int newValue)
@@ -38,6 +38,6 @@ public class ScoreUI : MonoBehaviour
     void OnDestroy()
     {
         if (gameManager != null)
-            gameManager.ScoreManager.score.OnValueChanged -= OnScoreChanged;
+            gameManager.HPManager.remainHP.OnValueChanged -= OnScoreChanged;
     }
 }
