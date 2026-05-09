@@ -30,4 +30,6 @@ public abstract class TutorialBase
     public virtual void OnTargetDestroyed(ulong playerId) { }
     public virtual void OnAttackBlocked(ulong playerId) { }
     public virtual void OnEnemyKilled(EnemyKilled e) { }
+
+    public virtual void OnMarkerPlaced(ulong playerId) { }
 }

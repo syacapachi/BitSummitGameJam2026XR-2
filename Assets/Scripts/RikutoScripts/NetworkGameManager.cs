@@ -19,21 +19,26 @@ public class NetworkGameManager : NetworkBehaviour
     [Header("Refernce")]
     [SerializeField] GameObject protectArea;
     [SerializeField] HPManager hpManager;
+    [SerializeField] GameObject tutorialLight;
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] PlayerManager PlayerManager;
     [SerializeField] TutorialManager tutorialManager;
     [SerializeField] ResultDataCreater resultDataCreater;
     [Header("Scene Setting")]
+    /*
     [SerializeField] SceneAsset homeScene;
     [SerializeField] SceneAsset gameScene;
     [SerializeField] SceneAsset tutorialScene;
+    */
     [Header("DataBase")]
     [SerializeField] DifficultyDataBase difficultyRpcDataBase;
-
+    [SerializeField] SceneAsset homeScene;
+    [SerializeField] SceneAsset gameScene;
     public GameMode CurrentGameMode => gameMode;
     public HPManager HPManager => hpManager;
     public PhaseManager PhaseManager => phaseManager;
     public GameObject ProtectArea => protectArea;
+
     public bool IsGamePlaying => CurrentGameState == GameState.Playing || CurrentGameState == GameState.Tutorial;
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
 
@@ -77,6 +82,7 @@ public class NetworkGameManager : NetworkBehaviour
     //コルーチンが使用可能なタイミングでは、サーバーかどうかはまだ確定してない。
     private void Start()
     {
+        tutorialLight.SetActive(true);
         string sceneName = SceneManager.GetActiveScene().name;
         StartCoroutine(WaitForAllClientConnect(sceneName));
     }
@@ -84,6 +90,7 @@ public class NetworkGameManager : NetworkBehaviour
     {
         yield return new WaitUntil(() => IsSpawned && PlayerManager != null && PlayerManager.IsAllClientReady());
         if (!IsServer) yield break;
+        /*
         if (sceneName.Equals(gameScene.name))
         {
             if (gameStartMode == GameStartMode.Auto)
@@ -93,6 +100,8 @@ public class NetworkGameManager : NetworkBehaviour
         {
             StartTutorialServerOnly();
         }
+        */
+        StartTutorialServerOnly();
     }
 
     private void OnEnable()
@@ -134,15 +143,15 @@ public class NetworkGameManager : NetworkBehaviour
     public void StartGameServerOnly()
     {
         if (!IsServer) return;
-        if (CurrentGameState != GameState.Initializing) return;
+        if (CurrentGameState != GameState.Initializing&& CurrentGameState != GameState.Tutorial) return;
 
         Debug.Log("Game Start", gameObject);
+        tutorialLight.SetActive(false);
         //関数内部でデータベースを参照しているので、引数をとらなくても同期されているはず...
         hpManager.SetHPByDifficultyServerOnly(CurrentDifficulty);
         phaseManager.StartPhasesServerOnly(CurrentDifficulty);
         //ここを更新すると、クライアントにイベントが飛ぶ。
         gameState.Value = GameState.Playing;
-
     }
 
     [OnInspectorButton("Reset")]
