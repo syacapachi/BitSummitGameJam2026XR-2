@@ -2,9 +2,13 @@
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class MarkerController : NetworkBehaviour
 {
+    [Header("Fps")]
+    [SerializeField] Transform playerHead;
+    [Header("XR")]
     [SerializeField] Transform firePoint;
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] GameObject playerMarker;
@@ -23,16 +27,28 @@ public class MarkerController : NetworkBehaviour
     Coroutine markerCoroutine;
     private WaitForSeconds wait;
 
+    public Transform FirePoint
+    {
+        get
+        {
+            if (!XRSettings.isDeviceActive)
+            {
+                return playerHead;
+            }
+            return firePoint;
+        }
+    }
+
     private void Awake()
     {
         wait = new WaitForSeconds(markerBackTime);
     }
     public override void OnNetworkSpawn()
     {
-        if(!IsOwner) return;
+        if (!IsOwner) return;
         markerEvent.Register(PlaceMarkerRpc);
     }
-  
+
     protected override void OnNetworkPostSpawn()
     {
         //Debug.Log($"{nameof(MarkerController)},IsOwner={IsOwner},Owned by={OwnerClientId}");
@@ -44,7 +60,7 @@ public class MarkerController : NetworkBehaviour
         }
     }
     [Rpc(SendTo.Server)]
-    private  void CreateMerkerRpc()
+    private void CreateMerkerRpc()
     {
         var marker = GameObject.Instantiate(playerMarker);
         var networkObject = marker.GetComponent<NetworkObject>();
@@ -53,7 +69,7 @@ public class MarkerController : NetworkBehaviour
         blinkEffectServerOnly = networkObject.GetComponentInChildren<MarkerBlinkEffect>();
         attachServerOnly.Attach(node);
         isMarkAttachedServerOnly = true;
-    }   
+    }
     public override void OnNetworkDespawn()
     {
         if (IsServer)
@@ -76,15 +92,15 @@ public class MarkerController : NetworkBehaviour
     }
     void UpdateLaser()
     {
-        if (lineRenderer == null || firePoint == null) return;
+        if (lineRenderer == null || FirePoint == null) return;
 
         // �J�n�_
-        lineRenderer.SetPosition(0, firePoint.position);
+        lineRenderer.SetPosition(0, FirePoint.position);
 
         // Raycast �Œ��e�_�𔻒�
-        Vector3 forward = firePoint.forward;
+        Vector3 forward = FirePoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out RaycastHit hit, laserDistance))
+        if (Physics.Raycast(FirePoint.position, forward, out RaycastHit hit, laserDistance))
         {
             // ���������ꍇ
             lineRenderer.SetPosition(1, hit.point);
@@ -92,7 +108,7 @@ public class MarkerController : NetworkBehaviour
         else
         {
             // ������Ȃ������ꍇ
-            lineRenderer.SetPosition(1, firePoint.position + forward * laserDistance);
+            lineRenderer.SetPosition(1, FirePoint.position + forward * laserDistance);
         }
     }
     [Rpc(SendTo.Server)]
@@ -102,16 +118,16 @@ public class MarkerController : NetworkBehaviour
             || ManagerLocator.Instance.AllGameManager == null
             || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
             ) return;
-        if (firePoint == null) return;
+        if (FirePoint == null) return;
 
-        Vector3 forward = firePoint.forward;
+        Vector3 forward = FirePoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out RaycastHit hit, laserDistance, markerHitLayerMask))
+        if (Physics.Raycast(FirePoint.position, forward, out RaycastHit hit, laserDistance, markerHitLayerMask))
         {
             MoveMarkerServerRpc(hit.point);
             markerAudioController.OnMarkerSondPlayRpc(hit.point);
 
-            if (ManagerLocator.Instance.AllGameManager.CurrentGameState == GameState.Tutorial) 
+            if (ManagerLocator.Instance.AllGameManager.CurrentGameState == GameState.Tutorial)
                 ManagerLocator.Instance.TutorialManager.OnMarkerPlacedServer(OwnerClientId);
         }
     }
@@ -121,7 +137,7 @@ public class MarkerController : NetworkBehaviour
     {
         if (attachServerOnly == null)
         {
-            Debug.LogWarning("Player marker not found. Cannot place marker.",gameObject);
+            Debug.LogWarning("Player marker not found. Cannot place marker.", gameObject);
             return;
         }
         if (isMarkAttachedServerOnly)
@@ -131,7 +147,7 @@ public class MarkerController : NetworkBehaviour
         }
         else
         {
-            if (markerCoroutine != null) 
+            if (markerCoroutine != null)
             {
                 StopCoroutine(markerCoroutine);
                 markerCoroutine = null;
@@ -169,7 +185,7 @@ public class MarkerController : NetworkBehaviour
         }
         else
         {
-            Debug.LogError($"[{gameObject.name}]AttachableBehaviour is null",gameObject);
+            Debug.LogError($"[{gameObject.name}]AttachableBehaviour is null", gameObject);
             isMarkAttachedServerOnly = false;
         }
     }
