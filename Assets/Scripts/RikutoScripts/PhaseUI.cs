@@ -139,8 +139,9 @@ public class PhaseUI : MonoBehaviour
     void OnPhaseChanged(int index)
     {
         currentPhaseIndex = index;
+        if (currentPhaseIndex < 0 || currentPhaseIndex >= rpcDataBase.CurrentSetting.Phases.Length) return;
         //var manager = nGameManager.PhaseManager;
-        var phaseSetting = rpcDataBase.CurrentSetting.Phases[index];
+        var phaseSetting = rpcDataBase.CurrentSetting.Phases[currentPhaseIndex];
 
         //if (index >= 0 && manager.Phases != null && index < manager.Phases.Length)
         //{

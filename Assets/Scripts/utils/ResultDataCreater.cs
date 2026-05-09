@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ResultDataCreater : MonoBehaviour
+public class ResultDataCreater : NetworkBehaviour
 {
     [SerializeField] PlayerManager PlayerManager;
     [Header("Publish Event")]
