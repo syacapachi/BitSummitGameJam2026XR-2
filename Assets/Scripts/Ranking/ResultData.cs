@@ -62,6 +62,7 @@ namespace Syacapachi.Data
             serializer.SerializeValue(ref GameSeed);
             serializer.SerializeValue(ref IsGameOver);
             serializer.SerializeValue(ref Cooperation);
+            serializer.SerializeValue(ref Difficulty);
             serializer.SerializeValue(ref detail);//INetworkSerializableがあるとこれでいいっぽい。
         }
     }

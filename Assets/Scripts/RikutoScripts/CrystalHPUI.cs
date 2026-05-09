@@ -5,49 +5,34 @@ using UnityEngine.UI;
 
 public class CrystalHPUI : MonoBehaviour
 {
-    private NetworkGameManager nGameManager;
+    [SerializeField] NetworkGameManager nGameManager;
 
     [Header("UI")]
+    [SerializeField] Canvas hpCanvas;
     [SerializeField] private Image scoreBar; // Filled Image
     [SerializeField] private TextMeshProUGUI scoreText;
+    [Header("Reference")]
+    [SerializeField] DifficultyDataBase rpcDataBase;
     [Header("Subscribe Event")]
     [SerializeField] HPInfoEvent HPInfoRpcEvent;
     [SerializeField] GameStateEvent GameStateEvent;
 
     private float maxScore;
 
-    IEnumerator Start()
+    void UIInitialize()
     {
-        Debug.Log("[HPUI] Start begin",gameObject);
-        // GameManager待機
-        while (ManagerLocator.Instance.AllGameManager == null)
-        {
-            yield return null;
-        }
-
-        nGameManager = ManagerLocator.Instance.AllGameManager;
-        Debug.Log($"[HPUI] GameManager取得 | score:{nGameManager.ScoreManager.score.Value}",gameObject);
-
-
-        //  scoreの初期値が入るまで待つ（0対策）
-        yield return new WaitUntil(() => nGameManager.ScoreManager != null);
-
-        //  初期値をmaxとして保存
-        maxScore = nGameManager.ScoreManager.InitialScore;
-        Debug.Log($"[HPUI] maxScore:{maxScore}");
-
+        maxScore = rpcDataBase.CurrentSetting.PlayerHP;
         // 念のため保険（0除算防止）
         maxScore = Mathf.Max(1f, maxScore);
 
         // 初期表示
         UpdateScoreUI(nGameManager.ScoreManager.score.Value);
-
-        // 変更監視
-        nGameManager.ScoreManager.score.OnValueChanged += OnScoreChanged;
     }
 
     private void OnEnable()
     {
+        // 変更監視
+        nGameManager.ScoreManager.score.OnValueChanged += OnScoreChanged;
         GameStateEvent.Register(OnGameStateChanged);
     }
 
@@ -85,10 +70,14 @@ public class CrystalHPUI : MonoBehaviour
 
     void OnGameStateChanged(GameState state)
     {
-        if (this == null) return;
-        if (state == GameState.GameOver || state == GameState.GameClear)
+        if (state == GameState.Playing)
         {
-            gameObject.SetActive(false);
+            UIInitialize();
+            hpCanvas.enabled = true;
+        }
+        else if (state == GameState.GameOver || state == GameState.GameClear)
+        {
+            hpCanvas.enabled = false;
         }
     }
 }

@@ -56,7 +56,7 @@ public class TutorialSpawner : NetworkBehaviour
         remain = playerCount;
         isSpawnFinished = false;
 
-        for (int i = 0; i < playerCount; i++)
+        for (int i = 0; i < Mathf.Min(playerCount, enemyList.Count); i++)
         {
             EnemySO enemy = enemyList[i];
             SpawnTarget(i, enemy);
