@@ -56,6 +56,8 @@ public class ScoreManager : NetworkBehaviour
     public void AddScoreServerOnly(int value)
     {
         if (!IsServer) return;
+        if(ManagerLocator.Instance.AllGameManager.CurrentGameState != GameState.Playing) return;
+           
 
         score.Value += value;
 

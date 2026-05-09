@@ -11,7 +11,7 @@ public class LanguageSelectManager : MonoBehaviour
     {
         PlayerPrefs.SetString("Language", "JP");
         PlayerPrefs.Save();
-        SceneManager.LoadScene(moveScene.name);
+        TitleFlowManager.Instance.SetState(TitleFlowState.NetworkConnect);
     }
 
     // 英語ボタンが押されたとき
@@ -19,6 +19,6 @@ public class LanguageSelectManager : MonoBehaviour
     {
         PlayerPrefs.SetString("Language", "EN");
         PlayerPrefs.Save();
-        SceneManager.LoadScene(moveScene.name);
+        TitleFlowManager.Instance.EnterNetworkConnect();
     }
 }

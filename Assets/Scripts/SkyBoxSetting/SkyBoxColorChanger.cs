@@ -8,6 +8,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     [Header("重増し時間")]
     [SerializeField] float timeOffset = 30f;
     [SerializeField] float clearChangeTime = 5f;
+    [SerializeField] float tutorialToEveningTime = 3f;
     [Header("SkyBox Material")]
     [SerializeField] Material skyboxMat;
     [Header("太陽と月のルート")]
@@ -33,6 +34,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     [SerializeField, EnableIf(nameof(IsDebug))] VoidEvent debugEvent;
 
     private int currentIndex = 0;
+    private GameState previousState;
     private void Awake()
     {
         ApplyColor(startSky);
@@ -59,8 +61,20 @@ public class SkyBoxColorChanger : MonoBehaviour
         {
             case GameState.Initializing:
                 ApplyColor(startSky); break;
+            case GameState.Tutorial:
+                ApplyColor(noonSky);
+                break;
             case GameState.Playing:
-                StartSkyBoxChange(); break;
+                if (previousState == GameState.Tutorial)
+                {
+                    StartCoroutine(
+                        TutorialToGameCoroutine());
+                }
+                else
+                {
+                    StartSkyBoxChange();
+                }
+                break;
             case GameState.GameClear:
                 StopAllCoroutines();
                 StartCoroutine(GameClearSkyCoroutine()); break;
@@ -69,6 +83,7 @@ public class SkyBoxColorChanger : MonoBehaviour
                 StartCoroutine(ApplyColorCorutine(currentSky, gameOverSky, clearChangeTime));
                 break;
         }
+        previousState = newState;
     }
     private void StartSkyBoxChange()
     {
@@ -94,6 +109,18 @@ public class SkyBoxColorChanger : MonoBehaviour
             if (index == skyBoxColorSettings.Length - 1) yield return ApplyColorCorutine(skyBoxColorSettings[^1], clearSky, hourTime);
             else yield return ApplyColorCorutine(index, index + 1, hourTime);
         }
+    }
+
+    IEnumerator TutorialToGameCoroutine()
+    {
+        // noon → evening を急速変化
+        yield return ApplyColorCorutine(
+            noonSky,
+            startSky,
+            tutorialToEveningTime);
+
+        // その後いつもの流れ
+        StartSkyBoxChange();
     }
     private IEnumerator GameClearSkyCoroutine()
     {

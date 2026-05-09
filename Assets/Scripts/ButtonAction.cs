@@ -151,6 +151,7 @@ public class Scripts : MonoBehaviour
     {
         isNetworkStarted = true;
         SetActiveButtons(false);
+        TitleFlowManager.Instance.EnterWorldView();
     }
 
     private void SetActiveButtons(bool active)
