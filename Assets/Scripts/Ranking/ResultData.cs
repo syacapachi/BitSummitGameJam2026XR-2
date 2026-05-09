@@ -17,16 +17,41 @@ namespace Syacapachi.Data
 
     [Serializable]
     [GenerateEvent(typeof(GameEventSOBase<>))]
-    public class ResultData :INetworkSerializable
+    public class ResultData : INetworkSerializable
     {
         //共通情報
+        /// <summary>
+        /// 時間
+        /// </summary>
         public string Time;
+        /// <summary>
+        /// 残りスコア
+        /// </summary>
         public int TotalScore;
+        /// <summary>
+        /// フェイズボーナスの合計
+        /// </summary>
         public int TotalBonus;
+        /// <summary>
+        /// シード値(ランダム性を入れる場合)
+        /// </summary>
         public int GameSeed;
+        /// <summary>
+        /// 難易度
+        /// </summary>
+        public Difficulty Difficulty;
+        /// <summary>
+        /// ゲームオーバーかどうか
+        /// </summary>
         public bool IsGameOver;
+        /// <summary>
+        /// 協力度
+        /// </summary>
         public float Cooperation;
 
+        /// <summary>
+        /// プレーヤーごとの詳細
+        /// </summary>
         public PlayerResultData[] detail;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -37,7 +62,7 @@ namespace Syacapachi.Data
             serializer.SerializeValue(ref GameSeed);
             serializer.SerializeValue(ref IsGameOver);
             serializer.SerializeValue(ref Cooperation);
-            serializer.SerializeValue(ref detail);
+            serializer.SerializeValue(ref detail);//INetworkSerializableがあるとこれでいいっぽい。
         }
     }
 }

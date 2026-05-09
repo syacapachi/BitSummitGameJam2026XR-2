@@ -213,7 +213,8 @@ public class NetworkGameManager : NetworkBehaviour
         resultDataCreater.CreateAndSendResultData(
             IsGameOver,
             ScoreManager.GetScore(),
-            ScoreManager.TotalBonusServerOnly);
+            ScoreManager.TotalBonusServerOnly,
+            CurrentDifficulty);
     }
     public void BulletHitProtectArea(int damage)
     {

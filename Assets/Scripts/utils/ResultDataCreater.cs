@@ -9,7 +9,7 @@ public class ResultDataCreater : MonoBehaviour
     [SerializeField] PlayerManager PlayerManager;
     [Header("Publish Event")]
     [SerializeField] ResultDataEvent resultDataRpcEvent;
-    public void CreateAndSendResultData(bool isGameOver, int totalScore, int totalBonus)
+    public void CreateAndSendResultData(bool isGameOver, int totalScore, int totalBonus, Difficulty difficulty)
     {
         var list = new List<PlayerResultData>();
         Debug.Log($"AllPlayers Count = {PlayerManager.AllPlayers.Count}");
@@ -33,6 +33,7 @@ public class ResultDataCreater : MonoBehaviour
             Cooperation = cooporate,
             IsGameOver = isGameOver,
             GameSeed = -1,
+            Difficulty = difficulty,
             detail = datas
         };
         OnSendResultRpc(data);
