@@ -1,8 +1,8 @@
 ﻿using System;
 
-public class Step3_Coop : TutorialBase
+public class Step4_Coop : TutorialBase
 {
-    public Step3_Coop(TutorialSpawner spawner, Action onComplete) :base(spawner, onComplete)
+    public Step4_Coop(TutorialSpawner spawner, Action onComplete) :base(spawner, onComplete)
     {
     }
 

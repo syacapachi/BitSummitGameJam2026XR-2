@@ -123,6 +123,11 @@ public class TutorialUI : MonoBehaviour
 
             case TutorialStep.Step3:
                 title = isJapanese ? "チュートリアル3" : "Tutorial 3";
+                desc = isJapanese ? "マーカーを置いて敵の位置を示せ！" : "Place a marker to indicate the enemy's position!";
+                break;
+
+            case TutorialStep.Step4:
+                title = isJapanese ? "チュートリアル4" : "Tutorial 4";
                 desc = isJapanese ? "見えない敵を倒せ！" : "Defeat invisible enemies!";
                 break;
         }

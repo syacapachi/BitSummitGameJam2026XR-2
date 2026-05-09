@@ -77,16 +77,20 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
                 break;
 
             case TutorialStep.Step3:
-                currentStepLogic = new Step3_Coop(spawner, OnStepCompleted);
+                currentStepLogic = new Step3_Marker(
+                    playerCount,
+                    spawner,
+                    OnStepCompleted);
                 break;
 
             case TutorialStep.Step4:
-                StartMainSimulation();
-                return;
+                currentStepLogic = new Step4_Coop(
+                    spawner,
+                    OnStepCompleted);
+                break;
+
             case TutorialStep.End:
-                MoveScene();
-                return;
-            default:
+                StartMainSimulation();
                 return;
         }
 
@@ -173,5 +177,12 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
             LoadSceneMode.Single
         );
         Debug.Log($"Move To {moveScene.name}");
+    }
+
+    public void OnMarkerPlacedServer(ulong playerId)
+    {
+        if (!IsServer) return;
+
+        currentStepLogic?.OnMarkerPlaced(playerId);
     }
 }
