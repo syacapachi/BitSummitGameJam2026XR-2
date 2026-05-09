@@ -3,12 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ReadOnlyAttribute = Syacapachi.Attribute.ReadOnlyAttribute;
 
-public class SyncroPropaty : NetworkBehaviour
+public class NetworkPlayerPropaty : NetworkBehaviour
 {
     [Serializable]
     struct DefaultJobSetting

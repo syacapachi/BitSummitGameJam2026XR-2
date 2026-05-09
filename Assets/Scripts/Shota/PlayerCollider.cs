@@ -2,11 +2,11 @@
 
 public class PlayerCollider : MonoBehaviour, IDamageReciever
 {
-    [SerializeField] SyncroPropaty playerProp;
+    [SerializeField] NetworkPlayerPropaty playerProp;
     [SerializeField] PlayerHealth playerHealth;
     [SerializeField] Renderer[] m_Renerers;
     public ulong OwnerClientId => playerProp.OwnerClientId;
-    public SyncroPropaty PlayerProp => playerProp;
+    public NetworkPlayerPropaty PlayerProp => playerProp;
 
     public GameObject GameObject => this.gameObject;
 

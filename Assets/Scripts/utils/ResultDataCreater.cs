@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ResultDataCreater : MonoBehaviour
+public class ResultDataCreater : NetworkBehaviour
 {
     [SerializeField] PlayerManager PlayerManager;
     [Header("Publish Event")]
     [SerializeField] ResultDataEvent resultDataRpcEvent;
-    public void CreateAndSendResultData(bool isGameOver, int totalScore, int totalBonus)
+    public void CreateAndSendResultData(bool isGameOver, int totalScore, int totalBonus, Difficulty difficulty)
     {
         var list = new List<PlayerResultData>();
         Debug.Log($"AllPlayers Count = {PlayerManager.AllPlayers.Count}");
@@ -28,11 +28,12 @@ public class ResultDataCreater : MonoBehaviour
         ResultData data = new ResultData()
         {
             Time = DateTime.Now.ToString(),
-            TotalScore = totalScore,
-            TotalBonus = totalBonus,
+            RemainHP = totalScore,
+            TotalBonusHP = totalBonus,
             Cooperation = cooporate,
             IsGameOver = isGameOver,
             GameSeed = -1,
+            Difficulty = difficulty,
             detail = datas
         };
         OnSendResultRpc(data);

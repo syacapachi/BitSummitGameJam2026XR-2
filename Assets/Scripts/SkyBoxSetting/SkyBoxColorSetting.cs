@@ -24,7 +24,7 @@ public class SkyBoxColorSetting : ScriptableObject
     public Color sunColor = Color.white;
     [Header("光源の強さ")]
     public float sunIntensity = 0.5f;
-    [Header("太陽の光の減衰率"),Tooltip("1以上の場合、光は跳ね返るたびに弱くなる。1未満の場合、光は跳ね返るたびに強くなる")]
+    [Header("太陽の光の減衰率"), Tooltip("1以上の場合、光は跳ね返るたびに弱くなる。1未満の場合、光は跳ね返るたびに強くなる")]
     public float sunMultiplier = 1f;
 
     [Header("月の説明")]
@@ -51,7 +51,7 @@ public class SkyBoxColorSetting : ScriptableObject
     }
 #endif
 
-    public void UpdateLerpSky(SkyBoxColorSetting fromSky,SkyBoxColorSetting toSky, float t)
+    public void UpdateLerpSky(SkyBoxColorSetting fromSky, SkyBoxColorSetting toSky, float t)
     {
         topColor = Color.Lerp(fromSky.topColor, toSky.topColor, t);
         horizonColor = Color.Lerp(fromSky.horizonColor, toSky.horizonColor, t);
@@ -64,7 +64,7 @@ public class SkyBoxColorSetting : ScriptableObject
         sunColor = Color.Lerp(fromSky.sunColor, toSky.sunColor, t);
         sunIntensity = Mathf.Lerp(fromSky.sunIntensity, toSky.sunIntensity, t);
         sunMultiplier = Mathf.Lerp(fromSky.sunMultiplier, toSky.sunMultiplier, t);
-        
+
         moonColor = Color.Lerp(fromSky.moonColor, toSky.moonColor, t);
         moonIntensity = Mathf.Lerp(fromSky.moonIntensity, toSky.moonIntensity, t);
         moonMultiplier = Mathf.Lerp(fromSky.moonMultiplier, toSky.moonMultiplier, t);

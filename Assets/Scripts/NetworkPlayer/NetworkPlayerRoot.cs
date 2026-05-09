@@ -12,7 +12,7 @@ public class NetworkPlayerRoot : NetworkBehaviour
     /// </summary>
     public Transform playerRoot;
     public PlayerHealth playerHealth;
-    public SyncroPropaty propaty; 
+    public NetworkPlayerPropaty propaty; 
     public PlayerItemControll itemControll;
     public PlayerStats stats; // プレイヤーの統計情報を管理するコンポーネント
     private PlayerManager playerManager;

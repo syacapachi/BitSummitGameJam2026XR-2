@@ -4,7 +4,7 @@ using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR;
 [RequireComponent(typeof(Animator))]
-public class AvatarSyncronize : NetworkBehaviour
+public class AvatarSynchronize : NetworkBehaviour
 {
     XROrigin xrOrigin;
     Transform leftHand, rightHand, leftController, rightController;
@@ -110,7 +110,7 @@ public class AvatarSyncronize : NetworkBehaviour
         eyeHeight /= calibrationCount;
         AvatarScale.Value = eyeHeight / avatarEyeHeight;
 #if UNITY_EDITOR
-        Debug.Log($"[{nameof(AvatarSyncronize)}] Scale is {AvatarScale.Value}", gameObject);
+        Debug.Log($"[{nameof(AvatarSynchronize)}] Scale is {AvatarScale.Value}", gameObject);
 #endif
     }
     public override void OnNetworkDespawn()

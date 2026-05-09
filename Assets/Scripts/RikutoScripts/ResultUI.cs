@@ -1,5 +1,4 @@
 ﻿using Syacapachi.Data;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
@@ -27,6 +26,8 @@ public class ResultUI : MonoBehaviour
     [SerializeField] LocalizeSimpleText gameOverText;
     [SerializeField] LocalizeSimpleText youText;
     [SerializeField] LocalizeSimpleText otherText;
+    [SerializeField] LocalizeSimpleText CooperationText;
+    [SerializeField] LocalizeSimpleText remainHPText;
     [SerializeField] LocalizeSimpleText scoreText;
     [SerializeField] LocalizeSimpleText killsText;
     [SerializeField] LocalizeSimpleText HitsText;
@@ -89,13 +90,12 @@ public class ResultUI : MonoBehaviour
             titleText.text = gameClearText.GetText(isJapanese);
         }
 
-        coopText.text = isJapanese
-            ? $"協力度 : {data.Cooperation:F1}%"
-            : $"Cooperation : {data.Cooperation:F1}%";
+        coopText.text =
+             $"{CooperationText.GetText(isJapanese)} : {data.Cooperation:F1}%";
 
         resultText.text =
-            $"{scoreText.GetText(isJapanese)} : {data.TotalScore}\n" +
-            $"{bonusText.GetText(isJapanese)} : {data.TotalBonus}";
+            $"{remainHPText.GetText(isJapanese)} : {data.RemainHP}\n" +
+            $"{bonusText.GetText(isJapanese)} : {data.TotalBonusHP}";
     }
     void ShowDetail(ResultData results, bool isJapanese)
     {

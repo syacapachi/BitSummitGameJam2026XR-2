@@ -24,7 +24,7 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     private float nextFire;
     //こいつは、残段数のみを同期してればわかる
     private bool isReloading = false;
-    private SyncroPropaty Propaty;
+    private NetworkPlayerPropaty Propaty;
 
     private void OnEnable()
     {
@@ -39,7 +39,7 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     {
         if (IsServer)
         {
-            Propaty = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponentInChildren<SyncroPropaty>();
+            Propaty = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponentInChildren<NetworkPlayerPropaty>();
             syncedAmmo.Value = weaponSettings.maxAmmo;
         }
     }

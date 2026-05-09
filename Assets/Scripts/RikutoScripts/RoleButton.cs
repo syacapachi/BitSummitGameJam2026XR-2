@@ -28,14 +28,14 @@ public class RoleButton : NetworkBehaviour
         if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(shooterId, out var client))
             return;
 
-        var player = client.PlayerObject.GetComponentInChildren<SyncroPropaty>();
+        var player = client.PlayerObject.GetComponentInChildren<NetworkPlayerPropaty>();
         if (player == null) return;
 
         SetRole(player);
         HideClientRpc();
     }
 
-    void SetRole(SyncroPropaty player)
+    void SetRole(NetworkPlayerPropaty player)
     {
         Debug.Log("SetRole called");
 
