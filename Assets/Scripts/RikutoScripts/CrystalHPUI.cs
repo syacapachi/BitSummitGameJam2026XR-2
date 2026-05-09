@@ -48,13 +48,11 @@ public class CrystalHPUI : MonoBehaviour
 
     void OnScoreChanged(int oldValue, int newValue)
     {
-        Debug.Log($"[HPUI] OnHPChanged {oldValue} → {newValue}",gameObject);
         UpdateScoreUI(newValue);
     }
 
     void UpdateScoreUI(int score)
     {
-        Debug.Log($"[HPUI] UpdateUI remainHP:{score} max:{maxScore}",gameObject);
         // バー更新
         if (scoreBar != null)
         {

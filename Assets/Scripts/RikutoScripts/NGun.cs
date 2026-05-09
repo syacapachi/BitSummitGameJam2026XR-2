@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.XR;
 public class NGun : GunController
 {
@@ -31,6 +32,13 @@ public class NGun : GunController
         if (IsOwner)
         {
             fireEvent.Register(base.Activate);
+            StartCoroutine(LaserUpdateCoroutine());
+
+            laserLine.enabled = XRSettings.isDeviceActive;
+        }
+        else
+        {
+            laserLine.enabled = false;
         }
     }
     public override void OnNetworkDespawn()
@@ -40,11 +48,14 @@ public class NGun : GunController
             fireEvent.Unregister(base.Activate);
         }
     }
-    void Update()
+    //オーナー以外で毎フレームチェックさせるオーバーヘッドをなくすためコルーチン化
+    IEnumerator LaserUpdateCoroutine()
     {
-        if (!IsOwner) return;
-
-        UpdateLaser();
+        while (IsOwner)
+        {
+            UpdateLaser();
+            yield return null;
+        }
     }
 
     void UpdateLaser()

@@ -45,8 +45,14 @@ public class MarkerController : NetworkBehaviour
     }
     public override void OnNetworkSpawn()
     {
-        if (!IsOwner) return;
+        if (!IsOwner)
+        {
+            lineRenderer.enabled = false;
+            return;
+        }
         markerEvent.Register(PlaceMarkerRpc);
+        StartCoroutine(LaserUpdateCoroutine());
+        lineRenderer.enabled = XRSettings.isDeviceActive;
     }
 
     protected override void OnNetworkPostSpawn()
@@ -84,12 +90,16 @@ public class MarkerController : NetworkBehaviour
             markerEvent.Unregister(PlaceMarkerRpc);
         }
     }
-
-    private void Update()
+    //オーナー以外で毎フレームチェックさせるオーバーヘッドをなくすためコルーチン化
+    IEnumerator LaserUpdateCoroutine()
     {
-        if (!IsOwner) return;
-        UpdateLaser();
+        while (IsOwner)
+        {
+            UpdateLaser();
+            yield return null;
+        }
     }
+
     void UpdateLaser()
     {
         if (lineRenderer == null || FirePoint == null) return;
