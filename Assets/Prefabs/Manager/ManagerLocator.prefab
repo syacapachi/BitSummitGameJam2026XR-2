@@ -194,7 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3782534606
+  GlobalObjectIdHash: 657515094
   InScenePlacedSourceGlobalObjectIdHash: 657380702
   DeferredDespawnTick: 0
   Ownership: 1
@@ -602,14 +602,14 @@ MonoBehaviour:
   gameStartMode: 0
   protectArea: {fileID: 0}
   hpManager: {fileID: 7622921992766210704}
+  tutorialLight: {fileID: 0}
   phaseManager: {fileID: 1871165705981970814}
   PlayerManager: {fileID: 8012348177458703508}
   tutorialManager: {fileID: 8343285116251111980}
   resultDataCreater: {fileID: 5193210326732251977}
-  homeScene: {fileID: 102900000, guid: 163666d43b155d647855c6a9c5d11bc6, type: 3}
-  gameScene: {fileID: 102900000, guid: 9976ecc257800ba4db4059546c0bc04c, type: 3}
-  tutorialScene: {fileID: 102900000, guid: c6c9a3ca826b22742a678a2328847735, type: 3}
   difficultyRpcDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
+  homeScene: {fileID: 102900000, guid: 163666d43b155d647855c6a9c5d11bc6, type: 3}
+  gameScene: {fileID: 102900000, guid: 3d3794061e3aa5a40bf03497b20c9443, type: 3}
   gameState:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -704,7 +704,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6839344822153498842}
   m_Father: {fileID: 4908882465109089120}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8343285116251111980
@@ -725,7 +726,7 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
-  spawner: {fileID: 0}
+  spawner: {fileID: 250586993705616725}
   step1Enemies:
   - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
   - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
@@ -741,7 +742,62 @@ MonoBehaviour:
   attackBlockedEvent: {fileID: 11400000, guid: 29e4db13b8933e44b8dfd9df362fd1d2, type: 2}
   OnTutorialStepCleared: {fileID: 11400000, guid: 64f3ed58da1abd54bb4e2c3464685d38, type: 2}
   OnTutorialStepChanged: {fileID: 11400000, guid: 4cdbcd5da1b58d048a39f9a786419768, type: 2}
-  moveScene: {fileID: 102900000, guid: 9976ecc257800ba4db4059546c0bc04c, type: 3}
+--- !u!1 &7385684458859226799
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6839344822153498842}
+  - component: {fileID: 250586993705616725}
+  m_Layer: 0
+  m_Name: TutorialSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6839344822153498842
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385684458859226799}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -4.329994, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5418814566632101354}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &250586993705616725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385684458859226799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4523dd20424bad4193a535e62722e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  EnemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
+  spawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  networkPool: {fileID: 4084111059737820316}
 --- !u!1 &7509225818068572671
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,11 +924,11 @@ MonoBehaviour:
   - action: {fileID: -932780676673065530, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: 146e83d8d5f1d4041aaf212501131a73, type: 2}
     setting: 1
-  - action: {fileID: 5746621223023547563, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
-    gameEvent: {fileID: 11400000, guid: f9e23ca27358a3f419041719b45bce40, type: 2}
-    setting: 1
   - action: {fileID: -3800612907701892205, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: 4f90a0dcf15ac3346a5d4dc1ef33d19a, type: 2}
+    setting: 1
+  - action: {fileID: 1218294735510755974, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
     setting: 1
   - action: {fileID: 1218294735510755974, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
