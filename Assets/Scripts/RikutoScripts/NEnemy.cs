@@ -41,12 +41,17 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public float MaxHealth => maxHpAll;
     
     public PlayerJob EnemyJob => enemyJob;
-
-    [SerializeField] private bool isAttackable = true;
+    /// <summary>
+    /// 無敵かどうか
+    /// </summary>
+    private bool canTakeDamage = true;
     private bool isDieServerOnly = false;
     Coroutine moveCorutine;
-
-    public bool IsAttackable => isAttackable;
+    /// <summary>
+    /// 無敵かどうか
+    /// </summary>
+    public bool CanTakeDamage => canTakeDamage;
+    public bool CanAttackServerOnly => enemySOServertOnly.CanAttack;
 
     [SerializeField] Renderer[] renderers;
 
@@ -126,19 +131,15 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         isInitialize = false;
         isDieServerOnly = false;
 
+        currentHP.OnValueChanged += OnHPChanged;
         if (IsServer)
         {
             currentHP.Value = enemySOServertOnly.Hp;
             ApplyMaxHpRpc(enemySOServertOnly.Hp);
         }
 
-        currentHP.OnValueChanged += OnHPChanged;
-
-        UpdateHPUI(currentHP.Value);
         ApplySettting();
-
-
-        isAttackable = true;
+        canTakeDamage = true;
         StartCoroutine(SetupPlayerCoroutine());
     }
     //必要な情報は、最大HPのみ
@@ -257,7 +258,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         {
             networkAnimator.SetTrigger("Hit");
             //アニメーションで見えてる間は無敵
-            isAttackable = false;
+            canTakeDamage = false;
             if (enemyAudio != null)
             {
                 enemyAudio.PlayHitVoiceServer();
@@ -268,8 +269,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         if(!IsServer) return ;
         //無敵解除
-        isAttackable = true;
-        if (!enemySOServertOnly.IsMovable) return;
+        canTakeDamage = true;
+        if (!enemySOServertOnly.CanMove) return;
         var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
         if (CheckPointManager == null) return;
         //次へ移動
@@ -315,7 +316,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             SetVisibleRpc();
         }
         //アニメーション終了を待つため
-        isAttackable = false;
+        canTakeDamage = false;
     }
     void DieOnspector()
     {
@@ -345,7 +346,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     }
     public void SetAttackabe(bool value)
     {
-        isAttackable = value;
+        canTakeDamage = value;
     }
 
     [OnInspectorButton]

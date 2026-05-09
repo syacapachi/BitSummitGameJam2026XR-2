@@ -44,10 +44,10 @@ public class NBullet : BulletBaseController
                 $"ShooterJob={ShooterJob}, " +
                 $"EnemyJob={enemy.EnemyJob}, " +
                 $"AttackableJob={layerMaskSetting.AttackableJob}, " +
-                $"IsAttackable={layerMaskSetting.IsAttackableJob(enemy.EnemyJob)}"
+                $"CanTakeDamage={layerMaskSetting.IsAttackableJob(enemy.EnemyJob)}"
                 ,other
             );
-            if (!enemy.IsAttackable)
+            if (!enemy.CanTakeDamage)
             {
                 //シールドがでなかったのと見えない敵を撃ってもstep2クリア可能だったため構造変更
                 if (layerMaskSetting.IsAttackableJob(enemy.EnemyJob))

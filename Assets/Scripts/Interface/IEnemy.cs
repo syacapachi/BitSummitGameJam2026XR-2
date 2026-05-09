@@ -9,7 +9,7 @@ public interface IEnemy
     /// <summary>
     /// システム的に倒せない、もしくは、死亡アニメーション中にfalseにする。
     /// </summary>
-    public bool IsAttackable { get; }
+    public bool CanTakeDamage { get; }
     public void InjectSetting(EnemySO enemySO, int spawnPointIndex);
 
     public int SpawnPointIndexServerOnly { get; }

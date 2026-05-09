@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: GhostTagert
   icon: {fileID: 21300000, guid: 6b1f4f011f864fb439e18107104924e2, type: 3}
+  enemyJob: 2
   HP: 100
   scoreValue: 100
+  canMove: 1
   MoveSpeed: 0
   prefab: {fileID: 6771765081132311059, guid: 7eefcaa2a4bb79147b58164e8fd85e53, type: 3}
+  canAttack: 0
   enemyWeapon: {fileID: 0}

@@ -38,7 +38,7 @@ public class NEnemyShoot : GunController
         if (!IsServer) return;
         weaponSOServerOnly = nEnemy.EnemyWeaponServeronly;
         remain = weaponSOServerOnly.maxAmmo;
-        if (nEnemy.EnemyJob != PlayerJob.Tutorial)
+        if (nEnemy.CanAttackServerOnly)
         {
             shootCorutine = StartCoroutine(ShootCorutine());
         }
