@@ -159,7 +159,8 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     private void StartMainSimulation()
     {
         //応急処置
-        MoveScene();
+        //MoveScene();
+        ManagerLocator.Instance.AllGameManager.StartGameServerOnly();
     }
 
     [OnInspectorButton]

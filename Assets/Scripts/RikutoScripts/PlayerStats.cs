@@ -14,6 +14,12 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     private int[] killCounts;
 
     public ulong ClientId => OwnerClientId;
+    bool CanRecord =>
+    IsServer &&
+    ManagerLocator.Instance != null &&
+    ManagerLocator.Instance.AllGameManager != null &&
+    ManagerLocator.Instance.AllGameManager.CurrentGameState
+        == GameState.Playing;
 
     void Awake()
     {
@@ -23,9 +29,10 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     // 発射
     public void AddShot()
     {
-        if (!IsServer)
+        if (!CanRecord)
         {
             Debug.Log("Can call only Server");
+            return;
         }
         shotsFired++;
     }
@@ -33,9 +40,10 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     // 命中
     public void AddHit()
     {
-        if (!IsServer)
+        if (!CanRecord)
         {
             Debug.Log("Can call only Server");
+            return;
         }
         hits++;
     }
@@ -43,9 +51,10 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     // 与ダメージ
     public void AddDamage(float damage)
     {
-        if (!IsServer)
+        if (!CanRecord)
         {
             Debug.Log("Can call only Server");
+            return;
         }
         damageDealt += damage;
     }
@@ -53,9 +62,10 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     // 敵撃破（enemyIdに変更）
     public void AddKill(EnemySO enemyso, int scoreValue)
     {
-        if (!IsServer)
+        if (!CanRecord)
         {
             Debug.Log("Can call only Server");
+            return;
         }
         int enemyId = enemyDataBase.GetIdFromEnemyData(enemyso);
         Debug.Log($"Add kill{enemyso.name}({enemyId})");
@@ -72,9 +82,10 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
 
     public void AddShield()
     {
-        if (!IsServer)
+        if (!CanRecord)
         {
             Debug.Log("Can call only Server");
+            return;
         }
         shield++;
     }

@@ -285,6 +285,7 @@ public class NetworkEnemySpawner : NetworkBehaviour,IEnemyBrokenReciever,ISpawna
     public void OnEnemyKilled(IEnemy enemy)
     {
         if (!IsServer) return;
+        if (ManagerLocator.Instance.AllGameManager.CurrentGameState != GameState.Playing) return;
         remain--;
         Debug.Log($"[OnEnemyKilled] remain:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}",gameObject);
         if (remain == 0 && isSpawnFinished && waitSpawnEnemyQueue.Count == 0)

@@ -18,20 +18,25 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] GameStartMode gameStartMode = GameStartMode.Button;
     [Header("Refernce")]
     [SerializeField] GameObject protectArea;
+    [SerializeField] GameObject tutorialLight;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] PlayerManager PlayerManager;
     [SerializeField] TutorialManager tutorialManager;
     [SerializeField] ResultDataCreater resultDataCreater;
     [Header("Scene Setting")]
+    /*
     [SerializeField] SceneAsset homeScene;
     [SerializeField] SceneAsset gameScene;
     [SerializeField] SceneAsset tutorialScene;
-    
+    */
+    [SerializeField] SceneAsset homeScene;
+    [SerializeField] SceneAsset gameScene;
     public GameMode CurrentGameMode => gameMode;
     public ScoreManager ScoreManager => scoreManager;
     public PhaseManager PhaseManager => phaseManager;
     public GameObject ProtectArea => protectArea;
+
     public bool IsGamePlaying => CurrentGameState == GameState.Playing || CurrentGameState == GameState.Tutorial;
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
     
@@ -76,6 +81,7 @@ public class NetworkGameManager : NetworkBehaviour
     //コルーチンが使用可能なタイミングでは、サーバーかどうかはまだ確定してない。
     private void Start()
     {
+        tutorialLight.SetActive(true);
         string sceneName = SceneManager.GetActiveScene().name;
         StartCoroutine(WaitForAllClientConnect(sceneName));
     }
@@ -83,6 +89,7 @@ public class NetworkGameManager : NetworkBehaviour
     {
         yield return new WaitUntil(() => IsSpawned && PlayerManager != null && PlayerManager.IsAllClientReady());
         if (!IsServer) yield break;
+        /*
         if (sceneName.Equals(gameScene.name))
         {
             if (gameStartMode == GameStartMode.Auto)
@@ -91,7 +98,9 @@ public class NetworkGameManager : NetworkBehaviour
         else if (sceneName.Equals(tutorialScene.name))
         {
             StartTutorialServerOnly();
-        }  
+        }
+        */
+        StartTutorialServerOnly();
     }
 
     private void OnEnable()
@@ -129,9 +138,10 @@ public class NetworkGameManager : NetworkBehaviour
     public void StartGameServerOnly()
     {
         if (!IsServer) return;
-        if (CurrentGameState != GameState.Initializing) return;
+        if (CurrentGameState != GameState.Initializing&& CurrentGameState != GameState.Tutorial) return;
 
         Debug.Log("Game Start");
+        tutorialLight.SetActive(false);
         scoreManager.SetScoreByDifficultyServerOnly(CurrentDifficulty);
         phaseManager.StartPhasesRpc(CurrentDifficulty);
         gameState.Value = GameState.Playing;
