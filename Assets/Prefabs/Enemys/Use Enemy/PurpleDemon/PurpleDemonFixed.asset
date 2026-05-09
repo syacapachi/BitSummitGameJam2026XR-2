@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: PurpleDemon
   icon: {fileID: 21300000, guid: e1214eac1ac3ce14fa9f39692abd7796, type: 3}
+  enemyJob: 1
   HP: 300
   scoreValue: 1000
+  canMove: 1
   MoveSpeed: 5
   prefab: {fileID: 2385688263842873445, guid: f8a8bd0431b587643b517b9e28bc01d1, type: 3}
+  canAttack: 1
   enemyWeapon: {fileID: 11400000, guid: 432610b31202a6c4fad5d4d697891ac4, type: 2}

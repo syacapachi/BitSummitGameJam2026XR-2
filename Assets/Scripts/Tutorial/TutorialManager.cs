@@ -27,8 +27,6 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
     [SerializeField] VoidEvent OnTutorialStepCleared;
     [SerializeField] IntEvent OnTutorialStepChanged;
-    [Header("Move Scene")]
-    [SerializeField] SceneAsset moveScene;
     private bool isTutorlalStarted;
     
     public override void OnNetworkSpawn()
@@ -165,18 +163,6 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
         //応急処置
         //MoveScene();
         ManagerLocator.Instance.AllGameManager.StartGameServerOnly();
-    }
-
-    [OnInspectorButton]
-    void MoveScene()
-    {
-        if (!IsServer) return;
-
-        NetworkManager.Singleton.SceneManager.LoadScene(
-            moveScene.name,
-            LoadSceneMode.Single
-        );
-        Debug.Log($"Move To {moveScene.name}");
     }
 
     public void OnMarkerPlacedServer(ulong playerId)

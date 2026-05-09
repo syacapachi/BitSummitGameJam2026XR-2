@@ -38,7 +38,10 @@ public class NEnemyShoot : GunController
         if (!IsServer) return;
         weaponSOServerOnly = nEnemy.EnemyWeaponServeronly;
         remain = weaponSOServerOnly.maxAmmo;
-        shootCorutine = StartCoroutine(ShootCorutine());
+        if (nEnemy.CanAttackServerOnly)
+        {
+            shootCorutine = StartCoroutine(ShootCorutine());
+        }
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
     private void InspectorShoot()

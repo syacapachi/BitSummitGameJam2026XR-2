@@ -338,8 +338,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a68185c628e611444b5a25eb835e72bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nGameManager: {fileID: 0}
+  hpCanvas: {fileID: 0}
   scoreBar: {fileID: 981212032592684446}
   scoreText: {fileID: 6172465854529609515}
+  rpcDataBase: {fileID: 0}
   HPInfoRpcEvent: {fileID: 0}
   GameStateEvent: {fileID: 0}
 --- !u!1 &6583766437810180435
@@ -577,6 +580,7 @@ GameObject:
   - component: {fileID: 9120954583551097543}
   - component: {fileID: 8533982560600244391}
   - component: {fileID: 6674767668317773317}
+  - component: {fileID: 860455800241777026}
   m_Layer: 12
   m_Name: OverLayCanvas
   m_TagString: Untagged
@@ -667,6 +671,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &860455800241777026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7126137569720502738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb89561f5900bb4ea5320eeb20fa328, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overLayCanvas: {fileID: 9120954583551097543}
+  changeEvent: {fileID: 11400000, guid: 146e83d8d5f1d4041aaf212501131a73, type: 2}
 --- !u!1 &7453324963103222195
 GameObject:
   m_ObjectHideFlags: 0
@@ -1001,6 +1019,7 @@ MonoBehaviour:
   OnPhaseChangeRpcEvent: {fileID: 11400000, guid: 2b1b45fabcd0c904e971e1791a444010, type: 2}
   GameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   WarningStateEvent: {fileID: 0}
+  rpcDataBase: {fileID: 0}
   nGameManager: {fileID: 0}
   japaneseFont: {fileID: 0}
   englishFont: {fileID: 0}

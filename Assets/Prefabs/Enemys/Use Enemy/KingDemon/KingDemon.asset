@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: KingDemon
   icon: {fileID: 21300000, guid: eec1f9b6407ca0b4d9389d4d033f3ffd, type: 3}
+  enemyJob: 1
   HP: 1000
   scoreValue: 10000
-  isMovable: 1
+  canMove: 1
   MoveSpeed: 30
   prefab: {fileID: 4098379032595231479, guid: d49aab5b63282ab46916f816abe2585e, type: 3}
+  canAttack: 1
   enemyWeapon: {fileID: 11400000, guid: 2d27e6e1f8fc91240b0402a317b6f27a, type: 2}

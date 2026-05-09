@@ -1,5 +1,4 @@
-﻿using Syacapachi.Attribute;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -131,12 +130,11 @@ public class InputReciever : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        
     }
 #endif
     protected virtual void OnEnable()
     {
-        foreach(var v in vector2EventList)
+        foreach (var v in vector2EventList)
         {
             v.Enable();
         }
@@ -152,7 +150,7 @@ public class InputReciever : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        foreach(var v in vector2EventList)
+        foreach (var v in vector2EventList)
         {
             v.Disable();
         }
@@ -163,18 +161,6 @@ public class InputReciever : MonoBehaviour
         foreach (var v in voidEventList)
         {
             v.Disable();
-        }
-    }
-    [OnInspectorButton]
-    private void ChangeCursorMode()
-    {
-        if(Cursor.lockState == CursorLockMode.Locked)
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 }

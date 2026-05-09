@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
   m_Name: OldBlackGhost
   m_EditorClassIdentifier: 
-  ID: 8
   Name: BlackGhost
   icon: {fileID: 21300000, guid: 9fe4f9eb838ecb4419917ae68007ca2d, type: 3}
+  enemyJob: 2
   HP: 100
   scoreValue: 1000
+  canMove: 1
   MoveSpeed: 1000
   prefab: {fileID: 2515483553086041883, guid: 4d89a9c5f68b98442bfda5a4d87c9aef, type: 3}
+  canAttack: 1
   enemyWeapon: {fileID: 11400000, guid: 66323ddfe1ed57d4c8504254422d2057, type: 2}
