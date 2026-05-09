@@ -4935,6 +4935,10 @@ PrefabInstance:
       propertyPath: m_NetworkManager
       value: 
       objectReference: {fileID: 1225731394}
+    - target: {fileID: 5992330147667127163, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: titleFlowManager
+      value: 
+      objectReference: {fileID: 1086353600}
     - target: {fileID: 6440033437923508921, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0.1
@@ -7862,7 +7866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79272e9093d74a5429f4cb0ce1e8ad96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveScene: {fileID: 102900000, guid: 163666d43b155d647855c6a9c5d11bc6, type: 3}
+  titleFlowManager: {fileID: 1086353600}
 --- !u!114 &605886164
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,6 +16,8 @@ public class Scripts : MonoBehaviour
     [SerializeField] GameObject connectionButtonPrefab;
     [SerializeField] Transform canvasTransfrom;
 
+    [SerializeField] TitleFlowManager titleFlowManager;
+
     readonly Queue<Button> connectionButtonUnActiveQueue = new();
     readonly Queue<Button> connectionButtonActiveQueue = new();
 
@@ -151,7 +153,7 @@ public class Scripts : MonoBehaviour
     {
         isNetworkStarted = true;
         SetActiveButtons(false);
-        TitleFlowManager.Instance.EnterWorldView();
+        titleFlowManager.EnterWorldView();
     }
 
     private void SetActiveButtons(bool active)

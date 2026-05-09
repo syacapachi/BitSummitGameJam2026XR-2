@@ -4,14 +4,13 @@ using UnityEngine.SceneManagement;
 
 public class LanguageSelectManager : MonoBehaviour
 {
-    [Header("Move Scene")]
-    [SerializeField] SceneAsset moveScene;
+    [SerializeField] TitleFlowManager titleFlowManager;
     // 日本語ボタンが押されたとき
     public void OnJapaneseButtonClicked()
     {
         PlayerPrefs.SetString("Language", "JP");
         PlayerPrefs.Save();
-        TitleFlowManager.Instance.SetState(TitleFlowState.NetworkConnect);
+        titleFlowManager.SetState(TitleFlowState.NetworkConnect);
     }
 
     // 英語ボタンが押されたとき
@@ -19,6 +18,6 @@ public class LanguageSelectManager : MonoBehaviour
     {
         PlayerPrefs.SetString("Language", "EN");
         PlayerPrefs.Save();
-        TitleFlowManager.Instance.EnterNetworkConnect();
+        titleFlowManager.EnterNetworkConnect();
     }
 }

@@ -1,10 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Netcode;
 
 public class TitleFlowManager : MonoBehaviour
 {
-    public static TitleFlowManager Instance;
-
     [Header("Canvas")]
     [SerializeField] GameObject languageCanvas;
     [SerializeField] GameObject connectCanvas;
@@ -14,11 +12,6 @@ public class TitleFlowManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
         bool connected =
             NetworkManager.Singleton != null &&
             NetworkManager.Singleton.IsClient;
@@ -57,15 +50,10 @@ public class TitleFlowManager : MonoBehaviour
     {
         SetState(TitleFlowState.NetworkConnect);
     }
-
-
-
     public void EnterWorldView()
     {
         SetState(TitleFlowState.WorldView);
     }
-
-
 }
 
 public enum TitleFlowState
