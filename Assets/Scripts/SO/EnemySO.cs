@@ -8,6 +8,8 @@ public class EnemySO : ScriptableObject
     [SerializeField] Sprite icon;
     /// <summary>
     /// 上手くもっていけないのでいったん放置します。
+    /// OnNetworkSpawn以降じゃないとRpcや、NetworkVariableが有効ではない。
+    /// しかし、Job同期前にApplySettingを行うと、見えてはいけないものがみえちゃう。
     /// </summary>
     [SerializeField, SingleFlagOnly, HideInInspector] PlayerJob enemyJob;
     [SerializeField] int HP = 100;
@@ -27,4 +29,17 @@ public class EnemySO : ScriptableObject
     public GameObject Prefab => prefab;
     public bool CanAttack => canAttack;
     public EnemyWeaponSettingsSO EnemyWeapon => enemyWeapon;
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if(prefab != null)
+        {
+            NEnemy nenemy = prefab.GetComponentInChildren<NEnemy>();
+            if(nenemy != null)
+            {
+                nenemy.EnemyJob = enemyJob;
+            }
+        }
+    }
+#endif
 }

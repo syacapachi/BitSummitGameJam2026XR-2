@@ -39,8 +39,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public EnemyWeaponSettingsSO EnemyWeaponServeronly => enemySOServertOnly.EnemyWeapon;  
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => maxHpAll;
-    
-    public PlayerJob EnemyJob => enemyJob;
+    /// <summary>
+    /// セットはEditor上のみ
+    /// </summary>
+    public PlayerJob EnemyJob 
+    {
+        get => enemyJob;
+#if UNITY_EDITOR
+        set => enemyJob = value;
+#endif
+    }
     /// <summary>
     /// 無敵かどうか
     /// </summary>
