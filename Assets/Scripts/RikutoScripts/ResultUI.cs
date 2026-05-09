@@ -94,7 +94,7 @@ public class ResultUI : MonoBehaviour
              $"{CooperationText.GetText(isJapanese)} : {data.Cooperation:F1}%";
 
         resultText.text =
-            $"{scoreText.GetText(isJapanese)} : {data.RemainHP}\n" +
+            $"{remainHPText.GetText(isJapanese)} : {data.RemainHP}\n" +
             $"{bonusText.GetText(isJapanese)} : {data.TotalBonusHP}";
     }
     void ShowDetail(ResultData results, bool isJapanese)
