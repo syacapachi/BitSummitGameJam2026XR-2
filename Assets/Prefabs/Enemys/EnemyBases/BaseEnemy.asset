@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Enemy
   icon: {fileID: 0}
+  enemyJob: 0
   HP: 100
   scoreValue: 100
-  isMovable: 1
+  canMove: 1
   MoveSpeed: 100
   prefab: {fileID: 7921933964387478276, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+  canAttack: 1
   enemyWeapon: {fileID: 0}
