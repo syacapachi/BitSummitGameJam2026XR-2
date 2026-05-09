@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ScoreManager : NetworkBehaviour
 {
-    [SerializeField] DifficultyDataBase database;
+    [SerializeField] DifficultyDataBase rpcDataBase;
     [SerializeField] int alertScore = 5000;
     
     public NetworkVariable<int> score = new(
@@ -13,10 +13,8 @@ public class ScoreManager : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
     [SerializeField] int totalBonusServerOnly = 0;
-    [SerializeField] NetworkVariable<int> lastClearBonus = new NetworkVariable<int>(0);
     
     public int TotalBonusServerOnly => totalBonusServerOnly;
-    public int LastClearBonus => lastClearBonus.Value;
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
     [SerializeField] BoolEvent aleartRpcEvent;
@@ -67,13 +65,14 @@ public class ScoreManager : NetworkBehaviour
         if (score.Value <= 0 && !isGameOver)
         {
             isGameOver = true;
-            Debug.Log("GAME OVER (ScoreManager)");
-            OnScoreReachZeroServerEvent?.Invoke();
+            Debug.Log("GAME OVER (ScoreManager)", gameObject);
+            OnScoreReachZeroServerEvent.Invoke();
         }
     }
     public void SetScoreByDifficultyServerOnly(Difficulty difficulty)
     {
-        int hp = database.GetSetting(difficulty).PlayerHP;
+        int hp = rpcDataBase.CurrentSetting.PlayerHP;
+        Debug.Log($"arg diff = {difficulty}, rpcDataBase diff = {rpcDataBase.CurrectDifficulty} ", gameObject);
         score.Value = hp;
         currentMaxScore = hp;
     }
@@ -87,11 +86,5 @@ public class ScoreManager : NetworkBehaviour
     {
         isGameOver = false;
         totalBonusServerOnly = 0;
-    }
-
-    public void SetBonusServerOnly(int value)
-    {
-        if (!IsServer) return;
-        lastClearBonus.Value = value;
     }
 }

@@ -53,7 +53,7 @@ public class NEnemyBullet : BulletBaseController
 
         if (playerProp == null)
         {
-            Debug.LogWarning("[NEnemyBullet] SyncroPropaty not found on player.");
+            Debug.LogWarning("[NEnemyBullet] NetworkPlayerPropaty not found on player.");
             if (NetworkObject.IsSpawned)
                 NetworkObject.Despawn(true);
             return;

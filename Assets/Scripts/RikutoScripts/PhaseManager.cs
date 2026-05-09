@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PhaseManager : NetworkBehaviour
 {
-    [SerializeField] DifficultyDataBase database;
+    [SerializeField] DifficultyDataBase rpcDataBase;
     [SerializeField] NetworkEnemySpawner spawner;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] PhaseCountDownSettingSO uiSettings;
@@ -19,14 +19,12 @@ public class PhaseManager : NetworkBehaviour
     );
     public IKillable KillableHandle => spawner;
     public ISpawnable SpawnableHandle => spawner;
-    public PhaseSO[] Phases => currentPhaseMode.Phases;
+    public PhaseSO[] Phases => rpcDataBase.CurrentSetting.Phases;
     public int CurrentPhaseIndex => syncedPhaseIndex.Value;
     private bool IsCountingDown = false;
-    private DifficultySetting currentPhaseMode;
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnAllPhaseEndedServerOnly;
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
-    [SerializeField] DifficultyEvent OnDifficultyChangedServerEvent;
     [SerializeField] BoolEvent WarningStateEvent;
 
     public override void OnNetworkSpawn()
@@ -37,22 +35,12 @@ public class PhaseManager : NetworkBehaviour
 
         if (IsServer)
         {
-            OnDifficultyChangedServerEvent.Register(OnDifficultyChanged);
             if (spawner == null)
                 spawner = GetComponentInChildren<NetworkEnemySpawner>();
         }
     }
     public override void OnNetworkDespawn()
     {
-        if (IsServer)
-            OnDifficultyChangedServerEvent.Unregister(OnDifficultyChanged);
-    }
-
-    void OnDifficultyChanged(Difficulty newValue)
-    {
-        Debug.Log($"[PhaseManager] Difficulty同期: {newValue}", gameObject);
-
-        currentPhaseMode = database.GetSetting(newValue);
     }
     private void OnEnable()
     {
@@ -68,15 +56,12 @@ public class PhaseManager : NetworkBehaviour
         OnPhaseChangeRpcEvent.Invoke(newValue);
     }
 
-    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Server)]
-    public void StartPhasesRpc(Difficulty difficulity)
+    public void StartPhasesServerOnly(Difficulty difficulity)
     {
-#if UNITY_EDITOR
-        Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartPhasesRpc called", gameObject);
-#endif
-        //クライアント側でもフェーズの情報を更新する必要があるため、RPC内でフェーズのモードを切り替える
-        currentPhaseMode = database.GetSetting(difficulity);
         if (!IsServer) return;
+#if UNITY_EDITOR
+        Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartPhasesServerOnly called", gameObject);
+#endif       
         //ここからサーバーOnlyの処理
         syncedPhaseIndex.Value = -1;
         StartNextPhase();
@@ -85,7 +70,7 @@ public class PhaseManager : NetworkBehaviour
     void StartNextPhase()
     {
 #if UNITY_EDITOR
-        Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartNextPhases called");
+        Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartNextPhases called", gameObject);
 #endif
 
         //syncedPhaseIndex.Value++;
@@ -98,7 +83,6 @@ public class PhaseManager : NetworkBehaviour
             OnAllPhaseEndedServerOnly.Invoke();
             return;
         }
-        scoreManager.SetBonusServerOnly(Phases[nextIndex].ClearBonus);
         StartCoroutine(StartPhaseWithCountdown(nextIndex));
     }
     IEnumerator StartPhaseWithCountdown(int phaseIndex)
@@ -130,10 +114,10 @@ public class PhaseManager : NetworkBehaviour
         IsCountingDown = false;
         syncedPhaseIndex.Value = phaseIndex;
 
-        var phase = Phases[phaseIndex];
-        SpawnableHandle.SpawnFromEvent(phase.SpawnEvents.ToList(), phase.UseRandomSpawn);
-        syncedPhaseIndex.Value = phaseIndex;
-        StartCoroutine(PhaseProgress(phase.PhaseTime));
+        var phaseSetting = Phases[phaseIndex];
+        SpawnableHandle.SpawnFromEvent(phaseSetting.SpawnEvents.ToList(), phaseSetting.UseRandomSpawn);
+        //別コルーチンとして起動
+        StartCoroutine(PhaseProgress(phaseSetting.PhaseTime));
     }
     IEnumerator PhaseProgress(float time)
     {
@@ -171,8 +155,6 @@ public class PhaseManager : NetworkBehaviour
             yield return AllDeadSequence();
         }
 
-        Debug.Log("StartNextPhase呼ぶ");
-
         StartNextPhase();
     }
 
@@ -194,7 +176,7 @@ public class PhaseManager : NetworkBehaviour
         while (count > 0)
         {
             CountdownValue.Value = count;
-            Debug.Log("End Phase Countdown: " + count);
+            Debug.Log("End Phase Countdown: " + count, gameObject);
 
             yield return waitlast;
             count--;

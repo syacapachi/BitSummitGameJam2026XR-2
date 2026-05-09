@@ -13,7 +13,7 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] GameStateEvent GameStateChangeRpcEvent;
     [SerializeField] BoolEvent WarningStateEvent;
     [Header("Reference")]
-    [SerializeField] DifficultyDataBase dataBase;
+    [SerializeField] DifficultyDataBase rpcDataBase;
     [SerializeField] private NetworkGameManager nGameManager;
     [SerializeField] TMP_FontAsset japaneseFont;
     [SerializeField] TMP_FontAsset englishFont;
@@ -21,6 +21,7 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] LoopScrollUI[] warningScrollers;
 
     private Coroutine currentRoutine;
+    private int currentPhaseIndex;
 
     bool isJapanese;
 
@@ -53,7 +54,7 @@ public class PhaseUI : MonoBehaviour
     void InitializeUI()
     {
         phaseText.gameObject.SetActive(false);
-        phaseBoard.gameObject.SetActive(false);
+        phaseBoard.SetActive(false);
 
         nGameManager.PhaseManager.CountdownValue.OnValueChanged += OnCountdownChanged; 
     }
@@ -137,13 +138,18 @@ public class PhaseUI : MonoBehaviour
     // =========================
     void OnPhaseChanged(int index)
     {
+        currentPhaseIndex = index;
+        //var manager = nGameManager.PhaseManager;
+        var phaseSetting = rpcDataBase.CurrentSetting.Phases[index];
 
-        var manager = nGameManager.PhaseManager;
-
-
-        if (index >= 0 && manager.Phases != null && index < manager.Phases.Length)
+        //if (index >= 0 && manager.Phases != null && index < manager.Phases.Length)
+        //{
+        //    string text = isJapanese ? manager.Phases[index].PhaseDisplayNameJP : manager.Phases[index].PhaseDisplayNameEN;
+        //    ChangeState(UIState.PhaseIntro, (index, text));
+        //}
+        if (phaseSetting != null)
         {
-            string text = isJapanese ? manager.Phases[index].PhaseDisplayNameJP : manager.Phases[index].PhaseDisplayNameEN;
+            string text = isJapanese ? phaseSetting.PhaseDisplayNameJP : phaseSetting.PhaseDisplayNameEN;
             ChangeState(UIState.PhaseIntro, (index, text));
         }
     }
@@ -182,8 +188,10 @@ public class PhaseUI : MonoBehaviour
         int index = data.index;
         string text = data.text;
 
-        var manager = nGameManager.PhaseManager;
-        int lastIndex = manager.Phases.Length - 1;
+        //var manager = nGameManager.PhaseManager;
+        var phaseSetting = rpcDataBase.CurrentSetting;
+        //int lastIndex = manager.Phases.Length - 1;
+        int lastIndex = phaseSetting.Phases.Length - 1;
 
         phaseText.fontSize = 120;
 
@@ -237,11 +245,10 @@ public class PhaseUI : MonoBehaviour
     IEnumerator PhaseFinishRoutine()
     {
         int score = nGameManager.ScoreManager.GetScore();
-        int phase = nGameManager.PhaseManager.CurrentPhaseIndex;
 
         SetupNormal();
 
-        phaseText.text = $"Phase {phase + 1} FINISH!\nScore: {score}";
+        phaseText.text = $"Phase {currentPhaseIndex + 1} FINISH!\nScore: {score}";
         phaseText.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(3f);
@@ -266,7 +273,8 @@ public class PhaseUI : MonoBehaviour
 
     IEnumerator AllEnemyDeadRoutine()
     {
-        int bonus = nGameManager.ScoreManager.LastClearBonus;
+        //int bonus = nGameManager.ScoreManager.LastClearBonus;
+        int bonus = rpcDataBase.CurrentSetting.Phases[currentPhaseIndex].ClearBonus;
 
         SetupNormal();
 

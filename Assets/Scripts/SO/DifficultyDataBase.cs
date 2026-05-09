@@ -8,12 +8,43 @@ public class DifficultyDataBase : ScriptableObject
     [SerializeField] DifficultySetting[] settings;
     readonly Dictionary<Difficulty, DifficultySetting> difficultyDataDic = new();
     private bool isInitialize;
+    private Difficulty currentDifficulty = Difficulty.Easy;
+    private DifficultySetting currentDifficultySetting = null;
+    public Difficulty CurrectDifficulty
+    {
+        get
+        {
+            return currentDifficulty;
+        }
+        set
+        {
+            if (value != currentDifficulty)
+            {
+                currentDifficulty = value;
+                currentDifficultySetting = DifficultyDataDic[currentDifficulty];
+            }
+        }
+    }
     public IReadOnlyDictionary<Difficulty, DifficultySetting> DifficultyDataDic
     {
         get
         {
             CreateDic();
             return difficultyDataDic;
+        }
+    }
+    /// <summary>
+    /// 現在の難易度における設定。CurrectDiffuicultyを更新する必要がある。
+    /// </summary>
+    public DifficultySetting CurrentSetting
+    {
+        get
+        {
+            if (currentDifficultySetting == null)
+            {
+                currentDifficultySetting = DifficultyDataDic[currentDifficulty];
+            }
+            return currentDifficultySetting;
         }
     }
     public DifficultySetting GetSetting(Difficulty setting)
@@ -24,7 +55,7 @@ public class DifficultyDataBase : ScriptableObject
     public bool TryGetSetting(Difficulty setting, out DifficultySetting settingValue)
     {
         CreateDic();
-        if(difficultyDataDic.TryGetValue(setting, out settingValue))
+        if (difficultyDataDic.TryGetValue(setting, out settingValue))
         {
             return true;
         }

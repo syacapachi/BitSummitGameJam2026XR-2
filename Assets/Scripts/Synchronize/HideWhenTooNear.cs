@@ -52,13 +52,13 @@ public class HideWhenTooNear : MonoBehaviour
         {
             SetRendererVisible(col, true);
         }
-        lastHitsColliders.Clear();  
+        lastHitsColliders.Clear();
         int hitCount = Physics.OverlapSphereNonAlloc(playerCamera.transform.position, checkDistance, hits, playerLayer);
         for (int i = 0; i < hitCount; i++)
         {
             var other = hits[i];
             if (myColliderSet.Contains(other)) continue;
-            if(!other.TryGetComponent<PlayerCollider>(out var playerCollider)) continue;
+            if (!other.TryGetComponent<PlayerCollider>(out var playerCollider)) continue;
             var locator = ManagerLocator.Instance;
             if (locator == null) return;
             if (locator.AllPlayerManager.NetworkOwnerPlayer.OwnerClientId == playerCollider.OwnerClientId) continue;
@@ -66,7 +66,7 @@ public class HideWhenTooNear : MonoBehaviour
             float distance = Vector3.Distance(playerCamera.transform.position, other.transform.position);
             //Debug.Log($"found collider distance = {distance}", playerCollider);
             SetRendererVisible(playerCollider, !(distance < hideThreshold));
-        }  
+        }
     }
     void SetRendererVisible(PlayerCollider other, bool visible)
     {

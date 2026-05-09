@@ -66,7 +66,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             NetworkObject playerObject = pair.Value.PlayerObject;
             if (playerObject == null) continue;
 
-            SyncroPropaty propaty = playerObject.GetComponentInChildren<SyncroPropaty>();
+            NetworkPlayerPropaty propaty = playerObject.GetComponentInChildren<NetworkPlayerPropaty>();
             if (propaty == null) continue;
 
             if (JobSetting.TryGetPlayerLayerSettings(propaty.Job, out var playerLayerSettings)
