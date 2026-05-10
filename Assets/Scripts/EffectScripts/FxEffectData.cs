@@ -43,7 +43,7 @@ public class FxEffectData : ScriptableObject, IEffect
     {
         if (isLayerOverride && layerOverride.value == 0)
         {
-            Debug.LogWarning("Layer override is enabled but no layer is selected. Please select a layer.");
+            Debug.LogWarning("CollidersLayer override is enabled but no layer is selected. Please select a layer.");
         }
         isApplydLayer = false;
     }

@@ -34,6 +34,8 @@ public class SkyBoxColorSetting : ScriptableObject
     public float moonIntensity = 0.1f;
     [Header("月の光の減衰率")]
     public float moonMultiplier = 1f;
+    [Header("テクスチャの存在感"),Range(0f,1f)]
+    public float textureStrength = 1f;
     private const float onehour = 360f / 24f;
 
     //0時->±180
@@ -47,7 +49,7 @@ public class SkyBoxColorSetting : ScriptableObject
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        //skyRootEular = new Vector3((int)timeOfDay * onehour - 180f, 170, 0);
+        skyRootEular = new Vector3((int)timeOfDay * onehour - 180f, 170, 0);
     }
 #endif
 
@@ -68,6 +70,8 @@ public class SkyBoxColorSetting : ScriptableObject
         moonColor = Color.Lerp(fromSky.moonColor, toSky.moonColor, t);
         moonIntensity = Mathf.Lerp(fromSky.moonIntensity, toSky.moonIntensity, t);
         moonMultiplier = Mathf.Lerp(fromSky.moonMultiplier, toSky.moonMultiplier, t);
+
+        textureStrength = Mathf.Lerp(fromSky.textureStrength, toSky.textureStrength, t);
 
         skyRootEular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular, t);
     }

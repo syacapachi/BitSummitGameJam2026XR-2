@@ -10,7 +10,6 @@ public class ManagerLocator : MonoBehaviour
     [field:SerializeField] public NetworkGameManager AllGameManager { get; private set; }
     [field:SerializeField] public NetworkObjectPool AllNetworkObjectPool { get; private set; }
     [field:SerializeField] public LocalObjectPoolManager LocalObjectPool { get; private set; }
-    [field:SerializeField] public RankingManager RankingManager { get; private set; }
     [field:SerializeField] public TutorialManager TutorialManager { get; private set; }
     [field:SerializeField] public CheckPointManager CheckPointManager { get; private set; }
 

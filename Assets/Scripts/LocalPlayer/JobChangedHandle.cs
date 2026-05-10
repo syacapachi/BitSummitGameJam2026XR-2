@@ -4,6 +4,7 @@ public class JobChangedHandle : MonoBehaviour
 {
     [SerializeField] GameObject PlayerCollider;
     [SerializeField] Camera PlayerCamera;
+    [SerializeField] Skybox playerSkybox;
     [SerializeField] JobSettingGenerator setting;
     [Header("Subsucribe Event")]
     [SerializeField] PlayerJobEvent jobEvent;
@@ -39,5 +40,6 @@ public class JobChangedHandle : MonoBehaviour
         //PlayerCollider.layer = newSetting.Layer;
         // カメラのカリングマスクを更新
         PlayerCamera.cullingMask = newSetting.CullingMask;
+        //playerSkybox.material = newSetting.CullingMask
     }
 }

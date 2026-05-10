@@ -8,7 +8,7 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     [SerializeField] Rigidbody rb;
     [SerializeField] protected JobSettingGenerator setting;
     private BulletSetting bulletSettingServerOnly;
-    private PlayerJob shooterJob = PlayerJob.Both;
+    private PlayerJob shooterJob = PlayerJob.Nothing;
     private IResultCollector shooterId;
     protected Coroutine despawnTimer;
     public GameObject GameObject => gameObject;
@@ -52,7 +52,7 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
         {
             foreach (Transform childs in transform.GetComponentsInChildren<Transform>())
             {
-                childs.gameObject.layer = layersetting.Layer;
+                childs.gameObject.layer = layersetting.CollidersLayer;
             }
         }
     }

@@ -40,13 +40,12 @@ public class JobSettingGenerator : ScriptableObject
 
         foreach (var settings in playerLayerSettingsList)
         {
-            if (JobLayerMaskReadOnlyDic.ContainsKey(settings.TargetJob))
+            if (JobLayerMaskReadOnlyDic.ContainsKey(settings.SettingJob))
             {
-                Debug.LogError($"Job {settings.TargetJob} is duplicated in JobSettingSO.");
+                Debug.LogError($"Job {settings.SettingJob} is duplicated in JobSettingSO.");
                 continue;
             }
-            settings.LayerUpdate();
-            JobToLayerMaskDic[settings.TargetJob] = settings;
+            JobToLayerMaskDic[settings.SettingJob] = settings;
         }
         var JobArray = System.Enum.GetValues(typeof(PlayerJob));
         // Enumに定義されているジョブがすべてJobSettingSOに定義されているか確認
@@ -66,13 +65,12 @@ public class JobSettingGenerator : ScriptableObject
                     if ((playerJob != (PlayerJob)mask) && ((playerJob & (PlayerJob)mask) != 0))
                     {
                         cullingMask &= JobLayerMaskReadOnlyDic[(PlayerJob)mask].CullingMask;
-                        attackableJob |= JobLayerMaskReadOnlyDic[(PlayerJob)mask].AttackableJob;
+                        attackableJob |= JobLayerMaskReadOnlyDic[(PlayerJob)mask].AttackableJobs;
                     }
                 }
-                var newSetting = new PlayerLayerSettings(colliderLayer, cullingMask, playerJob, attackableJob);
-                newSetting.LayerUpdate();
+                var newSetting = new PlayerLayerSettings(cullingMask, playerJob, attackableJob);
                 JobToLayerMaskDic[playerJob] = newSetting;
-                Debug.LogWarning($"[{nameof(JobSettingGenerator)}]Job {playerJob} is not defined in JobSettingSO. ColliderLayer set to {colliderLayer}, CullingMask set to {cullingMask} (intersection of all defined jobs).");
+                Debug.LogWarning($"[{nameof(JobSettingGenerator)}]Job {playerJob} is not defined in JobSettingSO. CollidersLayer set to {colliderLayer}, CullingMask set to {cullingMask} (intersection of all defined jobs).");
             }
         }
     }

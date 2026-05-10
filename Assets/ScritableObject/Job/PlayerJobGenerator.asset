@@ -15,37 +15,25 @@ MonoBehaviour:
   playerLayerSettingsList:
   - TargetJob: 1
     AttackableJob: 5
-    TargetColliderLayer:
-      serializedVersion: 2
-      m_Bits: 128
     CullingMask:
       serializedVersion: 2
       m_Bits: 5951
-    Layer: 0
+    ColliderLayer: 7
   - TargetJob: 2
     AttackableJob: 6
-    TargetColliderLayer:
-      serializedVersion: 2
-      m_Bits: 256
     CullingMask:
       serializedVersion: 2
       m_Bits: 5823
-    Layer: 0
+    ColliderLayer: 8
   - TargetJob: 0
     AttackableJob: -1
-    TargetColliderLayer:
-      serializedVersion: 2
-      m_Bits: 4096
     CullingMask:
       serializedVersion: 2
       m_Bits: 6079
-    Layer: 0
+    ColliderLayer: 12
   - TargetJob: 4
     AttackableJob: -1
-    TargetColliderLayer:
-      serializedVersion: 2
-      m_Bits: 1024
     CullingMask:
       serializedVersion: 2
       m_Bits: 6079
-    Layer: 0
+    ColliderLayer: 10

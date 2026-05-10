@@ -566,6 +566,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerCollider: {fileID: 5980159000183742360}
   PlayerCamera: {fileID: 4983985599855904450}
+  playerSkybox: {fileID: 3208942478996741434}
   setting: {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
   jobEvent: {fileID: 11400000, guid: a095f2c42eb216d4b98b3573306c9b88, type: 2}
 --- !u!1 &7126137569720502738
@@ -3653,7 +3654,7 @@ Skybox:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4983985599855904452}
   m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
+  m_CustomSkybox: {fileID: 2100000, guid: 5abac05424d24a74abdb61b5e24d8acd, type: 2}
 --- !u!4 &4983985599855904455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8341769907634336782, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
