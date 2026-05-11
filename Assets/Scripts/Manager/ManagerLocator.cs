@@ -13,6 +13,8 @@ public class ManagerLocator : MonoBehaviour
     [field:SerializeField] public TutorialManager TutorialManager { get; private set; }
     [field:SerializeField] public CheckPointManager CheckPointManager { get; private set; }
 
+    [field:SerializeField] public GameStateManager GameStateManager { get; private set; }
+
     void Awake()
     {
         if(Instance == null)

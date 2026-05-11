@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Crystal : MonoBehaviour,IDamageReciever
 {
-    private NetworkGameManager nGameManager;
+    [SerializeField] NetworkGameManager nGameManager;
 
     [Header("Target")]
     public GameObject crystal; // ← 操作対象
@@ -26,26 +26,6 @@ public class Crystal : MonoBehaviour,IDamageReciever
 
     public float MaxHealth => throw new System.NotImplementedException();
 
-
-    IEnumerator Start()
-    {
-        while (ManagerLocator.Instance.AllGameManager == null)
-        {
-            yield return null;
-        }
-
-        nGameManager = ManagerLocator.Instance.AllGameManager;
-
-        Initialize();
-    }
-
-    void Initialize()
-    {
-        if (nGameManager.CurrentGameState == GameState.GameOver)
-        {
-            Broken();
-        }
-    }
     void OnEnable()
     {
         OnbulletComeRpcEvent.Register(OnBulletCome);

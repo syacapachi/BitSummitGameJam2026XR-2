@@ -1,12 +1,17 @@
 ﻿using Syacapachi.Data;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class ResultUI : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds1 = new WaitForSeconds(1f);
+
     [SerializeField] GameObject panel;
+    [SerializeField] LazyFollow follow;
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI coopText;
@@ -67,6 +72,15 @@ public class ResultUI : MonoBehaviour
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
         ShowResult(resultData, isJapanese);
         ShowDetail(resultData, isJapanese);
+        panel.SetActive(true);
+        follow.enabled = true;
+        StartCoroutine(DisableLazyFollow());
+
+    }
+    IEnumerator DisableLazyFollow()
+    {
+        yield return _waitForSeconds1;
+        follow.enabled = false;
     }
     private void OnGameStateChanged(GameState state)
     {
@@ -78,8 +92,6 @@ public class ResultUI : MonoBehaviour
     }
     void ShowResult(ResultData data, bool isJapanese)
     {
-        panel.SetActive(true);
-
         // ⭐タイトル分岐
         if (data.IsGameOver)
         {

@@ -16,7 +16,7 @@ public class Scripts : MonoBehaviour
     [SerializeField] GameObject connectionButtonPrefab;
     [SerializeField] Transform canvasTransfrom;
 
-    [SerializeField] TitleFlowManager titleFlowManager;
+    [SerializeField] GameStateManager titleFlowManager;
 
     readonly Queue<Button> connectionButtonUnActiveQueue = new();
     readonly Queue<Button> connectionButtonActiveQueue = new();

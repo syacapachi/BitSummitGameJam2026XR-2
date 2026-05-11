@@ -56,7 +56,7 @@ public class PhaseManager : NetworkBehaviour
         OnPhaseChangeRpcEvent.Invoke(newValue);
     }
 
-    public void StartPhasesServerOnly(Difficulty difficulity)
+    public void StartPhasesServerOnly()
     {
         if (!IsServer) return;
 #if UNITY_EDITOR

@@ -14,6 +14,7 @@ public enum TutorialStep
 public class TutorialManager : NetworkBehaviour,ITutorialStart
 {
     [Header("Reference")]
+    [SerializeField] GameStateManager stateManager;
     public NetworkVariable<TutorialStep> CurrentStep =
         new(TutorialStep.Step1);
 
@@ -160,9 +161,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
 
     private void StartMainSimulation()
     {
-        //応急処置
-        //MoveScene();
-        ManagerLocator.Instance.AllGameManager.StartGameServerOnly();
+        stateManager.OnTutorialEnd();
     }
 
     public void OnMarkerPlacedServer(ulong playerId)

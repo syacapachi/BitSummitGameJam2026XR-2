@@ -69,10 +69,10 @@ public class HPManager : NetworkBehaviour
             OnScoreReachZeroServerEvent.Invoke();
         }
     }
-    public void SetHPByDifficultyServerOnly(Difficulty difficulty)
+    public void SetHPByDifficultyServerOnly()
     {
         int hp = rpcDataBase.CurrentSetting.PlayerHP;
-        Debug.Log($"arg diff = {difficulty}, rpcDataBase diff = {rpcDataBase.CurrectDifficulty} ", gameObject);
+        Debug.Log($"rpcDataBase diff = {rpcDataBase.CurrectDifficulty} ", gameObject);
         remainHP.Value = hp;
         currentMaxHP = hp;
     }

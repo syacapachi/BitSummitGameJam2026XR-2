@@ -1,21 +1,13 @@
 ﻿using Syacapachi.Attribute;
-using System.Collections;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class NetworkGameManager : NetworkBehaviour
 {
-    enum GameStartMode
-    {
-        Auto,
-        Button
-    }
+    
     [Header("ゲーム設定")]
     [SerializeField] NetworkVariable<Difficulty> difficulty = new(Difficulty.Easy);
     [SerializeField] GameMode gameMode = GameMode.Protect;
-    [SerializeField] GameStartMode gameStartMode = GameStartMode.Button;
     [Header("Refernce")]
     [SerializeField] GameObject protectArea;
     [SerializeField] HPManager hpManager;
@@ -24,17 +16,18 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] PlayerManager PlayerManager;
     [SerializeField] TutorialManager tutorialManager;
     [SerializeField] ResultDataCreater resultDataCreater;
+    [SerializeField] GameStateManager gameStateManager;
     [Header("DataBase")]
     [SerializeField] DifficultyDataBase difficultyRpcDataBase;
-    [Header("Scene Setting")]
-    [SerializeField, Scene(true)] string homeScene;
+    //[Header("Scene Setting")]
+    //[SerializeField, Scene(true)] string homeScene;
     public GameMode CurrentGameMode => gameMode;
     public HPManager HPManager => hpManager;
     public PhaseManager PhaseManager => phaseManager;
     public GameObject ProtectArea => protectArea;
 
-    public bool IsGamePlaying => CurrentGameState == GameState.Playing || CurrentGameState == GameState.Tutorial;
-    public bool IsGameOver => CurrentGameState == GameState.GameOver;
+    public bool IsGamePlaying => gameStateManager.IsGamePlaying;
+    public bool IsGameOver => gameStateManager.IsGameOver;
 
     public Difficulty CurrentDifficulty
     {
@@ -46,67 +39,50 @@ public class NetworkGameManager : NetworkBehaviour
             difficulty.Value = value;
         }
     }
-    [SerializeField]
-    NetworkVariable<GameState> gameState = new(
-        GameState.Initializing,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
-    public GameState CurrentGameState
-    {
-        get => gameState.Value;
-        private set
-        {
-            if (!IsServer) return;
-            if (gameState.Value == value) return;
-            gameState.Value = value;
-        }
-    }
+
 
     [Header("Publish Event")]
     [SerializeField] VoidEvent OnbulletComeRpcEvent;
-    [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     [SerializeField] BoolEvent gunEnableRpcEvent;
-
     [Header("SubscribeEvent")]
+    [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
     [SerializeField] VoidEvent OnAllPhaseEndedServerEvent;
     [SerializeField] DifficultyEvent difficultyEvent;
 
-    //コルーチンが使用可能なタイミングでは、サーバーかどうかはまだ確定してない。
-    private void Start()
-    {
-        tutorialLight.SetActive(true);
-        string sceneName = SceneManager.GetActiveScene().name;
-        StartCoroutine(WaitForAllClientConnect(sceneName));
-    }
-    IEnumerator WaitForAllClientConnect(string sceneName)
-    {
-        yield return new WaitUntil(() => IsSpawned && PlayerManager != null && PlayerManager.IsAllClientReady());
-        if (!IsServer) yield break;
-        /*
-        if (sceneName.Equals(gameScene.name))
-        {
-            if (gameStartMode == GameStartMode.Auto)
-                StartGameServerOnly();
-        }
-        else if (sceneName.Equals(tutorialScene.name))
-        {
-            StartTutorialServerOnly();
-        }
-        */
-        StartTutorialServerOnly();
-    }
-
     private void OnEnable()
     {
-        gameState.OnValueChanged += HandleGameStateChanged;
+        OnGameStateChangeRpcEvent.Register(OnStateChanged);
         difficulty.OnValueChanged += HandleDifficltyChange;
     }
     private void OnDisable()
     {
-        gameState.OnValueChanged -= HandleGameStateChanged;
+        OnGameStateChangeRpcEvent.Unregister(OnStateChanged);
         difficulty.OnValueChanged -= HandleDifficltyChange;
+    }
+    void OnStateChanged(GameState newState)
+    {
+        switch (newState)
+        {
+            case GameState.Initializing:
+                InitializeGameServerOnly(); break;
+            case GameState.Playing:
+                StartGameServerOnly();
+                 break;
+            case GameState.Tutorial:
+                tutorialLight.SetActive(true);
+                StartTutorialServerOnly();break;
+            default:
+                break;
+        }
+        if(newState == GameState.Playing || newState == GameState.Tutorial)
+        {
+            gunEnableRpcEvent.Invoke(true);
+        }
+        else
+        {
+            gunEnableRpcEvent.Invoke(false);
+        }
     }
     public override void OnNetworkSpawn()
     {
@@ -131,31 +107,25 @@ public class NetworkGameManager : NetworkBehaviour
     void StartTutorialServerOnly()
     {
         tutorialManager.OnTutorialStart();
-        gameState.Value = GameState.Tutorial;
     }
     [OnInspectorButton("Start Game")]
     public void StartGameServerOnly()
     {
         if (!IsServer) return;
-        if (CurrentGameState != GameState.Initializing&& CurrentGameState != GameState.Tutorial) return;
 
         Debug.Log("Game Start", gameObject);
         tutorialLight.SetActive(false);
         //関数内部でデータベースを参照しているので、引数をとらなくても同期されているはず...
-        hpManager.SetHPByDifficultyServerOnly(CurrentDifficulty);
-        phaseManager.StartPhasesServerOnly(CurrentDifficulty);
-        //ここを更新すると、クライアントにイベントが飛ぶ。
-        gameState.Value = GameState.Playing;
+        hpManager.SetHPByDifficultyServerOnly();
+        phaseManager.StartPhasesServerOnly();
     }
 
-    [OnInspectorButton("Reset")]
-    public void ResetGameServerOnly()
+    [OnInspectorButton("Initilalzie")]
+    public void InitializeGameServerOnly()
     {
         if (!IsServer) return;
 
-        Debug.Log("GAME RESET", gameObject);
-
-        CurrentGameState = GameState.Initializing;
+        Debug.Log("GAME Initilalzie", gameObject);
 
         phaseManager.ResetPhase();
         phaseManager.KillableHandle.KillAll();
@@ -167,12 +137,11 @@ public class NetworkGameManager : NetworkBehaviour
                 player.stats.ResetStats();
             }
         }
-        MoveScene();
     }
     void HandleDifficltyChangeServerOnly(Difficulty newDifficulty)
     {
         //プレイ中は変更禁止
-        if (gameState.Value == GameState.Playing) return;
+        if (gameStateManager.CurrentGameState == GameState.Playing) return;
         CurrentDifficulty = newDifficulty;
     }
     void HandleDifficltyChange(Difficulty oldDifficulty, Difficulty newDifficulty)
@@ -180,24 +149,12 @@ public class NetworkGameManager : NetworkBehaviour
         difficultyRpcDataBase.CurrectDifficulty = newDifficulty;
     }
 
-    void HandleGameStateChanged(GameState oldState, GameState newState)
-    {
-        Debug.Log($"GameState Changed: {oldState} -> {newState}", gameObject);
-        OnGameStateChangeRpcEvent.Invoke(newState);
-        if (newState == GameState.Tutorial || newState == GameState.Playing)
-        {
-            gunEnableRpcEvent.Invoke(true);
-        }
-        else
-        {
-            gunEnableRpcEvent.Invoke(false);
-        }
-    }
+    
     void HandleScoreZeroServerOnly()
     {
         if (!IsServer) return;
         Debug.Log("GAME OVER");
-        CurrentGameState = GameState.GameOver;
+        gameStateManager.OnGameOverServerOnly();
 
         OnGameEnd();
     }
@@ -205,7 +162,7 @@ public class NetworkGameManager : NetworkBehaviour
     void HandleAllPhaseEndedServerOnly()
     {
         Debug.Log("ALL PHASE ENDED CALLED");
-        CurrentGameState = GameState.GameClear;
+        gameStateManager.OnGameClearServerOnly(); ;
 
         OnGameEnd();
     }
@@ -229,27 +186,20 @@ public class NetworkGameManager : NetworkBehaviour
     {
         OnbulletComeRpcEvent.Invoke();
     }
-    void MoveScene()
-    {
-        if (!IsServer) return;
-        {
-            Debug.Log($"[{SceneManager.GetActiveScene().name}] Loading {homeScene}");
+    //void MoveScene()
+    //{
+    //    if (!IsServer) return;
+    //    {
+    //        Debug.Log($"[{SceneManager.GetActiveScene().name}] Loading {homeScene}");
 
-            NetworkManager.SceneManager.LoadScene(
-                homeScene,
-                LoadSceneMode.Single
-            );
-        }
-    }
+    //        NetworkManager.SceneManager.LoadScene(
+    //            homeScene,
+    //            LoadSceneMode.Single
+    //        );
+    //    }
+    //}
 }
-public enum GameState
-{
-    Initializing,// 開始前
-    Playing,     // プレイ中
-    GameClear,   // クリア
-    GameOver,    // ゲームオーバー
-    Tutorial     //チュートリアル(統合を見据えて置いておく)
-}
+
 
 public enum GameMode
 {
