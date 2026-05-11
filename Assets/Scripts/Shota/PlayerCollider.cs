@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Syacapachi.Attribute;
+using UnityEngine;
 
 public class PlayerCollider : MonoBehaviour, IDamageReciever
 {
@@ -27,4 +28,15 @@ public class PlayerCollider : MonoBehaviour, IDamageReciever
             Debug.LogError("PlayerHealth が PlayerCollider に設定されていません！",gameObject);
         }
     }
+#if UNITY_EDITOR
+    void Reset()
+    {
+        Find();
+    }
+    [OnInspectorButton]
+    void Find()
+    {
+        m_Renerers = transform.parent.GetComponentsInChildren<Renderer>();
+    }
+#endif
 }
