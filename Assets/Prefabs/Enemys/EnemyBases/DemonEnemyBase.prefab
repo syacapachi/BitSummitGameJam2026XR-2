@@ -404,7 +404,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -506,7 +506,6 @@ MonoBehaviour:
   enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   dieEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
   enemyAudio: {fileID: 7493623612878443819}
-  isAttackable: 1
   renderers: []
   jobCycle: 010000000200000004000000
 --- !u!114 &2074675331461316831
