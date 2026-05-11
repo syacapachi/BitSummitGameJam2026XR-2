@@ -155,6 +155,7 @@ public class SkyBoxColorChanger : MonoBehaviour
             if (skyboxMat.HasFloat("_TextureStrength"))
             {
                 skyboxMat.SetFloat("_TextureStrength", setting.textureStrength);
+                skyboxMat.SetFloat("_Rotate", setting.textureRotation);
             }
         }
 
@@ -246,6 +247,7 @@ public class SkyBoxColorChanger : MonoBehaviour
             if (skyboxMat.HasFloat("_TextureStrength"))
             {
                 skyboxMat.SetFloat("_TextureStrength", currentSky.textureStrength);
+                skyboxMat.SetFloat("_Rotate",currentSky.textureRotation);
             }
         }
         sunLight.color = currentSky.sunColor;

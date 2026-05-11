@@ -36,6 +36,8 @@ public class SkyBoxColorSetting : ScriptableObject
     public float moonMultiplier = 1f;
     [Header("テクスチャの存在感"),Range(0f,1f)]
     public float textureStrength = 1f;
+    [Header("テクスチャの回転"),Range(0f,1f)]
+    public float textureRotation = 1f;
     private const float onehour = 360f / 24f;
 
     //0時->±180
@@ -72,6 +74,7 @@ public class SkyBoxColorSetting : ScriptableObject
         moonMultiplier = Mathf.Lerp(fromSky.moonMultiplier, toSky.moonMultiplier, t);
 
         textureStrength = Mathf.Lerp(fromSky.textureStrength, toSky.textureStrength, t);
+        textureRotation = Mathf.Lerp(fromSky.textureRotation, toSky.textureRotation, t);
 
         skyRootEular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular, t);
     }
