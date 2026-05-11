@@ -1,15 +1,12 @@
-﻿using Syacapachi.Attribute;
-using TMPro;
+﻿using TMPro;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class WorldViewManager : NetworkBehaviour
 {
-    //[SerializeField] private bool isTutorialSkip;
-
+    [Header("Refernce")]
+    [SerializeField] GameStateManager gameStateManager;
     private NetworkVariable<int> pageIndex = new(
         0,
         NetworkVariableReadPermission.Everyone,
@@ -38,13 +35,13 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] LocalizeSimpleText closeText;
     [SerializeField] LocalizeSimpleText backText;
 
-    [Header("シーン設定")]
     /*
+    [Header("シーン設定")]
     SerializeField,Scene(true)] string tutorialScene;
     SerializeField,Scene(true)] string gameScene;
-    */
-    [SerializeField,Scene(true)] string gameSceneName;
 
+    [SerializeField,Scene(true)] string gameSceneName;
+    */
     /*
     private void Start()
     {
@@ -59,7 +56,6 @@ public class WorldViewManager : NetworkBehaviour
     //OnNetworkSpanは、ネット接続時にSetActive(true)でないと呼ばれないので、Canvsのみ無効にする。
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
         Debug.Log("WorldViewManager OnNetworkSpawn called");
         //if (boardCanvas != null) boardCanvas.enabled = true;
         pageIndex.OnValueChanged += OnPageChanged;
@@ -80,7 +76,7 @@ public class WorldViewManager : NetworkBehaviour
     {
         if (pageIndex.Value >= totalBoards - 1)
         {
-            MoveScene();
+            gameStateManager.OnGameInitialize();
             return;
         }
         pageIndex.Value++;
@@ -123,23 +119,23 @@ public class WorldViewManager : NetworkBehaviour
             backButton.gameObject.SetActive(index > 0);
     }
 
-    void MoveScene()
-    {
-        if (!IsServer) return;
-        /*
-        if (isTutorialSkip)
-        {
-            Debug.Log($"[{nameof(WorldViewManager)}] Loading {gameScene.name}");
-            NetworkManager.Singleton.SceneManager.LoadScene(gameScene.name, LoadSceneMode.Single);
-        }
-        else
-        {
-            Debug.Log($"[{nameof(WorldViewManager)}] Loading {tutorialScene.name}");
-            NetworkManager.Singleton.SceneManager.LoadScene(tutorialScene.name, LoadSceneMode.Single);
-        }
-        */
-        Debug.Log($"[{nameof(WorldViewManager)}] Loading {gameSceneName}");
-        NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
-    }
+    //void MoveScene()
+    //{
+    //    if (!IsServer) return;
+    //    /*
+    //    if (isTutorialSkip)
+    //    {
+    //        Debug.Log($"[{nameof(WorldViewManager)}] Loading {gameScene.name}");
+    //        NetworkManager.Singleton.SceneManager.LoadScene(gameScene.name, LoadSceneMode.Single);
+    //    }
+    //    else
+    //    {
+    //        Debug.Log($"[{nameof(WorldViewManager)}] Loading {tutorialScene.name}");
+    //        NetworkManager.Singleton.SceneManager.LoadScene(tutorialScene.name, LoadSceneMode.Single);
+    //    }
+    //    */
+    //    Debug.Log($"[{nameof(WorldViewManager)}] Loading {gameSceneName}");
+    //    NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
+    //}
 
 }

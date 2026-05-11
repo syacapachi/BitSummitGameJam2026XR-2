@@ -137,7 +137,7 @@ public class MarkerController : NetworkBehaviour
             MoveMarkerServerRpc(hit.point);
             markerAudioController.OnMarkerSondPlayRpc(hit.point);
 
-            if (ManagerLocator.Instance.AllGameManager.CurrentGameState == GameState.Tutorial)
+            if (ManagerLocator.Instance.GameStateManager.CurrentGameState == GameState.Tutorial)
                 ManagerLocator.Instance.TutorialManager.OnMarkerPlacedServer(OwnerClientId);
         }
     }

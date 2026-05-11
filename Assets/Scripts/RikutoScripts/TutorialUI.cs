@@ -9,7 +9,8 @@ public class TutorialUI : MonoBehaviour
     [SerializeField] GameObject root;
     [SerializeField] TextMeshProUGUI text; // ← 1つだけ
 
-    [Header("Event")]
+    [Header("Subscribe Event")]
+    [SerializeField] GameStateEvent gameStateEvent;
     [SerializeField] IntEvent OnTutorialStepChanged;
     [SerializeField] VoidEvent OnTutorialStepCleared;
 
@@ -25,15 +26,9 @@ public class TutorialUI : MonoBehaviour
 
     private TutorialUIState currentState = TutorialUIState.Idle;
 
-    void Start()
+    private void Start()
     {
-        isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
         root.SetActive(false);
-
-        if (tutorialManager != null)
-        {
-            OnStepChangedNetwork(default, tutorialManager.CurrentStep.Value);
-        }
     }
 
     void OnEnable()
@@ -41,6 +36,7 @@ public class TutorialUI : MonoBehaviour
         //OnTutorialStepChanged.Register(OnStepChanged);
         OnTutorialStepCleared.Register(OnStepCleared);
         tutorialManager.CurrentStep.OnValueChanged += OnStepChangedNetwork;
+        gameStateEvent.Register(OnStateChange);
     }
 
     void OnDisable()
@@ -48,6 +44,7 @@ public class TutorialUI : MonoBehaviour
         //OnTutorialStepChanged.Unregister(OnStepChanged);
         OnTutorialStepCleared.Unregister(OnStepCleared);
         tutorialManager.CurrentStep.OnValueChanged -= OnStepChangedNetwork;
+        gameStateEvent.Unregister(OnStateChange);
     }
 
     void OnStepChangedNetwork(TutorialStep oldStep, TutorialStep newStep)
@@ -58,7 +55,19 @@ public class TutorialUI : MonoBehaviour
             return;
         ChangeState(TutorialUIState.StepIntro, newStep);
     }
+    void OnStateChange(GameState state)
+    {
+        if(state == GameState.Tutorial)
+        {
+            isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+            root.SetActive(false);
 
+            if (tutorialManager != null)
+            {
+                OnStepChangedNetwork(default, tutorialManager.CurrentStep.Value);
+            }
+        }
+    }
     // =========================
     // 状態管理
     // =========================

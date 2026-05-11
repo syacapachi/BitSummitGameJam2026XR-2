@@ -17,8 +17,8 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     bool CanRecord =>
     IsServer &&
     ManagerLocator.Instance != null &&
-    ManagerLocator.Instance.AllGameManager != null &&
-    ManagerLocator.Instance.AllGameManager.CurrentGameState
+    ManagerLocator.Instance.GameStateManager != null &&
+    ManagerLocator.Instance.GameStateManager.CurrentGameState
         == GameState.Playing;
 
     void Awake()

@@ -51,6 +51,7 @@ MonoBehaviour:
   nextPhaseType: 0
   networkPool: {fileID: 4084111059737820316}
   checkPointManager: {fileID: 4441792715120167192}
+  gameStateManager: {fileID: 1142131513230880555}
   protectArea: {fileID: 0}
   OnAllEnemyDeadRpcEvent: {fileID: 11400000, guid: d48233639feb72e4ba705392d35f3c40, type: 2}
   EnemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
@@ -161,6 +162,7 @@ Transform:
   - {fileID: 4322182251488153399}
   - {fileID: 4746944526076724239}
   - {fileID: 8180314942974675238}
+  - {fileID: 7939887515387561348}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &577900837676337283
@@ -181,6 +183,7 @@ MonoBehaviour:
   <LocalObjectPool>k__BackingField: {fileID: 4446207769095747314}
   <TutorialManager>k__BackingField: {fileID: 8343285116251111980}
   <CheckPointManager>k__BackingField: {fileID: 4441792715120167192}
+  <GameStateManager>k__BackingField: {fileID: 1142131513230880555}
 --- !u!114 &4316947998156742355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 657380702
+  GlobalObjectIdHash: 3618414520
   InScenePlacedSourceGlobalObjectIdHash: 657380702
   DeferredDespawnTick: 0
   Ownership: 1
@@ -438,10 +441,7 @@ MonoBehaviour:
   setting:
   - {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   - {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
-  enemyJob:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  enemyJob: []
   enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
   difficultyDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
 --- !u!1 &5655868705551815652
@@ -602,7 +602,6 @@ MonoBehaviour:
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 1
   gameMode: 1
-  gameStartMode: 0
   protectArea: {fileID: 0}
   hpManager: {fileID: 7622921992766210704}
   tutorialLight: {fileID: 0}
@@ -610,16 +609,11 @@ MonoBehaviour:
   PlayerManager: {fileID: 8012348177458703508}
   tutorialManager: {fileID: 8343285116251111980}
   resultDataCreater: {fileID: 5193210326732251977}
+  gameStateManager: {fileID: 1142131513230880555}
   difficultyRpcDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
-  homeScene: WorldViewScene
-  gameState:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
-  OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   gunEnableRpcEvent: {fileID: 11400000, guid: c8ec81be65a3f1b459a48651324647bc, type: 2}
+  OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   OnScoreReachZeroServerEvent: {fileID: 11400000, guid: d25eacdc90bbcdd46906b309e60cc204, type: 2}
   OnAllPhaseEndedServerEvent: {fileID: 11400000, guid: 39db8e93554b7ad4a977159e38b88cbb, type: 2}
   difficultyEvent: {fileID: 11400000, guid: e641f2abcabb4f8449947c45a980c10f, type: 2}
@@ -723,6 +717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  stateManager: {fileID: 1142131513230880555}
   CurrentStep:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -1043,6 +1038,62 @@ MonoBehaviour:
     IsGameOver: 0
     Cooperation: 0
     detail: []
+--- !u!1 &8933282943940594150
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7939887515387561348}
+  - component: {fileID: 1142131513230880555}
+  m_Layer: 0
+  m_Name: StateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7939887515387561348
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8933282943940594150}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -3.5799942, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4908882465109089120}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1142131513230880555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8933282943940594150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63b4d3ca92506e8438778ee52695cabc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  gameStartMode: 1
+  useTutorial: 0
+  gameState:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 5
+  languageCanvas: {fileID: 0}
+  connectCanvas: {fileID: 0}
+  worldViewCanvas: {fileID: 0}
+  OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
 --- !u!1 &8974977137299023905
 GameObject:
   m_ObjectHideFlags: 0

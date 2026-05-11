@@ -6,6 +6,7 @@ public class StartButton : NetworkBehaviour
 {
     [SerializeField] GameObject startUI;
     [SerializeField] GameObject resetUI;
+    [SerializeField] GameStateManager gameStateManager;
 
     [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
@@ -18,6 +19,11 @@ public class StartButton : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI resetButtonText;
     [SerializeField] LocalizeSimpleText gameStartButton;
     [SerializeField] LocalizeSimpleText gameResetButton;
+
+    private void Start()
+    {
+        GameStartHandle();
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -60,7 +66,9 @@ public class StartButton : NetworkBehaviour
     {
         switch (state)
         {
+            case GameState.Home:
             case GameState.Initializing:
+                UpdateLanguageText();
                 OnGameInitialize(); break;
             case GameState.Playing:
                 GameStartHandle(); break;
@@ -87,13 +95,13 @@ public class StartButton : NetworkBehaviour
     [Rpc(SendTo.Server)]
     void StartGameRpc()
     {
-        ManagerLocator.Instance.AllGameManager.StartGameServerOnly();
+        gameStateManager.OnGameStartServerOnly();
     }
 
     [Rpc(SendTo.Server)]
     void ResetGameRpc()
     {
-        ManagerLocator.Instance.AllGameManager.ResetGameServerOnly();
+        gameStateManager.OnBackToHomeServerOnly();
         resetUI.SetActive(false);
     }
 

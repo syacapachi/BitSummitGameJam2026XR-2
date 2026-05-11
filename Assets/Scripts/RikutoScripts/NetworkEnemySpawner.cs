@@ -52,6 +52,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     [Header("Reference")]
     [SerializeField] NetworkObjectPool networkPool;
     [SerializeField] CheckPointManager checkPointManager;
+    [SerializeField] GameStateManager gameStateManager;
     [SerializeField] Transform protectArea;
     [Header("PublishEvent")]
     [SerializeField] VoidEvent OnAllEnemyDeadRpcEvent;
@@ -143,7 +144,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
 
         while (spawnQueue.Count > 0)
         {
-            if (!ManagerLocator.Instance.AllGameManager.IsGamePlaying) yield break;
+            if (!gameStateManager.IsGamePlaying) yield break;
             timer += Time.deltaTime;
 
             // 今の時間で出すべき敵を全部出す
@@ -190,7 +191,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     {
         while (waitSpawnEnemyQueue.Count > 0)
         {
-            if (!ManagerLocator.Instance.AllGameManager.IsGamePlaying) yield break;
+            if (!gameStateManager.IsGamePlaying) yield break;
             switch (waitSpawnType)
             {
                 case WaitSpawnType.WaitForNext:
@@ -284,7 +285,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     public void OnEnemyKilled(IEnemy enemy)
     {
         if (!IsServer) return;
-        if (ManagerLocator.Instance.AllGameManager.CurrentGameState != GameState.Playing) return;
+        if (gameStateManager.CurrentGameState != GameState.Playing) return;
         remain--;
         Debug.Log($"[OnEnemyKilled] remain:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}", gameObject);
         if (remain == 0 && isSpawnFinished && waitSpawnEnemyQueue.Count == 0)
