@@ -45,10 +45,10 @@ namespace UnityChan
 		private GameObject cameraObject;	// メインカメラへの参照
 		
 		// アニメーター各ステートへの参照
-		static int idleState = Animator.StringToHash ("Base Layer.Idle");
-		static int locoState = Animator.StringToHash ("Base Layer.Locomotion");
-		static int jumpState = Animator.StringToHash ("Base Layer.Jump");
-		static int restState = Animator.StringToHash ("Base Layer.Rest");
+		static int idleState = Animator.StringToHash ("Base CollidersLayer.Idle");
+		static int locoState = Animator.StringToHash ("Base CollidersLayer.Locomotion");
+		static int jumpState = Animator.StringToHash ("Base CollidersLayer.Jump");
+		static int restState = Animator.StringToHash ("Base CollidersLayer.Rest");
 
 		// 初期化
 		void Start ()

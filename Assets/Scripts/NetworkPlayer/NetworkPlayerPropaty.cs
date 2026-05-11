@@ -24,11 +24,11 @@ public class NetworkPlayerPropaty : NetworkBehaviour
     };
     [SerializeField]
     NetworkVariable<PlayerJob> syncroJob = new(
-        PlayerJob.Both,
+        PlayerJob.Nothing,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner
     );
-    [SerializeField, ReadOnly] PlayerJob currentjob = PlayerJob.Both;
+    [SerializeField, ReadOnly] PlayerJob currentjob = PlayerJob.Nothing;
     [Header("Subscribe Event")]
     [SerializeField] PlayerJobEvent jobChangeLocalEvent;
     [Header("Debug")]
@@ -39,16 +39,14 @@ public class NetworkPlayerPropaty : NetworkBehaviour
         get => syncroJob.Value;
         set
         {
-            if (IsOwner)
+            if (!IsOwner) return;
+
+            jobChangeLocalEvent.Invoke(value);
+            currentjob = value;
+            if (syncroJob.Value != value)
             {
-                jobChangeLocalEvent.Invoke(value);
-                currentjob = value;
-                if (syncroJob.Value != value)
-                {
-                    syncroJob.Value = value;
-                }
+                syncroJob.Value = value;
             }
-            
         }
     }
 
@@ -103,7 +101,7 @@ public class NetworkPlayerPropaty : NetworkBehaviour
             PlayerLayerSettings settings = setting.JobLayerMaskReadOnlyDic[newJob];
             foreach (var collider in avatorColliders)
             {
-                collider.gameObject.layer = settings.Layer;
+                collider.gameObject.layer = settings.CollidersLayer;
             }
         }
     }

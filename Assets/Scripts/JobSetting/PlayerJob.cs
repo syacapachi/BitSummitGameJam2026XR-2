@@ -1,6 +1,5 @@
 ﻿using Syacapachi.Attribute;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 //[GenerateEvent(typeof(GameEventSOBase<>),isArray:true)]
 [Flags]
@@ -18,59 +17,29 @@ public enum PlayerJob
     /// おばけだけ見えない。おばけだけ当たる。
     /// </summary>
     Ghost = 1 << 1,
-    /// <summary>
-    /// 両方見える。両方当たらない
-    /// </summary>
-    Both = Demon | Ghost,
-    /// <summary>
     /// チュートリアル用のジョブ
     /// 全員見えるし、全員当たる
     /// </summary>
     Tutorial = 1<<2
 }
 [Serializable]
-public struct PlayerLayerSettings
+public class PlayerLayerSettings : JobSettingBase
 {
-    /// <summary>
-    /// 設定対象の職業
-    /// </summary>
-    [SingleFlagOnly]
-    public PlayerJob TargetJob;
-    /// <summary>
-    /// 攻撃が当たる職業。複数選択可能。
-    /// </summary>
-    public PlayerJob AttackableJob;
-    /// <summary>
-    /// Colliderのレイヤー 1つのレイヤーのみを指定してください。
-    /// 複数指定した場合、最初のレイヤーが使用されます。
-    /// Layerを指定する際は、Layerを参照してください。
-    /// </summary>
-    [SingleFlagOnly]
-    public LayerMask TargetColliderLayer;
     /// <summary>
     /// Cameraのカリングマスク
     /// </summary>
     public LayerMask CullingMask;
     /// <summary>
-    /// コライダーのレイヤー
+    /// SkyBox
     /// </summary>
-    [HideInInspector]
-    public int Layer ;
+    public Material skyboxMeterial;
+    public PlayerLayerSettings() { }
 
-    public PlayerLayerSettings(LayerMask colliderLayer, LayerMask cullingMask, PlayerJob job,PlayerJob attackableJob)
+    public PlayerLayerSettings(PlayerJob tartgetJob, PlayerJob attackableJob, LayerMask cullingMask, int colliderLayer):base(tartgetJob,attackableJob,colliderLayer)
     {
-        TargetColliderLayer = colliderLayer;
         CullingMask = cullingMask;
-        TargetJob = job;
-        AttackableJob = attackableJob;
-        Layer = 0;
-        //最初に見つかったレイヤーを使用する
-        LayerUpdate();
     }
-    public void LayerUpdate()
-    {
-        Layer = GetFirstLayer(TargetColliderLayer);
-    }
+
     /// <summary>
     /// 最初に見つかったレイヤーを返す
     /// </summary>
@@ -86,25 +55,21 @@ public struct PlayerLayerSettings
         }
         return -1; //見つからない場合は-1を返す
     }
-    public readonly bool IsAttackableJob(PlayerJob targetJob)
-    {
-        return (AttackableJob & targetJob) != 0;
-    }
-    public readonly int GetNonVisibleLayerIndex()
+    public int GetNonVisibleLayerIndex()
     {
         return GetFirstLayer(~CullingMask);
     }
-    public readonly bool IsVisibleLayer(int targetLayer)
+    public bool IsVisibleLayer(int targetLayer)
     {
         Debug.Log($"Checking visibility for ownerLayer {targetLayer} in CullingMask {CullingMask.value}");
         return (CullingMask.value & (1 << targetLayer)) != 0;
     }
-    public readonly bool IsVisibleLayer(LayerMask targetLayerMask)
+    public bool IsVisibleLayer(LayerMask targetLayerMask)
     {
         return (CullingMask.value & targetLayerMask.value) != 0;
     }
-    public override readonly string ToString()
+    public override string ToString()
     {
-        return $"Job: {TargetJob}, AttackableJob: {AttackableJob}, ColliderLayerMask: {TargetColliderLayer.value}, CullingMask: {CullingMask.value}, Layer: {Layer}";
+        return $"Job: {base.SettingJob}, AttackableJob: {AttackableJobs}, CullingMask: {CullingMask.value}, CollidersLayer: {CollidersLayer}";
     }
 }

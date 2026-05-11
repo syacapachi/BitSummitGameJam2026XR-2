@@ -1837,9 +1837,6 @@ PrefabInstance:
       addedObject: {fileID: 1194369278827022531}
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2904216475575343669}
-    - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -3566905716766863411}
     - targetCorrespondingSourceObject: {fileID: 399528755730910307, guid: aa27a5d234e148745a90790e1c87ce24, type: 3}
       insertIndex: -1
@@ -1954,27 +1951,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  enemySO: {fileID: 11400000, guid: 46de6dc1c82b9ce4eb12e4f1f3bada05, type: 2}
-  enemyJobSetting: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
+  rootTransfrom: {fileID: 1124331973230440938}
+  enemyJobSetting: {fileID: 11400000, guid: 62e5df39faca2aa46a15408183215e7a, type: 2}
   hpCanvas: {fileID: 1696206507279681442}
   hpImage: {fileID: 7028729913468153075}
   hpText: {fileID: 108117791681994854}
-  enemyJob: 1
+  enemyJob: 0
+  networkAnimator: {fileID: 0}
   enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
-  isAttackable: 1
---- !u!114 &2904216475575343669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1124331973230472586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8131e068bca0d75419a6a5986a743dc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visibleToJobsAll: 1
+  dieEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+  enemyAudio: {fileID: 0}
+  renderers:
+  - {fileID: 6839955872806247574}
+  jobCycle: 010000000200000004000000
 --- !u!114 &-3566905716766863411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1988,15 +1977,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  validHitFxPrefabAll: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
-  validHitSfxAll: {fileID: 8300000, guid: c337d469678aa0d4fb70415fb29fb25d, type: 3}
-  validHitLifeTimeAll: 2
-  validHitVolumeAll: 1
-  invalidHitFxPrefabAll: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
-  invalidHitSfxAll: {fileID: 8300000, guid: c974731f514a5964780a24ffa7825328, type: 3}
-  invalidHitLifeTimeAll: 2
-  invalidHitVolumeAll: 1
-  fxRuleServer: {fileID: 0}
+  nEnemy: {fileID: 0}
+  validHitAudio: {fileID: 0}
+  validHitFx: {fileID: 0}
+  invalidHitAudio: {fileID: 0}
+  invalidHitFx: {fileID: 0}
+  JobSetting: {fileID: 0}
+  gameEffectEvent: {fileID: 0}
 --- !u!114 &9089704304245272198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2010,15 +1997,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  deathAudio: {fileID: 0}
+  deathFx: {fileID: 0}
   deathFxPrefabAll: {fileID: 8987055145473169864, guid: 61d292a3d4be52d48b3602f211d2c501, type: 3}
   deathSfxAll: {fileID: 8300000, guid: 28110385e59aa2a48aac031f73088dc4, type: 3}
-  deathFxLifeTimeAll: 2
   deathVolumeAll: 1
   reachedProtectArea:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  gameEffectEvent: {fileID: 0}
 --- !u!82 &-5080072534731083706
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2129,6 +2118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  m_AudioSource: {fileID: 0}
   loopClipAll: {fileID: 8300000, guid: dc8f926fab434a844b493d2f6b677a58, type: 3}
   loopVolumeAll: 0.3
 --- !u!82 &7408496459583059300
@@ -2249,9 +2239,10 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
-  enemySO: {fileID: 11400000, guid: 46de6dc1c82b9ce4eb12e4f1f3bada05, type: 2}
   nEnemy: {fileID: 1194369278827022531}
+  shotAudioEffect: {fileID: 0}
   shotClip: {fileID: 0}
+  networkAnimator: {fileID: 0}
   gameEffect: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!114 &-5903348280613425245
 MonoBehaviour:
@@ -2267,7 +2258,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   spawnFxPrefabAll: {fileID: 4637477889121937913, guid: 8341f291808030a4c9c3d4709878ef8f, type: 3}
-  spawnSfxAll: {fileID: 8300000, guid: 755277c4df6a1704b91570f49b062caa, type: 3}
-  spawnFxLifeTimeAll: 2
-  spawnVolumeAll: 1
+  audioEffectData: {fileID: 0}
+  fxEffect: {fileID: 0}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}

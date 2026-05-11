@@ -257,7 +257,11 @@ MonoBehaviour:
   phaseManager: {fileID: 0}
   timeOffset: 15
   clearChangeTime: 5
-  skyboxMat: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
+  tutorialToEveningTime: 3
+  skyboxMats:
+  - {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
+  - {fileID: 2100000, guid: 5abac05424d24a74abdb61b5e24d8acd, type: 2}
+  - {fileID: 2100000, guid: d6456de1a2515954891220c50af222d0, type: 2}
   sunAndMoonRoot: {fileID: 7565055580231618159}
   sunLight: {fileID: 4382631628304796848}
   sunMat: {fileID: 2100000, guid: 2a4258fad7be5a44ea76ecfa488e4aa9, type: 2}

@@ -211,9 +211,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)){
             foreach (Transform childs in transform.GetComponentsInChildren<Transform>())
             {
-                childs.gameObject.layer = setting.Layer;                
+                childs.gameObject.layer = setting.CollidersLayer;                
             }
-            originalLayerServerOnly = setting.Layer;
+            originalLayerServerOnly = setting.CollidersLayer;
         }
     }
     public override void OnNetworkDespawn()
@@ -240,6 +240,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (!isInitialize) return;
         if (rootTransfrom != null)
         {
+            //プレーヤーをずっと見てくる
             rootTransfrom.LookAt(targetPlayerServerOnly);
         }
         hpCanvas.transform.LookAt(targetPlayerServerOnly);

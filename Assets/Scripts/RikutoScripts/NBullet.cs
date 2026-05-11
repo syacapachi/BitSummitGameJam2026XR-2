@@ -43,7 +43,7 @@ public class NBullet : BulletBaseController
             Debug.Log(
                 $"ShooterJob={ShooterJob}, " +
                 $"EnemyJob={enemy.EnemyJob}, " +
-                $"AttackableJob={layerMaskSetting.AttackableJob}, " +
+                $"AttackableJob={layerMaskSetting.AttackableJobs}, " +
                 $"CanTakeDamage={layerMaskSetting.IsAttackableJob(enemy.EnemyJob)}"
                 ,other
             );

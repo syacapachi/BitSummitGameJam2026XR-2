@@ -1,13 +1,11 @@
 ﻿#if UNITY_EDITOR
 namespace Syacapachi.Editor
 {
-    using System.Reflection;
-    using System;
-    using UnityEditor;
-
-    using UnityEngine;
-    using System.Linq;
     using Syacapachi.Attribute;
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor;
+    using UnityEngine;
 
     /// <summary>
     /// [SerializeReferenceView] 用 PropertyDrawer
@@ -20,12 +18,12 @@ namespace Syacapachi.Editor
             var attr = (SerializeReferenceViewAttribute)attribute;
 
             EditorGUI.BeginProperty(position, label, property);
-
             if (property.managedReferenceValue == null)
             {
                 // タイプ選択ボタン
                 if (GUI.Button(position, "＋ 型を選択"))
                 {
+                    //Debug.Log($"Search {fieldInfo.FieldType}");
                     ShowTypeMenu(property, attr.BaseType);
                 }
             }
@@ -59,7 +57,7 @@ namespace Syacapachi.Editor
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             //何もないならスペースを1.2fに
-            if (property.managedReferenceValue == null)
+            if (property.propertyType != SerializedPropertyType.ManagedReference)
                 return EditorGUIUtility.singleLineHeight * 1.2f;
 
             return EditorGUI.GetPropertyHeight(property, label, true) + EditorGUIUtility.singleLineHeight;
@@ -70,16 +68,39 @@ namespace Syacapachi.Editor
             GenericMenu menu = new GenericMenu();
 
             Type fieldType = fieldInfo.FieldType;
+            //Array
+            if (fieldType.IsArray)
+            {
+                fieldType = fieldType.GetElementType();
+            }
+            //List
+            else if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                fieldType = fieldType.GetGenericArguments()[0];
+            }
             Type targetBase = baseType ?? fieldType;
 
             // ジェネリックなども含め全型,基底クラスを継承するクラスを探索
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t =>
-                    targetBase.IsAssignableFrom(t) &&
-                    !t.IsAbstract &&
-                    !t.IsInterface);
+            //var types = AppDomain.CurrentDomain.GetAssemblies()
+            //    .SelectMany(a => a.GetTypes())
+            //    .Where(t =>
+            //        targetBase.IsAssignableFrom(t) &&
+            //        !t.IsAbstract &&
+            //        !t.IsInterface);
 
+            //Unity内部のキャッシュを活用することで高速化
+            var types = TypeCache.GetTypesDerivedFrom(targetBase);
+
+            //自身
+            if(!targetBase.IsAbstract && !targetBase.IsInterface)
+            {
+                string menuName = targetBase.FullName.Replace('.', '/');
+                menu.AddItem(new GUIContent(menuName), false, () =>
+                {
+                    property.managedReferenceValue = Activator.CreateInstance(targetBase);
+                    property.serializedObject.ApplyModifiedProperties();
+                });
+            }
             foreach (var type in types)
             {
                 string menuName = type.FullName.Replace('.', '/');

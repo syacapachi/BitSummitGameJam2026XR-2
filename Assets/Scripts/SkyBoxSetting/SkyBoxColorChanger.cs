@@ -10,7 +10,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     [SerializeField] float clearChangeTime = 5f;
     [SerializeField] float tutorialToEveningTime = 3f;
     [Header("SkyBox Material")]
-    [SerializeField] Material skyboxMat;
+    [SerializeField] Material[] skyboxMats;
     [Header("太陽と月のルート")]
     [SerializeField] Transform sunAndMoonRoot;
     [Header("Directional Light(太陽)")]
@@ -144,12 +144,19 @@ public class SkyBoxColorChanger : MonoBehaviour
             Debug.LogWarning("setting is null", gameObject);
             return;
         }
-        skyboxMat.SetColor("_Color1", setting.topColor);
-        skyboxMat.SetColor("_Color2", setting.horizonColor);
-        skyboxMat.SetColor("_Color3", setting.bottomColor);
-        skyboxMat.SetFloat("_Intensity", setting.intensity);
-        skyboxMat.SetFloat("_Exponent1", setting.exponentTop);
-        skyboxMat.SetFloat("_Exponent2", setting.exponentBottom);
+        foreach (var skyboxMat in skyboxMats)
+        {
+            skyboxMat.SetColor("_Color1", setting.topColor);
+            skyboxMat.SetColor("_Color2", setting.horizonColor);
+            skyboxMat.SetColor("_Color3", setting.bottomColor);
+            skyboxMat.SetFloat("_Intensity", setting.intensity);
+            skyboxMat.SetFloat("_Exponent1", setting.exponentTop);
+            skyboxMat.SetFloat("_Exponent2", setting.exponentBottom);
+            if (skyboxMat.HasFloat("_TextureStrength"))
+            {
+                skyboxMat.SetFloat("_TextureStrength", setting.textureStrength);
+            }
+        }
 
 
         sunLight.color = setting.sunColor;
@@ -225,25 +232,32 @@ public class SkyBoxColorChanger : MonoBehaviour
     /// <param name="t"></param>
     void ApplyLerp(SkyBoxColorSetting a, SkyBoxColorSetting b, float t)
     {
+        //今の状態を更新する
         currentSky.UpdateLerpSky(a, b, t);
-        skyboxMat.SetColor("_Color1", Color.Lerp(a.topColor, b.topColor, t));
-        skyboxMat.SetColor("_Color2", Color.Lerp(a.horizonColor, b.horizonColor, t));
-        skyboxMat.SetColor("_Color3", Color.Lerp(a.bottomColor, b.bottomColor, t));
+        foreach (var skyboxMat in skyboxMats)
+        {
+            skyboxMat.SetColor("_Color1", currentSky.topColor);
+            skyboxMat.SetColor("_Color2", currentSky.horizonColor);
+            skyboxMat.SetColor("_Color3", currentSky.bottomColor);
 
-        skyboxMat.SetFloat("_Intensity", Mathf.Lerp(a.intensity, b.intensity, t));
-        skyboxMat.SetFloat("_Exponent1", Mathf.Lerp(a.exponentTop, b.exponentTop, t));
-        skyboxMat.SetFloat("_Exponent2", Mathf.Lerp(a.exponentBottom, b.exponentBottom, t));
+            skyboxMat.SetFloat("_Intensity", currentSky.intensity);
+            skyboxMat.SetFloat("_Exponent1", currentSky.exponentTop);
+            skyboxMat.SetFloat("_Exponent2", currentSky.exponentBottom);
+            if (skyboxMat.HasFloat("_TextureStrength"))
+            {
+                skyboxMat.SetFloat("_TextureStrength", currentSky.textureStrength);
+            }
+        }
+        sunLight.color = currentSky.sunColor;
+        sunLight.intensity = currentSky.intensity;
+        sunLight.bounceIntensity = currentSky.sunMultiplier;
+        sunMat.SetColor("Emission", currentSky.sunColor);
 
-        sunLight.color = Color.Lerp(a.sunColor, b.sunColor, t);
-        sunLight.intensity = Mathf.Lerp(a.sunIntensity, b.sunIntensity, t);
-        sunLight.bounceIntensity = Mathf.Lerp(a.sunMultiplier, b.sunMultiplier, t);
-        sunMat.SetColor("Emission", Color.Lerp(a.sunColor, b.sunColor, t));
+        moonLight.color = currentSky.moonColor;
+        moonLight.intensity = currentSky.moonIntensity;
+        moonLight.bounceIntensity = currentSky.moonMultiplier;
+        moonMat.SetColor("Emission", currentSky.moonColor);
 
-        moonLight.color = Color.Lerp(a.moonColor, b.moonColor, t);
-        moonLight.intensity = Mathf.Lerp(a.moonIntensity, b.moonIntensity, t);
-        moonLight.bounceIntensity = Mathf.Lerp(a.moonMultiplier, b.moonMultiplier, t);
-        moonMat.SetColor("Emission", Color.Lerp(a.moonColor, b.moonColor, t));
-
-        sunAndMoonRoot.rotation = Quaternion.Lerp(a.SkyRotation, b.SkyRotation, t);
+        sunAndMoonRoot.rotation = currentSky.SkyRotation;
     }
 }

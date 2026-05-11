@@ -13,39 +13,31 @@ MonoBehaviour:
   m_Name: PlayerJobGenerator
   m_EditorClassIdentifier: 
   playerLayerSettingsList:
-  - TargetJob: 1
-    AttackableJob: 5
-    TargetColliderLayer:
-      serializedVersion: 2
-      m_Bits: 128
+  - SettingJob: 1
+    AttackableJobs: 5
+    CollidersLayer: 7
     CullingMask:
       serializedVersion: 2
       m_Bits: 5951
-    Layer: 0
-  - TargetJob: 2
-    AttackableJob: 6
-    TargetColliderLayer:
-      serializedVersion: 2
-      m_Bits: 256
+    skyboxMeterial: {fileID: 2100000, guid: 5abac05424d24a74abdb61b5e24d8acd, type: 2}
+  - SettingJob: 2
+    AttackableJobs: 6
+    CollidersLayer: 8
     CullingMask:
       serializedVersion: 2
       m_Bits: 5823
-    Layer: 0
-  - TargetJob: 0
-    AttackableJob: -1
-    TargetColliderLayer:
-      serializedVersion: 2
-      m_Bits: 4096
+    skyboxMeterial: {fileID: 2100000, guid: d6456de1a2515954891220c50af222d0, type: 2}
+  - SettingJob: 0
+    AttackableJobs: -1
+    CollidersLayer: 12
     CullingMask:
       serializedVersion: 2
       m_Bits: 6079
-    Layer: 0
-  - TargetJob: 4
-    AttackableJob: -1
-    TargetColliderLayer:
-      serializedVersion: 2
-      m_Bits: 1024
+    skyboxMeterial: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
+  - SettingJob: 4
+    AttackableJobs: -1
+    CollidersLayer: 10
     CullingMask:
       serializedVersion: 2
       m_Bits: 6079
-    Layer: 0
+    skyboxMeterial: {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
