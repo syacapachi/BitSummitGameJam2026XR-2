@@ -1,5 +1,4 @@
 ﻿using Syacapachi.Attribute;
-using Unity.Android.Gradle.Manifest;
 using Unity.Netcode;
 using UnityEngine;
 public class NBullet : BulletBaseController
