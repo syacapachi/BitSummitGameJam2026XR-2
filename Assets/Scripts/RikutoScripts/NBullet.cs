@@ -1,4 +1,5 @@
 ﻿using Syacapachi.Attribute;
+using Unity.Android.Gradle.Manifest;
 using Unity.Netcode;
 using UnityEngine;
 public class NBullet : BulletBaseController
@@ -34,110 +35,104 @@ public class NBullet : BulletBaseController
     {
         if (reciever is IEnemy enemy)
         {
-            if (!setting.TryGetPlayerLayerSettings(ShooterJob, out var layerMaskSetting))
+            CheckEnemy(reciever, enemy);
+            if (NetworkObject.IsSpawned)
             {
-                Debug.LogError($"LayerMask setting not found for job: {ShooterJob}",other);
                 NetworkObject.Despawn(true);
-                return;
             }
+        }
+        else if (reciever is PlayerCollider player)
+        {
+            if (ResultCollector.ClientId == player.OwnerClientId) return;
 
-            Debug.Log(
-                $"ShooterJob={ShooterJob}, " +
-                $"EnemyJob={enemy.EnemyJob}, " +
-                $"AttackableJob={layerMaskSetting.AttackableJobs}, " +
-                $"CanTakeDamage={layerMaskSetting.IsAttackableJob(enemy.EnemyJob)}"
-                ,other
-            );
-            if (!enemy.CanTakeDamage)
+            //自身は無視
+            // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
+            Debug.Log("Shield by Player", other);
+            SpawnShieldFxRpc(transform.position);
+        }
+        else if(reciever is PlayerHealth health)
+        {
+            //自身は無視
+            // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
+            if (ResultCollector.ClientId == health.OwnerClientId) return;
+            Debug.Log("Shield by Player", other);
+            SpawnShieldFxRpc(transform.position);
+        }
+        else
+        {
+            Debug.Log($"Unkown type", other);
+        }
+    }
+    private void CheckEnemy(IDamageReciever reciever,IEnemy enemy)
+    {
+        if (!setting.TryGetPlayerLayerSettings(ShooterJob, out var layerMaskSetting))
+        {
+            Debug.LogError($"LayerMask setting not found for job: {ShooterJob}");
+            NetworkObject.Despawn(true);
+            return;
+        }
+
+        Debug.Log(
+            $"ShooterJob={ShooterJob}, " +
+            $"EnemyJob={enemy.EnemyJob}, " +
+            $"AttackableJob={layerMaskSetting.AttackableJobs}, " +
+            $"CanTakeDamage={layerMaskSetting.IsAttackableJob(enemy.EnemyJob)}"
+        );
+        bool isAttackable = layerMaskSetting.IsAttackableJob(enemy.EnemyJob);
+        if (!enemy.CanTakeDamage)
+        {
+            //シールドがでなかったのと見えない敵を撃ってもstep2クリア可能だったため構造変更
+            if (isAttackable)
             {
-                //シールドがでなかったのと見えない敵を撃ってもstep2クリア可能だったため構造変更
-                if (layerMaskSetting.IsAttackableJob(enemy.EnemyJob))
-                {
-                    Debug.Log($"NotDamage",other);  
-                } 
-                else
-                {
-
-                    attackBlockedEvent.Invoke(new AttackBlocked()
-                    {
-                        Collector = ResultCollector,
-                        Enemy = enemy
-                    });
-                    // [追加] 攻撃が無効な敵に当たった場合のデバッグログ
-                    SpawnShieldFxRpc(transform.position);
-                    Debug.Log($"NotDamage",other);
-                    
-                }
-                if (NetworkObject.IsSpawned)
-                {
-                    NetworkObject.Despawn(true);
-                }
-                return;
-            }
-
-            if (ResultCollector == null || ResultCollector is not PlayerStats stats)
-            {
-                Debug.Log($"ResultCollector is not {nameof(PlayerStats)}");
-                return;
-            }
-            
-
-            if (layerMaskSetting.IsAttackableJob(enemy.EnemyJob))
-            {
-                //ダメージが通る
-                stats.AddHit();
-                stats.AddDamage(Damage);
-                reciever.TakeDamage(this, Damage);
-                //水野編集
-                SpawnHitFxClientRpc(transform.position);
-                //水野以上
+                Debug.Log($"NotDamage By System");
             }
             else
             {
-                // シールド
-                stats.AddShield();
                 attackBlockedEvent.Invoke(new AttackBlocked()
                 {
                     Collector = ResultCollector,
                     Enemy = enemy
                 });
-                //水野編集
+                // [追加] 攻撃が無効な敵に当たった場合のデバッグログ
                 SpawnShieldFxRpc(transform.position);
-                //水野以上
+                Debug.Log($"NotDamage By Job");
+
             }
-        }
-        else if(reciever is PlayerCollider player || reciever is PlayerHealth health)
-        {
-            var playerObj = reciever as PlayerCollider;
-
-            if (playerObj != null && ResultCollector.ClientId == playerObj.OwnerClientId) return;
-
-            var healthObj = reciever as PlayerHealth;
-
-            if (healthObj != null && ResultCollector.ClientId == healthObj.OwnerClientId) return;
-            //自身は無視
-            //if (ResultCollector.ClientId == NetworkManager.LocalClientId) return;
-            // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
-            Debug.Log("Shield by Player",other);
-            /* チュートリアルstep2 プレイヤーに当ててクリア可能なため一旦コメントアウト
-            attackBlockedEvent.Invoke(new AttackBlocked()
+            if (NetworkObject.IsSpawned)
             {
-                Collector = ResultCollector,
-                Enemy = null
-            });
-            */
-            SpawnShieldFxRpc(transform.position);
+                NetworkObject.Despawn(true);
+            }
             return;
+        }
+
+        if (ResultCollector == null || ResultCollector is not PlayerStats stats)
+        {
+            Debug.Log($"ResultCollector is not {nameof(PlayerStats)}");
+            return;
+        }
+
+        if (isAttackable)
+        {
+            //ダメージが通る
+            stats.AddHit();
+            stats.AddDamage(Damage);
+            reciever.TakeDamage(this, Damage);
+            //水野編集
+            SpawnHitFxClientRpc(transform.position);
+            //水野以上
         }
         else
         {
-            Debug.Log($"Unkown type",other);
-            return;
-        }
-
-        if (NetworkObject.IsSpawned)
-        {
-            NetworkObject.Despawn(true);
+            // シールド
+            stats.AddShield();
+            attackBlockedEvent.Invoke(new AttackBlocked()
+            {
+                Collector = ResultCollector,
+                Enemy = enemy
+            });
+            //水野編集
+            SpawnShieldFxRpc(transform.position);
+            //水野以上
         }
     }
 }
