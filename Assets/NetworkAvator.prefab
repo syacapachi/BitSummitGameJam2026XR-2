@@ -1194,11 +1194,14 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  useLocalBullet: 1
+  localBulletPrefab: {fileID: 1439048196768540335, guid: c72f096be10ac334fac15ebd209d7baa, type: 3}
   playerHead: {fileID: 4004500094854023113}
   laserLine: {fileID: 4472680487610974925}
   audioObserver: {fileID: 5127359584954661953}
   ammoUI: {fileID: 6286586579024811426}
   playerStats: {fileID: 2716896203315894636}
+  changeLocalBulletEvent: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
   fireEvent: {fileID: 11400000, guid: 4cbe807c5f2ef6d47b2440ff35bb0265, type: 2}
   networkEvent: {fileID: 11400000, guid: fe2752e9d3c1f124ea7f49481397c5be, type: 2}
 --- !u!114 &5127359584954661953

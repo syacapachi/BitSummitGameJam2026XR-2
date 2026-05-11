@@ -18,6 +18,12 @@ Shader "Skybox/Horizontal Skybox Add Texture"
         _TextureMinY ("Texture Min Y", Range(-1,1)) = -0.2
         _TextureMaxY ("Texture Max Y", Range(-1,1)) = 1.0
         _TextureStrength ("Texture Strength", Range(0,1)) = 1
+        // Added: 太陽の見た目を制御するためのプロパティ
+        _SunColor ("Sun Color", Color) = (1.0, 0.92, 0.75, 1.0)
+        _SunTime24h ("Sun Time (24h)", Range(0,24)) = 12
+        _SunIntensity ("Sun Intensity", Range(0,8)) = 1.5
+        _SunAngularRadius ("Sun Angular Radius", Range(0.001,0.2)) = 0.04
+        _SunElevationAmplitude ("Sun Elevation Amplitude", Range(0,1)) = 0.85
     }
 
     CGINCLUDE//ここから GPUコード共通部 メンバー変数、メソッドの宣言
@@ -71,6 +77,12 @@ Shader "Skybox/Horizontal Skybox Add Texture"
     half _TextureMinY;
     half _TextureMaxY;
     half _TextureStrength;
+    // Added: 太陽描画用の内部変数
+    half4 _SunColor;
+    half _SunTime24h;
+    half _SunIntensity;
+    half _SunAngularRadius;
+    half _SunElevationAmplitude;
 
     //共通関数
     //モデルの各頂点(vert)に対して実行される。
@@ -151,8 +163,22 @@ Shader "Skybox/Horizontal Skybox Add Texture"
         float finalMask =
             lerp(mask, 1.0, _TextureClamp);
 
+        // Added: 24時間ベースの時刻から太陽方向を作り、空にディスクを重ねる
+        float sunAngle = ((_SunTime24h - 6.0) / 24.0) * (2.0 * UNITY_PI);
+        float sunHeight = sin(sunAngle) * _SunElevationAmplitude;
+        float sunHorizontal = sqrt(saturate(1.0 - sunHeight * sunHeight));
+        float3 sunDir = normalize(float3(cos(sunAngle) * sunHorizontal, sunHeight, sin(sunAngle) * sunHorizontal));
+
+        float sunAlignment = dot(dir, sunDir);
+        float sunDisc = smoothstep(cos(_SunAngularRadius * 1.35), cos(_SunAngularRadius), sunAlignment);
+        float sunGlow = smoothstep(cos(_SunAngularRadius * 4.0), cos(_SunAngularRadius * 1.2), sunAlignment);
+        float sunVisibility = saturate(sunDir.y * 4.0 + 0.2);
+        half3 sunColor = _SunColor.rgb * ((sunDisc * _SunIntensity) + (sunGlow * _SunIntensity * 0.2)) * sunVisibility;
+
         // ===== 合成 =====
         half4 finalColor = gradient + tex * _TextureStrength * finalMask;
+        // Added: 太陽色を最終色に加算して描画する
+        finalColor.rgb += sunColor;
         
         return finalColor * _Intensity;
     }

@@ -1,8 +1,13 @@
-﻿using System.Collections;
+﻿using Syacapachi.Attribute;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.XR;
 public class NGun : GunController
 {
+    [Header("LocalBullet")]
+    [SerializeField] bool useLocalBullet = false;
+    [SerializeField, EnableIf(nameof(useLocalBullet), hideWhenFalse = true)]
+    GameObject localBulletPrefab;
     [Header("Fps")]
     [SerializeField] Transform playerHead;
     [Header("gun")]
@@ -11,6 +16,7 @@ public class NGun : GunController
     [SerializeField] AmmoUI ammoUI;
     [SerializeField] PlayerStats playerStats;
     [Header("Subscribe Event")]
+    [SerializeField] VoidEvent changeLocalBulletEvent;
     [SerializeField] VoidEvent fireEvent;
     [SerializeField] GameEffectDataEvent networkEvent;
 
@@ -31,7 +37,8 @@ public class NGun : GunController
     {
         if (IsOwner)
         {
-            fireEvent.Register(base.Activate);
+            changeLocalBulletEvent.Register(ChangeLocalBullet);
+            fireEvent.Register(Activate);
             StartCoroutine(LaserUpdateCoroutine());
 
             laserLine.enabled = XRSettings.isDeviceActive;
@@ -45,8 +52,25 @@ public class NGun : GunController
     {
         if (IsOwner) 
         {
-            fireEvent.Unregister(base.Activate);
+            changeLocalBulletEvent.Unregister(ChangeLocalBullet);
+            fireEvent.Unregister(Activate);
         }
+    }
+    public override void Activate()
+    {
+        base.Activate();
+        if (useLocalBullet)
+        {
+            var obj = ManagerLocator.Instance.LocalObjectPool.Get(localBulletPrefab);
+            if (obj.TryGetComponent<LocalBullet>(out var localBullet))
+            {
+                localBullet.BulletInit(WeaponSettings.bulletSetting);
+            }
+        }
+    }
+    private void ChangeLocalBullet()
+    {
+        useLocalBullet = !useLocalBullet;
     }
     //オーナー以外で毎フレームチェックさせるオーバーヘッドをなくすためコルーチン化
     IEnumerator LaserUpdateCoroutine()
