@@ -146,6 +146,8 @@ Shader "Skybox/Horizontal Skybox Add Texture"
         // Clamp切り替え
         // =====================================
 
+        //GPUのIfは、処理を止めるため(基本的にコードを全て実行しかできない、偽の場合は他のGPUが終わるまで待機する)なるべく使わない。
+        //処理を工夫してみよう。
         float finalMask =
             lerp(mask, 1.0, _TextureClamp);
 

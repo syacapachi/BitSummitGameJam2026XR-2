@@ -1,17 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using Syacapachi.Attribute;
+using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "JobSetting", menuName = "ScriptableObjects/JobSettingGenerator")]
-public class JobSettingGenerator : ScriptableObject
+
+[CreateAssetMenu(fileName = "JobSetting", menuName = "ScriptableObjects/JobSettingDataBase")]
+public class JobSettingDataBase : ScriptableObject
 {
     /// <summary>
     /// [SerializeField],publicはシーンをまたいでも値が残る。
     /// </summary>
-    [SerializeField] PlayerLayerSettings[] playerLayerSettingsList;
+    [SerializeReference,SerializeReferenceView] JobSettingBase[] playerLayerSettingsList;
     /// <summary>
     /// シリアライズできないクラスは、参照が消える(そのシーンにこのScriptableObjectを使うScriptがない) -> 値が初期化される。
     /// </summary>
-    private readonly Dictionary<PlayerJob, PlayerLayerSettings> JobToLayerMaskDic = new();
-    public IReadOnlyDictionary<PlayerJob, PlayerLayerSettings> JobLayerMaskReadOnlyDic
+    private readonly Dictionary<PlayerJob, JobSettingBase> JobToLayerMaskDic = new();
+    public IReadOnlyDictionary<PlayerJob, JobSettingBase> JobLayerMaskReadOnlyDic
     {
         get
         {
@@ -22,12 +24,12 @@ public class JobSettingGenerator : ScriptableObject
     }
     private bool isInitialized = false;
     /// <summary>
-    /// PlayerJobに対応するPlayerLayerSettingsを取得する。JobSettingSOに定義されていないジョブがあれば、ColliderLayerは0、CullingMaskはすべてのレイヤーの積集合に設定して返す。
+    /// PlayerJobに対応するEnemyJobSettingを取得する。JobSettingSOに定義されていないジョブがあれば、ColliderLayerは0、CullingMaskはすべてのレイヤーの積集合に設定して返す。
     /// </summary>
     /// <param name="job"></param>
     /// <param name="settings"></param>
     /// <returns></returns>
-    public bool TryGetPlayerLayerSettings(PlayerJob job, out PlayerLayerSettings settings)
+    public bool TryGetPlayerLayerSettings(PlayerJob job, out JobSettingBase settings)
     {
         InitDic();
         return JobToLayerMaskDic.TryGetValue(job, out settings);
@@ -54,20 +56,19 @@ public class JobSettingGenerator : ScriptableObject
             PlayerJob playerJob = (PlayerJob)job;
             if (!JobLayerMaskReadOnlyDic.ContainsKey(playerJob))
             {
-                //とりあえず、ColliderLayerは6(Avator)、CullingMaskはすべてのレイヤーの積集合に設定
+                //とりあえず、ColliderLayerは0(Default)
                 //攻撃可能なジョブは和集合で設定
-                int colliderLayer = 6;
+                int colliderLayer = 0;
                 LayerMask cullingMask = -1;
                 PlayerJob attackableJob = PlayerJob.Nothing;
                 foreach (var mask in JobArray)
                 {
                     if ((playerJob != (PlayerJob)mask) && ((playerJob & (PlayerJob)mask) != 0))
                     {
-                        cullingMask &= JobLayerMaskReadOnlyDic[(PlayerJob)mask].CullingMask;
                         attackableJob |= JobLayerMaskReadOnlyDic[(PlayerJob)mask].AttackableJobs;
                     }
                 }
-                var newSetting = new PlayerLayerSettings(playerJob, attackableJob, cullingMask, colliderLayer);
+                var newSetting = new JobSettingBase(playerJob, attackableJob, colliderLayer);
                 JobToLayerMaskDic[playerJob] = newSetting;
                 Debug.LogWarning($"[{nameof(JobSettingGenerator)}]Job {playerJob} is not defined in JobSettingSO. CollidersLayer set to {colliderLayer}, CullingMask set to {cullingMask} (intersection of all defined jobs).");
             }

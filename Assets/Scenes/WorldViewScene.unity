@@ -21475,6 +21475,22 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 3495225186
       objectReference: {fileID: 0}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: enemyJob
+      value: 
+      objectReference: {fileID: 11400000, guid: 624a1a7647496fe4ebfe65c9527f283e, type: 2}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: enemyJob.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'enemyJob.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 624a1a7647496fe4ebfe65c9527f283e, type: 2}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'enemyJob.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: dca8a1225ec5ad84b87f00b8f1756e1a, type: 2}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

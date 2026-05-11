@@ -17,9 +17,17 @@ PrefabInstance:
       value: 0.201
       objectReference: {fileID: 0}
     - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: enemyJob
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: networkAnimator
       value: 
       objectReference: {fileID: 8871521487563348261}
+    - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: renderers.Array.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: 'renderers.Array.data[0]'
       value: 

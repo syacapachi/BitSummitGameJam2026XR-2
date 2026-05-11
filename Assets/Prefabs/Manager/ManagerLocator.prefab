@@ -179,7 +179,6 @@ MonoBehaviour:
   <AllGameManager>k__BackingField: {fileID: 5542295562281695918}
   <AllNetworkObjectPool>k__BackingField: {fileID: 4084111059737820316}
   <LocalObjectPool>k__BackingField: {fileID: 4446207769095747314}
-  <RankingManager>k__BackingField: {fileID: 2563868915211156367}
   <TutorialManager>k__BackingField: {fileID: 8343285116251111980}
   <CheckPointManager>k__BackingField: {fileID: 4441792715120167192}
 --- !u!114 &4316947998156742355
@@ -439,6 +438,7 @@ MonoBehaviour:
   setting:
   - {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   - {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
+  enemyJob: {fileID: 11400000, guid: 62e5df39faca2aa46a15408183215e7a, type: 2}
   enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
   difficultyDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
 --- !u!1 &5655868705551815652

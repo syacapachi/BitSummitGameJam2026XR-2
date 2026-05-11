@@ -13,6 +13,8 @@ namespace Syacapachi.Editor
             if (property.propertyType == SerializedPropertyType.Integer)
             {
                 LayerAttribute attr = (LayerAttribute)attribute;
+                //これがあると、Undo、RedoPrefab対応
+                EditorGUI.BeginProperty(position, label, property);
                 int layer = property.intValue;
                 int newLayer;
                 if (attr.useMask)
@@ -29,6 +31,7 @@ namespace Syacapachi.Editor
                 {
                     property.intValue = newLayer;
                 }
+                EditorGUI.EndProperty();
             }
             else
             {

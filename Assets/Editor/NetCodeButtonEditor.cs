@@ -548,9 +548,12 @@ namespace Syacapachi.Editor
         private void ShowTypeMenu(Type baseType, string path)
         {
             var menu = new GenericMenu();
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => baseType.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface);
+            //var types = AppDomain.CurrentDomain.GetAssemblies()
+            //    .SelectMany(a => a.GetTypes())
+            //    .Where(t => baseType.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface);
+
+            //Unity内部のキャッシュで検索高速化
+            var types = TypeCache.GetTypesDerivedFrom(baseType);
             foreach (var type in types)
             {
                 menu.AddItem(new GUIContent(type.FullName), false, () =>

@@ -18,8 +18,13 @@ public class SampleScript : MonoBehaviour
 
     [SerializeReference,SerializeReferenceView]
     IInLineInterface resultCollector;
+    [SerializeReference, SerializeReferenceView]
+    IInLineInterface[] resultCollectors;
+    [SerializeReference, SerializeReferenceView]
+    List<IInLineInterface> resultCollectorList;
     public interface IInLineInterface
     {
+        [OnInspectorButton]
         public void InlineMethod();
     }
     public interface IInLineGenericInterface<T>
@@ -54,7 +59,7 @@ public class SampleScript : MonoBehaviour
     }
     public struct InLineStruct : IInLineInterface, IInLineGenericInterface<string>
     {
-        string name;
+        public string name;
         public void InlineMethod()
         {
             Debug.Log($"This is an inline method. name = {name}");
@@ -135,30 +140,30 @@ public class SampleScript : MonoBehaviour
     //{
     //    Debug.Log("Value: " + mask + ", " + quatanion + ", " + time);
     //}
-    //[OnInspectorButton]
-    //public void SampleMethodWithParameter(int[] arr, InlineClass[] inlineClasses, IInLineInterface[] inlineClasse, IInLineGenericInterface<string>[] inLineGenericInterface)
-    //{
-    //    Debug.Log("Value: " + arr + ", " + inlineClasse + ", " + inlineClasse + ", "+inLineGenericInterface);
-    //}
-    //[OnInspectorButton]
-    //public void SampleMethodWithParameter<F>(GeneticClass<F> invokeEvent)
-    //{
-    //    Debug.Log("Value: " + invokeEvent.value);
-    //}
-    //[OnInspectorButton]
-    //public void SampleMethodWithParameter(GeneticClass<int> invokeEvent)
-    //{
-    //    Debug.Log("Value: " + invokeEvent.value);
-    //}
-    //[OnInspectorButton]
-    //public void SampleMethodWithParameter(IInLineInterface resisterable,IInLineGenericInterface<string> invokeEvent)
-    //{
-    //    resisterable.InlineMethod();
-    //    invokeEvent.InlineMethod("Sample Value");
-    //}
-    //[OnInspectorButton]
-    //public void SampleMethodWithParameter(IInLineGenericInterface<int> invokeEvent)
-    //{
-    //    invokeEvent.InlineMethod(1);
-    //}
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(int[] arr, InlineClass[] inlineClasses, IInLineInterface[] inlineClasse, IInLineGenericInterface<string>[] inLineGenericInterface)
+    {
+        Debug.Log("Value: " + arr + ", " + inlineClasse + ", " + inlineClasse + ", " + inLineGenericInterface);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter<F>(GeneticClass<F> invokeEvent)
+    {
+        Debug.Log("Value: " + invokeEvent.value);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(GeneticClass<int> invokeEvent)
+    {
+        Debug.Log("Value: " + invokeEvent.value);
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(IInLineInterface resisterable, IInLineGenericInterface<string> invokeEvent)
+    {
+        resisterable.InlineMethod();
+        invokeEvent.InlineMethod("Sample Value");
+    }
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(IInLineGenericInterface<int> invokeEvent)
+    {
+        invokeEvent.InlineMethod(1);
+    }
 }

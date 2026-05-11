@@ -40,6 +40,6 @@ public class JobChangedHandle : MonoBehaviour
         //PlayerCollider.layer = newSetting.Layer;
         // カメラのカリングマスクを更新
         PlayerCamera.cullingMask = newSetting.CullingMask;
-        //playerSkybox.material = newSetting.CullingMask
+        playerSkybox.material = newSetting.skyboxMeterial;
     }
 }

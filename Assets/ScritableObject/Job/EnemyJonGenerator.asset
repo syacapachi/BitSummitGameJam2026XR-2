@@ -13,27 +13,31 @@ MonoBehaviour:
   m_Name: EnemyJonGenerator
   m_EditorClassIdentifier: 
   playerLayerSettingsList:
-  - TargetJob: 2
-    AttackableJob: 1
+  - SettingJob: 2
+    AttackableJobs: 1
+    CollidersLayer: 8
     CullingMask:
       serializedVersion: 2
       m_Bits: 256
-    ColliderLayer: 8
-  - TargetJob: 1
-    AttackableJob: 2
+    skyboxMeterial: {fileID: 0}
+  - SettingJob: 1
+    AttackableJobs: 2
+    CollidersLayer: 7
     CullingMask:
       serializedVersion: 2
       m_Bits: 128
-    ColliderLayer: 7
-  - TargetJob: 0
-    AttackableJob: 0
+    skyboxMeterial: {fileID: 0}
+  - SettingJob: 0
+    AttackableJobs: 0
+    CollidersLayer: 0
     CullingMask:
       serializedVersion: 2
       m_Bits: 0
-    ColliderLayer: 6
-  - TargetJob: 4
-    AttackableJob: 0
+    skyboxMeterial: {fileID: 0}
+  - SettingJob: 4
+    AttackableJobs: 0
+    CollidersLayer: 0
     CullingMask:
       serializedVersion: 2
       m_Bits: 1024
-    ColliderLayer: 10
+    skyboxMeterial: {fileID: 0}

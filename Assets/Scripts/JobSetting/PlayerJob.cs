@@ -23,41 +23,21 @@ public enum PlayerJob
     Tutorial = 1<<2
 }
 [Serializable]
-public struct PlayerLayerSettings : IJobSetting
+public class PlayerLayerSettings : JobSettingBase
 {
-    /// <summary>
-    /// 設定対象の職業
-    /// </summary>
-    [SerializeField,SingleFlagOnly]
-    PlayerJob TargetJob;
-    /// <summary>
-    /// 攻撃が当たる職業。複数選択可能。
-    /// </summary>
-    [SerializeField]
-    PlayerJob AttackableJob;
     /// <summary>
     /// Cameraのカリングマスク
     /// </summary>
     public LayerMask CullingMask;
     /// <summary>
-    /// コライダーのレイヤー
+    /// SkyBox
     /// </summary>
-    [SerializeField,Layer]
-    int ColliderLayer ;
+    public Material skyboxMeterial;
+    public PlayerLayerSettings() { }
 
-
-    public readonly PlayerJob SettingJob => TargetJob;
-
-    public readonly int CollidersLayer => ColliderLayer;
-
-    public readonly PlayerJob AttackableJobs => AttackableJob;
-
-    public PlayerLayerSettings(LayerMask cullingMask, PlayerJob job,PlayerJob attackableJob)
+    public PlayerLayerSettings(PlayerJob tartgetJob, PlayerJob attackableJob, LayerMask cullingMask, int colliderLayer):base(tartgetJob,attackableJob,colliderLayer)
     {
         CullingMask = cullingMask;
-        TargetJob = job;
-        AttackableJob = attackableJob;
-        ColliderLayer = 0;
     }
 
     /// <summary>
@@ -75,25 +55,21 @@ public struct PlayerLayerSettings : IJobSetting
         }
         return -1; //見つからない場合は-1を返す
     }
-    public readonly bool IsAttackableJob(PlayerJob targetJob)
-    {
-        return (AttackableJob & targetJob) != 0;
-    }
-    public readonly int GetNonVisibleLayerIndex()
+    public int GetNonVisibleLayerIndex()
     {
         return GetFirstLayer(~CullingMask);
     }
-    public readonly bool IsVisibleLayer(int targetLayer)
+    public bool IsVisibleLayer(int targetLayer)
     {
         Debug.Log($"Checking visibility for ownerLayer {targetLayer} in CullingMask {CullingMask.value}");
         return (CullingMask.value & (1 << targetLayer)) != 0;
     }
-    public readonly bool IsVisibleLayer(LayerMask targetLayerMask)
+    public bool IsVisibleLayer(LayerMask targetLayerMask)
     {
         return (CullingMask.value & targetLayerMask.value) != 0;
     }
-    public override readonly string ToString()
+    public override string ToString()
     {
-        return $"Job: {TargetJob}, AttackableJob: {AttackableJob}, CullingMask: {CullingMask.value}, CollidersLayer: {ColliderLayer}";
+        return $"Job: {base.SettingJob}, AttackableJob: {AttackableJobs}, CullingMask: {CullingMask.value}, CollidersLayer: {CollidersLayer}";
     }
 }
