@@ -61,6 +61,7 @@ public class NGun : GunController
         base.Activate();
         if (useLocalBullet)
         {
+            if (ManagerLocator.Instance == null || ManagerLocator.Instance.LocalObjectPool == null) return;
             var obj = ManagerLocator.Instance.LocalObjectPool.Get(localBulletPrefab);
             if (obj.TryGetComponent<LocalBullet>(out var localBullet))
             {
