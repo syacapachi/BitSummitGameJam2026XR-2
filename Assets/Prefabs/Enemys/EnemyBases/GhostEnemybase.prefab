@@ -502,10 +502,11 @@ MonoBehaviour:
   hpImage: {fileID: 21042335613030804}
   hpText: {fileID: 1638564079639922388}
   enemyJob: 2
+  networkAnimator: {fileID: 0}
   enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   dieEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
   enemyAudio: {fileID: 4791195956241504628}
-  isAttackable: 1
+  renderers: []
   jobCycle: 010000000200000004000000
 --- !u!114 &7904087729250832076
 MonoBehaviour:
@@ -576,7 +577,6 @@ MonoBehaviour:
   shotAudioEffect: {fileID: 11400000, guid: 49655d728d772f140ab76bed3448b91e, type: 2}
   shotClip: {fileID: 8300000, guid: ed620494acb721c4f9b62ad6241c4889, type: 3}
   networkAnimator: {fileID: 0}
-  animator: {fileID: 0}
   gameEffect: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!114 &7369210036037199582
 MonoBehaviour:
@@ -594,9 +594,6 @@ MonoBehaviour:
   spawnFxPrefabAll: {fileID: 2424596171460707547, guid: c2928ca8c149c5040a6db6668e597ad5, type: 3}
   audioEffectData: {fileID: 11400000, guid: 21dcefe3b7e6a734caead12c0ae47cb6, type: 2}
   fxEffect: {fileID: 11400000, guid: 348779d48a972034890a39cbf1f6d43c, type: 2}
-  spawnSfxAll: {fileID: 8300000, guid: 755277c4df6a1704b91570f49b062caa, type: 3}
-  spawnFxLifeTimeAll: 2
-  spawnVolumeAll: 1
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!114 &4791195956241504628
 MonoBehaviour:
@@ -614,19 +611,12 @@ MonoBehaviour:
   nEnemy: {fileID: 1105539003889340882}
   ghostHitAudioData: {fileID: 11400000, guid: 7e3e2565791139641864af5b4ef85c93, type: 2}
   demonHitAudioData: {fileID: 11400000, guid: dee5d268ab1316641a009a148ea49577, type: 2}
-  ghostHitClipAll: {fileID: 0}
-  demonHitClipAll: {fileID: 0}
   defaultHitAudioData: {fileID: 11400000, guid: 5770ca59d52061a41af6b5d10162fea7, type: 2}
-  defaultHitClipAll: {fileID: 8300000, guid: d78d523e7039336419d32e747e8dd408, type: 3}
   hitVolumeAll: 1
   hitVoiceCooldownAll: 1
   ghostDeathAudioData: {fileID: 11400000, guid: 58dee3341e717e943b86328288c97ad0, type: 2}
   demonDeathAudioData: {fileID: 11400000, guid: e85a86f23243cd74496aa4fc8ef78ff1, type: 2}
-  ghostDeathClipAll: {fileID: 8300000, guid: 93c41a2f186aed54a9e13211c2d7bd37, type: 3}
-  demonDeathClipAll: {fileID: 8300000, guid: dc8f926fab434a844b493d2f6b677a58, type: 3}
   defaultDeathAudioData: {fileID: 11400000, guid: aefa70d3983e5e140bcec0dcf57cdd2e, type: 2}
-  defaultDeathClipAll: {fileID: 0}
-  deathVolumeAll: 1
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &8271794763165450280
 GameObject:
