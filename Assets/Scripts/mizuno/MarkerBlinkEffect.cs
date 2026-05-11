@@ -9,14 +9,16 @@ public class MarkerBlinkEffect : NetworkBehaviour
     [SerializeField] Color ownerNormalColor = Color.green;
     [SerializeField] Color nonOwnerNormalColor = Color.blue;
     [SerializeField] Color blinkColor = Color.red;
-    [SerializeField] float blinkSpeed = 8f;
+    [SerializeField] float blinkSpeed = 4.5f;
+    [SerializeField, Range(0f, 1f)] float blinkSaturationScale = 0.6f;
+    [SerializeField, Range(0f, 1f)] float blinkAlpha = 0.72f;
     [SerializeField] bool useEmission = true;
-    [SerializeField] float emissionIntensity = 5f;
+    [SerializeField] float emissionIntensity = 3.2f;
 
     [Header("Scale Pulse")]
     [SerializeField] Transform scaleTarget;
-    [SerializeField] float scaleSpeed = 3f;
-    [SerializeField] float scaleMultiplier = 1.12f;
+    [SerializeField] float scaleSpeed = 2.2f;
+    [SerializeField] float scaleMultiplier = 1.08f;
     Color DefaultColor;
     Material[] materials;
     bool isBlinking = false;
@@ -49,8 +51,8 @@ public class MarkerBlinkEffect : NetworkBehaviour
 
         if (materials != null)
         {
-            float colorT = (Mathf.Sin(Time.time * blinkSpeed) + 1f) * 0.5f;
-            Color currentColor = Color.Lerp(DefaultColor, blinkColor, colorT);
+            float colorT = EvaluatePulse(blinkSpeed);
+            Color currentColor = Color.Lerp(DefaultColor, GetBlinkDisplayColor(), colorT);
 
             for (int i = 0; i < materials.Length; i++)
             {
@@ -61,7 +63,7 @@ public class MarkerBlinkEffect : NetworkBehaviour
 
         if (scaleTarget != null)
         {
-            float t = (Mathf.Sin(Time.time * scaleSpeed) + 1f) * 0.5f;
+            float t = EvaluatePulse(scaleSpeed);
             float scale = Mathf.Lerp(1f, scaleMultiplier, t);
             scaleTarget.localScale = defaultScale * scale;
         }
@@ -93,7 +95,7 @@ public class MarkerBlinkEffect : NetworkBehaviour
             for (int i = 0; i < materials.Length; i++)
             {
                 if (materials[i] == null) continue;
-                ApplyColor(materials[i], ownerNormalColor);
+                ApplyColor(materials[i], DefaultColor);
             }
         }
 
@@ -116,6 +118,22 @@ public class MarkerBlinkEffect : NetworkBehaviour
             mat.EnableKeyword("_EMISSION");
             mat.SetColor("_EmissionColor", color * emissionIntensity);
         }
+    }
+
+    // PingPong を smootherstep で丸めて、山と谷の切り替わりをやわらかくする。
+    float EvaluatePulse(float speed)
+    {
+        float t = Mathf.PingPong(Time.time * speed, 1f);
+        return t * t * t * (t * (t * 6f - 15f) + 10f);
+    }
+
+    // 点滅色は少し白を混ぜて彩度を落とし、アルファも下げて見た目を柔らかくする。
+    Color GetBlinkDisplayColor()
+    {
+        Color.RGBToHSV(blinkColor, out float hue, out float saturation, out float value);
+        Color softened = Color.HSVToRGB(hue, saturation * blinkSaturationScale, value);
+        softened.a = blinkAlpha;
+        return softened;
     }
 #if UNITY_EDITOR
     private void Reset()

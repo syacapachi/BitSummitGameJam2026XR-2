@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Syacapachi.Attribute;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -43,8 +44,12 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
             syncedAmmo.Value = weaponSettings.maxAmmo;
         }
     }
-    public void Activate()
+    public virtual void Activate()
     {
+        if (ManagerLocator.Instance == null
+            || ManagerLocator.Instance.AllGameManager == null
+            || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
+            ) return;
         ShootRpc();
     }
     /// <summary>
@@ -53,10 +58,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     [Rpc(SendTo.Server)]
     private void ShootRpc()
     {
-        if (ManagerLocator.Instance == null
-            || ManagerLocator.Instance.AllGameManager == null
-            || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
-            ) return;
         if (isReloading) return;
         if (Time.time < nextFire) return;
         OnShootServer();
@@ -70,16 +71,15 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         syncedAmmo.Value--;
         // ① 弾を生成
         //GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        NetworkObject obj = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(bulletPrefab,FirePoint.position,FirePoint.rotation);
+        NetworkObject obj = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(bulletPrefab, FirePoint.position, FirePoint.rotation);
 
         // ② 弾のLayerをプレイヤーのJobに合わせる
-        GameObject go = obj.gameObject;
         var job = Propaty.Job;
         //go.SetLayerRecursively(LayerMask.NameToLayer(layerName));
 
         var bullet = obj.GetComponent<BulletBaseController>();
 
-        bullet.BulletInit(Collector, job,weaponSettings.bulletSetting);
+        bullet.BulletInit(Collector, job, weaponSettings.bulletSetting);
         // ③ ネットワークでSpawn
         obj.SpawnWithOwnership(OwnerClientId);
     }

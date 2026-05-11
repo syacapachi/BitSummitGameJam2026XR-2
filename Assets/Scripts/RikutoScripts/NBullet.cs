@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using Syacapachi.Attribute;
+using Unity.Netcode;
 using UnityEngine;
 public class NBullet : BulletBaseController
 {
