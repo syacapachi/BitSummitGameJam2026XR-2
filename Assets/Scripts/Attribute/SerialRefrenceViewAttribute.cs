@@ -1,12 +1,7 @@
 ﻿namespace Syacapachi.Attribute
 {
-    using UnityEngine;
-    using UnityEditor;
     using System;
-    using System.Linq;
-    using System.Collections.Generic;
-
-
+    using UnityEngine;
     /// <summary>
     /// 任意の [SerializeReference] フィールドで使用できる「型選択＋表示」属性。
     /// < param name="basetype"> AAbasetype </param>

@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Syacapachi.Attribute;
+using TMPro;
 using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
@@ -39,10 +40,10 @@ public class WorldViewManager : NetworkBehaviour
 
     [Header("シーン設定")]
     /*
-    [SerializeField] SceneAsset tutorialScene;
-    [SerializeField] SceneAsset gameScene;
+    SerializeField,Scene(true)] string tutorialScene;
+    SerializeField,Scene(true)] string gameScene;
     */
-    [SerializeField] SceneAsset gameScene;
+    [SerializeField,Scene(true)] string gameSceneName;
 
     /*
     private void Start()
@@ -137,8 +138,8 @@ public class WorldViewManager : NetworkBehaviour
             NetworkManager.Singleton.SceneManager.LoadScene(tutorialScene.name, LoadSceneMode.Single);
         }
         */
-        Debug.Log($"[{nameof(WorldViewManager)}] Loading {gameScene.name}");
-        NetworkManager.Singleton.SceneManager.LoadScene(gameScene.name, LoadSceneMode.Single);
+        Debug.Log($"[{nameof(WorldViewManager)}] Loading {gameSceneName}");
+        NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
     }
 
 }

@@ -24,16 +24,10 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] PlayerManager PlayerManager;
     [SerializeField] TutorialManager tutorialManager;
     [SerializeField] ResultDataCreater resultDataCreater;
-    [Header("Scene Setting")]
-    /*
-    [SerializeField] SceneAsset homeScene;
-    [SerializeField] SceneAsset gameScene;
-    [SerializeField] SceneAsset tutorialScene;
-    */
     [Header("DataBase")]
     [SerializeField] DifficultyDataBase difficultyRpcDataBase;
-    [SerializeField] SceneAsset homeScene;
-    [SerializeField] SceneAsset gameScene;
+    [Header("Scene Setting")]
+    [SerializeField, Scene(true)] string homeScene;
     public GameMode CurrentGameMode => gameMode;
     public HPManager HPManager => hpManager;
     public PhaseManager PhaseManager => phaseManager;
@@ -239,10 +233,10 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (!IsServer) return;
         {
-            Debug.Log($"[{SceneManager.GetActiveScene().name}] Loading {homeScene.name}");
+            Debug.Log($"[{SceneManager.GetActiveScene().name}] Loading {homeScene}");
 
             NetworkManager.SceneManager.LoadScene(
-                homeScene.name,
+                homeScene,
                 LoadSceneMode.Single
             );
         }

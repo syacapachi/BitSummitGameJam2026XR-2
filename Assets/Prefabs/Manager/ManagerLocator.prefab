@@ -600,7 +600,7 @@ MonoBehaviour:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 3
+    m_InternalValue: 1
   gameMode: 1
   gameStartMode: 0
   protectArea: {fileID: 0}
@@ -611,8 +611,7 @@ MonoBehaviour:
   tutorialManager: {fileID: 8343285116251111980}
   resultDataCreater: {fileID: 5193210326732251977}
   difficultyRpcDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
-  homeScene: {fileID: 102900000, guid: 163666d43b155d647855c6a9c5d11bc6, type: 3}
-  gameScene: {fileID: 102900000, guid: 3d3794061e3aa5a40bf03497b20c9443, type: 3}
+  homeScene: WorldViewScene
   gameState:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
