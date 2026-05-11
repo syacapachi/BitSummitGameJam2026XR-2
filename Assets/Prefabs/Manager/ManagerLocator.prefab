@@ -438,7 +438,10 @@ MonoBehaviour:
   setting:
   - {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
   - {fileID: 11400000, guid: 0b0a115d8e1556647a96868cfb99cd38, type: 2}
-  enemyJob: {fileID: 11400000, guid: 62e5df39faca2aa46a15408183215e7a, type: 2}
+  enemyJob:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
   difficultyDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
 --- !u!1 &5655868705551815652
@@ -1026,12 +1029,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSaveJson: 1
   FileName: Ranking
-  rankingMaxCount: 5
+  rankingMaxCount: 10
   useDailyFile: 0
   DaylyFileName: DailyRanking
   resultEvent: {fileID: 11400000, guid: f938f5fd3bfa6e949a8637e657b4cb88, type: 2}
   rankingList:
     Rankings: []
+  CurrentResult:
+    Time: 
+    RemainHP: 0
+    TotalBonusHP: 0
+    GameSeed: 0
+    Difficulty: 0
+    IsGameOver: 0
+    Cooperation: 0
+    detail: []
 --- !u!1 &8974977137299023905
 GameObject:
   m_ObjectHideFlags: 0

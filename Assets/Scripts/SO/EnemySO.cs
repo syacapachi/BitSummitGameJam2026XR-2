@@ -11,7 +11,7 @@ public class EnemySO : ScriptableObject
     /// OnNetworkSpawn以降じゃないとRpcや、NetworkVariableが有効ではない。
     /// しかし、Job同期前にApplySettingを行うと、見えてはいけないものがみえちゃう。
     /// </summary>
-    [SerializeField, SingleFlagOnly, HideInInspector] PlayerJob enemyJob;
+    [SerializeField, SingleFlagOnly] PlayerJob enemyJob;
     [SerializeField] int HP = 100;
     [SerializeField] int scoreValue = 100;
     [SerializeField] bool canMove = true;

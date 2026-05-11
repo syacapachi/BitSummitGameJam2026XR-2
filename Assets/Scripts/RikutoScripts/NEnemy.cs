@@ -63,7 +63,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     [SerializeField] Renderer[] renderers;
 
-    private int originalLayerServerOnly;
+    private int originalLayerRpc;
 
     private int spawnPointIndexServerOnly;
 
@@ -213,7 +213,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             {
                 childs.gameObject.layer = setting.CollidersLayer;                
             }
-            originalLayerServerOnly = setting.CollidersLayer;
+            originalLayerRpc = setting.CollidersLayer;
         }
     }
     public override void OnNetworkDespawn()
@@ -450,7 +450,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         for (int i = 0; i < renderers.Length; i++)
         {
-            renderers[i].gameObject.layer = visible ? 0 : originalLayerServerOnly;
+            renderers[i].gameObject.layer = visible ? 0 : originalLayerRpc;
         }
     }
 #if UNITY_EDITOR

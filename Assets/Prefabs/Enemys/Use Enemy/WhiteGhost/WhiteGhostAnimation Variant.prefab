@@ -21,6 +21,10 @@ PrefabInstance:
       value: 0.257
       objectReference: {fileID: 0}
     - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: enemyJob
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: isAttackable
       value: 1
       objectReference: {fileID: 0}
@@ -32,6 +36,10 @@ PrefabInstance:
       propertyPath: networkAnimator
       value: 
       objectReference: {fileID: 917824305127508827}
+    - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: renderers.Array.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: 'renderers.Array.data[0]'
       value: 
@@ -50,6 +58,10 @@ PrefabInstance:
       objectReference: {fileID: 6729771644855623118}
     - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
       propertyPath: 'renderers.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1897428903050454633}
+    - target: {fileID: 1105539003889340882, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
+      propertyPath: 'renderers.Array.data[5]'
       value: 
       objectReference: {fileID: 1897428903050454633}
     - target: {fileID: 1626770062420064645, guid: 8e0f968aa8e639b46a12d18d40255e90, type: 3}
@@ -286,6 +298,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0868c3bb445331b46bf64f67081f7c6b, type: 3}
       propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3335571722511510027, guid: 0868c3bb445331b46bf64f67081f7c6b, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0868c3bb445331b46bf64f67081f7c6b, type: 3}

@@ -18,6 +18,8 @@ namespace Syacapachi.Manager
         public RankingListWrapper DaylyRankingList => daylyRankingList;
         private string FilePath => Path.Combine(Application.streamingAssetsPath, FileName + ".json");
         private string DailyFilePath => Path.Combine(Application.streamingAssetsPath, DaylyFileName + ".json");
+
+        public ResultData CurrentResult;
         private void Start()
         {
             rankingList = LoadJson(FilePath);
@@ -32,12 +34,16 @@ namespace Syacapachi.Manager
         }
         private void SaveJson(ResultData data)
         {
+            CurrentResult = data;
+#if UNITY_EDITOR
             Debug.Log($"[{nameof(RankingManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(data, true)}", gameObject);
+#endif
             if (!isSaveJson) return;
             RankingListWrapper wrapper = LoadJson(FilePath);
             wrapper.Rankings.Add(data);
-            ExportJson(wrapper, FilePath);
             SortJson(wrapper);
+            ExportJson(wrapper, FilePath);
+            
             //ランキングデータ更新
             rankingList = wrapper;
             if (useDailyFile)
