@@ -63,6 +63,8 @@ public class BGMManager : MonoBehaviour
             case GameState.GameOver:
                 bgmSource.pitch = 1f;
                 PlayBGM(gameOverBGM, false);break;
+            case GameState.Home:
+                StopBGM(); break;
         }
     }
 

@@ -15,7 +15,6 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
 
     public ulong ClientId => OwnerClientId;
     bool CanRecord =>
-    IsServer &&
     ManagerLocator.Instance != null &&
     ManagerLocator.Instance.GameStateManager != null &&
     ManagerLocator.Instance.GameStateManager.CurrentGameState
@@ -29,9 +28,13 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     // 発射
     public void AddShot()
     {
-        if (!CanRecord)
+        if (!IsServer)
         {
             Debug.Log("Can call only Server");
+            return;
+        }
+        if (!CanRecord)
+        {
             return;
         }
         shotsFired++;
@@ -40,9 +43,13 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     // 命中
     public void AddHit()
     {
-        if (!CanRecord)
+        if (!IsServer)
         {
             Debug.Log("Can call only Server");
+            return;
+        }
+        if (!CanRecord)
+        {
             return;
         }
         hits++;
@@ -51,9 +58,13 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     // 与ダメージ
     public void AddDamage(float damage)
     {
-        if (!CanRecord)
+        if (!IsServer)
         {
             Debug.Log("Can call only Server");
+            return;
+        }
+        if (!CanRecord)
+        {
             return;
         }
         damageDealt += damage;
@@ -62,18 +73,26 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     // 敵撃破（enemyIdに変更）
     public void AddKill(EnemySO enemyso, int scoreValue)
     {
-        if (!CanRecord)
+        if (!IsServer)
         {
             Debug.Log("Can call only Server");
+            return;
+        }
+        if (!CanRecord)
+        {
             return;
         }
         int enemyId = enemyDataBase.GetIdFromEnemyData(enemyso);
         Debug.Log($"Add kill{enemyso.name}({enemyId})");
         score += scoreValue;
 
-        if (enemyId < 0 || enemyId >= killCounts.Length)
+        if (!IsServer)
         {
-            Debug.LogWarning($"Invalid enemyso: {enemyso}", gameObject);
+            Debug.Log("Can call only Server");
+            return;
+        }
+        if (!CanRecord)
+        {
             return;
         }
 
@@ -82,9 +101,13 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
 
     public void AddShield()
     {
-        if (!CanRecord)
+        if (!IsServer)
         {
             Debug.Log("Can call only Server");
+            return;
+        }
+        if (!CanRecord)
+        {
             return;
         }
         shield++;
@@ -96,6 +119,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
         if (!IsServer)
         {
             Debug.Log("Can call only Server");
+            return 0;
         }
         if (shotsFired == 0) return 0;
         return (float)hits / shotsFired;

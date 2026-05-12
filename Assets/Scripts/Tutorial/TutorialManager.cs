@@ -24,10 +24,11 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
 
     [SerializeField] List<EnemySO> step1Enemies;
     [SerializeField] List<EnemySO> step2Enemies;
-
+    [Header("Subscribe Event")]
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
     [SerializeField] VoidEvent OnTutorialStepCleared;
     [SerializeField] IntEvent OnTutorialStepChanged;
+    [SerializeField] ULongEvent markerPlaceServerEvent;
     private bool isTutorlalStarted;
     
     public override void OnNetworkSpawn()
@@ -35,7 +36,8 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
         isTutorlalStarted = false;
         if (IsServer)
         {
-            attackBlockedEvent.Register(OnAttackBlocked);  
+            attackBlockedEvent.Register(OnAttackBlocked);
+            markerPlaceServerEvent.Register(OnMarkerPlacedServer);
         }
         CurrentStep.OnValueChanged += OnStepChanged;
     }    
@@ -44,8 +46,8 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
         CurrentStep.OnValueChanged -= OnStepChanged;
         if (IsServer)
         {
-            
             attackBlockedEvent.Unregister(OnAttackBlocked);
+            markerPlaceServerEvent.Unregister(OnMarkerPlacedServer);
         }
     }
     public void OnTutorialStart()
@@ -161,10 +163,10 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
 
     private void StartMainSimulation()
     {
-        stateManager.OnTutorialEnd();
+        stateManager.OnTutorialEndServerOnly();
     }
 
-    public void OnMarkerPlacedServer(ulong playerId)
+    private void OnMarkerPlacedServer(ulong playerId)
     {
         if (!IsServer) return;
 

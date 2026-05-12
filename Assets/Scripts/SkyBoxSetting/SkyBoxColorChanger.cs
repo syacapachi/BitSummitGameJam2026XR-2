@@ -60,20 +60,13 @@ public class SkyBoxColorChanger : MonoBehaviour
         switch (newState)
         {
             case GameState.Initializing:
-                ApplyColor(startSky); break;
+            case GameState.Home:
             case GameState.Tutorial:
                 ApplyColor(noonSky);
                 break;
             case GameState.Playing:
-                if (previousState == GameState.Tutorial)
-                {
-                    StartCoroutine(
-                        TutorialToGameCoroutine());
-                }
-                else
-                {
-                    StartSkyBoxChange();
-                }
+                StartCoroutine(
+                    TutorialToGameCoroutine());
                 break;
             case GameState.GameClear:
                 StopAllCoroutines();
@@ -144,6 +137,7 @@ public class SkyBoxColorChanger : MonoBehaviour
             Debug.LogWarning("setting is null", gameObject);
             return;
         }
+        currentSky = setting;
         foreach (var skyboxMat in skyboxMats)
         {
             skyboxMat.SetColor("_Color1", setting.topColor);

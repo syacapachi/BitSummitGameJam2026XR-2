@@ -230,6 +230,7 @@ MonoBehaviour:
   laserDistance: 50
   markerBackTime: 5
   markerAudioController: {fileID: 5220367599130785473}
+  MarkerPlaceEventServerOnly: {fileID: 11400000, guid: 94c457b2ffa429f46954335afeff3e74, type: 2}
   markerEvent: {fileID: 11400000, guid: 4f90a0dcf15ac3346a5d4dc1ef33d19a, type: 2}
 --- !u!114 &5220367599130785473
 MonoBehaviour:
@@ -9469,14 +9470,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1358144342988845292}
     m_Modifications:
-    - target: {fileID: 5866666021909216657, guid: 8dcd854659ff9f84bb0535f84092109a, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 88c2f082f4c510f4da9bb93465d8c44c, type: 2}
-    - target: {fileID: 5866666021909216657, guid: 8dcd854659ff9f84bb0535f84092109a, type: 3}
-      propertyPath: m_CullingMode
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ab9aaea20be34134295e2d2b50b83922, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -9520,6 +9513,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab9aaea20be34134295e2d2b50b83922, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 8dcd854659ff9f84bb0535f84092109a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 88c2f082f4c510f4da9bb93465d8c44c, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 8dcd854659ff9f84bb0535f84092109a, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

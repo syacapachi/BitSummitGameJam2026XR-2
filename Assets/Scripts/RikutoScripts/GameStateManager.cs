@@ -21,9 +21,7 @@ public class GameStateManager : NetworkBehaviour
         get => gameState.Value;
         private set
         {
-            if (!IsServer) return;
-            if (gameState.Value == value) return;
-            gameState.Value = value;
+            TrySetGameState(value);
         }
     }
     LocalState localState = LocalState.LanguageSelect;
@@ -32,8 +30,7 @@ public class GameStateManager : NetworkBehaviour
         get { return localState; }
         private set
         {
-            localState = value;
-            SetState(localState);
+            TrySetLocalState(value);
         }
     }
     [Header("Canvas")]
@@ -50,6 +47,15 @@ public class GameStateManager : NetworkBehaviour
     {
         SetState(LocalState.LanguageSelect);
     }
+
+    public override void OnNetworkSpawn()
+    {
+        if (localState == LocalState.NetworkConnect)
+        {
+            LocalState = LocalState.WorldView;
+        }
+    }
+
     private void OnEnable()
     {
         gameState.OnValueChanged += HandleGameStateChanged;
@@ -66,7 +72,6 @@ public class GameStateManager : NetworkBehaviour
 
     private void SetState(LocalState state)
     {
-
         languageCanvas.SetActive(
             state == LocalState.LanguageSelect);
 
@@ -77,24 +82,82 @@ public class GameStateManager : NetworkBehaviour
         worldViewCanvas.enabled =
             state == LocalState.WorldView;
     }
-    public void OnTutorialEnd()
+
+    private bool CanTransition(GameState fromState, GameState toState)
     {
-        if (CurrentGameState != GameState.Tutorial) return;
-        if (gameStartMode == GameStartMode.Auto)
+        return fromState switch
         {
-            CurrentGameState = GameState.Playing;
+            GameState.Home => toState == GameState.Initializing,
+            GameState.Initializing => toState == GameState.Tutorial || toState == GameState.Playing,
+            GameState.Tutorial => toState == GameState.Playing,
+            GameState.Playing => toState == GameState.GameClear || toState == GameState.GameOver,
+            GameState.GameClear or GameState.GameOver => toState == GameState.Home,
+            _ => false,
+        };
+    }
+
+    private bool CanTransition(LocalState fromState, LocalState toState)
+    {
+        return fromState switch
+        {
+            LocalState.LanguageSelect => IsSpawned ? toState == LocalState.WorldView : toState == LocalState.NetworkConnect,
+            LocalState.NetworkConnect => toState == LocalState.WorldView,
+            LocalState.WorldView => toState == LocalState.Playing,
+            LocalState.Playing => toState == LocalState.LanguageSelect,
+            _ => false,
+        };
+    }
+
+    private bool TrySetGameState(GameState nextState)
+    {
+        if (!IsServer) return false;
+
+        GameState currentState = gameState.Value;
+        if (currentState == nextState) return true;
+
+        if (!CanTransition(currentState, nextState))
+        {
+            Debug.LogWarning(
+                $"[{nameof(GameStateManager)}] Invalid GameState transition: {currentState} -> {nextState}",
+                gameObject);
+            return false;
         }
+
+        gameState.Value = nextState;
+        return true;
+    }
+
+    private bool TrySetLocalState(LocalState nextState)
+    {
+        LocalState currentState = localState;
+        if (currentState == nextState) return true;
+
+        if (!CanTransition(currentState, nextState))
+        {
+            Debug.LogWarning(
+                $"[{nameof(GameStateManager)}] Invalid LocalState transition: {currentState} -> {nextState}",
+                gameObject);
+            return false;
+        }
+
+        localState = nextState;
+        SetState(localState);
+        return true;
+    }
+
+    public void OnTutorialEndServerOnly()
+    {
+        if (!IsServer) return;
+        CurrentGameState = GameState.Playing;
     }
     public void OnGameOverServerOnly()
     {
         if (!IsServer) return;
-        if (CurrentGameState != GameState.Playing) return;
         CurrentGameState = GameState.GameOver;
     }
     public void OnGameClearServerOnly()
     {
         if (!IsServer) return;
-        if (CurrentGameState != GameState.Playing) return;
         CurrentGameState = GameState.GameClear;
     }
     public void OnGameInitialize()
@@ -121,6 +184,7 @@ public class GameStateManager : NetworkBehaviour
     {
         if (!IsServer) return;
         CurrentGameState = GameState.Home;
+        LocalState = LocalState.LanguageSelect;
     }
     public void EnterLanguageSelect()
     {
@@ -145,12 +209,30 @@ public class GameStateManager : NetworkBehaviour
 }
 public enum GameState
 {
-    Initializing,// 初期化
-    Playing,     // プレイ中
-    GameClear,   // クリア
-    GameOver,    // ゲームオーバー
-    Tutorial,    //チュートリアル
-    Home         //待機
+    /// <summary>
+    /// ゲーム内部の初期化、チュートリアルへ遷移するかが分岐、まだ始まってない
+    /// </summary>
+    Initializing,
+    /// <summary>
+    /// プレイ開始時
+    /// </summary>
+    Playing,
+    /// <summary>
+    /// ゲームクリア
+    /// </summary>
+    GameClear,
+    /// <summary>
+    /// ゲームオーバー
+    /// </summary>
+    GameOver,
+    /// <summary>
+    /// チュートリアル開始時
+    /// </summary>
+    Tutorial,
+    /// <summary>
+    /// 待機WorldViewとかにいる時
+    /// </summary>
+    Home
 }
 public enum LocalState
 {
@@ -159,6 +241,19 @@ public enum LocalState
     WorldView,//世界観説明
     Playing,//ゲーム開始
 }
-//Stateの動き
-//Lang -> (connect) -> worldView -> Playing
-//Initialize -> (tutorial) -> Playing -> {GameClear, GameOver} -> Initialize;
+//LocalStateの動き
+//Lang -> (connect) -> worldView -> Playing ->GameState
+//Lang -> connect : 言語選択後、ネット接続してない場合遷移
+//Lang -> worldView :言語選択後、ネット接続している場合遷移
+//connect -> worldView:ネット接続した場合遷移
+//worlldView -> Playing:クライアント全員がworldViewの時、進むを押したとき。
+
+
+//GameState
+//Initialize -> (tutorial) -> Playing -> {GameClear, GameOver} -> Home;
+//Initialize(チュートリアルの分岐を判断する枝)ついでに初期化
+//Initialize -> Tutorial:チュートリアルが有効の場合遷移
+//Initialize -> Playing:チュートリアルが無効の場合遷移
+//Tutorial -> Plying:チュートリアル終了後遷移
+//PLaying -> {GameClear, GameOver} :条件により、どちらかに遷移
+//{GameClear, GameOver} -> Home : 戻るボタンで遷移
