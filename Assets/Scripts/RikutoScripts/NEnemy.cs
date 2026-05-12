@@ -16,8 +16,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         NetworkVariableWritePermission.Server
     );
     //これ使えば、動的に敵の状態を変えられる。
-    [SerializeField]
-    private NetworkVariable<int> enemyId = new(-1);
+    private readonly NetworkVariable<int> enemyId = new(-1);
 
     [SerializeField] private Canvas hpCanvas;
     [SerializeField] private Image hpImage; // Filled Image
