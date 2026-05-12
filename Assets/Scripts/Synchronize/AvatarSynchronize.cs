@@ -33,8 +33,7 @@ public class AvatarSynchronize : NetworkBehaviour
     [Header("Debug")]
     [SerializeField] bool isDebugMode = false;
     private readonly NetworkVariable<float> AvatarScale = new(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    [SerializeField, ReadOnly] float avatarEyeHeight = 0;
-    [SerializeField, ReadOnly] float avatarScale = 0;
+    private float avatarEyeHeight = 0;
     /// <summary>
     /// 更新が可能かのフラグ、オーナーがわで、ローカルプレイヤーを取得したかのために使う
     /// </summary>
@@ -42,6 +41,7 @@ public class AvatarSynchronize : NetworkBehaviour
     private bool isCalibrationed = false;
     public override void OnNetworkSpawn()
     {
+        AvatarScale.OnValueChanged += OnScaleChanged;
         if (IsOwner)
         {
             //初期化
@@ -49,15 +49,15 @@ public class AvatarSynchronize : NetworkBehaviour
             //avatorRootTransfromからみた、頭の相対座標のY成分を、アバターの目の高さとする
             avatarEyeHeight = avatorRootTransfrom.InverseTransformPoint(animator.GetBoneTransform(HumanBodyBones.Head).position).y;
             StartCoroutine(WaitForEnable());
-            NetworkManager.SceneManager.OnLoadComplete += OnSceneLoaded;
-            NetworkManager.SceneManager.OnUnload += OnSceneUnLoad;
+            //NetworkManager.SceneManager.OnLoadComplete += OnSceneLoaded;
+            //NetworkManager.SceneManager.OnUnload += OnSceneUnLoad;
         }
         else
         {
             //非オーナー側ではオッケー
             isfoundLocalPlayer = true;
         }
-        AvatarScale.OnValueChanged += OnScaleChanged;
+        
     }
     private void OnSceneUnLoad(ulong clientId, string sceneName, AsyncOperation asyncOperation)
     {
@@ -104,7 +104,7 @@ public class AvatarSynchronize : NetworkBehaviour
         float eyeHeight = 0;
         for (int i = 0; i < calibrationCount; i++)
         {
-            eyeHeight += xrOrigin.Camera.transform.position.y;
+            eyeHeight += xrOrigin.Camera.transform.localPosition.y;
             yield return null;
         }
         eyeHeight /= calibrationCount;
@@ -117,13 +117,12 @@ public class AvatarSynchronize : NetworkBehaviour
     {
         isfoundLocalPlayer = false;
         isCalibrationed = false;
-        NetworkManager.SceneManager.OnLoadComplete -= OnSceneLoaded;
-        NetworkManager.SceneManager.OnUnload -= OnSceneUnLoad;
+        //NetworkManager.SceneManager.OnLoadComplete -= OnSceneLoaded;
+        //NetworkManager.SceneManager.OnUnload -= OnSceneUnLoad;
         AvatarScale.OnValueChanged -= OnScaleChanged;
     }
     private void OnScaleChanged(float oldScale, float newScale)
     {
-        avatarScale = newScale;
         this.gameObject.transform.localScale = Vector3.one * newScale;
     }
     /// <summary>
