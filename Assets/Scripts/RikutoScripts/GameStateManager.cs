@@ -76,7 +76,7 @@ public class GameStateManager : NetworkBehaviour
         {
             LocalState = LocalState.LanguageSelect;
         }
-        else if(newState == GameState.Initializing)
+        else
         {
             LocalState = LocalState.Playing;
         }

@@ -37231,7 +37231,9 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8409759363476544798, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+    - {fileID: 8781178376713337252, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
     m_RemovedGameObjects:
     - {fileID: 6251211324531544301, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
     - {fileID: 2324685228820330940, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
@@ -68447,6 +68449,10 @@ PrefabInstance:
       propertyPath: tutorialLight
       value: 
       objectReference: {fileID: 1151818106}
+    - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: difficulty.m_InternalValue
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5843874078436757177, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: protectArea
       value: 

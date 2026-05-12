@@ -1,4 +1,4 @@
 ﻿public interface ITutorialStart
 {
-    public void OnTutorialStart();
+    public void OnTutorialStartServerOnly();
 }

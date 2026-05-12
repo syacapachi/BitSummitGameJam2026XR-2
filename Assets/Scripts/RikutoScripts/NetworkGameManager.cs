@@ -107,7 +107,7 @@ public class NetworkGameManager : NetworkBehaviour
     }
     void StartTutorialServerOnly()
     {
-        tutorialManager.OnTutorialStart();
+        tutorialManager.OnTutorialStartServerOnly();
     }
     [OnInspectorButton("Start Game")]
     private void StartGameServerOnly()
