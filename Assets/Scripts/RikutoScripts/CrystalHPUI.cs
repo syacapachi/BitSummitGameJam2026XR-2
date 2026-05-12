@@ -5,47 +5,44 @@ using UnityEngine.UI;
 
 public class CrystalHPUI : MonoBehaviour
 {
-    private NGameManager nGameManager;
+    [SerializeField] NetworkGameManager nGameManager;
 
     [Header("UI")]
+    [SerializeField] Canvas hpCanvas;
     [SerializeField] private Image scoreBar; // Filled Image
     [SerializeField] private TextMeshProUGUI scoreText;
+    [Header("Reference")]
+    [SerializeField] DifficultyDataBase rpcDataBase;
+    [Header("Subscribe Event")]
+    [SerializeField] HPInfoEvent HPInfoRpcEvent;
+    [SerializeField] GameStateEvent GameStateEvent;
 
     private float maxScore;
 
-    IEnumerator Start()
+    void UIInitialize()
     {
-        // GameManager待機
-        while (ManagerLocator.Instance.AllGameManager == null)
-        {
-            yield return null;
-        }
-
-        nGameManager = ManagerLocator.Instance.AllGameManager;
-
-        Debug.Log("GameManager取得成功");
-
-        //  scoreの初期値が入るまで待つ（0対策）
-        yield return new WaitUntil(() => nGameManager.ScoreManager.score.Value > 0);
-
-        //  初期値をmaxとして保存
-        maxScore = nGameManager.ScoreManager.score.Value;
-
+        maxScore = rpcDataBase.CurrentSetting.PlayerHP;
         // 念のため保険（0除算防止）
         maxScore = Mathf.Max(1f, maxScore);
 
         // 初期表示
-        UpdateScoreUI(nGameManager.ScoreManager.score.Value);
-
-        // 変更監視
-        nGameManager.ScoreManager.score.OnValueChanged += OnScoreChanged;
+        UpdateScoreUI(nGameManager.HPManager.remainHP.Value);
     }
 
-    private void OnDestroy()
+    private void OnEnable()
     {
+        // 変更監視
+        nGameManager.HPManager.remainHP.OnValueChanged += OnScoreChanged;
+        GameStateEvent.Register(OnGameStateChanged);
+    }
+
+    private void OnDisable()
+    {
+        GameStateEvent.Unregister(OnGameStateChanged);
+
         if (nGameManager != null)
         {
-            nGameManager.ScoreManager.score.OnValueChanged -= OnScoreChanged;
+            nGameManager.HPManager.remainHP.OnValueChanged -= OnScoreChanged;
         }
     }
 
@@ -66,6 +63,19 @@ public class CrystalHPUI : MonoBehaviour
         if (scoreText != null)
         {
             scoreText.text = $"{score} / {maxScore}";
+        }
+    }
+
+    void OnGameStateChanged(GameState state)
+    {
+        if (state == GameState.Playing)
+        {
+            UIInitialize();
+            hpCanvas.enabled = true;
+        }
+        else if (state == GameState.GameOver || state == GameState.GameClear)
+        {
+            hpCanvas.enabled = false;
         }
     }
 }

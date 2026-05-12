@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Syacapachi.Data;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using System.Collections.Generic;
-using Syacapachi.Data;
 namespace Syacapachi.Manager
 {
     public class RankingManager : MonoBehaviour
@@ -13,61 +11,42 @@ namespace Syacapachi.Manager
         [SerializeField] int rankingMaxCount = 10;
         [SerializeField] bool useDailyFile = false;
         [SerializeField] string DaylyFileName = "DailyRanking";
+        [SerializeField] ResultDataEvent resultEvent;
         [SerializeField] RankingListWrapper rankingList = new();
         public RankingListWrapper RankingList => rankingList;
         private RankingListWrapper daylyRankingList = new();
         public RankingListWrapper DaylyRankingList => daylyRankingList;
         private string FilePath => Path.Combine(Application.streamingAssetsPath, FileName + ".json");
         private string DailyFilePath => Path.Combine(Application.streamingAssetsPath, DaylyFileName + ".json");
-        //public void SetEvent(GameManager game)
-        //{
-        //    game.OnGameEnd += OnGameEndHandle;
-        //}
+
+        public ResultData CurrentResult;
         private void Start()
         {
             rankingList = LoadJson(FilePath);
         }
-        //private void OnDisable()
-        //{
-        //    var game = ManagerLocator.Instance.Game;
-        //    if (game != null)
-        //    {
-        //        game.OnGameEnd -= OnGameEndHandle;
-        //    }
-        //}
-        private void OnGameEndHandle(bool isgameComplete)
+        private void OnEnable()
         {
-            if (isgameComplete && isSaveJson)
-            {
-                SaveJson();
-            }
-
+            resultEvent.Register(SaveJson);
         }
-
-        private void SaveJson()
+        private void OnDisable()
         {
-            //var game = ManagerLocator.Instance.AllGameManager;
-            //if (game == null)
-            //{
-            //    Debug.LogError("[Ranking Manager] Game Manager is MIssing");
-            //    return;
-            //}
-            RankingData data = new RankingData
-            {
-                Time = DateTime.Now.ToString(),
-                GameSeed = 100,
-                TotalScore = 200
-            };
-            //data.MakeDetailData();
-            if (isSaveJson)
-            {
-                RankingListWrapper wrapper = LoadJson(FilePath);
-                wrapper.Rankings.Add(data);
-                ExportJson(wrapper,FilePath);
-                //ランキングデータ更新
-                rankingList = wrapper;
-            }
-            if(useDailyFile)
+            resultEvent.Unregister(SaveJson);
+        }
+        private void SaveJson(ResultData data)
+        {
+            CurrentResult = data;
+#if UNITY_EDITOR
+            Debug.Log($"[{nameof(RankingManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(data, true)}", gameObject);
+#endif
+            if (!isSaveJson) return;
+            RankingListWrapper wrapper = LoadJson(FilePath);
+            wrapper.Rankings.Add(data);
+            SortJson(wrapper);
+            ExportJson(wrapper, FilePath);
+            
+            //ランキングデータ更新
+            rankingList = wrapper;
+            if (useDailyFile)
             {
                 RankingListWrapper dailyWrapper = LoadJson(DailyFilePath);
                 dailyWrapper.Rankings.Add(data);
@@ -75,13 +54,13 @@ namespace Syacapachi.Manager
                 {
                     //ランキング数がmaxを超えた場合はソートしてmax数分だけ保存
                     dailyWrapper.Rankings = dailyWrapper.Rankings
-                        .OrderByDescending(r => r.TotalScore)
+                        .OrderByDescending(r => r.Cooperation)
                         .ThenBy(r => r.Time)
                         .Take(rankingMaxCount)
                         .ToList();
                 }
                 else
-                {   
+                {
                     //ランキング数がmaxに満たない場合はソートのみ}
                     SortJson(dailyWrapper);
                 }
@@ -89,25 +68,21 @@ namespace Syacapachi.Manager
                 //日別ランキングデータ更新
                 daylyRankingList = dailyWrapper;
             }
-            
-            
-
-
         }
-        private void ExportJson(RankingListWrapper wrapper,string filePath)
+        private void ExportJson(RankingListWrapper wrapper, string filePath)
         {
             string jsonText = JsonUtility.ToJson(wrapper, true);
-            string writePath = filePath;
-            File.WriteAllText(writePath, jsonText);
+            //ファイルがない場合は作成。そして書き込む。
+            File.WriteAllText(filePath, jsonText);
 #if UNITY_EDITOR
-            Debug.Log($"ExportedJson:\n{jsonText}at{writePath}");
+            Debug.Log($"ExportedJson:\n{jsonText}at{filePath}", gameObject);
 #endif
         }
         private RankingListWrapper LoadJson(string filepath)
         {
             if (!System.IO.File.Exists(filepath))
             {
-                Debug.LogError("[Ranking Manager]No ranking file found");
+                Debug.LogError("[Ranking Manager]No ranking file found", gameObject);
                 return new RankingListWrapper();
             }
 
@@ -117,18 +92,11 @@ namespace Syacapachi.Manager
         private void SortJson(RankingListWrapper wrapper)
         {
             // スコアの降順にソート（高いほど上位）
-            wrapper.Rankings = rankingList.Rankings
-                .OrderByDescending(r => r.TotalScore)
+            wrapper.Rankings = wrapper.Rankings
+                .OrderByDescending(r => r.Cooperation)
                 .ThenBy(r => r.Time) // 同点ならタイム順
+                .Take(rankingMaxCount) //上位以外は消す。
                 .ToList();
         }
-        private void OnApplicationQuit()
-        {
-            if (isSaveJson)
-            {
-                SaveJson();
-            }
-        }
     }
-
 }

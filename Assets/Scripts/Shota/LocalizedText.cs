@@ -1,29 +1,32 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "LocalizedText", menuName = "Game/LocalizedText")]
 public class LocalizedText : ScriptableObject
 {
-    [TextArea(3, 10)]
-    public string[] japaneseTexts;
+    [SerializeField] TitileAndText[] japaneseTexts;
 
-    [TextArea(3, 10)]
-    public string[] englishTexts;
+    [SerializeField] TitileAndText[] englishTexts;
 
-    public string Get(int index)
+    public int Length => Mathf.Min(japaneseTexts.Length, englishTexts.Length);
+#if UNITY_EDITOR
+    private void OnEnable()
     {
-        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+        if (japaneseTexts != null && englishTexts != null && japaneseTexts.Length != englishTexts.Length)
+        {
+            Debug.LogWarning($"[{nameof(LocalizedText)}] {name} text length is not simmilar");
+        }
+    }
+#endif
 
+    public TitileAndText[] Get(bool isJapanese)
+    {
         if (isJapanese)
         {
-            if (index < japaneseTexts.Length)
-                return japaneseTexts[index];
+            return japaneseTexts;
         }
         else
         {
-            if (index < englishTexts.Length)
-                return englishTexts[index];
+            return englishTexts;
         }
-
-        return "";
     }
 }

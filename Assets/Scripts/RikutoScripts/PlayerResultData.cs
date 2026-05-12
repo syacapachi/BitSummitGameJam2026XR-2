@@ -4,8 +4,8 @@ using Unity.Collections;
 using Syacapachi.Attribute;
 
 [Serializable]
-[GenerateEvent(typeof(GameEventSOBase<>),IsArray = true)]
-public struct PlayerResultData : INetworkSerializable,IEquatable<PlayerResultData>
+//[GenerateEvent(typeof(GameEventSOBase<>),IsArray = true)]
+public class PlayerResultData : INetworkSerializable,IEquatable<PlayerResultData>
 {
     public ulong clientId;
     public FixedString128Bytes playerName;
@@ -16,7 +16,7 @@ public struct PlayerResultData : INetworkSerializable,IEquatable<PlayerResultDat
     public float damageDealt;
     public int[] killCounts;
 
-    public readonly bool Equals(PlayerResultData other)
+    public bool Equals(PlayerResultData other)
     {
         return this.clientId == other.clientId;
     }
@@ -33,7 +33,7 @@ public struct PlayerResultData : INetworkSerializable,IEquatable<PlayerResultDat
         serializer.SerializeValue(ref damageDealt);
         serializer.SerializeValue(ref killCounts);
     }
-    public override readonly string ToString()
+    public override string ToString()
     {
         return base.ToString();
     }

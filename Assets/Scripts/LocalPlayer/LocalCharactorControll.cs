@@ -1,6 +1,6 @@
-﻿using Unity.Netcode;
-using UnityEngine;
-
+﻿using UnityEngine;
+using UnityEngine.XR;
+[RequireComponent(typeof(LocalCameraSetting))]
 public class LocalCharactorControll : MonoBehaviour 
 { 
     public enum MoveMode { Normal, Dash, Stop}
@@ -11,14 +11,11 @@ public class LocalCharactorControll : MonoBehaviour
      */
     [SerializeField] protected Transform playerRootTransform;
     [SerializeField] LocalCameraSetting cameraSetting;
-    [SerializeField] protected GameObject bombPrefab;
     [SerializeField] protected float jumpForce = 5f;
     [SerializeField] protected float normalSpeed = 5f;
     [SerializeField] protected float dashSpeed = 10f;
     [Header("Subscribe Event")]
-    [SerializeField] VoidEvent jumpEvent;
-    [SerializeField] BoolEventSO dashEvent;
-    [SerializeField] VoidEvent fireEvent;
+    [SerializeField] BoolEvent dashEvent;
     [SerializeField] Vector2Event moveEvent;
     public bool IsStop => moveMode == MoveMode.Stop;
     Vector2 lastMove = Vector2.zero;
@@ -27,37 +24,16 @@ public class LocalCharactorControll : MonoBehaviour
 
     private void OnEnable()
     {
-        jumpEvent.Register(OnJunp);
         dashEvent.Register(OnDashChanged);
-        fireEvent.Register(OnUIChanged);
-        //reciever.OnDashChanged += OnDashChanged;
-        //reciever.OnFireed += OnUIChanged;
-        //reciever.OnJumped += OnJunp;
     }
     private void OnDisable()
     {
-        jumpEvent.Unregister(OnJunp);
         dashEvent.Unregister(OnDashChanged);
-        fireEvent.Unregister(OnUIChanged);
-        //reciever.OnDashChanged -= OnDashChanged;
-        //reciever.OnFireed -= OnUIChanged;
-        //reciever.OnJumped -= OnJunp;
-    }
-    //サーバーで実行される関数(名前にServerRpcを付ける) 呼び出せるのはオーナー のみ
-    //オブジェクト生成はサーバーで行う必要がある。生成したオブジェクトをクライアントに同期するためには、生成したオブジェクトのNetworkObjectコンポーネントのSpawn()メソッドを呼び出す必要がある。
-    private void SpawnBomn()
-    {
-        if (bombPrefab == null)
-        {
-            Debug.LogError("Bomb prefab is not assigned.");
-            return;
-        }
-        GameObject bomb = Instantiate(bombPrefab, playerRootTransform.position + playerRootTransform.forward * 2, Quaternion.identity);
-        bomb.GetComponent<NetworkObject>().Spawn();
     }
     private void Update()
     {
         Vector2 moveInput = moveEvent.CurrentValue;
+        if(XRSettings.isDeviceActive) return;
         if (lastMove == Vector2.zero && moveInput == lastMove) return;
         float speed = moveMode switch
         {
@@ -82,11 +58,6 @@ public class LocalCharactorControll : MonoBehaviour
         //相対座標で移動させる。これにより、プレイヤーの向きに応じた移動が可能になる。
         playerRootTransform.Translate(move * Time.deltaTime);    
     }
-    private void OnJunp()
-    {
-        Debug.Log("Jump");
-        playerRootTransform.Translate(Vector3.up * jumpForce * Time.deltaTime);
-    }
     private void OnDashChanged(bool isDash)
     {
         if (isDash)
@@ -98,17 +69,10 @@ public class LocalCharactorControll : MonoBehaviour
             moveMode = MoveMode.Normal;
         }
     }
-    private void OnUIChanged()
+#if UNITY_EDITOR
+    private void Reset()
     {
-        if (moveMode == MoveMode.Stop)
-        {
-            //Cursor.lockState = CursorLockMode.Locked;
-            moveMode = MoveMode.Normal;
-        }
-        else
-        {
-            //Cursor.lockState = CursorLockMode.None;
-            moveMode = MoveMode.Stop;
-        }
+        cameraSetting = GetComponent<LocalCameraSetting>();
     }
+#endif
 }

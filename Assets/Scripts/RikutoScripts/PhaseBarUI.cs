@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PhaseBarUI : MonoBehaviour
 {
+    [Header("depend on")]
+    [SerializeField] PhaseManager phaseManager;
     [Header("UI")]
     [SerializeField] GameObject phaseBarPrefab;
     [SerializeField] GameObject separatorPrefab;
@@ -12,29 +14,22 @@ public class PhaseBarUI : MonoBehaviour
 
     [Header("Size")]
     [SerializeField] RectTransform rect;
+    [Header("Subscribe Event")]
+    [SerializeField] GameStateEvent GameStateEvent;
     float MaxWidth => rect.rect.width; // 最大フェーズの長さ
 
     private readonly List<Image> phaseBars = new List<Image>();
     private readonly List<Image> separators = new List<Image>();
 
-
-    private PhaseManager phaseManager;
-
     private Color defaultColor;
 
-    void Start()
+    private void OnEnable()
     {
-        // GameManager取得
-        phaseManager = ManagerLocator.Instance.AllGameManager.PhaseManager;
-
-        if (phaseManager == null)
-        {
-            Debug.LogError("PhaseManager not found");
-            return;
-        }
-
-        CreateBars();
-        SetupBarLength();
+        GameStateEvent.Register(OnStateChange);
+    }
+    private void OnDisable()
+    {
+        GameStateEvent.Unregister(OnStateChange);
     }
 
     void Update()
@@ -72,7 +67,18 @@ public class PhaseBarUI : MonoBehaviour
             }
         }
     }
-
+    private void OnStateChange(GameState state)
+    {
+        if (state == GameState.Playing)
+        {
+            CreateBars();
+            SetupBarLength();
+        }
+        if (state == GameState.GameOver || state == GameState.GameClear)
+        {
+            gameObject.SetActive(false);
+        }
+    }
     // =========================
     // フェーズバー生成
     // =========================
@@ -115,8 +121,9 @@ public class PhaseBarUI : MonoBehaviour
             float time = phaseManager.Phases[i].PhaseTime;
             float ratio = time / maxTime;
 
-            RectTransform rt = phaseBars[i].rectTransform;
+            int visualIndex = phaseBars.Count - 1 - i;
 
+            RectTransform rt = phaseBars[visualIndex].rectTransform;
             rt.sizeDelta = new Vector2(MaxWidth * ratio, rt.sizeDelta.y);
         }
     }

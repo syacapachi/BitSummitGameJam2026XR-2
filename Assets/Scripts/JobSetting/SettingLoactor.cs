@@ -1,0 +1,15 @@
+﻿using UnityEngine;
+/// <summary>
+/// インスペクター上で見えるようにデータを置いておいてるだけ
+/// </summary>
+public class SettingLoactor : MonoBehaviour
+{
+    [Header("このクラスはインスペクター上でデータを管理するためのものです")]
+    [Header("ジョブの設定")]
+    [SerializeField] JobSettingGenerator[] setting;
+    [SerializeField] JobSettingDataBase[] enemyJob;
+    [Header("敵のデータベース")]
+    [SerializeField] EnemyDataBase enemyDataBase;
+    [Header("難易度のデータベース")]
+    [SerializeField] DifficultyDataBase difficultyDataBase;
+}

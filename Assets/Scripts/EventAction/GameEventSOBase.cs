@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
 /// イベントを表すScriptableObjectクラス。イベントの発生を管理し、登録されたリスナーに通知するためのクラスです。
@@ -30,5 +29,26 @@ public class GameEventSOBase<T> : ScriptableObject,IResisterable<Action<T>>,IInv
     {
         lastValue = value;
         linsteners?.Invoke(value);
+    }
+}
+/// <summary>
+/// 因数なしバージョン
+/// </summary>
+public class GameEventSOBase : ScriptableObject, IResisterable<Action>, IInvokable
+{
+    private event Action linsteners;
+
+    public void Register(Action invokable)
+    {
+        linsteners += invokable;
+    }
+
+    public void Unregister(Action invokable)
+    {
+        linsteners -= invokable;
+    }
+    public void Invoke()
+    {
+        linsteners?.Invoke();
     }
 }

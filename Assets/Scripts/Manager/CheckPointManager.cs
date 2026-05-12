@@ -1,11 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using static CheckPointManager;
 
+/// <summary>
+/// NavMeshを使って、敵を移動させる。
+/// </summary>
 public class CheckPointManager : MonoBehaviour
 {
-    [SerializeField] GameObject m_Object;
-    [SerializeField] List<Transform> checkPointList = new();
-    readonly Dictionary<Transform, int> transformToIndexDic = new();
+    [Serializable]
+    public readonly struct IndexToTransform : IEquatable<IndexToTransform>
+    {
+        public readonly int id;
+        public readonly Transform transform;
+        public IndexToTransform(int id, Transform transform)
+        {
+            this.id = id;
+            this.transform = transform;
+        }
+
+        public bool Equals(IndexToTransform other)
+        {
+            return id == other.id;
+        }
+    }
+#if UNITY_EDITOR
+    [SerializeField] GameObject m_CheckPointParent;
+#endif
+    [SerializeField] Transform[] checkPoints;
+    IndexToTransform[] indexToTransformArr;
+    readonly Dictionary<IndexToTransform, int> transformToIndexDic = new();
+
+    public IndexToTransform[] SpawnPoints => indexToTransformArr;
+    private void Awake()
+    {
+        transformToIndexDic.Clear();
+        indexToTransformArr = new IndexToTransform[checkPoints.Length];
+        for(int i = 0; i < checkPoints.Length; i++)
+        {
+            IndexToTransform indexToTransform = new(i, checkPoints[i]);
+            indexToTransformArr[i] = indexToTransform;
+            transformToIndexDic[indexToTransform] = i;
+        }
+    }
 #if UNITY_EDITOR
     private void Reset()
     {
@@ -13,37 +51,64 @@ public class CheckPointManager : MonoBehaviour
     }
     private void OnValidate()
     {
-        if(m_Object != null)
+        if(m_CheckPointParent != null)
         {
-            foreach(Transform child in m_Object.GetComponentsInChildren<Transform>())
+            var childs = m_CheckPointParent.GetComponentsInChildren<Transform>();
+            if (childs != null)
             {
-                checkPointList.Add(child);
-            }
-            m_Object = null;
-            transformToIndexDic.Clear();
-            for(int i=0;i<checkPointList.Count;i++)
-            {
-                transformToIndexDic.Add(checkPointList[i], i);
+                checkPoints = childs.Skip(1).ToArray();
             }
         }
     }
 #endif
-    public Transform GetNextPoint(Transform transform)
+    public bool IsLastPoint(IndexToTransform transform)
+    {
+        if (transformToIndexDic.TryGetValue(transform, out int val))
+        {
+            return val == checkPoints.Length - 1;
+        }
+        Debug.LogError("Transform is not assinged");
+        return false;
+    }
+    public bool TryGetNextPoint(IndexToTransform transform, out IndexToTransform nextPoint)
+    {
+        nextPoint = default;
+        if (transformToIndexDic.TryGetValue(transform, out int val))
+        {
+            if (val < checkPoints.Length - 1)
+            {
+                nextPoint = indexToTransformArr[val + 1];
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning("This is the last point. No next point available.");
+                return false;
+            }
+        }
+        Debug.LogError("Transform is not assinged");
+        return false;
+    }
+    public IndexToTransform GetNextPoint(IndexToTransform transform)
     {
         if (transformToIndexDic.TryGetValue(transform, out int val))
         {
             return GetNextPoint(val);
         }
         Debug.LogError("Transform is not assinged");
-        return null;
+        return default;
     }
-    public Transform GetNextPoint(int index)
+    public IndexToTransform GetNextPoint(int index)
     {
-        if(index < 0 || index >= checkPointList.Count)
+        if(index < 0 || index >= checkPoints.Length)
         {
             Debug.LogError("List out Range");
-            return null;
+            return GetRandomPoint();
         }
-        return (index == checkPointList.Count-1) ? checkPointList[0] : checkPointList[index+1];
+        return (index == checkPoints.Length - 1) ? indexToTransformArr[0] : indexToTransformArr[index+1];
+    }
+    public IndexToTransform GetRandomPoint()
+    {
+        return indexToTransformArr[UnityEngine.Random.Range(0, checkPoints.Length)];
     }
 }

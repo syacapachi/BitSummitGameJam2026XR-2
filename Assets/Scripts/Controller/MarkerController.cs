@@ -2,37 +2,81 @@
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class MarkerController : NetworkBehaviour
 {
+    [Header("Fps")]
+    [SerializeField] Transform playerHead;
+    [Header("XR")]
     [SerializeField] Transform firePoint;
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] GameObject playerMarker;
     [SerializeField] AttachableNode node;
-    [SerializeField] int laserDistance = 10;
+    [SerializeField] LayerMask markerHitLayerMask;
+    [SerializeField] int laserDistance = 50;
+    [SerializeField] float markerBackTime = 5f;
     [SerializeField] MarkerAudioController markerAudioController;
+    [Header("Publish Event")]
+    [SerializeField] ULongEvent MarkerPlaceEventServerOnly;
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent markerEvent;
-    AttachableBehaviour attach;
+    AttachableBehaviour attachServerOnly;
+    //水野が追加した。マーカーの発光用サーバーだけもつ
+    MarkerBlinkEffect blinkEffectServerOnly;
+    //以上
     bool isMarkAttachedServerOnly = false;
     Coroutine markerCoroutine;
-    
+    private WaitForSeconds wait;
+
+    public Transform FirePoint
+    {
+        get
+        {
+            if (!XRSettings.isDeviceActive)
+            {
+                return playerHead;
+            }
+            return firePoint;
+        }
+    }
+
+    private void Awake()
+    {
+        wait = new WaitForSeconds(markerBackTime);
+    }
     public override void OnNetworkSpawn()
     {
-        if(!IsOwner) return;
-        //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnMarker += PlaceMarkerRpc;
+        if (!IsOwner)
+        {
+            lineRenderer.enabled = false;
+            return;
+        }
         markerEvent.Register(PlaceMarkerRpc);
+        StartCoroutine(LaserUpdateCoroutine());
+        lineRenderer.enabled = XRSettings.isDeviceActive;
     }
+
     protected override void OnNetworkPostSpawn()
     {
-        if (IsServer)
+        //Debug.Log($"{nameof(MarkerController)},IsOwner={IsOwner},Owned by={OwnerClientId}");
+        //IsServerだと、クライアントでスポーンする前にサーバーでスポーンする->オーナー権限が消えるため、IsOwnerでスポーンさせる
+        if (IsOwner)
         {
-            var marker = GameObject.Instantiate(playerMarker);
-            var networkObject = marker.GetComponent<NetworkObject>();
-            attach = marker.GetComponentInChildren<AttachableBehaviour>();
-            networkObject.SpawnWithOwnership(OwnerClientId);
-            isMarkAttachedServerOnly = false;
+            //オーナーがSpawnした後でRPCを呼び出す
+            CreateMerkerRpc();
         }
+    }
+    [Rpc(SendTo.Server)]
+    private void CreateMerkerRpc()
+    {
+        var marker = GameObject.Instantiate(playerMarker);
+        var networkObject = marker.GetComponent<NetworkObject>();
+        attachServerOnly = marker.GetComponentInChildren<AttachableBehaviour>();
+        networkObject.SpawnWithOwnership(OwnerClientId);
+        blinkEffectServerOnly = networkObject.GetComponentInChildren<MarkerBlinkEffect>();
+        attachServerOnly.Attach(node);
+        isMarkAttachedServerOnly = true;
     }
     public override void OnNetworkDespawn()
     {
@@ -45,47 +89,92 @@ public class MarkerController : NetworkBehaviour
         }
         if (IsOwner)
         {
-            //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnMarker -= PlaceMarkerRpc;
             markerEvent.Unregister(PlaceMarkerRpc);
+        }
+    }
+    //オーナー以外で毎フレームチェックさせるオーバーヘッドをなくすためコルーチン化
+    IEnumerator LaserUpdateCoroutine()
+    {
+        while (IsOwner)
+        {
+            UpdateLaser();
+            yield return null;
+        }
+    }
+
+    void UpdateLaser()
+    {
+        if (lineRenderer == null || FirePoint == null) return;
+
+        // �J�n�_
+        lineRenderer.SetPosition(0, FirePoint.position);
+
+        // Raycast �Œ��e�_�𔻒�
+        Vector3 forward = FirePoint.forward;
+
+        if (Physics.Raycast(FirePoint.position, forward, out RaycastHit hit, laserDistance))
+        {
+            // ���������ꍇ
+            lineRenderer.SetPosition(1, hit.point);
+        }
+        else
+        {
+            // ������Ȃ������ꍇ
+            lineRenderer.SetPosition(1, FirePoint.position + forward * laserDistance);
         }
     }
     [Rpc(SendTo.Server)]
     private void PlaceMarkerRpc()
     {
-        if(!ManagerLocator.Instance.AllGameManager.IsGamePlaying) return;
-        if (firePoint == null) return;
+        if (ManagerLocator.Instance == null
+            || ManagerLocator.Instance.GameStateManager == null
+            || !ManagerLocator.Instance.GameStateManager.IsGamePlaying
+            ) return;
+        if (FirePoint == null) return;
 
-        RaycastHit hit;
-        Vector3 forward = firePoint.forward;
+        Vector3 forward = FirePoint.forward;
 
-        if (Physics.Raycast(firePoint.position, forward, out hit, laserDistance))
+        if (Physics.Raycast(FirePoint.position, forward, out RaycastHit hit, laserDistance, markerHitLayerMask))
         {
-            MoveMarkerClientRpc(hit.point);
+            MoveMarkerServerRpc(hit.point);
             markerAudioController.OnMarkerSondPlayRpc(hit.point);
+
+            MarkerPlaceEventServerOnly.Invoke(OwnerClientId);
+            //if (ManagerLocator.Instance.GameStateManager.CurrentGameState == GameState.Tutorial)
+            //    ManagerLocator.Instance.TutorialManager.OnMarkerPlacedServer(OwnerClientId);
         }
     }
-    
+
     [Rpc(SendTo.Server)]
-    private void MoveMarkerClientRpc(Vector3 pos)
+    private void MoveMarkerServerRpc(Vector3 pos)
     {
-        if (attach == null)
+        if (attachServerOnly == null)
         {
-            Debug.LogWarning("Player marker not found. Cannot place marker.");
+            Debug.LogWarning("Player marker not found. Cannot place marker.", gameObject);
             return;
         }
         if (isMarkAttachedServerOnly)
         {
-            attach.Detach();
+            attachServerOnly.Detach();
+            isMarkAttachedServerOnly = false;
         }
         else
         {
-            if (markerCoroutine != null) 
+            if (markerCoroutine != null)
             {
                 StopCoroutine(markerCoroutine);
                 markerCoroutine = null;
             }
         }
-        attach.gameObject.transform.position = pos;
+        attachServerOnly.gameObject.transform.position = pos;
+
+        // 水野が追加した 非サーバーに点滅を指示
+        if (blinkEffectServerOnly != null)
+        {
+            blinkEffectServerOnly.StartBlinkRpc();
+        }
+        // 水野が追加した
+
         markerCoroutine = StartCoroutine(MarkerBackCorutine());
 
         //var renderer = playerMarker.GetComponent<MeshRenderer>();
@@ -93,19 +182,24 @@ public class MarkerController : NetworkBehaviour
     }
     private IEnumerator MarkerBackCorutine()
     {
-        yield return new WaitForSeconds(5f);
-;
-        if (attach != null)
+        yield return wait;
+        if (attachServerOnly != null)
         {
-            attach.Attach(node);
-            attach.gameObject.transform.localPosition = Vector3.zero;
+            attachServerOnly.Attach(node);
+            attachServerOnly.gameObject.transform.localPosition = Vector3.zero;
             isMarkAttachedServerOnly = true;
+
+            // 水野が追加した
+            if (blinkEffectServerOnly != null)
+            {
+                blinkEffectServerOnly.StopBlinkRpc();
+            }
+            // 水野が追加した
         }
         else
         {
-            Debug.LogError($"[{gameObject.name}]AttachableBehaviour is null");
+            Debug.LogError($"[{gameObject.name}]AttachableBehaviour is null", gameObject);
             isMarkAttachedServerOnly = false;
         }
-        
     }
 }

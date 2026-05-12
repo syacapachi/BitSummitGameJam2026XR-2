@@ -1,18 +1,16 @@
-﻿using Syacapachi.util;
+﻿using Syacapachi.Attribute;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Scripting;
 
-public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotSound, IReloadSound
+public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotSound, IReloadSound,IGun
 {
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform firePoint;
     [SerializeField] WeaponSettingsSO weaponSettings;
-    [SerializeField] AudioSource allShootSoundSource;
-    [SerializeField] AudioSource allReloadSoundSource;
     public GameObject BulletPrefab => bulletPrefab; // NBulletから参照できるように
-    public Transform FirePoint => firePoint; // NBulletから参照できるように
+    public virtual Transform FirePoint => firePoint; // NBulletから参照できるように
     public WeaponSettingsSO WeaponSettings => weaponSettings; // NBulletから参照できるように
     public NetworkVariable<int> syncedAmmo = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     
@@ -20,21 +18,15 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     public int MaxAmmo => weaponSettings.maxAmmo; // AmmoUIが参照できるように
     public float ReloadTime => weaponSettings.reloadTime; // AmmoUIが参照できるように
 
+    protected virtual IResultCollector Collector { get; } = null;
+
+
     private static readonly WaitForSeconds wait01 = new WaitForSeconds(0.1f);
     private float nextFire;
     //こいつは、残段数のみを同期してればわかる
     private bool isReloading = false;
-    private SyncroPropaty Propaty;
+    private NetworkPlayerPropaty Propaty;
 
-    private void Start()
-    {
-        var jobManager = ManagerLocator.Instance.JobManager;
-        if (jobManager == null)
-        {
-            Debug.LogError("PlayerJobManager not found in the scene.");
-            return;
-        }
-    }
     private void OnEnable()
     {
         syncedAmmo.OnValueChanged += OnAmmoChanged;
@@ -44,20 +36,20 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         syncedAmmo.OnValueChanged -= OnAmmoChanged;
     }
 
-    
-    public override void OnNetworkSpawn()
-    {
-    }
     protected override void OnNetworkPostSpawn()
     {
         if (IsServer)
         {
-            Propaty = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponentInChildren<SyncroPropaty>();
+            Propaty = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponentInChildren<NetworkPlayerPropaty>();
             syncedAmmo.Value = weaponSettings.maxAmmo;
         }
     }
-    public void Activate()
+    public virtual void Activate()
     {
+        if (ManagerLocator.Instance == null
+            || ManagerLocator.Instance.AllGameManager == null
+            || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
+            ) return;
         ShootRpc();
     }
     /// <summary>
@@ -77,19 +69,17 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     {
         nextFire = Time.time + weaponSettings.fireInterval;
         syncedAmmo.Value--;
-
         // ① 弾を生成
         //GameObject obj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        NetworkObject obj = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab,firePoint.position,firePoint.rotation);
+        NetworkObject obj = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(bulletPrefab, FirePoint.position, FirePoint.rotation);
 
         // ② 弾のLayerをプレイヤーのJobに合わせる
-        GameObject go = obj.gameObject;
         var job = Propaty.Job;
         //go.SetLayerRecursively(LayerMask.NameToLayer(layerName));
 
         var bullet = obj.GetComponent<BulletBaseController>();
 
-        bullet.BulletInit(OwnerClientId,job,weaponSettings);
+        bullet.BulletInit(Collector, job, weaponSettings.bulletSetting);
         // ③ ネットワークでSpawn
         obj.SpawnWithOwnership(OwnerClientId);
     }
@@ -98,13 +88,8 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         isReloading = true;
         if (IsClient)
         {
-            if (allReloadSoundSource != null)
-            {
-                allReloadSoundSource.Play();
-            }
             PlayReloadSound();
         }
-        // ここでリロードのアニメーションやエフェクトを再生することができます。
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         for (float t = 0; t < ReloadTime; t += 0.1f)
         {
@@ -129,15 +114,11 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     /// <param name="newVal"></param>
     private void OnAmmoChanged(int oldVal, int newVal)
     {
-        if(isReloading) return;
+        if (isReloading) return;
         if(oldVal < newVal) return;
         UpdateCount(newVal, MaxAmmo);
         if (IsClient)
         {
-            if (allReloadSoundSource != null)
-            {
-                allShootSoundSource.Play();
-            }
             PlayShotSound();
         }
         

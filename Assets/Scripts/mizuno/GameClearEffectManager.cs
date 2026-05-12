@@ -1,16 +1,15 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameClearEffectManager : MonoBehaviour
 {
-    [Header("Refs")]
-    [SerializeField] NGameManager gameManager; // Inspectorで入れるの推奨（無ければ自動検索）
+    [Header("Subscribe Event")]
+    [SerializeField] GameStateEvent gameStateRpcEvent;
 
     [Header("Debug")]
     [SerializeField] bool logStateChange = false;
+    GameState lastState = GameState.Initializing;
 
     // State監視
-    GameState lastState;
-    bool initialized;
     bool clearApplied;
 
     // ========== ここから「GameClearでやりたいこと」を詰めていく ==========
@@ -46,51 +45,24 @@ public class GameClearEffectManager : MonoBehaviour
 
     void Start()
     {
-        ResolveRefs();
         CacheDefaults();
-        InitState();
+    }
+    private void OnEnable()
+    {
+        gameStateRpcEvent.Register(OnStateChanged);
+    }
+    private void OnDisable()
+    {
+        gameStateRpcEvent.Unregister(OnStateChanged);
     }
 
-    void Update()
+    void OnStateChanged(GameState newState)
     {
-        if (gameManager == null)
+        if (logStateChange)
         {
-            ResolveRefs();
-            return;
+            Debug.Log($"[GameClearEffectManager] {lastState} -> {newState}");
+            lastState = newState;
         }
-
-        var current = gameManager.CurrentGameState;
-
-        if (!initialized)
-        {
-            lastState = current;
-            initialized = true;
-            return;
-        }
-
-        if (current != lastState)
-        {
-            if (logStateChange) Debug.Log($"[GameClearEffectManager] {lastState} -> {current}");
-            OnStateChanged(lastState, current);
-            lastState = current;
-        }
-    }
-
-    void ResolveRefs()
-    {
-        if (gameManager == null)
-            gameManager = FindFirstObjectByType<NGameManager>();
-    }
-
-    void InitState()
-    {
-        if (gameManager == null) return;
-        lastState = gameManager.CurrentGameState;
-        initialized = true;
-    }
-
-    void OnStateChanged(GameState oldState, GameState newState)
-    {
         if (newState == GameState.GameClear)
         {
             ApplyGameClearOnce();

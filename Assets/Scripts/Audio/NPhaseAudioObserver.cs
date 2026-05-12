@@ -2,11 +2,8 @@
 
 public class NPhaseAudioObserver : MonoBehaviour
 {
-    [SerializeField] private AudioClip phaseChangeClipAll;
-    [SerializeField] private AudioClip gameClearClipAll;
-
-    [SerializeField, Range(0f, 1f)] private float phaseVolumeAll = 1f;
-    [SerializeField, Range(0f, 1f)] private float clearVolumeAll = 1f;
+    [SerializeField] AudioEffectData phaseChangeAudioData;
+    [SerializeField] AudioEffectData gameClearAudioData;
 
     [Header("Subscribe Event")]
     [SerializeField] IntEvent OnPhaseChangeEvent;
@@ -31,12 +28,12 @@ public class NPhaseAudioObserver : MonoBehaviour
     {
         if (newValue >= 0)
         {
-            gameEffectEvent.Invoke(new GameEffect(phaseChangeClipAll,transform.position, phaseVolumeAll));
+            gameEffectEvent.Invoke(new GameEffect(phaseChangeAudioData.ToRuntimeData(), transform.position));
         }
     }
 
     private void OnGameFinished(PlayerResultData[] data)
     {
-        gameEffectEvent.Invoke(new GameEffect(gameClearClipAll, transform.position, clearVolumeAll));
+        gameEffectEvent.Invoke(new GameEffect(gameClearAudioData.ToRuntimeData(), transform.position));
     }
 }

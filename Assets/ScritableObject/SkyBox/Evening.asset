@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19a733a3c2f3c8240aeeb3a2e112824b, type: 3}
+  m_Name: Evening
+  m_EditorClassIdentifier: 
+  timeOfDay: 15
+  topColor: {r: 0.15686275, g: 0.23529412, b: 0.47058824, a: 1}
+  horizonColor: {r: 1, g: 0.47058824, b: 0.15686275, a: 1}
+  bottomColor: {r: 0.7058824, g: 0.23529412, b: 0.078431375, a: 1}
+  intensity: 2
+  exponentTop: 0.8
+  exponentBottom: 6
+  sunColor: {r: 1, g: 0.5882353, b: 0.3137255, a: 1}
+  sunIntensity: 0.2
+  sunMultiplier: 1
+  moonColor: {r: 1, g: 0, b: 0, a: 1}
+  moonIntensity: 0.1
+  moonMultiplier: 1
+  textureStrength: 1
+  textureRotation: 0
+  skyRootEular: {x: 45, y: 170, z: 0}

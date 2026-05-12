@@ -6,30 +6,55 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
 {
     [SerializeField] float lifeTime = 5f;
     [SerializeField] Rigidbody rb;
-    WeaponSettingsSO gunSO;
-    private PlayerJob shooterJob = PlayerJob.Both;
-    private ulong shooterId;
+    [SerializeField] protected JobSettingGenerator setting;
+    private BulletSetting bulletSettingServerOnly;
+    private PlayerJob shooterJob = PlayerJob.Nothing;
+    private IResultCollector shooterId;
     protected Coroutine despawnTimer;
-    public ulong ShooterId => shooterId;
     public GameObject GameObject => gameObject;
 
     public PlayerJob ShooterJob => shooterJob;
 
-    public float Damage => gunSO.Damage;
+    public float Damage => bulletSettingServerOnly.Damage;
+
+    public IResultCollector ResultCollector => shooterId;
+
+    protected BulletSetting BulletServerOnly => bulletSettingServerOnly;
+
+
+    void Start()
+    {
+        rb ??= GetComponent<Rigidbody>();
+    }
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
+        if (IsServer && bulletSettingServerOnly != null)
         {
-            rb = GetComponent<Rigidbody>();
-            rb.linearVelocity = transform.forward * gunSO.speed;
+            rb ??= GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+            rb.linearVelocity = transform.forward * bulletSettingServerOnly.Speed;
             despawnTimer = StartCoroutine(DespawnCorutine(lifeTime));
         }
     }
-    public void BulletInit(ulong id,PlayerJob shooterJob,WeaponSettingsSO so)
+    public void BulletInit(IResultCollector shooter, PlayerJob shooterJob, BulletSetting bulletSetting, bool isApplyLayer = false)
     {
-        shooterId = id;
+        shooterId = shooter;
         this.shooterJob = shooterJob;
-        gunSO = so;
+        this.bulletSettingServerOnly = bulletSetting;
+        if (isApplyLayer)
+        {
+            ApplySetting();
+        }
+    }
+    private void ApplySetting()
+    {
+        if (setting.TryGetPlayerLayerSettings(ShooterJob, out var layersetting))
+        {
+            foreach (Transform childs in transform.GetComponentsInChildren<Transform>())
+            {
+                childs.gameObject.layer = layersetting.CollidersLayer;
+            }
+        }
     }
     private IEnumerator DespawnCorutine(float time)
     {
@@ -41,12 +66,20 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     private void OnTriggerEnter(Collider other)
     {
         if (!IsServer) return;
-        
-        //Debug.Log("Hit " + other.name);
 
+        //Debug.Log("Hit " + other.name);
         if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
         {
             OnHitServer(damageReciver, other.gameObject);
+        }
+        else
+        {
+            var receiver = other.GetComponentInChildren<IDamageReciever>();
+            receiver ??= other.GetComponentInParent<IDamageReciever>();
+            if (receiver != null)
+            {
+                OnHitServer(receiver, other.gameObject);
+            }
         }
     }
     /// <summary>
@@ -59,4 +92,10 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     {
         reciever.TakeDamage(this,damage);
     }
+#if UNITY_EDITOR
+    void Reset()
+    {
+        rb ??= GetComponent<Rigidbody>();
+    }
+#endif
 }

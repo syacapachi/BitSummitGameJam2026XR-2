@@ -1,31 +1,28 @@
 ﻿using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class ScoreUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI scoreText;
 
-    NGameManager gameManager;
+    NetworkGameManager gameManager;
 
-    void Start()
+    IEnumerator Start()
     {
-        TryRegister();
-    }
-
-    void TryRegister()
-    {
-        gameManager = ManagerLocator.Instance?.AllGameManager;
-        if (gameManager == null)
+        ManagerLocator locator = ManagerLocator.Instance;
+        while (locator == null
+            || locator.AllGameManager == null
+            || locator.AllGameManager.HPManager == null)
         {
-            Invoke(nameof(TryRegister), 0.5f);
-            return;
+            yield return null;
         }
-
+        gameManager = locator.AllGameManager;
         // 初期表示
-        UpdateScore(gameManager.ScoreManager.score.Value);
+        UpdateScore(gameManager.HPManager.remainHP.Value);
 
         // スコア変更イベント
-        gameManager.ScoreManager.score.OnValueChanged += OnScoreChanged;
+        gameManager.HPManager.remainHP.OnValueChanged += OnScoreChanged;
     }
 
     void OnScoreChanged(int oldValue, int newValue)
@@ -41,6 +38,6 @@ public class ScoreUI : MonoBehaviour
     void OnDestroy()
     {
         if (gameManager != null)
-            gameManager.ScoreManager.score.OnValueChanged -= OnScoreChanged;
+            gameManager.HPManager.remainHP.OnValueChanged -= OnScoreChanged;
     }
 }

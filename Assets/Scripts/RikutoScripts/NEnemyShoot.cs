@@ -1,38 +1,64 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using Unity.Netcode;
-using System.Collections;
-using Syacapachi.util;
+using UnityEngine;
+using Syacapachi.Attribute;
+using Unity.Netcode.Components;
 
 public class NEnemyShoot : GunController
 {
-    public EnemySO enemySO;
-    
-    private EnemyWeaponSettingsSO weaponSO;
+    [SerializeField] NEnemy nEnemy;
+    [SerializeField] AudioEffectData shotAudioEffect;
+    [SerializeField] AudioClip shotClip;
+    [Header("Reference")]
+    [SerializeField] NetworkAnimator networkAnimator;
+    [Header("Publish Event")]
+    [SerializeField] GameEffectEvent gameEffect;
 
-    Transform target;
+    private EnemyWeaponSettingsSO weaponSOServerOnly;
     Coroutine shootCorutine;
-    public PlayerJob enemyJob;
+    NetworkGameManager gameManager;
+    PlayerManager playerManager;
+    float remain = 0;
+
+    private IEnumerator Start()
+    {
+        //ゲームマネージャーが生成されるのを待つ
+        while (ManagerLocator.Instance.AllGameManager == null || ManagerLocator.Instance.AllPlayerManager == null)
+        {
+            yield return null;
+        }
+        gameManager = ManagerLocator.Instance.AllGameManager;
+        playerManager = ManagerLocator.Instance.AllPlayerManager;
+    }
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
 
         if (!IsServer) return;
-        weaponSO = enemySO.EnemyWeapon;
-        weaponSO ??= base.WeaponSettings as EnemyWeaponSettingsSO;
+        weaponSOServerOnly = nEnemy.EnemyWeaponServeronly;
+        remain = weaponSOServerOnly.maxAmmo;
+        if (nEnemy.CanAttackServerOnly)
+        {
+            shootCorutine = StartCoroutine(ShootCorutine());
+        }
+    }
+    [OnInspectorButton(showOnlyInPlayMode = true)]
+    private void InspectorShoot()
+    {
         shootCorutine = StartCoroutine(ShootCorutine());
     }
-
+    public void ShootFromAnimationEvent()
+    {
+        if (!IsServer) return;
+        OnShootServer();
+    }
     protected override void OnShootServer()
     {
+        if (!TryGetTarget(out var target)) return;
+        Vector3 direction = (target.position - FirePoint.position).normalized;
 
-        target = GetTarget();
- 
-        if (target == null) return;
-
-        Vector3 direction = (target.position - transform.position).normalized;
-
-        NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(
+        NetworkObject networkObject = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(
             BulletPrefab,
             FirePoint.position,
             Quaternion.LookRotation(direction)
@@ -41,55 +67,65 @@ public class NEnemyShoot : GunController
         networkObject.gameObject.layer = this.gameObject.layer;
 
         var bullet = networkObject.GetComponent<BulletBaseController>();
-        bullet.BulletInit(0, PlayerJob.Nothing, weaponSO);
+        bullet.BulletInit(null, nEnemy.EnemyJob, weaponSOServerOnly.bulletSetting);
 
         networkObject.Spawn();
     }
 
     private IEnumerator ShootCorutine()
     {
-        // 初弾
-        yield return new WaitForSeconds(weaponSO.FirstShootDelayTime);
-        OnShootServer();
+        //トリガー以外はこっち
+        //networkAnimator?.Animator.SetFloat("Speed", 2.0f);
+        WaitForSeconds waitInterval = new WaitForSeconds(weaponSOServerOnly.fireInterval);
+        WaitForSeconds waitReload = new WaitForSeconds(weaponSOServerOnly.reloadTime);
+        yield return new WaitForSeconds(weaponSOServerOnly.FirstShootDelayTime);
+        //トリガーはこっち
+        networkAnimator?.SetTrigger("Attack");
 
         while (true)
         {
-            yield return new WaitForSeconds(weaponSO.reloadTime);
-            OnShootServer();
+            yield return waitInterval;
+            //トリガーはこっち
+            networkAnimator?.SetTrigger("Attack");
+            if (--remain <= 0)
+            {
+                yield return waitReload;
+                remain = weaponSOServerOnly.maxAmmo;
+            }
         }
     }
 
-    Transform GetTarget()
+    bool TryGetTarget(out Transform target)
     {
-        var gameManager = ManagerLocator.Instance.AllGameManager;
+        target = null;
+        if(gameManager == null) return false;
 
         switch (gameManager.CurrentGameMode)
         {
             case GameMode.Protect:
                 {
-                    // ProtectAreaを優先
                     var protectArea = gameManager.ProtectArea;
                     if (protectArea != null)
-                        return protectArea.transform;
-
-                    // 念のためフォールバック
-                    return GetNearestPlayer();
+                    {
+                        target = protectArea.transform;
+                        return true;
+                    }
+                    return TryGetNearestPlayer(out target);
                 }
 
             case GameMode.Survival:
             default:
                 {
-                    // 常にプレイヤーのみ
-                    return GetNearestPlayer();
+                    return TryGetNearestPlayer(out target);
                 }
         }
     }
 
-    Transform GetNearestPlayer()
+    bool TryGetNearestPlayer(out Transform nearest)
     {
-        var players = ManagerLocator.Instance.AllPlayerManager.AllPlayers;
+        var players = playerManager.AllPlayers;
 
-        Transform nearest = null;
+        nearest = null;
         float minDist = float.MaxValue;
 
         foreach (var player in players)
@@ -98,9 +134,10 @@ public class NEnemyShoot : GunController
             if (prop == null) continue;
 
             var playerJob = prop.Job;
+            
+            bool canTarget = nEnemy.IsAttackableJob(playerJob);
 
-            // 敵タイプに応じたフィルタ
-            bool canTarget = (enemyJob & playerJob) == 0;
+            //Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {nEnemy.EnemyJob}, canTarget: {canTarget}");
 
             if (!canTarget) continue;
 
@@ -110,8 +147,22 @@ public class NEnemyShoot : GunController
                 minDist = dist;
                 nearest = player.transform;
             }
+            break;
         }
 
-        return nearest;
+        Debug.Log($"[{nameof(NEnemyShoot)},{nEnemy.EnemyJob}] nearest target: {(nearest != null ? nearest.name : "null")}",gameObject);
+
+        return nearest != null;
     }
+    public override void PlayShotSound()
+    {
+        //gameEffect.Invoke(new GameEffect(shotAudioEffect.ToRuntimeData(), transform.position));
+        gameEffect.Invoke(GameEffect.CreateAudioEffect(shotClip, transform.position));
+    }
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        nEnemy ??= GetComponent<NEnemy>();   
+    }
+#endif
 }

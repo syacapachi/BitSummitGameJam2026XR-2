@@ -9,143 +9,192 @@ using UnityEngine.UI;
 
 public class Scripts : MonoBehaviour
 {
-    [SerializeField] Button ServerButton;
     [SerializeField] Button HostButton;
-    [SerializeField] Button ClientButton;
     [SerializeField] Button ExitButton;
     [SerializeField] Button DiscoveryButton;
-    TextMeshProUGUI discovertext;
     [SerializeField] Button StopDiscoveryButton;
     [SerializeField] GameObject connectionButtonPrefab;
     [SerializeField] Transform canvasTransfrom;
+
+    [SerializeField] GameStateManager titleFlowManager;
+
     readonly Queue<Button> connectionButtonUnActiveQueue = new();
     readonly Queue<Button> connectionButtonActiveQueue = new();
+
     [SerializeField] MyNetworkDiscovery m_Discovery;
     [SerializeField] UnityTransport transport;
     private bool isNetworkStarted = false;
-    [SerializeField]NetworkManager m_NetworkManager;
+    [SerializeField] NetworkManager m_NetworkManager;
 
-    readonly Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new Dictionary<IPAddress, DiscoveryResponseData>();
+    [SerializeField] private BoolEvent networkConnectionEvent;
+
+    [Header("UI テキスト参照")]
+    [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private TextMeshProUGUI descriptionText;
+
+    [Header("ボタンテキスト参照")]
+    [SerializeField] private TextMeshProUGUI hostButtonText;
+    [SerializeField] private TextMeshProUGUI discoverButtonText;
+    [SerializeField] private TextMeshProUGUI stopDiscoverButtonText;
+    [SerializeField] private TextMeshProUGUI exitButtonText;
+
+    [Header("日英テキスト設定")]
+    [SerializeField] private string japaneseTitleText;
+    [SerializeField] private string englishTitleText;
+    [SerializeField] private string japaneseDescriptionText;
+    [SerializeField] private string englishDescriptionText;
+
+    [Header("ボタンテキスト設定")]
+    [SerializeField] private string japaneseHostText;
+    [SerializeField] private string englishHostText;
+    [SerializeField] private string japaneseDiscoverText;
+    [SerializeField] private string englishDiscoverText;
+    [SerializeField] private string japaneseRefreshText;
+    [SerializeField] private string englishRefreshText;
+    [SerializeField] private string japaneseStopDiscoverText;
+    [SerializeField] private string englishStopDiscoverText;
+    [SerializeField] private string japaneseExitText;
+    [SerializeField] private string englishExitText;
+
+    // ★ 追加: 接続ボタンテキスト
+    [SerializeField] private string japaneseRoomFoundText = "部屋を見つけた！";
+    [SerializeField] private string englishRoomFoundText = "Room Found!";
+
+    readonly Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new();
     public UnityEvent OnClientStart = new UnityEvent();
 
-    public Vector2 DrawOffset = new Vector2(10, 210);
+    private TextMeshProUGUI discovertext;
+    private string discoverTextDefault;
+    private string refreshText;
 
     private void Reset()
     {
         m_NetworkManager ??= NetworkManager.Singleton;
-        m_Discovery ??= m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
-        m_Discovery.OnServerFound.AddListener(OnServerFound);
-    }
-    void Awake()
-    {
-        m_NetworkManager ??= ManagerLocator.Instance.NetworkManager;
         m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);
     }
 
     private void Start()
     {
-        ServerButton.onClick.AddListener(OnStartServer);
-        HostButton.onClick.AddListener(OnStartHost);
-        ClientButton.onClick.AddListener(OnStartClient);
-        ExitButton.onClick.AddListener(OnExitNetwork);
-        DiscoveryButton.onClick.AddListener(StartDiscover);
-        discovertext = DiscoveryButton.GetComponentInChildren<TextMeshProUGUI>();
+        m_NetworkManager ??= NetworkManager.Singleton;
+        m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
+        m_Discovery.OnServerFound.AddListener(OnServerFound);
 
-        StopDiscoveryButton.onClick.AddListener(StopDiscovery);
+        if (DiscoveryButton != null)
+            discovertext = DiscoveryButton.GetComponentInChildren<TextMeshProUGUI>();
 
-        ServerButton.gameObject.SetActive(true);
-        HostButton.gameObject.SetActive(true);
-        ClientButton.gameObject.SetActive(true);
-        DiscoveryButton.gameObject.SetActive(true);
+        UpdateLanguageText();
 
-        ExitButton.gameObject.SetActive(false);
-        StopDiscoveryButton.gameObject.SetActive(false);
+        if (HostButton != null)
+        {
+            HostButton.onClick.AddListener(OnStartHost);
+            HostButton.gameObject.SetActive(true);
+        }
+        if (ExitButton != null)
+        {
+            ExitButton.onClick.AddListener(OnExitNetwork);
+            ExitButton.gameObject.SetActive(false);
+        }
+        if (DiscoveryButton != null)
+        {
+            DiscoveryButton.onClick.AddListener(StartDiscover);
+            DiscoveryButton.gameObject.SetActive(true);
+        }
+        if (StopDiscoveryButton != null)
+        {
+            StopDiscoveryButton.onClick.AddListener(StopDiscovery);
+            StopDiscoveryButton.gameObject.SetActive(false);
+        }
     }
-    
-    private void OnStartServer()
+
+    private void UpdateLanguageText()
     {
-        NetworkManager.Singleton.StartServer();
-        Debug.Log("Server Started");
-        OnNetworkStart();
+        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+
+        if (titleText != null)
+            titleText.text = isJapanese ? japaneseTitleText : englishTitleText;
+        if (descriptionText != null)
+            descriptionText.text = isJapanese ? japaneseDescriptionText : englishDescriptionText;
+        if (hostButtonText != null)
+            hostButtonText.text = isJapanese ? japaneseHostText : englishHostText;
+        if (stopDiscoverButtonText != null)
+            stopDiscoverButtonText.text = isJapanese ? japaneseStopDiscoverText : englishStopDiscoverText;
+        if (exitButtonText != null)
+            exitButtonText.text = isJapanese ? japaneseExitText : englishExitText;
+
+        discoverTextDefault = isJapanese ? japaneseDiscoverText : englishDiscoverText;
+        refreshText = isJapanese ? japaneseRefreshText : englishRefreshText;
+
+        if (discovertext != null)
+            discovertext.text = discoverTextDefault;
     }
+
     private void OnStartHost()
     {
         NetworkManager.Singleton.StartHost();
         Debug.Log("Host Started");
+        networkConnectionEvent.Invoke(true);
         OnNetworkStart();
     }
-    private void OnStartClient()
-    {
-        NetworkManager.Singleton.StartClient();
-        Debug.Log("Client Started");
-        OnNetworkStart();
-    }
+
     private void OnExitNetwork()
     {
-        if (isNetworkStarted)
-        {
-            if (NetworkManager.Singleton.IsServer)
-            {
-                NetworkManager.Singleton.Shutdown();
-                Debug.Log("Server Stopped");
-            }
-            else if (NetworkManager.Singleton.IsHost)
-            {
-                NetworkManager.Singleton.Shutdown();
-                Debug.Log("Host Stopped");
-            }
-            else if (NetworkManager.Singleton.IsClient)
-            {
-                NetworkManager.Singleton.Shutdown();
-                Debug.Log("Client Stopped");
-            }
-            isNetworkStarted = false;
-            SetActiveButtons(true);
-            StopDiscovery();
+        if (!isNetworkStarted) return;
 
-        }
-        else
-        {
-            Debug.LogWarning("Network is not started. Cannot exit network.");
-        }
+        NetworkManager.Singleton.Shutdown();
+        Debug.Log("Network Stopped");
+        isNetworkStarted = false;
+        networkConnectionEvent.Invoke(false);
+        StopDiscovery();
+        SetActiveButtons(true);
     }
+
     public void OnNetworkStart()
     {
         isNetworkStarted = true;
-        SetActiveButtons(false);   
+        SetActiveButtons(false);
+        titleFlowManager.EnterWorldView();
     }
+
     private void SetActiveButtons(bool active)
     {
-        ServerButton.gameObject.SetActive(active);
-        HostButton.gameObject.SetActive(active);
-        ClientButton.gameObject.SetActive(active);
-        DiscoveryButton.gameObject.SetActive(active);
-
-        ExitButton.gameObject.SetActive(!active);
+        HostButton?.gameObject.SetActive(active);
+        DiscoveryButton?.gameObject.SetActive(active);
+        StopDiscoveryButton?.gameObject.SetActive(false);
+        ExitButton?.gameObject.SetActive(!active);
     }
+
     private void StartDiscover()
     {
         if (m_Discovery.IsRunning)
         {
             RefreshList();
+            m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
         }
         else
         {
-            discovertext.text = "Refresh List";
-            StopDiscoveryButton.gameObject.SetActive(true);
             m_Discovery.StartClient();
+            m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
         }
-        m_Discovery.ClientBroadcast(new DiscoveryBroadcastData());
+
+        if (discovertext != null)
+            discovertext.text = refreshText;
+
+        StopDiscoveryButton?.gameObject.SetActive(true);
     }
+
     private void StopDiscovery()
     {
-        discovertext.text = "Discover";
         m_Discovery.StopDiscovery();
         RefreshList();
-        StopDiscoveryButton.gameObject.SetActive(false);
 
+        if (discovertext != null)
+            discovertext.text = discoverTextDefault;
+
+        StopDiscoveryButton?.gameObject.SetActive(false);
+        DiscoveryButton?.gameObject.SetActive(true);
     }
+
     private void RefreshList()
     {
         discoveredServers.Clear();
@@ -157,9 +206,11 @@ public class Scripts : MonoBehaviour
             connectionButtonUnActiveQueue.Enqueue(button);
         }
     }
+
     private void OnServerFound(IPEndPoint sender, DiscoveryResponseData response)
     {
         discoveredServers[sender.Address] = response;
+
         Button button;
         if (connectionButtonUnActiveQueue.Count > 0)
         {
@@ -167,21 +218,40 @@ public class Scripts : MonoBehaviour
         }
         else
         {
-            var obj = GameObject.Instantiate(connectionButtonPrefab, canvasTransfrom);
+            var obj = Instantiate(connectionButtonPrefab, canvasTransfrom);
             button = obj.GetComponent<Button>();
-            connectionButtonActiveQueue.Enqueue(button);
         }
-        button.GetComponentInChildren<TextMeshProUGUI>().text = $"{response.ServerName}[{sender}]";
-        button.onClick.AddListener(() => ConnectedToServer(sender.Address.ToString(), response.Port));
+
+        // ★ テキストを日英対応に変更
+        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+        button.GetComponentInChildren<TextMeshProUGUI>().text =
+            isJapanese ? japaneseRoomFoundText : englishRoomFoundText;
+
+        // ★ ボタンの色を赤に変更
+        ColorBlock colors = button.colors;
+        colors.normalColor = new Color(0.6f, 0.05f, 0.05f, 1f);
+        colors.highlightedColor = new Color(0.8f, 0.1f, 0.1f, 1f);
+        colors.pressedColor = new Color(0.4f, 0.02f, 0.02f, 1f);
+        button.colors = colors;
+
+        // ★ テキストの色を金色に変更
+        button.GetComponentInChildren<TextMeshProUGUI>().color =
+            new Color(1f, 0.78f, 0.2f, 1f);
+
+        button.onClick.AddListener(() =>
+            ConnectedToServer(sender.Address.ToString(), response.Port));
         button.gameObject.SetActive(true);
+        connectionButtonActiveQueue.Enqueue(button);
     }
-    private void ConnectedToServer(string address,ushort port)
+
+    private void ConnectedToServer(string address, ushort port)
     {
         transport ??= (UnityTransport)m_NetworkManager.NetworkConfig.NetworkTransport;
         transport.SetConnectionData(address, port);
         m_NetworkManager.StartClient();
         OnClientStart.Invoke();
         OnNetworkStart();
-        StopDiscoveryButton.gameObject.SetActive(false);
+        networkConnectionEvent.Invoke(true);
+        StopDiscoveryButton?.gameObject.SetActive(false);
     }
 }

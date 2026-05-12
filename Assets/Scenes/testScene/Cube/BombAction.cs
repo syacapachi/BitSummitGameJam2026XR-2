@@ -32,9 +32,17 @@ public class BombAction : NetworkBehaviour,IDamageSender
     public GameObject GameObject => this.gameObject;
 
     public float Damage => explosionDamage;
+    private IResultCollector collectr = null;
+
+    public IResultCollector ResultCollector => collectr;
+
     void Start()
     {
         mainCamera = Camera.main;
+    }
+    public void Init(IResultCollector collectr)
+    {
+        this.collectr = collectr;
     }
 
     public override void OnNetworkSpawn()
@@ -104,11 +112,6 @@ public class BombAction : NetworkBehaviour,IDamageSender
                 SendDamage(damageReciever, explosionDamage);
             }
         }
-    }
-    private void OnGUI()
-    {
-        Vector3 position = mainCamera.WorldToScreenPoint(transform.position);
-        GUI.Label(new Rect(position.x, Screen.height - position.y, 100, 20), $"Timer: {timer.Value:F1}");
     }
     public void SendDamage(IDamageReciever reciever, float damage)
     {

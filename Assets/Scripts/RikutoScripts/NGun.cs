@@ -1,39 +1,89 @@
-﻿using UnityEngine;
+﻿using Syacapachi.Attribute;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.XR;
 public class NGun : GunController
 {
+    [Header("LocalBullet")]
+    [SerializeField] bool useLocalBullet = false;
+    [SerializeField, EnableIf(nameof(useLocalBullet), hideWhenFalse = true)]
+    GameObject localBulletPrefab;
+    [Header("Fps")]
+    [SerializeField] Transform playerHead;
+    [Header("gun")]
     [SerializeField] LineRenderer laserLine;
     [SerializeField] NGunAudioObserver audioObserver;
     [SerializeField] AmmoUI ammoUI;
     [SerializeField] PlayerStats playerStats;
     [Header("Subscribe Event")]
+    [SerializeField] VoidEvent changeLocalBulletEvent;
     [SerializeField] VoidEvent fireEvent;
+    [SerializeField] GameEffectDataEvent networkEvent;
+
+    protected override IResultCollector Collector => playerStats;
+    public override Transform FirePoint 
+    {
+        get
+        {
+            if (!XRSettings.isDeviceActive)
+            {
+                return playerHead;
+            }
+            return base.FirePoint;
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
         {
-            //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed += base.Activate;
-            fireEvent.Register(base.Activate);
+            changeLocalBulletEvent.Register(ChangeLocalBullet);
+            fireEvent.Register(Activate);
+            StartCoroutine(LaserUpdateCoroutine());
+
+            laserLine.enabled = XRSettings.isDeviceActive;
+        }
+        else
+        {
+            laserLine.enabled = false;
         }
     }
     public override void OnNetworkDespawn()
     {
         if (IsOwner) 
         {
-            //ManagerLocator.Instance.AllPlayerManager.LocalPlayerRoot.InputReciver.OnFireed -= base.Activate;
-            fireEvent.Unregister(base.Activate);
+            changeLocalBulletEvent.Unregister(ChangeLocalBullet);
+            fireEvent.Unregister(Activate);
         }
     }
-    
-    public override void OnLostOwnership()
+    public override void Activate()
     {
-
+        base.Activate();
+        var Locator = ManagerLocator.Instance;
+        if (Locator == null || Locator.GameStateManager == null || Locator.LocalObjectPool == null) return;
+        if (!Locator.GameStateManager.IsGamePlaying) return;
+        if (useLocalBullet)
+        {
+            var obj = Locator.LocalObjectPool.Get(localBulletPrefab);
+            obj.transform.SetPositionAndRotation(FirePoint.position, FirePoint.rotation);
+            if (obj.TryGetComponent<LocalBullet>(out var localBullet))
+            {
+                localBullet.BulletInit(WeaponSettings.bulletSetting);
+            }
+        }
     }
-    void Update()
+    private void ChangeLocalBullet()
     {
-        if (!IsOwner) return;
-
-        UpdateLaser();
+        useLocalBullet = !useLocalBullet;
+    }
+    //オーナー以外で毎フレームチェックさせるオーバーヘッドをなくすためコルーチン化
+    IEnumerator LaserUpdateCoroutine()
+    {
+        while (IsOwner)
+        {
+            UpdateLaser();
+            yield return null;
+        }
     }
 
     void UpdateLaser()
@@ -44,10 +94,9 @@ public class NGun : GunController
         laserLine.SetPosition(0, FirePoint.position);
 
         // Raycast �Œ��e�_�𔻒�
-        RaycastHit hit;
         Vector3 forward = FirePoint.forward;
 
-        if (Physics.Raycast(FirePoint.position, forward, out hit, WeaponSettings.laserDistance))
+        if (Physics.Raycast(FirePoint.position, forward, out RaycastHit hit, WeaponSettings.laserDistance))
         {
             // ���������ꍇ
             laserLine.SetPosition(1, hit.point);
@@ -113,14 +162,17 @@ public class NGun : GunController
     protected override void OnShootServer()
     {
         base.OnShootServer();
-        playerStats.AddShot();
+        if (playerStats != null)
+            playerStats.AddShot();
     }
     public override void UpdateProgress(float progress)
     {
+        if (ammoUI == null) return;
         ammoUI.UpdateProgress(progress);
     }
     public override void UpdateCount(int remainVal, int maxVal)
     {
+        if (ammoUI == null) return;
         ammoUI.UpdateCount(remainVal, maxVal);
     }
     public override void PlayReloadSound()

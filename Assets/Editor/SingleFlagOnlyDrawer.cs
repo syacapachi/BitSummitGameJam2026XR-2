@@ -126,13 +126,7 @@ namespace Syacapachi.Editor
 
         int MaskToLayer(int mask)
         {
-            if (mask == 0) return -1;
-
-            for (int i = 0; i < 32; i++)
-            {
-                if (mask == (1 << i))
-                    return i;
-            }
+            if (mask <= 0) return 0;
 
             // 複数Layerが入ってた場合 → 最初の1つだけ返す
             for (int i = 0; i < 32; i++)
@@ -141,7 +135,7 @@ namespace Syacapachi.Editor
                     return i;
             }
 
-            return -1;
+            return 0;
         }
 
         int LayerToMask(int layer)

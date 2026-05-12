@@ -9,9 +9,9 @@
 	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 	<!-- WifiのIPアドレスの取得） -->
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<!-- Wifiの詳細情報にアクセスする） -->
+	<!-- connectivityManager が持つ Wifiの詳細情報にアクセス許可(最近のAndroid) -->
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<!-- Dhcp サブネットマスクとかのアクセス許可 -->
+	<!-- Dhcp のアクセス許可 (古いAndroid) -->
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<!-- Socket,HTTPなどの接続許可(NetCode必須) -->
 	<uses-permission android:name="android.permission.INTERNET" />

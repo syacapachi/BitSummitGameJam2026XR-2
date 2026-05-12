@@ -4,13 +4,17 @@
 public class PhaseSO : ScriptableObject
 {
     [Header("Phase Display Setting")]
-    [SerializeField] string phaseDisplayName;
+    [SerializeField] LocalizeSimpleText phaseName;
 
-    public string PhaseDisplayName => phaseDisplayName;
+    public string PhaseDisplayNameEN => phaseName.GetText(false);
+    public string PhaseDisplayNameJP => phaseName.GetText(true);
 
     [Header("Phase Settings")]
     [SerializeField] float phaseTime = 30f;
     [SerializeField] int clearBonus = 500;
+    [SerializeField] bool useRandomSpawn = false;
+
+    public bool UseRandomSpawn => useRandomSpawn;
 
     public float PhaseTime => phaseTime;
     public int ClearBonus => clearBonus;
@@ -22,13 +26,24 @@ public class PhaseSO : ScriptableObject
 }
 
 [System.Serializable]
-public class SpawnEvent
+public struct SpawnEvent
 {
     [SerializeField] EnemySO enemyType;   // 敵の種類
     [SerializeField] int spawnPointIndex; // 出現位置
     [SerializeField] float spawnTime;     // 何秒後に出るか（phase開始から）
+    [SerializeField] bool forceSpawn;
 
-    public EnemySO EnemyType => enemyType;
-    public int SpawnPointIndex => spawnPointIndex;
-    public float SpawnTime => spawnTime;
+    public readonly EnemySO EnemyType => enemyType;
+    public readonly int SpawnPointIndex => spawnPointIndex;
+    public readonly float SpawnTime => spawnTime;
+
+    public readonly bool ForceSpawn => forceSpawn;
+
+    public SpawnEvent(EnemySO so, int spawnPointIndex, float spawnTime,bool forceSpawn = false)
+    {
+        enemyType = so;
+        this.spawnPointIndex = spawnPointIndex;
+        this.spawnTime = spawnTime;
+        this.forceSpawn = forceSpawn;
+    }
 }

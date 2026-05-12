@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e738f9d64c2d54b960159c48581a4c, type: 3}
+  m_Name: WorldViewTexts
+  m_EditorClassIdentifier: 
+  japaneseTexts:
+  - titie: "\u53CC\u5B50\u306E\u970A\u5A92\u5E2B"
+    Description: "\u3075\u305F\u308A\u306F\u53CC\u5B50\u306E\u30A8\u30FC\u30B8\u30A7\u30F3\u30C8\u3002\u304A\u4ED5\u4E8B\u306F\u300C\u5316\u3051\u7269\u9000\u6CBB\u300D\uFF01\u4ECA\u56DE\u306E\u4F9D\u983C\u5834\u6240\u306F\u2026\u68EE\u306E\u5965\u306B\u3042\u308B\u4E0D\u6C17\u5473\u306A\u304A\u5C4B\u6577\u3060\uFF01"
+  - titie: "\u970A\u529B\u306E\u6CD5\u5247"
+    Description: "\u3053\u306E\u304A\u5C4B\u6577\u306B\u306F\u4E0D\u601D\u8B70\u306A\u30EB\u30FC\u30EB\u304C\u3042\u308B\u3002\u81EA\u5206\u306B\u898B\u3048\u3066\u3044\u308B\u5316\u3051\u7269\u306B\u306F\u653B\u6483\u304C\u304D\u304B\u306A\u3044\uFF01\u898B\u3048\u3066\u3044\u306A\u3044\u76F8\u65B9\u3060\u3051\u304C\u5012\u305B\u308B\u3093\u3060\uFF01"
+  - titie: "\u4ECA\u56DE\u306E\u4F9D\u983C"
+    Description: "\u5316\u3051\u7269\u305F\u3061\u3092\u5168\u54E1\u5012\u3057\u3066\u591C\u660E\u3051\u307E\u3067\u751F\u304D\u6B8B\u308C\uFF01\u3084\u3089\u308C\u3066\u3057\u307E\u3046\u3068\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC\u3002\u3075\u305F\u308A\u3067\u529B\u3092\u5408\u308F\u305B\u308D\uFF01"
+  - titie: "\u64CD\u4F5C\u8AAC\u660E"
+    Description: "\u53F3\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9\u30FC\u306E\u30C8\u30EA\u30AC\u30FC\u3092\u5F15\u304F\u3068\u5F3E\u304C\u51FA\u308B\u3088\uFF01\u76F8\u65B9\u306B\u5316\u3051\u7269\u306E\u5834\u6240\u3092\u4F1D\u3048\u306A\u304C\u3089\u6226\u304A\u3046\uFF01"
+  englishTexts:
+  - titie: Twin Mediums
+    Description: "The twin spirit mediums were born with the ability\r\nto see supernatural
+      beings invisible to ordinary people.\r\n\r\nTheir aura attributes differ:\r\nGhost
+      aura \u2192 can only see Ghosts\r\nDemon aura \u2192 can only see Demons"
+  - titie: Law of Spiritual Power
+    Description: "Spiritual power resonates between same attributes,\r\ncausing attacks
+      to scatter.\r\n\r\nIn other words\u2014\u2014\r\nYou cannot defeat enemies
+      you can see.\r\nYou can defeat enemies you cannot see.\r\n\r\nReport to your
+      partner\u2014\u2014cooperation is the key to survival."
+  - titie: The Mission
+    Description: "Destination: A mansion deep in the forest.\r\n\r\nThe crystal stored
+      in the mansion is the core of the seal.\r\nAt night, supernatural beings attack
+      to destroy it.\r\n\r\nIf the crystal's HP reaches 0\u2014\u2014the seal collapses.
+      Mission failed.\nSurvive the onslaught and make it through the night.\r\n\r\nurvive
+      the onslaught and make it through the night."
+  - titie: Controls
+    Description: 'Controls
+
+
+
+
+
+      Pull the right trigger to shoot.
+
+      Bullets
+      auto-reload.
+
+'

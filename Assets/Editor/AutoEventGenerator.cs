@@ -3,8 +3,10 @@ namespace Syacapachi.util
 {
     using Syacapachi.Attribute;
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using UnityEditor;
     using UnityEditor.Callbacks;
     using UnityEngine;
@@ -22,19 +24,28 @@ namespace Syacapachi.util
         { 
             GenerateAll();
         }
+        //UnityEditorのstaticは、Editor更新時に再生成される。(設定でOFFにしなければ)
+        static readonly HashSet<string> cachedTypeNames = 
+            new(
+                //キャッシュにあるすべてのTypeの名前を登録
+                TypeCache.GetTypesDerivedFrom<object>()
+                .Select(t => t.Name)
+            );
 
         static void GenerateAll()
         {
+            bool generated = false;
             //アセンブリからGenerateEventAttributeがついたクラス・構造体を検索
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => t.GetCustomAttributes(typeof(GenerateEventAttribute), false).Length > 0);
+            //var types = AppDomain.CurrentDomain.GetAssemblies()
+            //    .SelectMany(a => a.GetTypes())
+            //    .Where(t => t.GetCustomAttributes(typeof(GenerateEventAttribute), false).Length > 0);
+
+            //Unity内部のキャッシュで検索高速化
+            var types = TypeCache.GetTypesWithAttribute<GenerateEventAttribute>();
 
             foreach (var type in types)
             {
-                var attr = (GenerateEventAttribute)type
-                    .GetCustomAttributes(typeof(GenerateEventAttribute), false)
-                    .First();
+                var attr = type.GetCustomAttribute<GenerateEventAttribute>(false);
                 //<T>か調べる
                 if (!attr.GenerateClass.IsGenericType)
                 {
@@ -84,17 +95,19 @@ public class {className} : {GenerateClassName}<{inlineClassName}>
 ";
 
                 File.WriteAllText(path, code);
+                generated = true;
                 Debug.Log($"[{nameof(AutoEventGenerator)}]Create new Script At :{path},Name = {className} extends {GenerateClassName}");
             }
-
-            AssetDatabase.Refresh();
+            //生成時のみリフレッシュ
+            if (generated)
+            {
+                AssetDatabase.Refresh();
+            }
         }
 
         static bool AlreadyExists(string className)
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Any(t => t.Name == className);
+            return cachedTypeNames.Contains(className);
         }
 
         static void EnsureFolder(string path)

@@ -1,129 +1,141 @@
+ï»¿using TMPro;
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
 using UnityEngine.UI;
 
-public class WorldViewManager : MonoBehaviour
+public class WorldViewManager : NetworkBehaviour
 {
-    [Header("ŠÅ”Â‚ÌƒeƒLƒXƒg•\¦—“")]
-    public TextMeshProUGUI boardText;
+    [Header("Refernce")]
+    [SerializeField] GameStateManager gameStateManager;
+    private NetworkVariable<int> pageIndex = new(
+        0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
 
-    [Header("ƒ^ƒCƒgƒ‹ƒeƒLƒXƒg")]
-    public TextMeshProUGUI titleText;
+    [Header("UI")]
+    [SerializeField] TextMeshProUGUI boardText;
+    [SerializeField] TextMeshProUGUI titleText;
+    [SerializeField] TextMeshProUGUI buttonText;
+    [SerializeField] TextMeshProUGUI backButtonText;
+    [SerializeField] Button backButton;
+    [SerializeField] WorldViewData worldViewData;
 
-    [Header("Ÿ‚Öƒ{ƒ^ƒ“")]
-    public Button nextButton;
+    /*
+    [Header("Canvasç®¡ç†")]
+    [SerializeField] private BoolEvent connectCanvasEvent;
+    [SerializeField] private Canvas boardCanvas;
+    */
 
-    [Header("ƒ{ƒ^ƒ“‚ÌƒeƒLƒXƒg")]
-    public TextMeshProUGUI buttonText;
+    [Header("ãƒšãƒ¼ã‚¸è¨­å®š")]
+    [SerializeField] private int totalBoards = 5;
 
-    [Header("ƒ[ƒJƒ‰ƒCƒYƒeƒLƒXƒg")]
-    public LocalizedText localizedText;
+    [Header("ãƒœã‚¿ãƒ³ãƒ†ã‚­ã‚¹ãƒˆè¨­å®š")]
+    [SerializeField] LocalizeSimpleText nextButtonText;
+    [SerializeField] LocalizeSimpleText closeText;
+    [SerializeField] LocalizeSimpleText backText;
 
-    [Header("BGM")]
-    public AudioSource bgmSource;
-    public AudioClip bgmClip;
+    /*
+    [Header("ã‚·ãƒ¼ãƒ³è¨­å®š")]
+    SerializeField,Scene(true)] string tutorialScene;
+    SerializeField,Scene(true)] string gameScene;
 
-    [Header("ŠÂ‹«‰¹")]
-    public AudioSource ambientSource;
-    public AudioClip ambientClip;
-
-    // Œ»İ‰½–‡–Ú‚ÌŠÅ”Â‚ğ•\¦‚µ‚Ä‚¢‚é‚©
-    private int currentIndex = 0;
-
-    // ŠÅ”Â‚Í‘S•”‚Å4–‡i¢ŠEŠÏ3–‡{‘€ìà–¾1–‡j
-    private int totalBoards = 4;
-
-    // ŠeŠÅ”Â‚Ìƒ^ƒCƒgƒ‹i“ú–{Œêj
-    private string[] japaneseTitles = {
-        "‘oq‚Ì—ì”}t",
-        "—ì—Í‚Ì–@‘¥",
-        "¡‰ñ‚ÌˆË—Š",
-        "‘€ìà–¾"
-    };
-
-    // ŠeŠÅ”Â‚Ìƒ^ƒCƒgƒ‹i‰pŒêj
-    private string[] englishTitles = {
-        "Twin Mediums",
-        "Law of Spiritual Power",
-        "The Mission",
-        "Controls"
-    };
-
-    void Start()
+    [SerializeField,Scene(true)] string gameSceneName;
+    */
+    /*
+    private void Start()
     {
-        // BGM‚ğÄ¶‚·‚é
-        if (bgmSource != null && bgmClip != null)
+        // connectCanvasEvent?.Invoke(); â† å‰Šé™¤ï¼šStart()ã§ã¯å‘¼ã°ãªã„
+        if (!IsSpawned)
         {
-            bgmSource.clip = bgmClip;
-            bgmSource.loop = true;
-            bgmSource.Play();
+            if (boardCanvas != null)
+                boardCanvas.enabled = false;
         }
-
-        // ŠÂ‹«‰¹‚ğÄ¶‚·‚é
-        if (ambientSource != null && ambientClip != null)
-        {
-            ambientSource.clip = ambientClip;
-            ambientSource.loop = true;
-            ambientSource.Play();
-        }
-
-        // Å‰‚ÌŠÅ”Â‚ğ•\¦‚·‚é
-        ShowBoard(currentIndex);
+    }
+    */
+    //OnNetworkSpanã¯ã€ãƒãƒƒãƒˆæ¥ç¶šæ™‚ã«SetActive(true)ã§ãªã„ã¨å‘¼ã°ã‚Œãªã„ã®ã§ã€Canvsã®ã¿ç„¡åŠ¹ã«ã™ã‚‹ã€‚
+    public override void OnNetworkSpawn()
+    {
+        Debug.Log("WorldViewManager OnNetworkSpawn called");
+        //if (boardCanvas != null) boardCanvas.enabled = true;
+        pageIndex.OnValueChanged += OnPageChanged;
+        ShowPage(pageIndex.Value);
     }
 
-    // ŠÅ”Â‚ğ•\¦‚·‚éƒƒ\ƒbƒh
-    void ShowBoard(int index)
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        pageIndex.OnValueChanged -= OnPageChanged;
+        //if (boardCanvas != null) boardCanvas.enabled = false;
+    }
+
+    public void OnNextButtonClicked() => RequestNextPageRpc();
+
+    [Rpc(SendTo.Server)]
+    void RequestNextPageRpc()
+    {
+        if (pageIndex.Value >= totalBoards - 1)
+        {
+            gameStateManager.OnGameInitialize();
+            return;
+        }
+        pageIndex.Value++;
+    }
+
+    public void OnBackButtonClicked() => RequestBackPageRpc();
+
+    [Rpc(SendTo.Server)]
+    void RequestBackPageRpc()
+    {
+        if (pageIndex.Value <= 0) return;
+        pageIndex.Value--;
+    }
+
+    void OnPageChanged(int oldValue, int newValue) => ShowPage(newValue);
+
+    void ShowPage(int index)
     {
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
 
-        // –{•¶ƒeƒLƒXƒg‚ğXV‚·‚é
-        if (localizedText != null && boardText != null)
-        {
-            boardText.text = localizedText.Get(index);
-        }
+        if (boardText != null)
+            boardText.text = isJapanese
+                ? worldViewData.japaneseTexts[index].Replace("\\n", "\n")
+                : worldViewData.englishTexts[index].Replace("\\n", "\n");
 
-        // ƒ^ƒCƒgƒ‹ƒeƒLƒXƒg‚ğXV‚·‚é
         if (titleText != null)
-        {
-            if (isJapanese)
-            {
-                titleText.text = japaneseTitles[index];
-            }
-            else
-            {
-                titleText.text = englishTitles[index];
-            }
-        }
+            titleText.text = isJapanese
+                ? worldViewData.japaneseTitles[index]
+                : worldViewData.englishTitles[index];
 
-        // ÅŒã‚ÌŠÅ”Â‚È‚çƒ{ƒ^ƒ“‚ÌƒeƒLƒXƒg‚ğu•Â‚¶‚év‚É•Ï‚¦‚é
         if (buttonText != null)
-        {
-            if (index >= totalBoards - 1)
-            {
-                buttonText.text = isJapanese ? "•Â‚¶‚é" : "Close";
-            }
-            else
-            {
-                buttonText.text = isJapanese ? "Ÿ‚Ö" : "Next";
-            }
-        }
+            buttonText.text = index >= totalBoards - 1
+                ? closeText.GetText(isJapanese)
+                : nextButtonText.GetText(isJapanese);
+
+        if (backButtonText != null)
+            backButtonText.text = backText.GetText(isJapanese);
+
+        if (backButton != null)
+            backButton.gameObject.SetActive(index > 0);
     }
 
-    // ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚éƒƒ\ƒbƒh
-    public void OnNextButtonClicked()
-    {
-        currentIndex++;
+    //void MoveScene()
+    //{
+    //    if (!IsServer) return;
+    //    /*
+    //    if (isTutorialSkip)
+    //    {
+    //        Debug.Log($"[{nameof(WorldViewManager)}] Loading {gameScene.name}");
+    //        NetworkManager.Singleton.SceneManager.LoadScene(gameScene.name, LoadSceneMode.Single);
+    //    }
+    //    else
+    //    {
+    //        Debug.Log($"[{nameof(WorldViewManager)}] Loading {tutorialScene.name}");
+    //        NetworkManager.Singleton.SceneManager.LoadScene(tutorialScene.name, LoadSceneMode.Single);
+    //    }
+    //    */
+    //    Debug.Log($"[{nameof(WorldViewManager)}] Loading {gameSceneName}");
+    //    NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
+    //}
 
-        // ‚Ü‚¾ŠÅ”Â‚ªc‚Á‚Ä‚¢‚é‚È‚çŸ‚ÌŠÅ”Â‚ğ•\¦
-        if (currentIndex < totalBoards)
-        {
-            ShowBoard(currentIndex);
-        }
-        else
-        {
-            // ‘S•”‚ÌŠÅ”Â‚ğŒ©I‚í‚Á‚½‚çTutorialScene‚ÖˆÚ“®
-            SceneManager.LoadScene("TutorialScene");
-        }
-    }
 }

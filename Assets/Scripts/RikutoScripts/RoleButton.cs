@@ -23,26 +23,26 @@ public class RoleButton : NetworkBehaviour
 
         if (damageSender is not NBullet bullet) return;
 
-        ulong shooterId = bullet.ShooterId;
+        ulong shooterId = bullet.ResultCollector.ClientId;
 
         if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(shooterId, out var client))
             return;
 
-        var player = client.PlayerObject.GetComponentInChildren<PlayerPropaty>();
+        var player = client.PlayerObject.GetComponentInChildren<NetworkPlayerPropaty>();
         if (player == null) return;
 
         SetRole(player);
         HideClientRpc();
     }
 
-    void SetRole(PlayerPropaty player)
+    void SetRole(NetworkPlayerPropaty player)
     {
         Debug.Log("SetRole called");
 
         if (role == RoleType.Human)
         {
             Debug.Log("Setting Human");
-            player.Job = PlayerJob.Human;
+            player.Job = PlayerJob.Demon;
             startButton.SelectHuman();
         }
         else

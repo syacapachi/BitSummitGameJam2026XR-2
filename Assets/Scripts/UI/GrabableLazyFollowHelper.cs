@@ -1,14 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Transformers;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 [RequireComponent(typeof(LazyFollow))]
 [RequireComponent(typeof(XRGrabInteractable))]
+[RequireComponent(typeof(XRGeneralGrabTransformer))]
 public class GrabableLazyFollowHelper : MonoBehaviour
 {
-    [HideInInspector, SerializeField]
+    [SerializeField]
     LazyFollow m_LazyFollow;
-    [HideInInspector,SerializeField]
+    [SerializeField]
     XRGrabInteractable m_GrabInteractable;
     [SerializeField] Camera Camera;
     private void Awake()
@@ -41,6 +43,7 @@ public class GrabableLazyFollowHelper : MonoBehaviour
     }
     public void SetTargetOffset()
     {
+        //カメラに対する相対座標を計算する。Vector3同士の引き算ではScaleが考慮されないので注意
         Vector3 point = Camera.transform.InverseTransformPoint(this.transform.position);
         if(point.z < 0f) point.z = -point.z;
         m_LazyFollow.targetOffset = point;
@@ -49,5 +52,10 @@ public class GrabableLazyFollowHelper : MonoBehaviour
     {
         m_LazyFollow = GetComponent<LazyFollow>();
         m_GrabInteractable = GetComponent<XRGrabInteractable>();
+        if(TryGetComponent<Rigidbody>(out var rigidbody))
+        {
+            rigidbody.isKinematic = true;
+            rigidbody.useGravity = false;
+        }
     }
 }

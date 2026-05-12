@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireInterval: 0.2
   maxAmmo: 20
-  reloadTime: 3
-  speed: 30
+  reloadTime: 2
   laserDistance: 100
-  damage: 100
-  target: 0
+  bulletSetting: {fileID: 11400000, guid: e84d09d992a233d48b95af49e34f3fe8, type: 2}

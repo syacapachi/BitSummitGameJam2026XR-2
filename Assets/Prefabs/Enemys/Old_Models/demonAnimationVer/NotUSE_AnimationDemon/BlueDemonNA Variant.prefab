@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4445744594062972806
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1073023365163605807, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: spawnFxLifeTimeAll
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494804037057244283, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494804037057244283, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494804037057244283, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494804037057244283, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494804037057244283, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494804037057244283, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494804037057244283, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494804037057244283, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494804037057244283, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494804037057244283, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2663368294603694058, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1569615606
+      objectReference: {fileID: 0}
+    - target: {fileID: 2663368294603694058, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 612826626
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067321379482885418, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 2038955630852635262}
+    - target: {fileID: 6067321379482885418, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: networkAnimator
+      value: 
+      objectReference: {fileID: 1105445683930374860}
+    - target: {fileID: 6667643625726899027, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+      propertyPath: m_Name
+      value: BlueDemonNA Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 6234789069370190068, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+--- !u!114 &1105445683930374860 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3667374688630486346, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+  m_PrefabInstance: {fileID: 4445744594062972806}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &2038955630852635262 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2448170875422010872, guid: 7d31ea99dea3e654580c2396764ee048, type: 3}
+  m_PrefabInstance: {fileID: 4445744594062972806}
+  m_PrefabAsset: {fileID: 0}

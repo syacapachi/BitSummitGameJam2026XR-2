@@ -1,85 +1,96 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class AlertLightController : MonoBehaviour
 {
     [SerializeField] GameObject alertObject;
 
     [Header("Setting")]
-    [SerializeField] int threshold = 2000;
     [SerializeField] float rotateSpeed = 100f;
 
-    float timer = 0f;
     [SerializeField] float interval = 3f;
     [SerializeField] AudioClip buzzerClip;
+    [SerializeField] AudioEffectData buzzerEffectData;
 
+    [Header("Subscribe Event")]
+    [SerializeField] HPInfoEvent hpInfo;
+    [SerializeField] BoolEvent alertRpcEvent;
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffectEvent;
+    [SerializeField] BoolEvent WarningStateEvent;
 
     bool isActive = false;
-
-    ScoreManager scoreManager;
 
     void Awake()
     {
         if (alertObject != null)
             alertObject.SetActive(false);
     }
-
-    void Start()
+    private void OnEnable()
     {
-        var locator = ManagerLocator.Instance;
-        Debug.Log("Locator: " + locator);
-
-        var gameManager = locator?.AllGameManager;
-        Debug.Log("GameManager: " + gameManager);
-
-        scoreManager = gameManager?.ScoreManager;
-        Debug.Log("ScoreManager: " + scoreManager);
+        alertRpcEvent.Register(OnAlert);
+        WarningStateEvent.Register(OnWarningState);
     }
-
-    void Update()
+    private void OnDisable()
     {
-        if (scoreManager == null) return;
-
-
-        int score = scoreManager.GetScore();
-
-        if (score <= threshold)
+        alertRpcEvent.Unregister(OnAlert);
+        WarningStateEvent.Unregister(OnWarningState);
+    }
+    void OnAlert(bool alert)
+    {
+        if (alert)
         {
-            if (!isActive) ActivateAlert();
+            ActivateAlert();
         }
         else
         {
-            if (isActive) DeactivateAlert();
-        }
-
-        if (isActive && alertObject != null)
-        {
-            alertObject.transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
-            timer += Time.deltaTime;
-
-            if (timer >= interval)
-            {
-                gameEffectEvent.Invoke(new GameEffect(buzzerClip, alertObject.transform.position));
-
-                timer = 0f;
-            }
+            DeactivateAlert();
         }
     }
 
     void ActivateAlert()
     {
+        if (isActive) return;
         isActive = true;
 
         if (alertObject != null)
             alertObject.SetActive(true);
+
+        StartCoroutine(BuzzerRotateCoroutine());
+        StartCoroutine(BuzzerCoroutine());
     }
 
     void DeactivateAlert()
     {
+        if(!isActive) return;
         isActive = false;
 
         if (alertObject != null)
             alertObject.SetActive(false);
+    }
+    IEnumerator BuzzerRotateCoroutine()
+    {
+        while (isActive && alertObject != null)
+        {
+            alertObject.transform.Rotate(rotateSpeed * Time.deltaTime * Vector3.up);
+            yield return null;
+        }
+    }
+    IEnumerator BuzzerCoroutine()
+    {
+        WaitForSeconds waitInterval = new WaitForSeconds(interval);
+        while (isActive)
+        {
+            gameEffectEvent.Invoke(new GameEffect(buzzerEffectData.ToRuntimeData(), alertObject.transform.position));
+            yield return waitInterval;
+        }
+    }
+
+    void OnWarningState(bool active)
+    {
+        if (active)
+            ActivateAlert();
+        else
+            DeactivateAlert();
     }
 }

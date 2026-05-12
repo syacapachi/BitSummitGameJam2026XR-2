@@ -1,12 +1,9 @@
-﻿using UnityEngine;
+﻿ using UnityEngine;
 using Unity.Netcode;
 public class NGunAudioObserver : NetworkBehaviour, IShotSound, IReloadSound
 {
-    [SerializeField] private AudioClip shotClipAll;
-    [SerializeField] private AudioClip reloadClipAll;
-
-    [SerializeField, Range(0f, 1f)] private float shotVolumeAll = 1f;
-    [SerializeField, Range(0f, 1f)] private float reloadVolumeAll = 1f;
+    [SerializeField] AudioEffectData shotAudioEffect;
+    [SerializeField] AudioEffectData reloadAudioEffect;
 
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffectEvent; 
@@ -14,10 +11,10 @@ public class NGunAudioObserver : NetworkBehaviour, IShotSound, IReloadSound
 
     public void PlayShotSound()
     {
-        gameEffectEvent.Invoke(new GameEffect(shotClipAll, transform.position, volume: shotVolumeAll));
+        gameEffectEvent.Invoke(new GameEffect(shotAudioEffect.ToRuntimeData(), transform.position));
     }
     public void PlayReloadSound()
     {
-        gameEffectEvent.Invoke(new GameEffect(reloadClipAll, transform.position, volume: reloadVolumeAll));
+        gameEffectEvent.Invoke(new GameEffect(reloadAudioEffect.ToRuntimeData(), transform.position));
     }
 }

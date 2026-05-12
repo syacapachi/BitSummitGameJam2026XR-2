@@ -11,7 +11,10 @@ public class BGMManager : MonoBehaviour
     [SerializeField] AudioClip gameOverBGM;
     [Header("Subscribe Event")]
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
+    [SerializeField] BoolEvent WarningStateEvent;
     private AudioClip currentClip;
+    bool playFastNext = false;
+    bool isWarning = false;
 
     public void PlayBGM(AudioClip clip, bool loop)
     {
@@ -29,10 +32,12 @@ public class BGMManager : MonoBehaviour
     private void OnEnable()
     {
         OnGameStateChangeRpcEvent.Register(OnGameStateChanged);
+        WarningStateEvent.Register(OnWarningStateChanged);
     }
     private void OnDisable()
     {
         OnGameStateChangeRpcEvent.Unregister(OnGameStateChanged);
+        WarningStateEvent.Unregister(OnWarningStateChanged);
     }
     public void StopBGM()
     {
@@ -41,18 +46,40 @@ public class BGMManager : MonoBehaviour
     }
     private void OnGameStateChanged(GameState state)
     {
+        if (isWarning) return;
         switch (state)
         {
             case GameState.Playing:
+                bgmSource.pitch = 1f;
                 PlayBGM(playingBGM, true);
                 break;
             case GameState.Initializing:
+                bgmSource.pitch = 1f;
                 PlayBGM(waitingBGM, false);
                 break;
             case GameState.GameClear:
+                bgmSource.pitch = 1f;
                 PlayBGM(clearBGM, true); break;
             case GameState.GameOver:
+                bgmSource.pitch = 1f;
                 PlayBGM(gameOverBGM, false);break;
+            case GameState.Home:
+                StopBGM(); break;
+        }
+    }
+
+    void OnWarningStateChanged(bool active)
+    {
+        isWarning = active;
+
+        if (active)
+        {
+            StopBGM();
+        }
+        else
+        {
+            bgmSource.pitch = 1.3f;
+            PlayBGM(playingBGM, true);
         }
     }
 }

@@ -1,47 +1,58 @@
-﻿using UnityEngine;
+﻿using Syacapachi.Data;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
-using System.Collections;
+using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class ResultUI : MonoBehaviour
 {
-    private NGameManager nGameManager;
+    private static readonly WaitForSeconds _waitForSeconds1 = new WaitForSeconds(1f);
 
     [SerializeField] GameObject panel;
+    [SerializeField] LazyFollow follow;
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI titleText;
-    [SerializeField] private EnemySO[] enemyDatabase;
+    [SerializeField] TextMeshProUGUI coopText;
+    [SerializeField] EnemyDataBase enemyDatabase;
+    [Header("Prefab")]
     [SerializeField] private GameObject enemyRowPrefab;
+    [SerializeField] GameObject playerHeaderPrefab;
+    [Header("ContentPos")]
     [SerializeField] private Transform contentParent;
+    [Header("Font Setting")]
     [SerializeField] Font textFont;                 // 必要に応じて設定
     [SerializeField] int fontSizeHeader = 28;
     [SerializeField] int fontSizeStats = 22;
     [SerializeField] int fontSizeKill = 20;
+    [Header("テキスト設定")]
+    [SerializeField] LocalizeSimpleText gameClearText;
+    [SerializeField] LocalizeSimpleText gameOverText;
+    [SerializeField] LocalizeSimpleText youText;
+    [SerializeField] LocalizeSimpleText otherText;
+    [SerializeField] LocalizeSimpleText CooperationText;
+    [SerializeField] LocalizeSimpleText remainHPText;
+    [SerializeField] LocalizeSimpleText scoreText;
+    [SerializeField] LocalizeSimpleText killsText;
+    [SerializeField] LocalizeSimpleText HitsText;
+    [SerializeField] LocalizeSimpleText bonusText;
+    [SerializeField] LocalizeSimpleText shieldText;
+    [SerializeField] LocalizeSimpleText damageText;
 
     [Header("SubscribeEvent")]
     [SerializeField] GameStateEvent gameStateEvent;
-    [SerializeField] PlayerResultDataArrayEvent OnGameResultRpc;
+    [SerializeField] ResultDataEvent OnGameResultRpc;
 
-    private bool isGameOver = false;
-    IEnumerator Start()
+    private readonly List<GameObject> spawnedUIObjects = new();
+    void Start()
     {
-        // GameManager待機
-        while (ManagerLocator.Instance.AllGameManager == null)
-        {
-            yield return null;
-        }
-
-        nGameManager = ManagerLocator.Instance.AllGameManager;
-
-        Debug.Log("GameManager取得成功");
-
         InitializeUI();
     }
 
     void InitializeUI()
     {
         panel.SetActive(false);
-
     }
     private void OnEnable()
     {
@@ -55,10 +66,21 @@ public class ResultUI : MonoBehaviour
         gameStateEvent.Unregister(OnGameStateChanged);
     }
 
-    void OnGameFinished(PlayerResultData[] resultData)
+    void OnGameFinished(ResultData resultData)
     {
-        ShowResult();
-        ShowDetail(resultData);
+        Debug.Log($"OnGameFinished called: {Time.frameCount}");
+        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+        ShowResult(resultData, isJapanese);
+        ShowDetail(resultData, isJapanese);
+        panel.SetActive(true);
+        follow.enabled = true;
+        StartCoroutine(DisableLazyFollow());
+
+    }
+    IEnumerator DisableLazyFollow()
+    {
+        yield return _waitForSeconds1;
+        follow.enabled = false;
     }
     private void OnGameStateChanged(GameState state)
     {
@@ -66,69 +88,64 @@ public class ResultUI : MonoBehaviour
         {
             case GameState.Initializing:
                 InitializeUI(); break;
-            case GameState.GameClear:
-                isGameOver = false; break;
-            case GameState.GameOver:
-                isGameOver = true; break;
-
         }
     }
-    void ShowResult()
+    void ShowResult(ResultData data, bool isJapanese)
     {
-        panel.SetActive(true);
-
-        int score = nGameManager.ScoreManager.GetScore();
-        int bonus = nGameManager.ScoreManager.totalBonus.Value;
-
         // ⭐タイトル分岐
-        if (isGameOver)
+        if (data.IsGameOver)
         {
-            titleText.text = "GAME OVER!";
+            titleText.text = gameOverText.GetText(isJapanese);
         }
         else
         {
-            titleText.text = "GAME CLEAR!";
+            titleText.text = gameClearText.GetText(isJapanese);
         }
+
+        coopText.text =
+             $"{CooperationText.GetText(isJapanese)} : {data.Cooperation:F1}%";
 
         resultText.text =
-            $"SCORE : {score}\n" +
-            $"BONUS : {bonus}";
+            $"{remainHPText.GetText(isJapanese)} : {data.RemainHP}\n" +
+            $"{bonusText.GetText(isJapanese)} : {data.TotalBonusHP}";
     }
-
-    
-
-    void ShowDetail(PlayerResultData[] results)
+    void ShowDetail(ResultData results, bool isJapanese)
     {
+        foreach (var r in results.detail)
+        {
+            Debug.Log($"Player {r.clientId} Score:{r.score} Kills:{string.Join(",", r.killCounts)}");
+        }
+        // （必要なら）前回削除
+        ClearSpawnedUI();
         panel.SetActive(true);
 
-        titleText.text = isGameOver ? "GAME OVER!" : "GAME CLEAR!";
+        titleText.text = results.IsGameOver
+            ? gameOverText.GetText(isJapanese)
+            : gameClearText.GetText(isJapanese);
 
-        // （必要なら）前回削除
-        foreach (Transform child in contentParent)
-        {
-            Destroy(child.gameObject);
-        }
 
-        foreach (var r in results)
+        foreach (var playerResult in results.detail)
         {
-            var headerObj = new GameObject("PlayerHeader");
-            headerObj.transform.SetParent(contentParent, false);
-            // RectTransformの設定
-            var rect = headerObj.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(400, 120); // 高さを120に固定。横は0で親に合わせる
-            var headerText = headerObj.AddComponent<TextMeshProUGUI>();
+            var headerObj = Instantiate(playerHeaderPrefab, contentParent);
+            spawnedUIObjects.Add(headerObj);
+            if (!headerObj.TryGetComponent<TextMeshProUGUI>(out var headerText))
+            {
+                headerText = headerObj.AddComponent<TextMeshProUGUI>();
+            }
             headerText.fontSize = fontSizeHeader;
             headerText.alignment = TextAlignmentOptions.TopLeft;
             headerText.enableAutoSizing = false;
-            headerText.text = $"Player {r.clientId} : {r.playerName}\n";
+            headerText.text = NetworkManager.Singleton.LocalClientId == playerResult.clientId
+                ? $"{youText.GetText(isJapanese)} : {playerResult.playerName}\n"
+                : $"{otherText.GetText(isJapanese)} : {playerResult.playerName}\n";
 
             // 統計情報（2項目ずつ改行）
             string[] stats = new string[]
             {
-                $"Score: {r.score}",
-                $"Hits: {r.hits}/{r.shotsFired}",
-                $"Shield: {r.shield}",
-                $"Damage: {r.damageDealt:F1}"
+                $"{scoreText.GetText(isJapanese)}: {playerResult.score}",
+                $"{HitsText.GetText(isJapanese)}: {playerResult.hits}/{playerResult.shotsFired}",
+                $"{shieldText.GetText(isJapanese)}: {playerResult.shield}",
+                $"{damageText.GetText(isJapanese)}: {playerResult.damageDealt:F1}"
             };
 
             string statsText = "";
@@ -143,25 +160,44 @@ public class ResultUI : MonoBehaviour
             headerText.text += statsText;
 
             // 🔴 敵ごとに行生成
-            for (int i = 0; i < r.killCounts.Length; i++)
+            for (int i = 0; i < playerResult.killCounts.Length; i++)
             {
-                int count = r.killCounts[i];
+                int count = playerResult.killCounts[i];
                 if (count <= 0) continue;
 
-                var enemy = enemyDatabase[i];
+                var enemy = enemyDatabase.GetEnemyDataFromId(i);
 
                 var obj = Instantiate(enemyRowPrefab, contentParent);
+                spawnedUIObjects.Add(obj);
                 var row = obj.GetComponent<EnemyResultRow>();
 
                 row.Setup(enemy.Icon, enemy.EnemyName, count);
+                //レイアウトを手動で即時更新
+                //ContentSizeFitter contentSizeFitter = obj.GetComponent<ContentSizeFitter>();
+                //contentSizeFitter.SetLayoutHorizontal();
+                //contentSizeFitter.SetLayoutVertical();
+
+                //LayoutRebuilder.ForceRebuildLayoutImmediate(contentSizeFitter.GetComponent<RectTransform>());
             }
 
             var sepObj = new GameObject("Separator");
-            sepObj.transform.SetParent(contentParent, false);
+            sepObj.transform.SetParent(contentParent);
+            spawnedUIObjects.Add(sepObj);
             var sepText = sepObj.AddComponent<TextMeshProUGUI>();
             sepText.text = "----------------------------";
             sepText.fontSize = fontSizeKill;
             sepText.alignment = TextAlignmentOptions.Center;
         }
+    }
+    void ClearSpawnedUI()
+    {
+        foreach (var obj in spawnedUIObjects)
+        {
+            if (obj != null)
+            {
+                Destroy(obj);
+            }
+        }
+        spawnedUIObjects.Clear();
     }
 }

@@ -1,7 +1,9 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using Syacapachi.Attribute;
+﻿using Syacapachi.Attribute;
 using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Events;
 public class SampleScript : MonoBehaviour
 {
     [ShowInspector, SerializeField] int a;
@@ -9,18 +11,70 @@ public class SampleScript : MonoBehaviour
     [ShowInspector, SerializeField] Vector3 vec;
     [ShowInspector, SerializeField] Color color;
     [ShowInspector, SerializeField] GameObject obj;
-    [ShowInspector, SerializeField] InlineClass clazz;
+    [SerializeField] InlineClass clazz;
     [ShowInspector, SerializeField] List<float> list = new List<float>();
     [ShowInspector, SerializeField] List<InlineClass> classList = new List<InlineClass>();
     [ShowInspector, SerializeField] Dictionary<int,string> adic = new Dictionary<int,string>();
-    public class InlineClass
+
+    [SerializeReference,SerializeReferenceView]
+    IInLineInterface resultCollector;
+    [SerializeReference, SerializeReferenceView]
+    IInLineInterface[] resultCollectors;
+    [SerializeReference, SerializeReferenceView]
+    List<IInLineInterface> resultCollectorList;
+    public interface IInLineInterface
+    {
+        [OnInspectorButton]
+        public void InlineMethod();
+    }
+    public interface IInLineGenericInterface<T>
+    {
+        public void InlineMethod(T value);
+    }
+    [Serializable]
+    public class InlineClass : IInLineInterface
+    {
+        public string name;
+        public int[] ints; 
+        public void InlineMethod()
+        {
+            Debug.Log($"This is an inline method. name = {name}");
+        }
+    }
+    public class InLineClass2 : IInLineInterface
+    {
+        public int number;
+        public void InlineMethod()
+        {
+            Debug.Log($"This is an inline method. number = {number}");
+        }
+    }
+    public class InLineClass3 : IInLineGenericInterface<string>
+    {
+        public string name;
+        public void InlineMethod(string value)
+        {
+            Debug.Log($"This is an inline method. name = {name}, value = {value}");
+        }
+    }
+    public struct InLineStruct : IInLineInterface, IInLineGenericInterface<string>
     {
         public string name;
         public void InlineMethod()
         {
             Debug.Log($"This is an inline method. name = {name}");
         }
+
+        public void InlineMethod(string value)
+        {
+            Debug.Log($"This is an inline method. name = {name}, value = {value}");
+        }
     }
+    public class GeneticClass<T>
+    {
+        public T value;
+    }
+
     [Flags]
     public enum SampleEnum
     {
@@ -33,41 +87,83 @@ public class SampleScript : MonoBehaviour
     {
         Debug.Log("This is a sample method.");
     }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(string message)
+    [OnInspectorButton(validateInvoke = true)]
+    public void SampleMethod(InlineClass lass)
     {
-        Debug.Log("Message: " + message);
+        if (lass.name.Length > 100)
+        {
+            Debug.Log("Too Long Name");
+            return;
+        }
+        Debug.Log("This is a sample method.");
+        lass.name = lass.name + name;
+    }
+    [OnInspectorButton(validateInvoke = true)]
+    public void SampleMethod(InLineStruct[] script)
+    {
+        throw new Exception($"[{nameof(SampleScript)}] Sample Exception !");
+    }
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(string message, int number)
+    //{
+    //    Debug.Log("Message: " + message + ", Number: " + number);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(SampleEnum message)
+    //{
+    //    Debug.Log("Message: " + message);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(List<float> value, List<ScriptableObject> valueObject,List<InlineClass> inlineClasses,List<IInLineInterface> inlineInterfaces, List<IInLineGenericInterface<int>> inlineGenericInterfaces)
+    //{
+    //    string valueString = string.Join(", ", value);
+    //    string valueObjectString = string.Join(", ", valueObject);
+    //    string inlineClassString = string.Join(", ", inlineClasses);
+    //    string inlineInterfaceString = string.Join(", ", inlineInterfaces);
+    //    string inlineGenericInterfaceString = string.Join(", ", inlineGenericInterfaces);
+    //    Debug.Log("Value: " + valueString + ", " + valueObjectString + ", " + inlineClassString + ", " + inlineInterfaceString + ", " + inlineGenericInterfaceString);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(Dictionary<InlineClass, IInLineInterface> dic,Dictionary<IInLineGenericInterface<string>,IInLineGenericInterface<int>> dic2)
+    //{
+    //    string dicString = string.Join(", ", dic);
+    //    string dic2String = string.Join(", ", dic2);
+    //    Debug.Log("Message: " + dicString + ", " + dic2String);
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(UnityEvent invokeEvent)
+    //{
+    //    invokeEvent.Invoke();
+    //}
+    //[OnInspectorButton]
+    //public void SampleMethodWithParameter(LayerMask mask,Quaternion quatanion, DateTime time)
+    //{
+    //    Debug.Log("Value: " + mask + ", " + quatanion + ", " + time);
+    //}
+    [OnInspectorButton]
+    public void SampleMethodWithParameter(int[] arr, InlineClass[] inlineClasses, IInLineInterface[] inlineClasse, IInLineGenericInterface<string>[] inLineGenericInterface)
+    {
+        Debug.Log("Value: " + arr + ", " + inlineClasse + ", " + inlineClasse + ", " + inLineGenericInterface);
     }
     [OnInspectorButton]
-    public void SampleMethodWithParameter(SampleEnum message)
+    public void SampleMethodWithParameter<F>(GeneticClass<F> invokeEvent)
     {
-        Debug.Log("Message: " + message);
+        Debug.Log("Value: " + invokeEvent.value);
     }
     [OnInspectorButton]
-    public void SampleMethodWithParameter(int number)
+    public void SampleMethodWithParameter(GeneticClass<int> invokeEvent)
     {
-        Debug.Log("Number: " + number);
+        Debug.Log("Value: " + invokeEvent.value);
     }
     [OnInspectorButton]
-    public void SampleMethodWithParameter(List<float> value)
+    public void SampleMethodWithParameter(IInLineInterface resisterable, IInLineGenericInterface<string> invokeEvent)
     {
-        string valueString = string.Join(", ", value);
-        Debug.Log("Value: " + valueString);
+        resisterable.InlineMethod();
+        invokeEvent.InlineMethod("Sample Value");
     }
     [OnInspectorButton]
-    public void SampleMethodWithParameter(InlineClass inlineClass)
+    public void SampleMethodWithParameter(IInLineGenericInterface<int> invokeEvent)
     {
-        inlineClass.InlineMethod();
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(Dictionary<int,bool> dic, string message)
-    {
-        string dicString = string.Join(", ", dic);
-        Debug.Log("Message: " + dicString + message);
-    }
-    [OnInspectorButton]
-    public void SampleMethodWithParameter(GameObject obj, PhaseSO so)
-    {
-        Debug.Log("Message: " + obj.name + so.name);
+        invokeEvent.InlineMethod(1);
     }
 }

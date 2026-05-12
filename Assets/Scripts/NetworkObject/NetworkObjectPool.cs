@@ -21,15 +21,16 @@ namespace Syacapachi.util
         [SerializeField]
         List<PoolConfigObject> PooledPrefabsList;
 
-        HashSet<GameObject> m_Prefabs = new HashSet<GameObject>();
+        readonly HashSet<GameObject> m_Prefabs = new HashSet<GameObject>();
 
-        Dictionary<GameObject, ObjectPool<NetworkObject>> m_PooledObjects = new Dictionary<GameObject, ObjectPool<NetworkObject>>();
+        readonly Dictionary<GameObject, ObjectPool<NetworkObject>> m_PooledObjects = new ();
 
         public void Awake()
         {
             if (Singleton != null && Singleton != this)
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
+                Debug.LogError($"{nameof(NetworkObjectPool)} is maltiplicate!");
             }
             else
             {
@@ -57,6 +58,7 @@ namespace Syacapachi.util
             }
             m_PooledObjects.Clear();
             m_Prefabs.Clear();
+            Debug.Log($"{nameof(NetworkObjectPool)} is despawn!");
         }
 
         public void OnValidate()
@@ -109,9 +111,9 @@ namespace Syacapachi.util
         /// <summary>
         /// Return an object to the pool (reset objects before returning).
         /// </summary>
-        public void ReturnNetworkObject(NetworkObject networkObject, GameObject prefab)
+        public void ReturnNetworkObject(NetworkObject networkObject, GameObject prefabObject)
         {
-            m_PooledObjects[prefab].Release(networkObject);
+            m_PooledObjects[prefabObject].Release(networkObject);
         }
 
         /// <summary>
@@ -121,28 +123,31 @@ namespace Syacapachi.util
         {
             NetworkObject CreateFunc()
             {
-                return Instantiate(prefab).GetComponent<NetworkObject>();
+                var networkObject = Instantiate(prefab).GetComponent<NetworkObject>();
+                return networkObject;
             }
 
-            void ActionOnGet(NetworkObject networkObject)
+            static void ActionOnGet(NetworkObject networkObject)
             {
                 networkObject.gameObject.SetActive(true);
             }
 
             void ActionOnRelease(NetworkObject networkObject)
             {
-                if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb))
+                if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb) && !rb.isKinematic)
                 {
-                    bool preKinematic = rb.isKinematic;
-                    rb.isKinematic = true;
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
-                    rb.isKinematic = rb.isKinematic;
+                }
+                if (networkObject.IsSpawned && IsServer)
+                {
+                    //破壊しないで、Despawn()
+                    networkObject.Despawn(false);
                 }
                 networkObject.gameObject.SetActive(false);
             }
 
-            void ActionOnDestroy(NetworkObject networkObject)
+            static void ActionOnDestroy(NetworkObject networkObject)
             {
                 Destroy(networkObject.gameObject);
             }
@@ -155,21 +160,17 @@ namespace Syacapachi.util
                 actionOnGet: ActionOnGet, 
                 actionOnRelease: ActionOnRelease,
                 actionOnDestroy: ActionOnDestroy,
-                defaultCapacity: prewarmCount);
-
-            // Populate the pool
-            var prewarmNetworkObjects = new List<NetworkObject>();
-            for (var i = 0; i < prewarmCount; i++)
-            {
-                prewarmNetworkObjects.Add(m_PooledObjects[prefab].Get());
-            }
-            foreach (var networkObject in prewarmNetworkObjects)
-            {
-                m_PooledObjects[prefab].Release(networkObject);
-            }
+                collectionCheck: false,
+                defaultCapacity: prewarmCount * 10);
 
             // Register Netcode Spawn handlers
             NetworkManager.Singleton.PrefabHandler.AddHandler(prefab, new PooledPrefabInstanceHandler(prefab, this));
+
+            //NetworkObjectには、元からあるやつとSpawn()したやつの２つがある。
+            // 前もって作ると、元からあるやつだと思われる。
+            //その状態はよろしくないらしいので作らない
+
+
         }
     }
 
@@ -182,8 +183,8 @@ namespace Syacapachi.util
 
     class PooledPrefabInstanceHandler : INetworkPrefabInstanceHandler
     {
-        GameObject m_Prefab;
-        NetworkObjectPool m_Pool;
+        readonly GameObject m_Prefab;
+        readonly NetworkObjectPool m_Pool;
 
         public PooledPrefabInstanceHandler(GameObject prefab, NetworkObjectPool pool)
         {
