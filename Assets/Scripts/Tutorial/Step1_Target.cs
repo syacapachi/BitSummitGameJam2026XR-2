@@ -21,6 +21,7 @@ public class Step1_Target : TutorialBase
     public override void OnEnd()
     {
         spawner.OnAllEnemyDead -= HandleAllDead;
+        spawner.KillAll();
     }
 
 }

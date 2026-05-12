@@ -38,10 +38,23 @@ public class TutorialSpawner : NetworkBehaviour
 
     void OnEnemyKilledEvent(EnemyKilled e)
     {
-        OnEnemyKilled();
+        Debug.Log(
+    $"[TutorialSpawner] EnemyKilledEvent : " +
+    $"enemy={e.KilledEnemy} " +
+    $"contains={spawnedEnemies.Contains(e.KilledEnemy)} " +
+    $"remain(before)={remain} " +
+    $"spawnedCount(before)={spawnedEnemies.Count}");
+        if (!spawnedEnemies.Contains(e.KilledEnemy))
+            return;
 
         spawnedEnemies.Remove(e.KilledEnemy);
 
+        Debug.Log(
+    $"[TutorialSpawner] removed enemy : " +
+    $"remain(before decrement)={remain} " +
+    $"spawnedCount(after remove)={spawnedEnemies.Count}");
+
+        OnEnemyKilled();
     }
     public void SpawnTargetsForEachPlayer(int playerCount, List<EnemySO> enemyList)
     {
