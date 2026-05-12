@@ -74,9 +74,40 @@ public class SkyBoxColorSetting : ScriptableObject
         moonMultiplier = Mathf.Lerp(fromSky.moonMultiplier, toSky.moonMultiplier, t);
 
         textureStrength = Mathf.Lerp(fromSky.textureStrength, toSky.textureStrength, t);
-        textureRotation = Mathf.Lerp(fromSky.textureRotation, toSky.textureRotation, t);
+
+        if (fromSky.textureRotation > toSky.textureRotation)
+        {
+            float rot = Mathf.Lerp(fromSky.textureRotation, toSky.textureRotation + 1, t);
+            textureRotation = rot <= 1 ? rot : rot -1;
+        }
+        else
+        {
+            textureRotation = Mathf.Lerp(fromSky.textureRotation, toSky.textureRotation, t);
+        }
 
         skyRootEular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular, t);
+    }
+    public void CopySky(SkyBoxColorSetting setting)
+    {
+        timeOfDay = setting.timeOfDay;
+
+        topColor = setting.topColor;
+        horizonColor = setting.horizonColor;
+        bottomColor = setting.bottomColor;
+
+        intensity = setting.intensity;
+        exponentBottom = setting.exponentBottom;
+        exponentTop = setting.exponentTop;
+
+        sunColor = setting.sunColor;
+        sunIntensity = setting.sunIntensity;
+        sunMultiplier = setting.sunMultiplier;
+
+        moonColor = setting.moonColor;
+        moonIntensity = setting.moonIntensity;
+        moonMultiplier = setting.moonMultiplier;
+
+        skyRootEular = setting.skyRootEular;
     }
 }
 /// <summary>

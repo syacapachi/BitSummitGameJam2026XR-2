@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
+using Syacapachi.Attribute;
 
 public class GameStateManager : NetworkBehaviour
 {
@@ -30,7 +31,10 @@ public class GameStateManager : NetworkBehaviour
         get { return localState; }
         private set
         {
-            TrySetLocalState(value);
+            if (TrySetLocalState(value))
+            {
+                localStateChangeLocalEvent.Invoke(value);
+            }
         }
     }
     [Header("Canvas")]
@@ -39,6 +43,7 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] Canvas worldViewCanvas;
     [Header("Publish Event")]
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
+    [SerializeField] LocalStateEvent localStateChangeLocalEvent;
 
     public bool IsGamePlaying => CurrentGameState == GameState.Playing || CurrentGameState == GameState.Tutorial;
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
@@ -66,8 +71,15 @@ public class GameStateManager : NetworkBehaviour
     }
     void HandleGameStateChanged(GameState oldState, GameState newState)
     {
-        Debug.Log($"GameState Changed: {oldState} -> {newState}", gameObject);
         OnGameStateChangeRpcEvent.Invoke(newState);
+        if(newState == GameState.Home)
+        {
+            LocalState = LocalState.LanguageSelect;
+        }
+        else
+        {
+            LocalState = LocalState.Playing;
+        }
     }
 
     private void SetState(LocalState state)
@@ -160,9 +172,8 @@ public class GameStateManager : NetworkBehaviour
         if (!IsServer) return;
         CurrentGameState = GameState.GameClear;
     }
-    public void OnGameInitialize()
+    public void OnGameInitializeServerOnly()
     {
-        LocalState = LocalState.Playing;
         //ここからサーバー
         if (!IsServer) return;
         CurrentGameState = GameState.Initializing;
@@ -184,7 +195,6 @@ public class GameStateManager : NetworkBehaviour
     {
         if (!IsServer) return;
         CurrentGameState = GameState.Home;
-        LocalState = LocalState.LanguageSelect;
     }
     public void EnterLanguageSelect()
     {
@@ -234,6 +244,7 @@ public enum GameState
     /// </summary>
     Home
 }
+[GenerateEvent(typeof(GameEventSOBase<>))]
 public enum LocalState
 {
     LanguageSelect,//言語設定

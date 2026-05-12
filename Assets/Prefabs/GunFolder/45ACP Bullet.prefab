@@ -11,10 +11,8 @@ GameObject:
   - component: {fileID: 1438026406749548805}
   - component: {fileID: 2101342538799749373}
   - component: {fileID: 4257803779471900231}
-  - component: {fileID: 4363810229634238148}
   - component: {fileID: 3991711560101474768}
   - component: {fileID: 3060220139113979187}
-  - component: {fileID: 8892975938324126701}
   - component: {fileID: 1794494490317834517}
   - component: {fileID: 2013280611132370121}
   m_Layer: 0
@@ -93,52 +91,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &4363810229634238148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1439048196768540335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 0
-  AutoOwnerAuthorityTickOffset: 1
-  PositionInterpolationType: 0
-  RotationInterpolationType: 0
-  ScaleInterpolationType: 0
-  PositionLerpSmoothing: 1
-  PositionMaxInterpolationTime: 0.1
-  RotationLerpSmoothing: 1
-  RotationMaxInterpolationTime: 0.1
-  ScaleLerpSmoothing: 1
-  ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
-  TickSyncChildren: 0
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 0
-  SyncRotAngleY: 0
-  SyncRotAngleZ: 0
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
-  PositionThreshold: 0.01
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!114 &3991711560101474768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,9 +113,6 @@ MonoBehaviour:
   hitFx: {fileID: 11400000, guid: ba595eb9204057b42b34863a044e92c5, type: 2}
   shieldAudio: {fileID: 11400000, guid: b074aa59bcf83d94587a78942ad10826, type: 2}
   shieldFx: {fileID: 11400000, guid: 212545edf4debc149ae1cdd60895fd69, type: 2}
-  hitFxPrefab: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
-  shieldFxPrefab: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
-  hitFxLife: 2
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!96 &3060220139113979187
 TrailRenderer:
@@ -281,23 +230,6 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!114 &8892975938324126701
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1439048196768540335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 0
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
 --- !u!65 &1794494490317834517
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -334,7 +266,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   ownerLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 64
   noOwnerLayer:
     serializedVersion: 2
     m_Bits: 64

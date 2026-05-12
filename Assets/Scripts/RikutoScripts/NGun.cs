@@ -5,8 +5,7 @@ using UnityEngine.XR;
 public class NGun : GunController
 {
     [Header("LocalBullet")]
-    [SerializeField] bool useLocalBullet = false;
-    [SerializeField, EnableIf(nameof(useLocalBullet), hideWhenFalse = true)]
+    [SerializeField]
     GameObject localBulletPrefab;
     [Header("Fps")]
     [SerializeField] Transform playerHead;
@@ -16,7 +15,6 @@ public class NGun : GunController
     [SerializeField] AmmoUI ammoUI;
     [SerializeField] PlayerStats playerStats;
     [Header("Subscribe Event")]
-    [SerializeField] VoidEvent changeLocalBulletEvent;
     [SerializeField] VoidEvent fireEvent;
     [SerializeField] GameEffectDataEvent networkEvent;
 
@@ -37,7 +35,6 @@ public class NGun : GunController
     {
         if (IsOwner)
         {
-            changeLocalBulletEvent.Register(ChangeLocalBullet);
             fireEvent.Register(Activate);
             StartCoroutine(LaserUpdateCoroutine());
 
@@ -52,29 +49,22 @@ public class NGun : GunController
     {
         if (IsOwner) 
         {
-            changeLocalBulletEvent.Unregister(ChangeLocalBullet);
             fireEvent.Unregister(Activate);
         }
     }
     public override void Activate()
     {
         base.Activate();
+        //ローカルで弾を打つ打つことで、ラグさを見せない
         var Locator = ManagerLocator.Instance;
         if (Locator == null || Locator.GameStateManager == null || Locator.LocalObjectPool == null) return;
         if (!Locator.GameStateManager.IsGamePlaying) return;
-        if (useLocalBullet)
-        {
             var obj = Locator.LocalObjectPool.Get(localBulletPrefab);
             obj.transform.SetPositionAndRotation(FirePoint.position, FirePoint.rotation);
-            if (obj.TryGetComponent<LocalBullet>(out var localBullet))
-            {
-                localBullet.BulletInit(WeaponSettings.bulletSetting);
-            }
+        if (obj.TryGetComponent<LocalBullet>(out var localBullet))
+        {
+            localBullet.BulletInit(WeaponSettings.bulletSetting);
         }
-    }
-    private void ChangeLocalBullet()
-    {
-        useLocalBullet = !useLocalBullet;
     }
     //オーナー以外で毎フレームチェックさせるオーバーヘッドをなくすためコルーチン化
     IEnumerator LaserUpdateCoroutine()

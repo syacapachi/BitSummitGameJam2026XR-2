@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SkyBoxColorChanger : MonoBehaviour
 {
-    [SerializeField] PhaseManager phaseManager;
+    [SerializeField] DifficultyDataBase rpcDataBase;
     [Header("重増し時間")]
     [SerializeField] float timeOffset = 30f;
     [SerializeField] float clearChangeTime = 5f;
@@ -61,16 +61,25 @@ public class SkyBoxColorChanger : MonoBehaviour
         {
             case GameState.Initializing:
             case GameState.Home:
+                ApplyColor(noonSky); break;
             case GameState.Tutorial:
-                ApplyColor(noonSky);
-                break;
+                StartCoroutine(ApplyColorCorutine(currentSky, startSky, tutorialToEveningTime));break;
+
             case GameState.Playing:
-                StartCoroutine(
-                    TutorialToGameCoroutine());
+                if (previousState != GameState.Tutorial)
+                {
+                    StartCoroutine(TutorialToGameCoroutine());
+                }
+                else
+                {
+                    StartSkyBoxChange();
+                }
                 break;
+
             case GameState.GameClear:
                 StopAllCoroutines();
                 StartCoroutine(GameClearSkyCoroutine()); break;
+
             case GameState.GameOver:
                 StopAllCoroutines();
                 StartCoroutine(ApplyColorCorutine(currentSky, gameOverSky, clearChangeTime));
@@ -81,7 +90,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     private void StartSkyBoxChange()
     {
         float maxPhaseTime = timeOffset;
-        foreach (var phase in phaseManager.Phases)
+        foreach (var phase in rpcDataBase.CurrentSetting.Phases)
         {
             maxPhaseTime += phase.PhaseTime;
         }
@@ -108,11 +117,11 @@ public class SkyBoxColorChanger : MonoBehaviour
     {
         // noon → evening を急速変化
         yield return ApplyColorCorutine(
-            noonSky,
+            currentSky,
             startSky,
             tutorialToEveningTime);
 
-        // その後いつもの流れ
+        //その後、いつもの流れ
         StartSkyBoxChange();
     }
     private IEnumerator GameClearSkyCoroutine()
@@ -137,7 +146,7 @@ public class SkyBoxColorChanger : MonoBehaviour
             Debug.LogWarning("setting is null", gameObject);
             return;
         }
-        currentSky = setting;
+        currentSky.CopySky(setting);
         foreach (var skyboxMat in skyboxMats)
         {
             skyboxMat.SetColor("_Color1", setting.topColor);

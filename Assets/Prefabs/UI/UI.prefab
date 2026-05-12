@@ -864,6 +864,7 @@ MonoBehaviour:
   StopDiscoveryButton: {fileID: 147479615710474157}
   connectionButtonPrefab: {fileID: 5832469320842144106, guid: 991ced9450cd1bd438d3b5bac9d90b9b, type: 3}
   canvasTransfrom: {fileID: 2230179368131528091}
+  titleFlowManager: {fileID: 0}
   m_Discovery: {fileID: 0}
   transport: {fileID: 0}
   m_NetworkManager: {fileID: 0}
@@ -1395,7 +1396,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5636524330715420138}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 20207e3967912c04eb8030bf014be6d2, type: 3}
   m_Name: 
@@ -1849,7 +1850,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.6}
+  m_AnchoredPosition: {x: 0, y: 0.1}
   m_SizeDelta: {x: 1500, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &2183212114285007308

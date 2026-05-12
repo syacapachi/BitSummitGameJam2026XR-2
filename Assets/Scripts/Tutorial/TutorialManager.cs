@@ -2,9 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public enum TutorialStep
 {
@@ -29,11 +27,11 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     [SerializeField] VoidEvent OnTutorialStepCleared;
     [SerializeField] IntEvent OnTutorialStepChanged;
     [SerializeField] ULongEvent markerPlaceServerEvent;
-    private bool isTutorlalStarted;
+    private bool isTutorlalStartedServerOnly;
     
     public override void OnNetworkSpawn()
     {
-        isTutorlalStarted = false;
+        isTutorlalStartedServerOnly = false;
         if (IsServer)
         {
             attackBlockedEvent.Register(OnAttackBlocked);
@@ -50,10 +48,10 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
             markerPlaceServerEvent.Unregister(OnMarkerPlacedServer);
         }
     }
-    public void OnTutorialStart()
+    public void OnTutorialStartServerOnly()
     {
-        if (isTutorlalStarted) return;
-        isTutorlalStarted = true;
+        if (isTutorlalStartedServerOnly) return;
+        isTutorlalStartedServerOnly = true;
         StartStep(TutorialStep.Step1);
     }
 
@@ -151,7 +149,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     private void OnAttackBlocked(AttackBlocked blocked)
     {
         if (!IsServer) return;
-        if(!isTutorlalStarted) return;
+        if(!isTutorlalStartedServerOnly) return;
         currentStepLogic?.OnAttackBlocked(blocked.Collector.ClientId);
     }
 
@@ -164,6 +162,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     private void StartMainSimulation()
     {
         stateManager.OnTutorialEndServerOnly();
+        isTutorlalStartedServerOnly = false;
     }
 
     private void OnMarkerPlacedServer(ulong playerId)

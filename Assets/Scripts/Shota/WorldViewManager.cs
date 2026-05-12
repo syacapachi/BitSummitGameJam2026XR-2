@@ -34,6 +34,8 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] LocalizeSimpleText nextButtonText;
     [SerializeField] LocalizeSimpleText closeText;
     [SerializeField] LocalizeSimpleText backText;
+    [Header("Subscribe Event")]
+    [SerializeField] LocalStateEvent localStateEvent;
 
     /*
     [Header("シーン設定")]
@@ -53,21 +55,25 @@ public class WorldViewManager : NetworkBehaviour
         }
     }
     */
-    //OnNetworkSpanは、ネット接続時にSetActive(true)でないと呼ばれないので、Canvsのみ無効にする。
-    public override void OnNetworkSpawn()
+    private void OnEnable()
     {
-        Debug.Log("WorldViewManager OnNetworkSpawn called");
-        //if (boardCanvas != null) boardCanvas.enabled = true;
+        localStateEvent.Register(OnLocalStateChanged);
         pageIndex.OnValueChanged += OnPageChanged;
-        ShowPage(pageIndex.Value);
     }
-
-    public override void OnNetworkDespawn()
+    private void OnDisable()
     {
-        base.OnNetworkDespawn();
+        localStateEvent.Unregister(OnLocalStateChanged);
         pageIndex.OnValueChanged -= OnPageChanged;
-        //if (boardCanvas != null) boardCanvas.enabled = false;
     }
+    //OnNetworkSpanは、ネット接続時にSetActive(true)でないと呼ばれないので、Canvsのみ無効にする。
+    private void OnLocalStateChanged(LocalState localState)
+    {
+        if(localState == LocalState.WorldView)
+        {
+            ShowPage(pageIndex.Value);
+        }
+    }
+    
 
     public void OnNextButtonClicked() => RequestNextPageRpc();
 
@@ -76,7 +82,8 @@ public class WorldViewManager : NetworkBehaviour
     {
         if (pageIndex.Value >= totalBoards - 1)
         {
-            gameStateManager.OnGameInitialize();
+            gameStateManager.OnGameInitializeServerOnly();
+            pageIndex.Value = 0;
             return;
         }
         pageIndex.Value++;
