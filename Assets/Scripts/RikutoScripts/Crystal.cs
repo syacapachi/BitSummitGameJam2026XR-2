@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Crystal : MonoBehaviour,IDamageReciever
 {
-    [SerializeField] NetworkGameManager nGameManager;
-
     [Header("Target")]
     public GameObject crystal; // ← 操作対象
 
@@ -34,8 +32,6 @@ public class Crystal : MonoBehaviour,IDamageReciever
 
     void OnDisable()
     {
-        if (nGameManager == null) return;
-
         OnbulletComeRpcEvent.Unregister(OnBulletCome);
         GameStateChangeRpcEvent.Unregister(OnGameStateChanged);
     }

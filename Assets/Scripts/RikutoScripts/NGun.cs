@@ -59,10 +59,13 @@ public class NGun : GunController
     public override void Activate()
     {
         base.Activate();
+        var Locator = ManagerLocator.Instance;
+        if (Locator == null || Locator.GameStateManager == null || Locator.LocalObjectPool == null) return;
+        if (!Locator.GameStateManager.IsGamePlaying) return;
         if (useLocalBullet)
         {
-            if (ManagerLocator.Instance == null || ManagerLocator.Instance.LocalObjectPool == null) return;
-            var obj = ManagerLocator.Instance.LocalObjectPool.Get(localBulletPrefab);
+            var obj = Locator.LocalObjectPool.Get(localBulletPrefab);
+            obj.transform.SetPositionAndRotation(FirePoint.position, FirePoint.rotation);
             if (obj.TryGetComponent<LocalBullet>(out var localBullet))
             {
                 localBullet.BulletInit(WeaponSettings.bulletSetting);

@@ -109,7 +109,7 @@ public class NetworkGameManager : NetworkBehaviour
         tutorialManager.OnTutorialStart();
     }
     [OnInspectorButton("Start Game")]
-    public void StartGameServerOnly()
+    private void StartGameServerOnly()
     {
         if (!IsServer) return;
 
@@ -119,9 +119,11 @@ public class NetworkGameManager : NetworkBehaviour
         hpManager.SetHPByDifficultyServerOnly();
         phaseManager.StartPhasesServerOnly();
     }
-
+    /// <summary>
+    /// ゲーム初期化
+    /// </summary>
     [OnInspectorButton("Initilalzie")]
-    public void InitializeGameServerOnly()
+    private void InitializeGameServerOnly()
     {
         if (!IsServer) return;
 

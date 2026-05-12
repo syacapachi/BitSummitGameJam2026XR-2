@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class ResultUI : MonoBehaviour
 {
-    private static WaitForSeconds _waitForSeconds1 = new WaitForSeconds(1f);
+    private static readonly WaitForSeconds _waitForSeconds1 = new WaitForSeconds(1f);
 
     [SerializeField] GameObject panel;
     [SerializeField] LazyFollow follow;

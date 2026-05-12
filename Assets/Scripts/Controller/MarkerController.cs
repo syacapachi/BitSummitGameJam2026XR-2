@@ -17,6 +17,8 @@ public class MarkerController : NetworkBehaviour
     [SerializeField] int laserDistance = 50;
     [SerializeField] float markerBackTime = 5f;
     [SerializeField] MarkerAudioController markerAudioController;
+    [Header("Publish Event")]
+    [SerializeField] ULongEvent MarkerPlaceEventServerOnly;
     [Header("Subscribe Event")]
     [SerializeField] VoidEvent markerEvent;
     AttachableBehaviour attachServerOnly;
@@ -125,8 +127,8 @@ public class MarkerController : NetworkBehaviour
     private void PlaceMarkerRpc()
     {
         if (ManagerLocator.Instance == null
-            || ManagerLocator.Instance.AllGameManager == null
-            || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
+            || ManagerLocator.Instance.GameStateManager == null
+            || !ManagerLocator.Instance.GameStateManager.IsGamePlaying
             ) return;
         if (FirePoint == null) return;
 
@@ -137,8 +139,9 @@ public class MarkerController : NetworkBehaviour
             MoveMarkerServerRpc(hit.point);
             markerAudioController.OnMarkerSondPlayRpc(hit.point);
 
-            if (ManagerLocator.Instance.GameStateManager.CurrentGameState == GameState.Tutorial)
-                ManagerLocator.Instance.TutorialManager.OnMarkerPlacedServer(OwnerClientId);
+            MarkerPlaceEventServerOnly.Invoke(OwnerClientId);
+            //if (ManagerLocator.Instance.GameStateManager.CurrentGameState == GameState.Tutorial)
+            //    ManagerLocator.Instance.TutorialManager.OnMarkerPlacedServer(OwnerClientId);
         }
     }
 
