@@ -204,7 +204,7 @@ public class GameStateManager : NetworkBehaviour
         LocalState = LocalState.LanguageSelect;
     }
 
-    public void EnterNetworkConnect()
+    public void OnLangageDefined()
     {
         if (!IsSpawned)
         {
@@ -212,10 +212,10 @@ public class GameStateManager : NetworkBehaviour
         }
         else
         {
-            EnterWorldView();
+            OnConnection();
         }
     }
-    public void EnterWorldView()
+    public void OnConnection()
     {
         LocalState = LocalState.WorldView;
     }

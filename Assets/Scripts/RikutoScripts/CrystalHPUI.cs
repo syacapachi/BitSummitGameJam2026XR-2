@@ -73,7 +73,7 @@ public class CrystalHPUI : MonoBehaviour
             UIInitialize();
             hpCanvas.enabled = true;
         }
-        else if (state == GameState.GameOver || state == GameState.GameClear)
+        else
         {
             hpCanvas.enabled = false;
         }
