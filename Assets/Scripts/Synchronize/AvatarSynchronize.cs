@@ -99,6 +99,7 @@ public class AvatarSynchronize : NetworkBehaviour
     }
     private IEnumerator CalcHeight()
     {
+        if(!XRSettings.isDeviceActive) yield break;
         if (isCalibrationed) yield break;
         isCalibrationed = true;
         float eyeHeight = 0;

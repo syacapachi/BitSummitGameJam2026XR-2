@@ -39,10 +39,11 @@ public class SkyBoxColorSetting : ScriptableObject
     [Header("テクスチャの回転"),Range(0f,1f)]
     public float textureRotation = 1f;
     private const float onehour = 360f / 24f;
+    private static readonly Vector3 loopx = 360f * Vector3.right;
 
     //0時->±180
     //6時-> -90 or 270
-    //12時 -> 0
+    //12時 -> 0 or 360
     //18時 -> 90
     [SerializeField] private Vector3 skyRootEular;
     public Vector3 SkyRootEular => skyRootEular;
@@ -51,7 +52,7 @@ public class SkyBoxColorSetting : ScriptableObject
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        skyRootEular = new Vector3((int)timeOfDay * onehour - 180f, 170, 0);
+        skyRootEular = new Vector3((int)timeOfDay * onehour + 180f, 170, 0);
     }
 #endif
 
@@ -84,8 +85,15 @@ public class SkyBoxColorSetting : ScriptableObject
         {
             textureRotation = Mathf.Lerp(fromSky.textureRotation, toSky.textureRotation, t);
         }
-
-        skyRootEular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular, t);
+        if (fromSky.SkyRootEular.x > toSky.SkyRootEular.x)
+        {
+            Vector3 eular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular + loopx, t);
+            skyRootEular = eular;
+        }
+        else
+        {
+            skyRootEular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular, t);
+        }
     }
     public void CopySky(SkyBoxColorSetting setting)
     {

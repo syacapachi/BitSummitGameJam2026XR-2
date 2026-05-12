@@ -35,9 +35,10 @@ public class SkyBoxColorChanger : MonoBehaviour
 
     private int currentIndex = 0;
     private GameState previousState;
+
     private void Awake()
     {
-        ApplyColor(startSky);
+        ApplyColor(noonSky);
     }
     private void OnEnable()
     {
@@ -61,9 +62,11 @@ public class SkyBoxColorChanger : MonoBehaviour
         {
             case GameState.Initializing:
             case GameState.Home:
+                StopAllCoroutines();
                 ApplyColor(noonSky); break;
+
             case GameState.Tutorial:
-                StartCoroutine(ApplyColorCorutine(currentSky, startSky, tutorialToEveningTime));break;
+                StartCoroutine(ApplyColorCorutineByTime(currentSky, startSky, tutorialToEveningTime));break;
 
             case GameState.Playing:
                 if (previousState != GameState.Tutorial)
@@ -82,7 +85,7 @@ public class SkyBoxColorChanger : MonoBehaviour
 
             case GameState.GameOver:
                 StopAllCoroutines();
-                StartCoroutine(ApplyColorCorutine(currentSky, gameOverSky, clearChangeTime));
+                StartCoroutine(ApplyColorCorutineByTime(currentSky, gameOverSky, clearChangeTime));
                 break;
         }
         previousState = newState;
@@ -108,15 +111,15 @@ public class SkyBoxColorChanger : MonoBehaviour
 
         for (int index = 0; index < skyBoxColorSettings.Length; index++)
         {
-            if (index == skyBoxColorSettings.Length - 1) yield return ApplyColorCorutine(skyBoxColorSettings[^1], clearSky, hourTime);
-            else yield return ApplyColorCorutine(index, index + 1, hourTime);
+            if (index == skyBoxColorSettings.Length - 1) yield return ApplyColorCorutineByHour(skyBoxColorSettings[^1], clearSky, hourTime);
+            else yield return ApplyColorCorutineByHour(index, index + 1, hourTime);
         }
     }
 
     IEnumerator TutorialToGameCoroutine()
     {
         // noon → evening を急速変化
-        yield return ApplyColorCorutine(
+        yield return ApplyColorCorutineByTime(
             currentSky,
             startSky,
             tutorialToEveningTime);
@@ -126,8 +129,8 @@ public class SkyBoxColorChanger : MonoBehaviour
     }
     private IEnumerator GameClearSkyCoroutine()
     {
-        yield return ApplyColorCorutine(currentSky, clearSky, clearChangeTime);
-        yield return ApplyColorCorutine(clearSky, noonSky, 20f);
+        yield return ApplyColorCorutineByTime(currentSky, clearSky, clearChangeTime);
+        yield return ApplyColorCorutineByTime(clearSky, noonSky, 100f);
     }
     /// <summary>
     /// 即時変更用。
@@ -184,49 +187,53 @@ public class SkyBoxColorChanger : MonoBehaviour
     {
         if(index == 0)
         {
-            StartCoroutine(ApplyColorCorutine(skyBoxColorSettings[^1], skyBoxColorSettings[index], clearChangeTime));
+            StartCoroutine(ApplyColorCorutineByHour(skyBoxColorSettings[^1], skyBoxColorSettings[index], clearChangeTime));
             return;
         }
         if(index < 1 || index >= skyBoxColorSettings.Length) return;
-        StartCoroutine(ApplyColorCorutine(skyBoxColorSettings[index-1], skyBoxColorSettings[index], clearChangeTime));
+        StartCoroutine(ApplyColorCorutineByHour(skyBoxColorSettings[index-1], skyBoxColorSettings[index], clearChangeTime));
     }
-    IEnumerator ApplyColorCorutine(int fromIndex,int toIndex,float hourTime)
+    IEnumerator ApplyColorCorutineByHour(int fromIndex,int toIndex,float hourTime)
     {
         if(fromIndex < 0 || fromIndex >= skyBoxColorSettings.Length)
         {
-            Debug.LogWarning("fromIndex is out of range",gameObject);
+            Debug.LogWarning("from is out of range",gameObject);
             yield break;
         }
-        yield return ApplyColorCorutine(skyBoxColorSettings[fromIndex], skyBoxColorSettings[toIndex], hourTime);
+        yield return ApplyColorCorutineByHour(skyBoxColorSettings[fromIndex], skyBoxColorSettings[toIndex], hourTime);
     }
-    IEnumerator ApplyColorCorutine(SkyBoxColorSetting fromIndex, SkyBoxColorSetting toIndex, float hourTime)
+    IEnumerator ApplyColorCorutineByHour(SkyBoxColorSetting from, SkyBoxColorSetting to, float hourTime)
     {
-        int hours = toIndex.timeOfDay - fromIndex.timeOfDay;
+        int hours = to.timeOfDay - from.timeOfDay;
         if(hours < 0)
         {
             hours += 24;
         }
         float changeTime = hourTime * hours;
-        for (float timer = 0f; timer <= changeTime; timer += Time.deltaTime)
-        {
-            ApplyLerp(fromIndex, toIndex, timer / changeTime);
-            yield return null;
-        }
-        ApplyColor(toIndex);
+        yield return ApplyColorCorutineByTime(from, to, changeTime);
     }
     [OnInspectorButton(showOnlyInPlayMode: true)]
-    void DebugSkyChange(SkyBoxColorSetting fromIndex, SkyBoxColorSetting toIndex, float changeTime)
+    void DebugSkyChange(SkyBoxColorSetting from, SkyBoxColorSetting to, float changeTime)
     {
-        StartCoroutine(ApplyColorCorutineByTime(fromIndex, toIndex, changeTime));
+        StartCoroutine(ApplyColorCorutineByTime(from, to, changeTime));
     }
-    IEnumerator ApplyColorCorutineByTime(SkyBoxColorSetting fromIndex, SkyBoxColorSetting toIndex, float changeTime)
+    IEnumerator ApplyColorCorutineByTime(int fromIndex, int toIndex, float changeTime)
+    {
+        if (fromIndex < 0 || fromIndex >= skyBoxColorSettings.Length)
+        {
+            Debug.LogWarning("from is out of range", gameObject);
+            yield break;
+        }
+        yield return ApplyColorCorutineByTime(skyBoxColorSettings[fromIndex], skyBoxColorSettings[toIndex], changeTime);
+    }
+    IEnumerator ApplyColorCorutineByTime(SkyBoxColorSetting from, SkyBoxColorSetting to, float changeTime)
     {
         for (float timer = 0f; timer <= changeTime; timer += Time.deltaTime)
         {
-            ApplyLerp(fromIndex, toIndex, timer / changeTime);
+            ApplyLerp(from, to, timer / changeTime);
             yield return null;
         }
-        ApplyColor(toIndex);
+        ApplyColor(to);
     }
     /// <summary>
     /// 徐々に変化させる用。Update等で呼び出すことを想定。

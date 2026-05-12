@@ -36967,7 +36967,7 @@ GameObject:
   - component: {fileID: 926694488}
   - component: {fileID: 926694487}
   m_Layer: 0
-  m_Name: Shot Light (2)
+  m_Name: 'Room Light '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36981,13 +36981,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 926694485}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7532527, y: -0.034444936, z: 0.025661986, w: -0.6563273}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.42300782, y: 5.48, z: 6.3830085}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1788668071}
-  m_LocalEulerAnglesHint: {x: 97.892, y: -2.7359924, z: 352.38098}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &926694487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37023,9 +37023,9 @@ Light:
   m_Type: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 10
-  m_Range: 500
-  m_SpotAngle: 128.45892
-  m_InnerSpotAngle: 63.702915
+  m_Range: 20
+  m_SpotAngle: 60.833836
+  m_InnerSpotAngle: 37.44711
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
@@ -46761,37 +46761,65 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 448783273181898590, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: clearChangeTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 448783273181898590, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: tutorialToEveningTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382631628304796848, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: m_Color.b
+      value: 0.78431374
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382631628304796848, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: m_Color.g
+      value: 0.99607843
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382631628304796848, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382631628304796848, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: m_Intensity
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382631628304796848, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4947028098112727187, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_Name
       value: SunAndMoon
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -213.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 95.24
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.32
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.35355335
+      value: -0.087155804
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.35355335
+      value: -0.000000007619402
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.61237246
+      value: -0.9961947
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.61237246
+      value: 0.00000008709011
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -46799,11 +46827,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -226.7
+      value: 170
       objectReference: {fileID: 0}
     - target: {fileID: 7565055580231618159, guid: efc106fa637b6e3458906a6061a12bca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -49594,7 +49622,7 @@ GameObject:
   - component: {fileID: 1420935047}
   - component: {fileID: 1420935046}
   m_Layer: 0
-  m_Name: Shot Light (1)
+  m_Name: chandelier Light (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49608,13 +49636,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1420935044}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0099736685, y: -0.88323444, z: 0.46124545, w: 0.08396531}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.34300178, y: 5.002983, z: 3.762}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1788668071}
-  m_LocalEulerAnglesHint: {x: 54.4, y: 195.7, z: 369.4}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &1420935046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49650,9 +49678,9 @@ Light:
   m_Type: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 10
-  m_Range: 500
-  m_SpotAngle: 128.45892
-  m_InnerSpotAngle: 63.702915
+  m_Range: 20
+  m_SpotAngle: 120
+  m_InnerSpotAngle: 60
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
@@ -55056,7 +55084,7 @@ GameObject:
   - component: {fileID: 1701501018}
   - component: {fileID: 1701501020}
   m_Layer: 0
-  m_Name: Shot Light
+  m_Name: chandelier Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55074,9 +55102,9 @@ Light:
   m_Type: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 10
-  m_Range: 500
-  m_SpotAngle: 174.26181
-  m_InnerSpotAngle: 109.50594
+  m_Range: 20
+  m_SpotAngle: 100
+  m_InnerSpotAngle: 50
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
@@ -55135,13 +55163,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1701501017}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.601669, y: 0.117931, z: -0.18728837, w: 0.76746976}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.2530001, y: 5.0029993, z: 9.692}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1788668071}
-  m_LocalEulerAnglesHint: {x: 104.60199, y: 169.867, z: 144.732}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &1701501020
 MonoBehaviour:
   m_ObjectHideFlags: 0
