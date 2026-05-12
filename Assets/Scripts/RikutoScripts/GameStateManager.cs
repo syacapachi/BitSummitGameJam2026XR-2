@@ -71,8 +71,15 @@ public class GameStateManager : NetworkBehaviour
     }
     void HandleGameStateChanged(GameState oldState, GameState newState)
     {
-        Debug.Log($"GameState Changed: {oldState} -> {newState}", gameObject);
         OnGameStateChangeRpcEvent.Invoke(newState);
+        if(newState == GameState.Home)
+        {
+            LocalState = LocalState.LanguageSelect;
+        }
+        else if(newState == GameState.Initializing)
+        {
+            LocalState = LocalState.Playing;
+        }
     }
 
     private void SetState(LocalState state)
@@ -165,9 +172,8 @@ public class GameStateManager : NetworkBehaviour
         if (!IsServer) return;
         CurrentGameState = GameState.GameClear;
     }
-    public void OnGameInitialize()
+    public void OnGameInitializeServerOnly()
     {
-        LocalState = LocalState.Playing;
         //ここからサーバー
         if (!IsServer) return;
         CurrentGameState = GameState.Initializing;
@@ -189,7 +195,6 @@ public class GameStateManager : NetworkBehaviour
     {
         if (!IsServer) return;
         CurrentGameState = GameState.Home;
-        LocalState = LocalState.LanguageSelect;
     }
     public void EnterLanguageSelect()
     {

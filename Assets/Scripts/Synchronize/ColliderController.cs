@@ -3,13 +3,21 @@ using UnityEngine;
 public class ColliderController : MonoBehaviour
 {
 #if UNITY_EDITOR
-    private Collider[] m_Collider;
+    [SerializeField] Collider[] m_Collider;
     [OnInspectorButton]
     void SetColliderTrigger(bool isTriger)
     {
         foreach (Collider collider in m_Collider)
         {
             collider.isTrigger = isTriger;
+        }
+    }
+    [OnInspectorButton]
+    void SetColliderEnable(bool enable)
+    {
+        foreach (Collider collider in m_Collider)
+        {
+            collider.enabled = enable;
         }
     }
     private void Reset()

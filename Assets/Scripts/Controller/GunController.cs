@@ -51,6 +51,8 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
             || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
             ) return;
         ShootRpc();
+        //音をローカルですぐ流す
+        PlayShotSound();
     }
     /// <summary>
     /// 打てるかを確認
@@ -117,7 +119,8 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         if (isReloading) return;
         if(oldVal < newVal) return;
         UpdateCount(newVal, MaxAmmo);
-        if (IsClient)
+        //オーナー以外
+        if (!IsOwner && IsClient)
         {
             PlayShotSound();
         }

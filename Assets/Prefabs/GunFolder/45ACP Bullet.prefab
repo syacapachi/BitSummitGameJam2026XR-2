@@ -161,9 +161,6 @@ MonoBehaviour:
   hitFx: {fileID: 11400000, guid: ba595eb9204057b42b34863a044e92c5, type: 2}
   shieldAudio: {fileID: 11400000, guid: b074aa59bcf83d94587a78942ad10826, type: 2}
   shieldFx: {fileID: 11400000, guid: 212545edf4debc149ae1cdd60895fd69, type: 2}
-  hitFxPrefab: {fileID: 208596880418014024, guid: 4d5e2f7e92f53944db78ef25f299766b, type: 3}
-  shieldFxPrefab: {fileID: 6102700143095738657, guid: 8ceb54799b426c344a7f14b192c475cb, type: 3}
-  hitFxLife: 2
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!96 &3060220139113979187
 TrailRenderer:
@@ -334,7 +331,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   ownerLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 64
   noOwnerLayer:
     serializedVersion: 2
     m_Bits: 64

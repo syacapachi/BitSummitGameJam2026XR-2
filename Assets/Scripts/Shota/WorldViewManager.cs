@@ -82,7 +82,7 @@ public class WorldViewManager : NetworkBehaviour
     {
         if (pageIndex.Value >= totalBoards - 1)
         {
-            gameStateManager.OnGameInitialize();
+            gameStateManager.OnGameInitializeServerOnly();
             pageIndex.Value = 0;
             return;
         }
