@@ -1,11 +1,9 @@
 ﻿using Syacapachi.Attribute;
-using System;
 using System.Collections;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.UI;
 
 public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
@@ -17,6 +15,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+    //これ使えば、動的に敵の状態を変えられる。
+    private readonly NetworkVariable<int> enemyId = new(-1);
 
     [SerializeField] private Canvas hpCanvas;
     [SerializeField] private Image hpImage; // Filled Image
@@ -32,13 +32,12 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     private bool isInitialize = false;
 
     private Transform targetPlayerServerOnly;
-    private EnemySO enemySOServertOnly;
-    private float maxHpAll = 0;
+    private EnemySO rpcEnemySO;
     public GameObject GameObject => this.gameObject;
     NetworkObject IEnemy.NetworkObject => this.NetworkObject;
-    public EnemyWeaponSettingsSO EnemyWeaponServeronly => enemySOServertOnly.EnemyWeapon;  
+    public EnemyWeaponSettingsSO EnemyWeaponRpc => rpcEnemySO.EnemyWeapon;  
     public float CurrentHealth => currentHP.Value;
-    public float MaxHealth => maxHpAll;
+    public float MaxHealth => rpcEnemySO.Hp;
     /// <summary>
     /// セットはEditor上のみ
     /// </summary>
@@ -59,7 +58,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     /// 無敵かどうか
     /// </summary>
     public bool CanTakeDamage => canTakeDamage;
-    public bool CanAttackServerOnly => enemySOServertOnly.CanAttack;
+    public bool CanAttackRpc => rpcEnemySO.CanAttack;
 
     [SerializeField] Renderer[] renderers;
 
@@ -72,20 +71,20 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public int SpawnPointIndexServerOnly => spawnPointIndexServerOnly;
 
 
-    [SerializeField]
-        private PlayerJob[] jobCycle = new PlayerJob[]
-    {
-        PlayerJob.Demon,
-        PlayerJob.Ghost,
-        PlayerJob.Tutorial
-    };
+    //[SerializeField]
+    //    private PlayerJob[] jobCycle = new PlayerJob[]
+    //{
+    //    PlayerJob.Demon,
+    //    PlayerJob.Ghost,
+    //    PlayerJob.Tutorial
+    //};
 
-    //[SerializeField] EnemyDataBase enemyDataBase;
+    [SerializeField] EnemyDataBase enemyDataBase;
     public bool IsAttackableJob(PlayerJob playerJob)
     {
         if(enemyJobSetting == null)
         {
-            Debug.LogError("enemyJobSetting is null!",gameObject);
+            Debug.LogError($"enemyJobSetting is null! {gameObject.name}",gameObject);
             return false;
         }
         if(enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)){
@@ -95,111 +94,58 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         return false;
     }
     [OnInspectorButton(showOnlyInPlayMode = true)]
-    public void InjectSetting(EnemySO enemySO,int spawnPointIndex)
+    public void InjectSetting(int id,int spawnPointIndex)
     {
-        this.enemySOServertOnly = enemySO;
+        enemyId.Value = id;
         spawnPointIndexServerOnly = spawnPointIndex;
         currentPointIndexServerOnly = spawnPointIndex;
     }
 
-    //[Rpc(SendTo.ClientsAndHost)]
-    //public void InitEnemyRpc(int id)
-    //{
-    //    Debug.Log($"[InitEnemyRpc] Called | IsServer:{IsServer} IsClient:{IsClient} | id:{id}");
+    public bool TryGetEnemySO(int id,out EnemySO enemySO)
+    {
+        enemySO = null;
+        if (enemyDataBase == null)
+        {
+            Debug.LogError($"[{nameof(TryGetEnemySO)}] enemyDataBase is NULL! {gameObject.name}");
+            return false;
+        }
+        //内部で大きさを測ってるのでnullかEnemySOがかえる
+        enemySO = enemyDataBase.GetEnemyDataFromId(id);
 
-    //    if (enemyDataBase == null)
-    //    {
-    //        Debug.LogError("[InitEnemyRpc] enemyDataBase is NULL!");
-    //        return;
-    //    }
-
-    //    if (id < 0 || id >= enemyDataBase.Length)
-    //    {
-    //        Debug.LogError($"[InitEnemyRpc] Invalid ID: {id}");
-    //        return;
-    //    }
-
-    //    enemySOServertOnly = enemyDataBase.GetEnemyDataFromId(id);
-
-    //    if (enemySOServertOnly == null)
-    //    {
-    //        Debug.LogError($"[InitEnemyRpc] enemySOServertOnly is NULL after GetEnemyDataFromId | id:{id}");
-    //        return;
-    //    }
-
-    //    Debug.Log($"[InitEnemyRpc] SUCCESS | Enemy: {enemySOServertOnly.name}");
-
-    //    // 念のためUI更新
-    //    UpdateHPUI(currentHP.Value);
-    //}
-
+        return enemySO != null;
+    }
 
     public override void OnNetworkSpawn()
     {
         isInitialize = false;
         isDieServerOnly = false;
-
         currentHP.OnValueChanged += OnHPChanged;
-        if (IsServer)
+        //NetworkVariableを使えば、Spawn()前に設定した値も初期化時に同期される。
+        if (TryGetEnemySO(enemyId.Value, out rpcEnemySO))
         {
-            currentHP.Value = enemySOServertOnly.Hp;
-            ApplyMaxHpRpc(enemySOServertOnly.Hp);
+            if (IsServer)
+            {
+                currentHP.Value = rpcEnemySO.Hp;
+            }
+            UpdateHPUI(currentHP.Value);
         }
-
+        else
+        {
+            StartCoroutine(WaitForEnemySO());
+        }
         ApplySettting();
         canTakeDamage = true;
         StartCoroutine(SetupPlayerCoroutine());
     }
-    //必要な情報は、最大HPのみ
-    [Rpc(SendTo.Everyone)]
-    private void ApplyMaxHpRpc(float maxHp)
-    {
-        this.maxHpAll = maxHp;
-        if (!IsClient) return;// クライアントでのみ実行
-
-        if (hpImage != null)
+    IEnumerator WaitForEnemySO()
+    {   
+        yield return new WaitUntil(() => TryGetEnemySO(enemyId.Value, out rpcEnemySO));
+        if (IsServer)
         {
-            hpImage.fillAmount = 1f;
+            currentHP.Value = rpcEnemySO.Hp;
         }
-        if (hpText != null)
-        {
-            hpText.text = $"{currentHP.Value} / {maxHpAll}";
-        }
+        UpdateHPUI(currentHP.Value);
     }
-
-    //public override void OnNetworkSpawn()
-    //{
-    //    isInitialize = false;
-
-    //    currentHP.OnValueChanged += OnHPChanged;
-
-    //    StartCoroutine(WaitForEnemySO());
-    //}
-
-    //IEnumerator WaitForEnemySO()
-    //{
-    //    // enemySO がセットされるまで待つ
-    //    yield return new WaitUntil(() => enemySOServertOnly != null);
-
-    //    // ↓ここから安全に使える
-    //    if (IsServer)
-    //    {
-    //        currentHP.Value = enemySOServertOnly.Hp;
-    //    }
-
-    //    UpdateHPUI(currentHP.Value);
-    //    ApplySettting();
-
-    //    if (!IsClient) yield break;
-
-    //    if (hpImage != null)
-    //        hpImage.fillAmount = 1f;
-
-    //    if (hpText != null)
-    //        hpText.text = $"{currentHP.Value} / {enemySOServertOnly.Hp}";
-
-    //    StartCoroutine(SetupPlayerCoroutine());
-    //}
     private void ApplySettting()
     {
         if(enemyJobSetting == null)
@@ -279,7 +225,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if(!IsServer) return ;
         //無敵解除
         canTakeDamage = true;
-        if (!enemySOServertOnly.CanMove) return;
+        if (!rpcEnemySO.CanMove) return;
         var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
         if (CheckPointManager == null) return;
         //次へ移動
@@ -298,7 +244,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         yield return nextFixed;
         while(Vector3.Distance(transform.position, targetPos) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.fixedDeltaTime * enemySOServertOnly.MoveSpeedValue);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.fixedDeltaTime * rpcEnemySO.MoveSpeedValue);
             yield return nextFixed;
         }
     }
@@ -307,7 +253,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         if (collector != null && collector is PlayerStats stats)
         {
-            stats.AddKill(enemySOServertOnly, enemySOServertOnly.ScoreValue);
+            stats.AddKill(rpcEnemySO, rpcEnemySO.ScoreValue);
         }
         else
         {
@@ -317,7 +263,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
         if (enemyJob == PlayerJob.Tutorial)
         {
-            DieFromAnimationEvent();
+            DieFromAnimationServerEvent();
         }
         else
         {
@@ -333,7 +279,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         isInitialize = true;
     }
     [OnInspectorButton]
-    public void DieFromAnimationEvent()
+    public void DieFromAnimationServerEvent()
     {
         if (NetworkObject.IsSpawned)
         {
@@ -346,85 +292,82 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     }
     void UpdateHPUI(float hp)
     {
-
         if (hpImage != null)
-            hpImage.fillAmount = hp / maxHpAll;
+            hpImage.fillAmount = hp / rpcEnemySO.Hp;
 
         if (hpText != null)
-            hpText.text = $"{hp} / {maxHpAll}";
+            hpText.text = $"{hp} / {rpcEnemySO.Hp}";
     }
     public void SetAttackabe(bool value)
     {
         canTakeDamage = value;
     }
 
-    [OnInspectorButton]
-    public void NextJob()
-    {
-        if (!IsServer) return;
+    //[OnInspectorButton]
+    //public void NextJob()
+    //{
+    //    if (!IsServer) return;
 
-        if (jobCycle == null || jobCycle.Length == 0)
-        {
-            Debug.LogError("[Enemy] JobCycle is empty");
-            return;
-        }
+    //    if (jobCycle == null || jobCycle.Length == 0)
+    //    {
+    //        Debug.LogError("[Enemy] JobCycle is empty");
+    //        return;
+    //    }
 
-        int index = Array.IndexOf(jobCycle, enemyJob);
+    //    int index = Array.IndexOf(jobCycle, enemyJob);
 
-        int nextIndex;
+    //    int nextIndex;
 
-        if (index == -1)
-        {
-            // 見つからない場合は先頭へ
-            nextIndex = 0;
-        }
-        else
-        {
-            nextIndex = (index + 1) % jobCycle.Length;
-        }
+    //    if (index == -1)
+    //    {
+    //        // 見つからない場合は先頭へ
+    //        nextIndex = 0;
+    //    }
+    //    else
+    //    {
+    //        nextIndex = (index + 1) % jobCycle.Length;
+    //    }
 
-        ChangeJobServer(jobCycle[nextIndex]);
-    }
-    // =========================
-    // 🌐 サーバー専用：Job変更
-    // =========================
-    public void ChangeJobServer(PlayerJob newJob)
-    {
-        if (!IsServer) return;
+    //    ChangeJobServer(jobCycle[nextIndex]);
+    //}
+    //// =========================
+    //// 🌐 サーバー専用：Job変更
+    //// =========================
+    //public void ChangeJobServer(PlayerJob newJob)
+    //{
+    //    if (!IsServer) return;
 
-        ApplyJobInternal(newJob);
-        // 全クライアントへ同期
-        ChangeJobRpc(newJob);
-    }
-    // =========================
-    // 🌐 クライアント同期
-    // =========================
-    [Rpc(SendTo.ClientsAndHost)]
-    private void ChangeJobRpc(PlayerJob newJob)
-    {
-        ApplyJobInternal(newJob);
-    }
+    //    ApplyJobInternal(newJob);
+    //    // 全クライアントへ同期
+    //    ChangeJobRpc(newJob);
+    //}
+    //// =========================
+    //// 🌐 クライアント同期
+    //// =========================
+    //[Rpc(SendTo.ClientsAndHost)]
+    //private void ChangeJobRpc(PlayerJob newJob)
+    //{
+    //    ApplyJobInternal(newJob);
+    //}
 
-    // =========================
-    // 🧠 内部処理
-    // =========================
-    private void ApplyJobInternal(PlayerJob newJob)
-    {
-        if (enemyJob == newJob) return;
+    //// =========================
+    //// 🧠 内部処理
+    //// =========================
+    //private void ApplyJobInternal(PlayerJob newJob)
+    //{
+    //    if (enemyJob == newJob) return;
 
-        var oldJob = enemyJob;
-        enemyJob = newJob;
+    //    var oldJob = enemyJob;
+    //    enemyJob = newJob;
 
-        ApplySettting(); // ← 既存のLayer変更処理
+    //    ApplySettting(); // ← 既存のLayer変更処理
 
-        Debug.Log($"[Enemy] Job Changed: {oldJob} → {enemyJob}",gameObject);
-    }
+    //    Debug.Log($"[Enemy] Job Changed: {oldJob} → {enemyJob}",gameObject);
+    //}
 
-    public void SetVisibleServer()
+    public void SetVisibleFromAnimationEvent()
     {
         ApplyVisible(true);
-        //if (!IsServer) return;
-        //SetVisibleRpc();
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -433,15 +376,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         ApplyVisible(true);
     }
 
-    public void RestoreLayerServer()
-    {
-        ApplyVisible(false);
-        //if (!IsServer) return;
-        //RestoreLayerRpc();
-    }
-
-    [Rpc(SendTo.ClientsAndHost)]
-    void RestoreLayerRpc()
+    public void RestoreLayerFromAnimationEvent()
     {
         ApplyVisible(false);
     }

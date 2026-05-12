@@ -256,8 +256,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rpcDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
   timeOffset: 15
-  clearChangeTime: 5
-  tutorialToEveningTime: 3
+  clearChangeTime: 10
+  tutorialToEveningTime: 10
   skyboxMats:
   - {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
   - {fileID: 2100000, guid: 5abac05424d24a74abdb61b5e24d8acd, type: 2}
@@ -412,8 +412,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 0.45603484, g: 0.37072986, b: 0.5275926, a: 1}
-  m_Intensity: 0.13608329
+  m_Color: {r: 1, g: 0.99607843, b: 0.78431374, a: 1}
+  m_Intensity: 1.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -455,7 +455,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 0.1453611
+  m_BounceIntensity: 0.5
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}

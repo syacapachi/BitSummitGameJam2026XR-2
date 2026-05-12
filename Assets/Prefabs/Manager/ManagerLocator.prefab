@@ -49,6 +49,7 @@ MonoBehaviour:
   waitSpawnType: 0
   waitSpawnRemainCount: 5
   nextPhaseType: 0
+  enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
   networkPool: {fileID: 4084111059737820316}
   checkPointManager: {fileID: 4441792715120167192}
   gameStateManager: {fileID: 1142131513230880555}
@@ -345,10 +346,32 @@ MonoBehaviour:
     PrewarmCount: 3
   - Prefab: {fileID: 1389866778582299859, guid: 892ddf1b837759b4a9994414e91b2cc0, type: 3}
     PrewarmCount: 3
+  - Prefab: {fileID: 6288402849401771863, guid: 4248749b8aa571a4db8f72e7ae8f9683, type: 3}
+    PrewarmCount: 3
   - Prefab: {fileID: 7872818705598725113, guid: 55efbe935c1407746b4427fcb8ec3b29, type: 3}
     PrewarmCount: 3
   - Prefab: {fileID: 2632902684132212087, guid: d6485a41623cfe44e97d30a8770a5a14, type: 3}
     PrewarmCount: 1
+  - Prefab: {fileID: 4022916156752048900, guid: 1d01dddc51ec73244b8b9173d7d2731a, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 6912148272411766303, guid: 026751995b6851b42be415935bd6c062, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 6912148272411766303, guid: debf27b818c55434680b61882504a64c, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 7415242239569161829, guid: a25b822653c782d468928aa55f52607a, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 959754860058491867, guid: 48774db7302a1a645838e43e6345f856, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 4022916156752048900, guid: f06541f8be4ba8c44a00d551169c8d9b, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 4022916156752048900, guid: 48654854aeca3a74485038f54f98ff2a, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 4022916156752048900, guid: 6183c83455095294dba2fdd416bbcd81, type: 3}
+    PrewarmCount: 3
+  - Prefab: {fileID: 1439048196768540335, guid: c72f096be10ac334fac15ebd209d7baa, type: 3}
+    PrewarmCount: 10
+  - Prefab: {fileID: 976249959754663240, guid: 06d26555edf3166479e9fee5631ea60c, type: 3}
+    PrewarmCount: 5
 --- !u!1 &2827320418798051780
 GameObject:
   m_ObjectHideFlags: 0
@@ -785,6 +808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
   EnemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   spawnPoints:
   - {fileID: 0}

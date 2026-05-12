@@ -48,7 +48,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     [SerializeField, EnableIfEnum(nameof(waitSpawnType), true, WaitSpawnType.WaitForSomeEnemyDead)]
     int waitSpawnRemainCount = 5;
     [SerializeField] NextPhaseType nextPhaseType = NextPhaseType.Remain;
-    //[SerializeField] EnemyDataBase enemyDataBase;
+    [SerializeField] EnemyDataBase enemyDataBase;
     [Header("Reference")]
     [SerializeField] NetworkObjectPool networkPool;
     [SerializeField] CheckPointManager checkPointManager;
@@ -274,7 +274,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
                rot);
 
         var enemy = networkObject.GetComponent<IEnemy>();
-        enemy.InjectSetting(enemyData, spawnIndex);
+        enemy.InjectSetting(enemyDataBase.GetIdFromEnemyData(enemyData), spawnIndex);
         spawnedEnemies.Add(enemy);
         networkObject.Spawn();
         //int id = enemyDataBase.GetIdFromEnemyData(enemyData);
@@ -287,7 +287,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
         if (!IsServer) return;
         if (gameStateManager.CurrentGameState != GameState.Playing) return;
         remain--;
-        Debug.Log($"[OnEnemyKilled] remain:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}", gameObject);
+        Debug.Log($"[OnEnemyKilled] remainServerOnly:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}", gameObject);
         if (remain == 0 && isSpawnFinished && waitSpawnEnemyQueue.Count == 0)
         {
             isAllDead = true;

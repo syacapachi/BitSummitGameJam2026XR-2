@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-[RequireComponent(typeof(Rigidbody),typeof(TrailRenderer))]
+[RequireComponent(typeof(Rigidbody))]
 public class LocalBullet : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;

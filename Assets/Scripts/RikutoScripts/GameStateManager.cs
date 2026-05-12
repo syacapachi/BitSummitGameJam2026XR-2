@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Syacapachi.Attribute;
 using Unity.Netcode;
-using Syacapachi.Attribute;
+using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 public class GameStateManager : NetworkBehaviour
 {
@@ -59,6 +60,8 @@ public class GameStateManager : NetworkBehaviour
         {
             LocalState = LocalState.WorldView;
         }
+        //初期同期
+        OnGameStateChangeRpcEvent.Invoke(CurrentGameState);
     }
 
     private void OnEnable()
@@ -201,7 +204,7 @@ public class GameStateManager : NetworkBehaviour
         LocalState = LocalState.LanguageSelect;
     }
 
-    public void EnterNetworkConnect()
+    public void OnLangageDefined()
     {
         if (!IsSpawned)
         {
@@ -209,10 +212,10 @@ public class GameStateManager : NetworkBehaviour
         }
         else
         {
-            EnterWorldView();
+            OnConnection();
         }
     }
-    public void EnterWorldView()
+    public void OnConnection()
     {
         LocalState = LocalState.WorldView;
     }

@@ -13,6 +13,7 @@ public class TutorialSpawner : NetworkBehaviour
 
     int remain;
     bool isSpawnFinished;
+    [SerializeField] EnemyDataBase enemyDataBase;
     [Header("Subscribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
     [SerializeField] Transform[] spawnPoints;
@@ -66,13 +67,13 @@ public class TutorialSpawner : NetworkBehaviour
             return;
         }
 
-        remain = playerCount;
         isSpawnFinished = false;
 
         for (int i = 0; i < Mathf.Min(playerCount, enemyList.Count); i++)
         {
             EnemySO enemy = enemyList[i];
             SpawnTarget(i, enemy);
+            remain++;
         }
         isSpawnFinished = true;
     }
@@ -97,7 +98,7 @@ public class TutorialSpawner : NetworkBehaviour
 
         if (obj.TryGetComponent<IEnemy>(out var enemy))
         {
-            enemy.InjectSetting(enemyData,spawnIndex);
+            enemy.InjectSetting(enemyDataBase.GetIdFromEnemyData(enemyData), spawnIndex);
             spawnedEnemies.Add(enemy);
         }
         obj.Spawn(true);

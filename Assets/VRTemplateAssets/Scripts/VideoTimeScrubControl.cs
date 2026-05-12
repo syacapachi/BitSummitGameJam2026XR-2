@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -38,7 +38,7 @@ namespace Unity.VRTemplate
         TextMeshProUGUI m_VideoTimeText;
 
         [SerializeField]
-        [Tooltip("If checked, the slider will fade off after a few seconds. If unchecked, the slider will remain on.")]
+        [Tooltip("If checked, the slider will fade off after a few seconds. If unchecked, the slider will remainServerOnly on.")]
         bool m_HideSliderAfterFewSeconds;
 
         bool m_IsDragging;

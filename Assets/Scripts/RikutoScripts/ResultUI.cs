@@ -86,6 +86,7 @@ public class ResultUI : MonoBehaviour
     {
         switch (state)
         {
+            case GameState.Home:
             case GameState.Initializing:
                 InitializeUI(); break;
         }
