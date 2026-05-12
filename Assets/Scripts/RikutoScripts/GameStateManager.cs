@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
+using Syacapachi.Attribute;
 
 public class GameStateManager : NetworkBehaviour
 {
@@ -30,7 +31,10 @@ public class GameStateManager : NetworkBehaviour
         get { return localState; }
         private set
         {
-            TrySetLocalState(value);
+            if (TrySetLocalState(value))
+            {
+                localStateChangeLocalEvent.Invoke(value);
+            }
         }
     }
     [Header("Canvas")]
@@ -39,6 +43,7 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] Canvas worldViewCanvas;
     [Header("Publish Event")]
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
+    [SerializeField] LocalStateEvent localStateChangeLocalEvent;
 
     public bool IsGamePlaying => CurrentGameState == GameState.Playing || CurrentGameState == GameState.Tutorial;
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
@@ -234,6 +239,7 @@ public enum GameState
     /// </summary>
     Home
 }
+[GenerateEvent(typeof(GameEventSOBase<>))]
 public enum LocalState
 {
     LanguageSelect,//言語設定
