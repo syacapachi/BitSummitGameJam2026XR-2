@@ -51,7 +51,19 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     public void OnTutorialStartServerOnly()
     {
         if (isTutorlalStartedServerOnly) return;
+
+        spawner.KillAll();
+
+        currentStepLogic?.OnEnd();
+        currentStepLogic = null;
+
+        StopAllCoroutines();
+
         isTutorlalStartedServerOnly = true;
+        isWaitingNext = false;
+
+        CurrentStep.Value = TutorialStep.Step1;
+
         StartStep(TutorialStep.Step1);
     }
 
@@ -130,8 +142,26 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     {
         if (!IsServer) return;
 
-        CurrentStep.Value++;
+        switch (CurrentStep.Value)
+        {
+            case TutorialStep.Step1:
+                CurrentStep.Value = TutorialStep.Step2;
+                break;
+
+            case TutorialStep.Step2:
+                CurrentStep.Value = TutorialStep.Step3;
+                break;
+
+            case TutorialStep.Step3:
+                CurrentStep.Value = TutorialStep.Step4;
+                break;
+
+            case TutorialStep.Step4:
+                CurrentStep.Value = TutorialStep.End;
+                break;
+        }
     }
+
     [Rpc(SendTo.Server)]
     public void NextStepRequretRpc()
     {

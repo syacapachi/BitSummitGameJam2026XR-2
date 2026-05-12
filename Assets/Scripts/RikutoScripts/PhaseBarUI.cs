@@ -52,6 +52,13 @@ public class PhaseBarUI : MonoBehaviour
     // =========================
     void CreateBars()
     {
+        foreach (Transform child in container)
+        {
+            Destroy(child.gameObject);
+        }
+
+        phaseBars.Clear();
+        separators.Clear();
 
         int count = rpcDataBase.CurrentSetting.Phases.Length;
 

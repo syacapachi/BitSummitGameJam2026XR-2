@@ -112,10 +112,12 @@ public class NetworkGameManager : NetworkBehaviour
     [OnInspectorButton("Start Game")]
     private void StartGameServerOnly()
     {
+        Debug.Log("[NetworkGameManager] StartGameServerOnly");
         if (!IsServer) return;
         tutorialLight.SetActive(false);
         //関数内部でデータベースを参照しているので、引数をとらなくても同期されているはず...
         hpManager.SetHPByDifficultyServerOnly();
+        Debug.Log("[NetworkGameManager] call StartPhasesServerOnly");
         phaseManager.StartPhasesServerOnly();
     }
     /// <summary>
