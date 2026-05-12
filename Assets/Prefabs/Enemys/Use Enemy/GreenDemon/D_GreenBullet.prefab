@@ -9692,6 +9692,7 @@ GameObject:
   - component: {fileID: 5158083865324121612}
   - component: {fileID: 2438645337064451966}
   - component: {fileID: -7458399323481798108}
+  - component: {fileID: 4459520341951778710}
   m_Layer: 7
   m_Name: D_GreenBullet
   m_TagString: Untagged
@@ -9921,3 +9922,26 @@ MonoBehaviour:
   lifeTime: 5
   rb: {fileID: 1573959926225779258}
   setting: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
+--- !u!114 &4459520341951778710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4022916156752048900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be45b286bce2c6043944e7c9d905976c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  ownerLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  noOwnerLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  m_Renderer:
+  - {fileID: 1889808807597214699}
+  - {fileID: 149389364656128860}
+  - {fileID: 5779545191722118857}

@@ -51,8 +51,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
             || !ManagerLocator.Instance.AllGameManager.IsGamePlaying
             ) return;
         ShootRpc();
-        //音をローカルですぐ流す
-        PlayShotSound();
     }
     /// <summary>
     /// 打てるかを確認

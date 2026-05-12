@@ -3431,6 +3431,7 @@ GameObject:
   - component: {fileID: 115478534}
   - component: {fileID: 115478533}
   - component: {fileID: 115478532}
+  - component: {fileID: 115478535}
   m_Layer: 5
   m_Name: Scroll View
   m_TagString: Untagged
@@ -3528,6 +3529,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 115478530}
   m_CullTransparentMesh: 1
+--- !u!65 &115478535
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115478530}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 610, y: 900, z: 0}
 --- !u!1 &116297274
 GameObject:
   m_ObjectHideFlags: 0
@@ -5256,7 +5278,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8466363864452579136, guid: 4794981bedeccaf4c9a30bb177c3cecd, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 4094704211
+      value: 2052521444
       objectReference: {fileID: 0}
     - target: {fileID: 8466363864452579136, guid: 4794981bedeccaf4c9a30bb177c3cecd, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
@@ -68449,10 +68471,6 @@ PrefabInstance:
       propertyPath: tutorialLight
       value: 
       objectReference: {fileID: 1151818106}
-    - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: difficulty.m_InternalValue
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 5843874078436757177, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: protectArea
       value: 

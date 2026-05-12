@@ -9692,6 +9692,7 @@ GameObject:
   - component: {fileID: 4246634838562097788}
   - component: {fileID: 7958317608532639792}
   - component: {fileID: 8133911712559356113}
+  - component: {fileID: 4263140426410741906}
   m_Layer: 8
   m_Name: G_KingBullet
   m_TagString: Untagged
@@ -9921,3 +9922,26 @@ MonoBehaviour:
   lifeTime: 5
   rb: {fileID: 5474787745808911041}
   setting: {fileID: 11400000, guid: b84d075d57a218c47b5d9be1b3be9669, type: 2}
+--- !u!114 &4263140426410741906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7415242239569161829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be45b286bce2c6043944e7c9d905976c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  ownerLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  noOwnerLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  m_Renderer:
+  - {fileID: 4577081340843455239}
+  - {fileID: 2038806514414235176}
+  - {fileID: 6518789499789056309}

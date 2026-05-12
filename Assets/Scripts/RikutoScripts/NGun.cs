@@ -5,8 +5,7 @@ using UnityEngine.XR;
 public class NGun : GunController
 {
     [Header("LocalBullet")]
-    [SerializeField]
-    GameObject localBulletPrefab;
+    [SerializeField] GameObject localBulletPrefab;
     [Header("Fps")]
     [SerializeField] Transform playerHead;
     [Header("gun")]
@@ -19,7 +18,7 @@ public class NGun : GunController
     [SerializeField] GameEffectDataEvent networkEvent;
 
     protected override IResultCollector Collector => playerStats;
-    public override Transform FirePoint 
+    public override Transform FirePoint
     {
         get
         {
@@ -47,7 +46,7 @@ public class NGun : GunController
     }
     public override void OnNetworkDespawn()
     {
-        if (IsOwner) 
+        if (IsOwner)
         {
             fireEvent.Unregister(Activate);
         }
@@ -56,15 +55,18 @@ public class NGun : GunController
     {
         base.Activate();
         //ローカルで弾を打つ打つことで、ラグさを見せない
+        if (CurrentAmmo <= 0) return;
         var Locator = ManagerLocator.Instance;
         if (Locator == null || Locator.GameStateManager == null || Locator.LocalObjectPool == null) return;
         if (!Locator.GameStateManager.IsGamePlaying) return;
-            var obj = Locator.LocalObjectPool.Get(localBulletPrefab);
-            obj.transform.SetPositionAndRotation(FirePoint.position, FirePoint.rotation);
+        var obj = Locator.LocalObjectPool.Get(localBulletPrefab);
+        obj.transform.SetPositionAndRotation(FirePoint.position, FirePoint.rotation);
         if (obj.TryGetComponent<LocalBullet>(out var localBullet))
         {
             localBullet.BulletInit(WeaponSettings.bulletSetting);
         }
+        //音をローカルですぐ流す
+        PlayShotSound();
     }
     //オーナー以外で毎フレームチェックさせるオーバーヘッドをなくすためコルーチン化
     IEnumerator LaserUpdateCoroutine()

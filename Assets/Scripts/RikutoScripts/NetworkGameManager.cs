@@ -49,7 +49,10 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
     [SerializeField] VoidEvent OnAllPhaseEndedServerEvent;
     [SerializeField] DifficultyEvent difficultyEvent;
-
+    private void Start()
+    {
+        gunEnableRpcEvent.Invoke(false);
+    }
     private void OnEnable()
     {
         OnGameStateChangeRpcEvent.Register(OnStateChanged);
