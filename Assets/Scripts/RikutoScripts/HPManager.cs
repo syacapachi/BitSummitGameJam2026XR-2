@@ -55,12 +55,18 @@ public class HPManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        remainHP.Value += value;
-
-        if (remainHP.Value < 0)
+        if(remainHP.Value + value > currentMaxHP)
+        {
+            remainHP.Value = currentMaxHP;
+        }
+        else if(remainHP.Value + value < 0)
+        {
             remainHP.Value = 0;
-
-        //Debug.Log("Score: " + score.Value);
+        }
+        else
+        {
+            remainHP.Value += value;
+        }
 
         if (remainHP.Value <= 0 && !isGameOver)
         {

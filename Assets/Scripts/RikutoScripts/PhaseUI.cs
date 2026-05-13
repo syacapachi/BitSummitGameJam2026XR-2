@@ -213,7 +213,7 @@ public class PhaseUI : MonoBehaviour
         {
             // 通常フェーズ
             phaseText.text = isJapanese
-                ? $"第{index + 1}波"
+                ? $"第{index + 1}フェーズ"
                 : $"Phase {index + 1}";
         }
 
