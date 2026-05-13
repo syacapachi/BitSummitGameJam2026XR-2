@@ -153,12 +153,11 @@ MonoBehaviour:
   hpCanvas: {fileID: 0}
   hpImage: {fileID: 0}
   hpText: {fileID: 0}
-  enemyJob: 4
+  enemyJob: 1
   networkAnimator: {fileID: 0}
   enemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   dieEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
   enemyAudio: {fileID: 0}
-  isAttackable: 1
   renderers:
   - {fileID: 6009221504515441882}
-  jobCycle: 010000000200000004000000
+  enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}

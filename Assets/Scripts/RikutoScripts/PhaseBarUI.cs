@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
-using Unity.XR.CoreUtils.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PhaseBarUI : MonoBehaviour
 {
     [Header("depend on")]
+    [SerializeField] DifficultyDataBase rpcDataBase;
     [SerializeField] PhaseManager phaseManager;
     [Header("UI")]
+    [SerializeField] Canvas timerCanvas;
     [SerializeField] GameObject phaseBarPrefab;
     [SerializeField] GameObject separatorPrefab;
     [SerializeField] Transform container;
@@ -22,7 +24,7 @@ public class PhaseBarUI : MonoBehaviour
     private readonly List<Image> separators = new List<Image>();
 
     private Color defaultColor;
-
+    GameState currentState;
     private void OnEnable()
     {
         GameStateEvent.Register(OnStateChange);
@@ -31,52 +33,18 @@ public class PhaseBarUI : MonoBehaviour
     {
         GameStateEvent.Unregister(OnStateChange);
     }
-
-    void Update()
-    {
-        if (phaseManager == null) return;
-
-        int current = phaseManager.CurrentPhaseIndex;
-        float progress = phaseManager.phaseProgress.Value;
-
-        if (current < 0) return;
-
-        for (int i = 0; i < phaseBars.Count; i++)
-        {
-            int visualIndex = phaseBars.Count - 1 - i;
-            if (i < current)
-            {
-                // 過去フェーズ → 完了
-                phaseBars[visualIndex].fillAmount = 0f;
-                phaseBars[visualIndex].color = Color.gray;
-                separators[visualIndex].enabled = false;
-            }
-            else if (i == current)
-            {
-                // 現在フェーズ → 減少
-                phaseBars[visualIndex].fillAmount = progress;
-                phaseBars[visualIndex].color = Color.yellow;
-                separators[visualIndex].enabled = true;
-            }
-            else
-            {
-                // 未来フェーズ → フル
-                phaseBars[visualIndex].fillAmount = 1f;
-                phaseBars[visualIndex].color = defaultColor;
-                separators[visualIndex].enabled = true;
-            }
-        }
-    }
     private void OnStateChange(GameState state)
     {
+        currentState = state;
         if (state == GameState.Playing)
         {
             CreateBars();
             SetupBarLength();
+            StartCoroutine(PhaseProgress());
         }
         if (state == GameState.GameOver || state == GameState.GameClear)
         {
-            gameObject.SetActive(false);
+            timerCanvas.enabled = false;
         }
     }
     // =========================
@@ -84,7 +52,15 @@ public class PhaseBarUI : MonoBehaviour
     // =========================
     void CreateBars()
     {
-        int count = phaseManager.Phases.Length;
+        foreach (Transform child in container)
+        {
+            Destroy(child.gameObject);
+        }
+
+        phaseBars.Clear();
+        separators.Clear();
+
+        int count = rpcDataBase.CurrentSetting.Phases.Length;
 
         for (int i = 0; i < count; i++)
         {
@@ -110,7 +86,7 @@ public class PhaseBarUI : MonoBehaviour
     {
         float maxTime = 0f;
         // 最大時間取得
-        foreach (var phase in phaseManager.Phases)
+        foreach (var phase in rpcDataBase.CurrentSetting.Phases)
         {
             maxTime += phase.PhaseTime;
         }
@@ -118,13 +94,50 @@ public class PhaseBarUI : MonoBehaviour
         // 各バーに反映
         for (int i = 0; i < phaseBars.Count; i++)
         {
-            float time = phaseManager.Phases[i].PhaseTime;
+            float time = rpcDataBase.CurrentSetting.Phases[i].PhaseTime;
             float ratio = time / maxTime;
 
             int visualIndex = phaseBars.Count - 1 - i;
 
             RectTransform rt = phaseBars[visualIndex].rectTransform;
             rt.sizeDelta = new Vector2(MaxWidth * ratio, rt.sizeDelta.y);
+        }
+    }
+    IEnumerator PhaseProgress()
+    {
+        //できればマネージャークラスへの依存を切りたい
+        yield return new WaitWhile(() => phaseManager.CurrentPhaseIndex < 0);
+        while(currentState == GameState.Playing)
+        {
+            int current = phaseManager.CurrentPhaseIndex;
+            float progress = phaseManager.phaseProgress.Value;
+
+            for (int i = 0; i < phaseBars.Count; i++)
+            {
+                int visualIndex = phaseBars.Count - 1 - i;
+                if (i < current)
+                {
+                    // 過去フェーズ → 完了
+                    phaseBars[visualIndex].fillAmount = 0f;
+                    phaseBars[visualIndex].color = Color.gray;
+                    separators[visualIndex].enabled = false;
+                }
+                else if (i == current)
+                {
+                    // 現在フェーズ → 減少
+                    phaseBars[visualIndex].fillAmount = progress;
+                    phaseBars[visualIndex].color = Color.yellow;
+                    separators[visualIndex].enabled = true;
+                }
+                else
+                {
+                    // 未来フェーズ → フル
+                    phaseBars[visualIndex].fillAmount = 1f;
+                    phaseBars[visualIndex].color = defaultColor;
+                    separators[visualIndex].enabled = true;
+                }
+            }
+            yield return null;
         }
     }
 }

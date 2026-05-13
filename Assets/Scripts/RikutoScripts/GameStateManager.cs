@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using Syacapachi.Attribute;
 using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 public class GameStateManager : NetworkBehaviour
 {
@@ -30,7 +32,10 @@ public class GameStateManager : NetworkBehaviour
         get { return localState; }
         private set
         {
-            TrySetLocalState(value);
+            if (TrySetLocalState(value))
+            {
+                localStateChangeLocalEvent.Invoke(value);
+            }
         }
     }
     [Header("Canvas")]
@@ -39,6 +44,7 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] Canvas worldViewCanvas;
     [Header("Publish Event")]
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
+    [SerializeField] LocalStateEvent localStateChangeLocalEvent;
 
     public bool IsGamePlaying => CurrentGameState == GameState.Playing || CurrentGameState == GameState.Tutorial;
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
@@ -54,6 +60,8 @@ public class GameStateManager : NetworkBehaviour
         {
             LocalState = LocalState.WorldView;
         }
+        //初期同期
+        OnGameStateChangeRpcEvent.Invoke(CurrentGameState);
     }
 
     private void OnEnable()
@@ -66,8 +74,15 @@ public class GameStateManager : NetworkBehaviour
     }
     void HandleGameStateChanged(GameState oldState, GameState newState)
     {
-        Debug.Log($"GameState Changed: {oldState} -> {newState}", gameObject);
         OnGameStateChangeRpcEvent.Invoke(newState);
+        if(newState == GameState.Home)
+        {
+            LocalState = LocalState.LanguageSelect;
+        }
+        else
+        {
+            LocalState = LocalState.Playing;
+        }
     }
 
     private void SetState(LocalState state)
@@ -160,9 +175,8 @@ public class GameStateManager : NetworkBehaviour
         if (!IsServer) return;
         CurrentGameState = GameState.GameClear;
     }
-    public void OnGameInitialize()
+    public void OnGameInitializeServerOnly()
     {
-        LocalState = LocalState.Playing;
         //ここからサーバー
         if (!IsServer) return;
         CurrentGameState = GameState.Initializing;
@@ -184,14 +198,13 @@ public class GameStateManager : NetworkBehaviour
     {
         if (!IsServer) return;
         CurrentGameState = GameState.Home;
-        LocalState = LocalState.LanguageSelect;
     }
     public void EnterLanguageSelect()
     {
         LocalState = LocalState.LanguageSelect;
     }
 
-    public void EnterNetworkConnect()
+    public void OnLangageDefined()
     {
         if (!IsSpawned)
         {
@@ -199,10 +212,10 @@ public class GameStateManager : NetworkBehaviour
         }
         else
         {
-            EnterWorldView();
+            OnConnection();
         }
     }
-    public void EnterWorldView()
+    public void OnConnection()
     {
         LocalState = LocalState.WorldView;
     }
@@ -234,6 +247,7 @@ public enum GameState
     /// </summary>
     Home
 }
+[GenerateEvent(typeof(GameEventSOBase<>))]
 public enum LocalState
 {
     LanguageSelect,//言語設定

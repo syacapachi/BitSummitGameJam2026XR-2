@@ -508,6 +508,7 @@ MonoBehaviour:
   enemyAudio: {fileID: 7493623612878443819}
   renderers: []
   jobCycle: 010000000200000004000000
+  enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
 --- !u!114 &2074675331461316831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -573,6 +574,7 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  localBulletPrefab: {fileID: 0}
   nEnemy: {fileID: 3163972296892794398}
   shotAudioEffect: {fileID: 11400000, guid: 6fb4e5230ada0f9409b390a6c5f1ddc7, type: 2}
   shotClip: {fileID: 8300000, guid: e90dd8ec210e052498d651c120222d8a, type: 3}

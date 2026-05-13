@@ -13,6 +13,7 @@ public class TutorialSpawner : NetworkBehaviour
 
     int remain;
     bool isSpawnFinished;
+    [SerializeField] EnemyDataBase enemyDataBase;
     [Header("Subscribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
     [SerializeField] Transform[] spawnPoints;
@@ -38,10 +39,23 @@ public class TutorialSpawner : NetworkBehaviour
 
     void OnEnemyKilledEvent(EnemyKilled e)
     {
-        OnEnemyKilled();
+        Debug.Log(
+    $"[TutorialSpawner] EnemyKilledEvent : " +
+    $"enemy={e.KilledEnemy} " +
+    $"contains={spawnedEnemies.Contains(e.KilledEnemy)} " +
+    $"remain(before)={remain} " +
+    $"spawnedCount(before)={spawnedEnemies.Count}");
+        if (!spawnedEnemies.Contains(e.KilledEnemy))
+            return;
 
         spawnedEnemies.Remove(e.KilledEnemy);
 
+        Debug.Log(
+    $"[TutorialSpawner] removed enemy : " +
+    $"remain(before decrement)={remain} " +
+    $"spawnedCount(after remove)={spawnedEnemies.Count}");
+
+        OnEnemyKilled();
     }
     public void SpawnTargetsForEachPlayer(int playerCount, List<EnemySO> enemyList)
     {
@@ -53,13 +67,13 @@ public class TutorialSpawner : NetworkBehaviour
             return;
         }
 
-        remain = playerCount;
         isSpawnFinished = false;
 
         for (int i = 0; i < Mathf.Min(playerCount, enemyList.Count); i++)
         {
             EnemySO enemy = enemyList[i];
             SpawnTarget(i, enemy);
+            remain++;
         }
         isSpawnFinished = true;
     }
@@ -84,7 +98,7 @@ public class TutorialSpawner : NetworkBehaviour
 
         if (obj.TryGetComponent<IEnemy>(out var enemy))
         {
-            enemy.InjectSetting(enemyData,spawnIndex);
+            enemy.InjectSetting(enemyDataBase.GetIdFromEnemyData(enemyData), spawnIndex);
             spawnedEnemies.Add(enemy);
         }
         obj.Spawn(true);

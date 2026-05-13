@@ -1,6 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 public class LanguageSelectManager : MonoBehaviour
 {
@@ -10,7 +8,7 @@ public class LanguageSelectManager : MonoBehaviour
     {
         PlayerPrefs.SetString("Language", "JP");
         PlayerPrefs.Save();
-        titleFlowManager.EnterNetworkConnect();
+        titleFlowManager.OnLangageDefined();
     }
 
     // 英語ボタンが押されたとき
@@ -18,6 +16,6 @@ public class LanguageSelectManager : MonoBehaviour
     {
         PlayerPrefs.SetString("Language", "EN");
         PlayerPrefs.Save();
-        titleFlowManager.EnterNetworkConnect();
+        titleFlowManager.OnLangageDefined();
     }
 }

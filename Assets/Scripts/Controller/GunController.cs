@@ -117,7 +117,8 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         if (isReloading) return;
         if(oldVal < newVal) return;
         UpdateCount(newVal, MaxAmmo);
-        if (IsClient)
+        //オーナー以外
+        if (!IsOwner && IsClient)
         {
             PlayShotSound();
         }

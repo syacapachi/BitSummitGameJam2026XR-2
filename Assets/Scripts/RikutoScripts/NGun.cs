@@ -5,9 +5,7 @@ using UnityEngine.XR;
 public class NGun : GunController
 {
     [Header("LocalBullet")]
-    [SerializeField] bool useLocalBullet = false;
-    [SerializeField, EnableIf(nameof(useLocalBullet), hideWhenFalse = true)]
-    GameObject localBulletPrefab;
+    [SerializeField] GameObject localBulletPrefab;
     [Header("Fps")]
     [SerializeField] Transform playerHead;
     [Header("gun")]
@@ -16,12 +14,11 @@ public class NGun : GunController
     [SerializeField] AmmoUI ammoUI;
     [SerializeField] PlayerStats playerStats;
     [Header("Subscribe Event")]
-    [SerializeField] VoidEvent changeLocalBulletEvent;
     [SerializeField] VoidEvent fireEvent;
     [SerializeField] GameEffectDataEvent networkEvent;
 
     protected override IResultCollector Collector => playerStats;
-    public override Transform FirePoint 
+    public override Transform FirePoint
     {
         get
         {
@@ -37,7 +34,6 @@ public class NGun : GunController
     {
         if (IsOwner)
         {
-            changeLocalBulletEvent.Register(ChangeLocalBullet);
             fireEvent.Register(Activate);
             StartCoroutine(LaserUpdateCoroutine());
 
@@ -50,31 +46,27 @@ public class NGun : GunController
     }
     public override void OnNetworkDespawn()
     {
-        if (IsOwner) 
+        if (IsOwner)
         {
-            changeLocalBulletEvent.Unregister(ChangeLocalBullet);
             fireEvent.Unregister(Activate);
         }
     }
     public override void Activate()
     {
         base.Activate();
+        //ローカルで弾を打つ打つことで、ラグさを見せない
+        if (CurrentAmmo <= 0) return;
         var Locator = ManagerLocator.Instance;
         if (Locator == null || Locator.GameStateManager == null || Locator.LocalObjectPool == null) return;
         if (!Locator.GameStateManager.IsGamePlaying) return;
-        if (useLocalBullet)
+        var obj = Locator.LocalObjectPool.Get(localBulletPrefab);
+        obj.transform.SetPositionAndRotation(FirePoint.position, FirePoint.rotation);
+        if (obj.TryGetComponent<LocalBullet>(out var localBullet))
         {
-            var obj = Locator.LocalObjectPool.Get(localBulletPrefab);
-            obj.transform.SetPositionAndRotation(FirePoint.position, FirePoint.rotation);
-            if (obj.TryGetComponent<LocalBullet>(out var localBullet))
-            {
-                localBullet.BulletInit(WeaponSettings.bulletSetting);
-            }
+            localBullet.BulletInit(WeaponSettings.bulletSetting);
         }
-    }
-    private void ChangeLocalBullet()
-    {
-        useLocalBullet = !useLocalBullet;
+        //音をローカルですぐ流す
+        PlayShotSound();
     }
     //オーナー以外で毎フレームチェックさせるオーバーヘッドをなくすためコルーチン化
     IEnumerator LaserUpdateCoroutine()

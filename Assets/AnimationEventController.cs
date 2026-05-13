@@ -10,27 +10,24 @@ public class AnimationEventController : NetworkBehaviour
     //アニメーションイベントはAnimationControllerと同じところでないと呼ばれない。
     void OnAttack()
     {
-        if (!IsServer) return;
         shooter.ShootFromAnimationEvent();
     }
     //アニメーションイベントはAnimationControllerと同じところでないと呼ばれない。
     //アニメーションは全てで呼ばれる
     void OnVisible()
     {
-        //if (!IsServer) return;
-        enemy.SetVisibleServer();
+        enemy.SetVisibleFromAnimationEvent();
     }
 
     void OnInvisible()
     {
-        //if (!IsServer) return;
-        enemy.RestoreLayerServer();
+        enemy.RestoreLayerFromAnimationEvent();
     }
 
     void OnDie()
     {
         if (!IsServer) return;
-        enemy.DieFromAnimationEvent();
+        enemy.DieFromAnimationServerEvent();
     }
 
     void StartMove()

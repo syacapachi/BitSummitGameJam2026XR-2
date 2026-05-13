@@ -1,26 +1,21 @@
-﻿using System.Collections;
-using UnityEngine;
-[RequireComponent(typeof(Rigidbody),typeof(TrailRenderer))]
+﻿using UnityEngine;
+[RequireComponent(typeof(Rigidbody))]
 public class LocalBullet : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
     [SerializeField] TrailRenderer trailRenderer;
     [SerializeField] float lifeTime = 5f;
-    float bulletSpped;
     private void OnDisable()
     {
         trailRenderer.Clear();
-    }
-    private void Start()
-    {
-        rb.isKinematic = false;
-        rb.linearVelocity = transform.forward * bulletSpped;
-        ManagerLocator.Instance.LocalObjectPool.Release(gameObject, lifeTime);
+        rb.isKinematic = true;
     }
 
     public void BulletInit(BulletSetting setting)
     {
-        bulletSpped = setting.Speed;
+        rb.isKinematic = false;
+        rb.linearVelocity = transform.forward * setting.Speed;
+        ManagerLocator.Instance.LocalObjectPool.Release(gameObject, lifeTime);
     }
 #if UNITY_EDITOR
     private void Reset()

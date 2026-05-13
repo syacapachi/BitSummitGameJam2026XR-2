@@ -15,6 +15,7 @@ public class AlertLightController : MonoBehaviour
     [Header("Subscribe Event")]
     [SerializeField] HPInfoEvent hpInfo;
     [SerializeField] BoolEvent alertRpcEvent;
+    [SerializeField] GameStateEvent gameStateEvent;
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffectEvent;
     [SerializeField] BoolEvent WarningStateEvent;
@@ -28,13 +29,24 @@ public class AlertLightController : MonoBehaviour
     }
     private void OnEnable()
     {
+        gameStateEvent.Register(GameStateChanged);
         alertRpcEvent.Register(OnAlert);
         WarningStateEvent.Register(OnWarningState);
     }
     private void OnDisable()
     {
+        gameStateEvent.Unregister(GameStateChanged);
         alertRpcEvent.Unregister(OnAlert);
         WarningStateEvent.Unregister(OnWarningState);
+    }
+    void GameStateChanged(GameState newState)
+    {
+        switch(newState)
+        {
+            case GameState.Home:
+            case GameState.Initializing:
+                OnAlert(false);break;
+        }
     }
     void OnAlert(bool alert)
     {

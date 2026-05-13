@@ -39,10 +39,11 @@ public class SkyBoxColorSetting : ScriptableObject
     [Header("テクスチャの回転"),Range(0f,1f)]
     public float textureRotation = 1f;
     private const float onehour = 360f / 24f;
+    private static readonly Vector3 loopx = 360f * Vector3.right;
 
     //0時->±180
     //6時-> -90 or 270
-    //12時 -> 0
+    //12時 -> 0 or 360
     //18時 -> 90
     [SerializeField] private Vector3 skyRootEular;
     public Vector3 SkyRootEular => skyRootEular;
@@ -51,7 +52,7 @@ public class SkyBoxColorSetting : ScriptableObject
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        skyRootEular = new Vector3((int)timeOfDay * onehour - 180f, 170, 0);
+        skyRootEular = new Vector3((int)timeOfDay * onehour + 180f, 170, 0);
     }
 #endif
 
@@ -74,9 +75,47 @@ public class SkyBoxColorSetting : ScriptableObject
         moonMultiplier = Mathf.Lerp(fromSky.moonMultiplier, toSky.moonMultiplier, t);
 
         textureStrength = Mathf.Lerp(fromSky.textureStrength, toSky.textureStrength, t);
-        textureRotation = Mathf.Lerp(fromSky.textureRotation, toSky.textureRotation, t);
 
-        skyRootEular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular, t);
+        if (fromSky.textureRotation > toSky.textureRotation)
+        {
+            float rot = Mathf.Lerp(fromSky.textureRotation, toSky.textureRotation + 1, t);
+            textureRotation = rot <= 1 ? rot : rot -1;
+        }
+        else
+        {
+            textureRotation = Mathf.Lerp(fromSky.textureRotation, toSky.textureRotation, t);
+        }
+        if (fromSky.SkyRootEular.x > toSky.SkyRootEular.x)
+        {
+            Vector3 eular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular + loopx, t);
+            skyRootEular = eular;
+        }
+        else
+        {
+            skyRootEular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular, t);
+        }
+    }
+    public void CopySky(SkyBoxColorSetting setting)
+    {
+        timeOfDay = setting.timeOfDay;
+
+        topColor = setting.topColor;
+        horizonColor = setting.horizonColor;
+        bottomColor = setting.bottomColor;
+
+        intensity = setting.intensity;
+        exponentBottom = setting.exponentBottom;
+        exponentTop = setting.exponentTop;
+
+        sunColor = setting.sunColor;
+        sunIntensity = setting.sunIntensity;
+        sunMultiplier = setting.sunMultiplier;
+
+        moonColor = setting.moonColor;
+        moonIntensity = setting.moonIntensity;
+        moonMultiplier = setting.moonMultiplier;
+
+        skyRootEular = setting.skyRootEular;
     }
 }
 /// <summary>

@@ -57,6 +57,14 @@ public class SampleScript : MonoBehaviour
             Debug.Log($"This is an inline method. name = {name}, value = {value}");
         }
     }
+    public class InlineMonoClass : MonoBehaviour, IInLineInterface
+    {
+        [SerializeField] AnimationCurve curve;
+        public void InlineMethod()
+        {
+            Debug.Log("hello",this.gameObject);
+        }
+    }
     public struct InLineStruct : IInLineInterface, IInLineGenericInterface<string>
     {
         public string name;

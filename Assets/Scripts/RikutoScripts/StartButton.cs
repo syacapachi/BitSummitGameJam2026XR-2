@@ -66,18 +66,19 @@ public class StartButton : NetworkBehaviour
     {
         switch (state)
         {
-            case GameState.Home:
             case GameState.Initializing:
                 UpdateLanguageText();
                 OnGameInitialize(); break;
+
+            case GameState.Home:
             case GameState.Playing:
-                GameStartHandle(); break;
             case GameState.Tutorial:
                 GameStartHandle(); break;
+
             case GameState.GameClear:
-                GameEndHandle(); break;
             case GameState.GameOver:
                 GameEndHandle(); break;
+
             default: break;
         }
     }

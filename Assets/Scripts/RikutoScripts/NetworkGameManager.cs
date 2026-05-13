@@ -49,7 +49,10 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] VoidEvent OnScoreReachZeroServerEvent;
     [SerializeField] VoidEvent OnAllPhaseEndedServerEvent;
     [SerializeField] DifficultyEvent difficultyEvent;
-
+    private void Start()
+    {
+        gunEnableRpcEvent.Invoke(false);
+    }
     private void OnEnable()
     {
         OnGameStateChangeRpcEvent.Register(OnStateChanged);
@@ -64,11 +67,13 @@ public class NetworkGameManager : NetworkBehaviour
     {
         switch (newState)
         {
+            case GameState.Home:
             case GameState.Initializing:
                 InitializeGameServerOnly(); break;
             case GameState.Playing:
                 StartGameServerOnly();
-                 break;
+                tutorialLight.SetActive(false);
+                break;
             case GameState.Tutorial:
                 tutorialLight.SetActive(true);
                 StartTutorialServerOnly();break;
@@ -106,15 +111,14 @@ public class NetworkGameManager : NetworkBehaviour
     }
     void StartTutorialServerOnly()
     {
-        tutorialManager.OnTutorialStart();
+        tutorialManager.OnTutorialStartServerOnly();
     }
     [OnInspectorButton("Start Game")]
     private void StartGameServerOnly()
     {
+        Debug.Log("[NetworkGameManager] StartGameServerOnly");
         if (!IsServer) return;
-
-        Debug.Log("Game Start", gameObject);
-        tutorialLight.SetActive(false);
+        
         //関数内部でデータベースを参照しているので、引数をとらなくても同期されているはず...
         hpManager.SetHPByDifficultyServerOnly();
         phaseManager.StartPhasesServerOnly();
@@ -126,9 +130,6 @@ public class NetworkGameManager : NetworkBehaviour
     private void InitializeGameServerOnly()
     {
         if (!IsServer) return;
-
-        Debug.Log("GAME Initilalzie", gameObject);
-
         phaseManager.ResetPhase();
         phaseManager.KillableHandle.KillAll();
         hpManager.ResetHP();
@@ -155,7 +156,6 @@ public class NetworkGameManager : NetworkBehaviour
     void HandleScoreZeroServerOnly()
     {
         if (!IsServer) return;
-        Debug.Log("GAME OVER");
         gameStateManager.OnGameOverServerOnly();
 
         OnGameEnd();
@@ -163,7 +163,6 @@ public class NetworkGameManager : NetworkBehaviour
 
     void HandleAllPhaseEndedServerOnly()
     {
-        Debug.Log("ALL PHASE ENDED CALLED");
         gameStateManager.OnGameClearServerOnly(); ;
 
         OnGameEnd();

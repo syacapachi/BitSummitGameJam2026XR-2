@@ -60,19 +60,23 @@ public class Scripts : MonoBehaviour
     [SerializeField] private string japaneseRoomFoundText = "部屋を見つけた！";
     [SerializeField] private string englishRoomFoundText = "Room Found!";
 
+    [Header("Subscribe Event")]
+    [SerializeField] LocalStateEvent localStateEvent;
+
     readonly Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new();
     public UnityEvent OnClientStart = new UnityEvent();
 
     private TextMeshProUGUI discovertext;
     private string discoverTextDefault;
     private string refreshText;
-
+#if UNITY_EDITOR
     private void Reset()
     {
         m_NetworkManager ??= NetworkManager.Singleton;
         m_Discovery ??= m_NetworkManager.gameObject.GetComponent<MyNetworkDiscovery>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);
     }
+#endif
 
     private void Start()
     {
@@ -107,6 +111,19 @@ public class Scripts : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        localStateEvent.Register(OnLocalStateChanged);
+    }
+    private void OnDisable()
+    {
+        localStateEvent.Unregister(OnLocalStateChanged);
+    }
+    private void OnLocalStateChanged(LocalState state)
+    {
+        //状態更新ごとに言語設定を更新
+        UpdateLanguageText();
+    }
     private void UpdateLanguageText()
     {
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
@@ -153,7 +170,7 @@ public class Scripts : MonoBehaviour
     {
         isNetworkStarted = true;
         SetActiveButtons(false);
-        titleFlowManager.EnterWorldView();
+        titleFlowManager.OnConnection();
     }
 
     private void SetActiveButtons(bool active)

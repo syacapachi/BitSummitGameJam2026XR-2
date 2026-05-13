@@ -2,9 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public enum TutorialStep
 {
@@ -29,11 +27,11 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     [SerializeField] VoidEvent OnTutorialStepCleared;
     [SerializeField] IntEvent OnTutorialStepChanged;
     [SerializeField] ULongEvent markerPlaceServerEvent;
-    private bool isTutorlalStarted;
+    private bool isTutorlalStartedServerOnly;
     
     public override void OnNetworkSpawn()
     {
-        isTutorlalStarted = false;
+        isTutorlalStartedServerOnly = false;
         if (IsServer)
         {
             attackBlockedEvent.Register(OnAttackBlocked);
@@ -50,10 +48,22 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
             markerPlaceServerEvent.Unregister(OnMarkerPlacedServer);
         }
     }
-    public void OnTutorialStart()
+    public void OnTutorialStartServerOnly()
     {
-        if (isTutorlalStarted) return;
-        isTutorlalStarted = true;
+        if (isTutorlalStartedServerOnly) return;
+
+        spawner.KillAll();
+
+        currentStepLogic?.OnEnd();
+        currentStepLogic = null;
+
+        StopAllCoroutines();
+
+        isTutorlalStartedServerOnly = true;
+        isWaitingNext = false;
+
+        CurrentStep.Value = TutorialStep.Step1;
+
         StartStep(TutorialStep.Step1);
     }
 
@@ -132,8 +142,26 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     {
         if (!IsServer) return;
 
-        CurrentStep.Value++;
+        switch (CurrentStep.Value)
+        {
+            case TutorialStep.Step1:
+                CurrentStep.Value = TutorialStep.Step2;
+                break;
+
+            case TutorialStep.Step2:
+                CurrentStep.Value = TutorialStep.Step3;
+                break;
+
+            case TutorialStep.Step3:
+                CurrentStep.Value = TutorialStep.Step4;
+                break;
+
+            case TutorialStep.Step4:
+                CurrentStep.Value = TutorialStep.End;
+                break;
+        }
     }
+
     [Rpc(SendTo.Server)]
     public void NextStepRequretRpc()
     {
@@ -151,7 +179,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     private void OnAttackBlocked(AttackBlocked blocked)
     {
         if (!IsServer) return;
-        if(!isTutorlalStarted) return;
+        if(!isTutorlalStartedServerOnly) return;
         currentStepLogic?.OnAttackBlocked(blocked.Collector.ClientId);
     }
 
@@ -164,6 +192,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     private void StartMainSimulation()
     {
         stateManager.OnTutorialEndServerOnly();
+        isTutorlalStartedServerOnly = false;
     }
 
     private void OnMarkerPlacedServer(ulong playerId)

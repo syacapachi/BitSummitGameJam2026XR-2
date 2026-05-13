@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using Syacapachi.Attribute;
+using System.Collections;
+using Unity.Collections;
 using Unity.Netcode;
-using UnityEngine;
-using Syacapachi.Attribute;
 using Unity.Netcode.Components;
+using UnityEngine;
 
 public class NEnemyShoot : GunController
 {
+    [Header("LocalBullet")]
+    [SerializeField] GameObject localBulletPrefab;
     [SerializeField] NEnemy nEnemy;
     [SerializeField] AudioEffectData shotAudioEffect;
     [SerializeField] AudioClip shotClip;
@@ -14,31 +17,24 @@ public class NEnemyShoot : GunController
     [Header("Publish Event")]
     [SerializeField] GameEffectEvent gameEffect;
 
-    private EnemyWeaponSettingsSO weaponSOServerOnly;
+    private EnemyWeaponSettingsSO weaponSORpc;
     Coroutine shootCorutine;
     NetworkGameManager gameManager;
     PlayerManager playerManager;
-    float remain = 0;
-
-    private IEnumerator Start()
+    float remainServerOnly = 0;
+    Transform nearestPlayerTransfrom = null;
+    private void Start()
     {
-        //ゲームマネージャーが生成されるのを待つ
-        while (ManagerLocator.Instance.AllGameManager == null || ManagerLocator.Instance.AllPlayerManager == null)
-        {
-            yield return null;
-        }
         gameManager = ManagerLocator.Instance.AllGameManager;
         playerManager = ManagerLocator.Instance.AllPlayerManager;
     }
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
-
+        weaponSORpc = nEnemy.EnemyWeaponRpc != null ? nEnemy.EnemyWeaponRpc : (EnemyWeaponSettingsSO)base.WeaponSettings;
         if (!IsServer) return;
-        weaponSOServerOnly = nEnemy.EnemyWeaponServeronly;
-        remain = weaponSOServerOnly.maxAmmo;
-        if (nEnemy.CanAttackServerOnly)
+        remainServerOnly = weaponSORpc.maxAmmo;
+        if (nEnemy.CanAttackRpc)
         {
             shootCorutine = StartCoroutine(ShootCorutine());
         }
@@ -50,13 +46,34 @@ public class NEnemyShoot : GunController
     }
     public void ShootFromAnimationEvent()
     {
+        if(!TryGetTarget(out nearestPlayerTransfrom)) return;
+        ShootLocal();
         if (!IsServer) return;
         OnShootServer();
     }
+    private void ShootLocal()
+    {
+        
+        Vector3 direction = (nearestPlayerTransfrom.position - FirePoint.position).normalized;
+
+        GameObject bulletObject = ManagerLocator.Instance.LocalObjectPool.Get(
+            localBulletPrefab
+        );
+        bulletObject.transform.SetPositionAndRotation(
+            FirePoint.position,
+            Quaternion.LookRotation(direction)
+            );
+
+        bulletObject.layer = this.gameObject.layer;
+        if (bulletObject.TryGetComponent<LocalBullet>(out var localBullet))
+        {
+            localBullet.BulletInit(weaponSORpc.bulletSetting);
+        }
+    }
     protected override void OnShootServer()
     {
-        if (!TryGetTarget(out var target)) return;
-        Vector3 direction = (target.position - FirePoint.position).normalized;
+        if (nearestPlayerTransfrom == null) return;
+        Vector3 direction = (nearestPlayerTransfrom.position - FirePoint.position).normalized;
 
         NetworkObject networkObject = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(
             BulletPrefab,
@@ -67,7 +84,7 @@ public class NEnemyShoot : GunController
         networkObject.gameObject.layer = this.gameObject.layer;
 
         var bullet = networkObject.GetComponent<BulletBaseController>();
-        bullet.BulletInit(null, nEnemy.EnemyJob, weaponSOServerOnly.bulletSetting);
+        bullet.BulletInit(null, nEnemy.EnemyJob, weaponSORpc.bulletSetting);
 
         networkObject.Spawn();
     }
@@ -76,9 +93,9 @@ public class NEnemyShoot : GunController
     {
         //トリガー以外はこっち
         //networkAnimator?.Animator.SetFloat("Speed", 2.0f);
-        WaitForSeconds waitInterval = new WaitForSeconds(weaponSOServerOnly.fireInterval);
-        WaitForSeconds waitReload = new WaitForSeconds(weaponSOServerOnly.reloadTime);
-        yield return new WaitForSeconds(weaponSOServerOnly.FirstShootDelayTime);
+        WaitForSeconds waitInterval = new WaitForSeconds(weaponSORpc.fireInterval);
+        WaitForSeconds waitReload = new WaitForSeconds(weaponSORpc.reloadTime);
+        yield return new WaitForSeconds(weaponSORpc.FirstShootDelayTime);
         //トリガーはこっち
         networkAnimator?.SetTrigger("Attack");
 
@@ -87,10 +104,10 @@ public class NEnemyShoot : GunController
             yield return waitInterval;
             //トリガーはこっち
             networkAnimator?.SetTrigger("Attack");
-            if (--remain <= 0)
+            if (--remainServerOnly <= 0)
             {
                 yield return waitReload;
-                remain = weaponSOServerOnly.maxAmmo;
+                remainServerOnly = weaponSORpc.maxAmmo;
             }
         }
     }
@@ -98,7 +115,7 @@ public class NEnemyShoot : GunController
     bool TryGetTarget(out Transform target)
     {
         target = null;
-        if(gameManager == null) return false;
+        if (gameManager == null) return false;
 
         switch (gameManager.CurrentGameMode)
         {
@@ -134,10 +151,8 @@ public class NEnemyShoot : GunController
             if (prop == null) continue;
 
             var playerJob = prop.Job;
-            
-            bool canTarget = nEnemy.IsAttackableJob(playerJob);
 
-            //Debug.Log($"[{nameof(NEnemyShoot)}] player: {player.gameObject.name}, job: {playerJob}, enemyJob: {nEnemy.EnemyJob}, canTarget: {canTarget}");
+            bool canTarget = nEnemy.IsAttackableJob(playerJob);
 
             if (!canTarget) continue;
 
@@ -150,7 +165,7 @@ public class NEnemyShoot : GunController
             break;
         }
 
-        Debug.Log($"[{nameof(NEnemyShoot)},{nEnemy.EnemyJob}] nearest target: {(nearest != null ? nearest.name : "null")}",gameObject);
+        Debug.Log($"[{nameof(NEnemyShoot)},{nEnemy.EnemyJob}] nearest target: {(nearest != null ? nearest.name : "null")}", gameObject);
 
         return nearest != null;
     }
@@ -162,7 +177,7 @@ public class NEnemyShoot : GunController
 #if UNITY_EDITOR
     private void Reset()
     {
-        nEnemy ??= GetComponent<NEnemy>();   
+        nEnemy ??= GetComponent<NEnemy>();
     }
 #endif
 }
