@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Meta.WitAi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using static CheckPointManager;
 
@@ -27,6 +29,7 @@ public class CheckPointManager : MonoBehaviour
     }
 #if UNITY_EDITOR
     [SerializeField] GameObject m_CheckPointParent;
+    private GameObject lastCheckPoint;
 #endif
     [SerializeField] Transform[] checkPoints;
     IndexToTransform[] indexToTransformArr;
@@ -53,12 +56,59 @@ public class CheckPointManager : MonoBehaviour
     {
         if(m_CheckPointParent != null)
         {
-            var childs = m_CheckPointParent.GetComponentsInChildren<Transform>();
-            if (childs != null)
+            if (lastCheckPoint != null && lastCheckPoint != m_CheckPointParent)
             {
-                checkPoints = childs.Skip(1).ToArray();
+                var lastSpawnPoints = lastCheckPoint.GetComponentsInChildren<Transform>();
+                foreach(var spawnPoint in lastSpawnPoints.Skip(1))
+                {
+                    if (spawnPoint.TryGetComponent<SpawnPointMarker>(out var marker))
+                    {
+                        //次のフレームで1っ回だけ実行される
+                        EditorApplication.delayCall += () =>
+                        {
+                            //Destroyは危険な処理なのでOnValidateでは実行できない
+                            if (marker != null) DestroyImmediate(marker);
+                        };
+                        
+                    }
+                    if(spawnPoint.TryGetComponent<Collider>(out var collider))
+                    {
+                        EditorApplication.delayCall += () =>
+                        {
+                            if (collider != null) DestroyImmediate(collider);
+                        };
+                    }
+                }
+            }
+            lastCheckPoint = m_CheckPointParent;
+            var childs = m_CheckPointParent.GetComponentsInChildren<Transform>();
+            int id = 0;
+            //親を飛ばす
+            checkPoints = childs.Skip(1).ToArray();
+            foreach (var t in checkPoints)
+            {
+                if (!t.TryGetComponent<SpawnPointMarker>(out var spawnPoint))
+                {
+                    //AddComponentは重い処理なので、エラーを防ぐため次のフレームで実行する。
+                    //コピーしないと全部同じになる。(内部参照が同じになるため)
+                    int next = id;
+                    EditorApplication.delayCall += () => CreateMaker(t, next);
+                }
+                else
+                {
+                    spawnPoint.SpawnPointId = id;
+                }
+                id++;
             }
         }
+    }
+    void CreateMaker(Transform t,int id)
+    {
+        SphereCollider sc = t.gameObject.AddComponent<SphereCollider>();
+        sc.radius = 0.1f;
+        sc.isTrigger = true;
+        SpawnPointMarker spawnPoint = t.gameObject.AddComponent<SpawnPointMarker>();
+        spawnPoint.SpawnPointId = id;
     }
 #endif
     public bool IsLastPoint(IndexToTransform transform)
