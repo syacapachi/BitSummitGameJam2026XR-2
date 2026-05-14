@@ -93,7 +93,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         Debug.LogError($"LayerMask setting not found for job: {playerJob}",gameObject);
         return false;
     }
-    [OnInspectorButton(showOnlyInPlayMode = true)]
+    [OnInspectorButton(ShowOnlyInPlayMode = true)]
     public void InjectSetting(int id,int spawnPointIndex)
     {
         enemyId.Value = id;

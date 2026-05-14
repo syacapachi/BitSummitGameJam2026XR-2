@@ -141,7 +141,7 @@ public class SkyBoxColorChanger : MonoBehaviour
         if (index < 0 || index >= skyBoxColorSettings.Length) return;
         ApplyColor(skyBoxColorSettings[index]);
     }
-    [OnInspectorButton("適応ボタン(設定)", validateInvoke = true)]
+    [OnInspectorButton("適応ボタン(設定)", ValidateInvoke = true)]
     void ApplyColor(SkyBoxColorSetting setting)
     {
         if (setting == null)
