@@ -42,6 +42,7 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] GameObject languageCanvas;
     [SerializeField] GameObject connectCanvas;
     [SerializeField] Canvas worldViewCanvas;
+    [SerializeField] Canvas tutorialUI;
     [Header("Publish Event")]
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     [SerializeField] LocalStateEvent localStateChangeLocalEvent;
@@ -83,6 +84,8 @@ public class GameStateManager : NetworkBehaviour
         {
             LocalState = LocalState.Playing;
         }
+
+        UpdateTutorialUI();
     }
 
     private void SetState(LocalState state)
@@ -96,6 +99,17 @@ public class GameStateManager : NetworkBehaviour
 
         worldViewCanvas.enabled =
             state == LocalState.WorldView;
+
+        UpdateTutorialUI();
+    }
+
+    void UpdateTutorialUI()
+    {
+        bool active =
+            localState == LocalState.Playing &&
+            CurrentGameState == GameState.Tutorial;
+
+        tutorialUI.enabled = active;
     }
 
     private bool CanTransition(GameState fromState, GameState toState)
