@@ -43,9 +43,11 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] GameObject connectCanvas;
     [SerializeField] Canvas worldViewCanvas;
     [SerializeField] Canvas tutorialUI;
+    [SerializeField] Canvas difficultyCanvas;
     [Header("Publish Event")]
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     [SerializeField] LocalStateEvent localStateChangeLocalEvent;
+    [SerializeField] DifficultyEvent difficultyEvent;
 
     public bool IsGamePlaying => CurrentGameState == GameState.Playing || CurrentGameState == GameState.Tutorial;
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
@@ -73,6 +75,7 @@ public class GameStateManager : NetworkBehaviour
     {
         gameState.OnValueChanged -= HandleGameStateChanged;
     }
+    /*
     void HandleGameStateChanged(GameState oldState, GameState newState)
     {
         OnGameStateChangeRpcEvent.Invoke(newState);
@@ -87,7 +90,32 @@ public class GameStateManager : NetworkBehaviour
 
         UpdateTutorialUI();
     }
+    */
 
+    void HandleGameStateChanged(GameState oldState, GameState newState)
+    {
+        OnGameStateChangeRpcEvent.Invoke(newState);
+
+        switch (newState)
+        {
+            case GameState.Home:
+                LocalState = LocalState.LanguageSelect;
+                break;
+
+            case GameState.Waiting:
+                LocalState = LocalState.SelectDifficulty;
+                break;
+
+            case GameState.Tutorial:
+                LocalState = LocalState.Tutorial;
+                break;
+
+            case GameState.Playing:
+                LocalState = LocalState.Playing;
+                break;
+        }
+    }
+    /*
     private void SetState(LocalState state)
     {
         languageCanvas.SetActive(
@@ -102,16 +130,29 @@ public class GameStateManager : NetworkBehaviour
 
         UpdateTutorialUI();
     }
+    */
 
-    void UpdateTutorialUI()
+    private void SetState(LocalState state)
     {
-        bool active =
-            localState == LocalState.Playing &&
-            CurrentGameState == GameState.Tutorial;
+        languageCanvas.SetActive(
+            state == LocalState.LanguageSelect);
 
-        tutorialUI.enabled = active;
+        connectCanvas.SetActive(
+            state == LocalState.NetworkConnect ||
+            state == LocalState.WorldView);
+
+        worldViewCanvas.enabled =
+            state == LocalState.WorldView;
+
+        tutorialUI.enabled =
+            state == LocalState.Tutorial;
+
+        difficultyCanvas.enabled =
+            state == LocalState.SelectDifficulty;
     }
 
+
+    /*
     private bool CanTransition(GameState fromState, GameState toState)
     {
         return fromState switch
@@ -133,6 +174,68 @@ public class GameStateManager : NetworkBehaviour
             LocalState.NetworkConnect => toState == LocalState.WorldView,
             LocalState.WorldView => toState == LocalState.Playing,
             LocalState.Playing => toState == LocalState.LanguageSelect,
+            _ => false,
+        };
+    }
+    */
+
+    private bool CanTransition(LocalState fromState, LocalState toState)
+    {
+        return fromState switch
+        {
+            LocalState.LanguageSelect
+                => IsSpawned
+                ? toState == LocalState.WorldView
+                : toState == LocalState.NetworkConnect,
+
+            LocalState.NetworkConnect
+                => toState == LocalState.WorldView,
+
+            LocalState.WorldView
+                => toState == LocalState.Tutorial
+                || toState == LocalState.SelectDifficulty
+                || toState == LocalState.Playing,
+
+            LocalState.Tutorial
+                => toState == LocalState.SelectDifficulty
+                || toState == LocalState.Playing,
+
+            LocalState.SelectDifficulty
+                => toState == LocalState.Playing,
+
+            LocalState.Playing
+                => toState == LocalState.LanguageSelect,
+
+            _ => false,
+        };
+    }
+
+    private bool CanTransition(GameState fromState, GameState toState)
+    {
+        return fromState switch
+        {
+            GameState.Home
+                => toState == GameState.Initializing,
+
+            GameState.Initializing
+                => toState == GameState.Tutorial
+                || toState == GameState.Playing
+                || toState == GameState.Waiting,
+
+            GameState.Tutorial
+                => toState == GameState.Waiting
+                || toState == GameState.Playing,
+
+            GameState.Waiting
+                => toState == GameState.Playing,
+
+            GameState.Playing
+                => toState == GameState.GameClear
+                || toState == GameState.GameOver,
+
+            GameState.GameClear or GameState.GameOver
+                => toState == GameState.Home,
+
             _ => false,
         };
     }
@@ -177,6 +280,46 @@ public class GameStateManager : NetworkBehaviour
     public void OnTutorialEndServerOnly()
     {
         if (!IsServer) return;
+
+        if (gameStartMode == GameStartMode.Button)
+        {
+            CurrentGameState = GameState.Waiting;
+        }
+        else
+        {
+            CurrentGameState = GameState.Playing;
+        }
+    }
+
+    [OnInspectorButton]
+    public void StartEasy()
+    {
+        StartGame(Difficulty.Easy);
+    }
+
+    [OnInspectorButton]
+    public void StartNormal()
+    {
+        StartGame(Difficulty.Normal);
+    }
+
+    [OnInspectorButton]
+    public void StartHard()
+    {
+        StartGame(Difficulty.Hard);
+    }
+
+    void StartGame(Difficulty difficulty)
+    {
+        if (!IsServer) return;
+
+        if (CurrentGameState != GameState.Waiting)
+            return;
+
+        difficultyEvent.Invoke(difficulty);
+
+        Debug.Log($"Start Difficulty : {difficulty}");
+
         CurrentGameState = GameState.Playing;
     }
     public void OnGameOverServerOnly()
@@ -191,16 +334,24 @@ public class GameStateManager : NetworkBehaviour
     }
     public void OnGameInitializeServerOnly()
     {
-        //ここからサーバー
         if (!IsServer) return;
+
         CurrentGameState = GameState.Initializing;
+
         if (useTutorial)
         {
             CurrentGameState = GameState.Tutorial;
         }
-        else if(gameStartMode == GameStartMode.Auto)
+        else
         {
-            CurrentGameState = GameState.Playing;
+            if (gameStartMode == GameStartMode.Auto)
+            {
+                CurrentGameState = GameState.Playing;
+            }
+            else
+            {
+                CurrentGameState = GameState.Waiting;
+            }
         }
     }
     public void OnGameStartServerOnly()
@@ -259,7 +410,11 @@ public enum GameState
     /// <summary>
     /// 待機WorldViewとかにいる時
     /// </summary>
-    Home
+    Home,
+    /// <summary>
+    /// ゲーム開始前の待機状態
+    /// </summary>
+    Waiting,
 }
 [GenerateEvent(typeof(GameEventSOBase<>))]
 public enum LocalState
@@ -267,6 +422,8 @@ public enum LocalState
     LanguageSelect,//言語設定
     NetworkConnect,//接続
     WorldView,//世界観説明
+    Tutorial,//チュートリアル
+    SelectDifficulty,//難易度選択
     Playing,//ゲーム開始
 }
 //LocalStateの動き
@@ -278,10 +435,12 @@ public enum LocalState
 
 
 //GameState
-//Initialize -> (tutorial) -> Playing -> {GameClear, GameOver} -> Home;
+//Initialize -> (tutorial) -> (Waiting) -> Playing -> {GameClear, GameOver} -> Home;
 //Initialize(チュートリアルの分岐を判断する枝)ついでに初期化
 //Initialize -> Tutorial:チュートリアルが有効の場合遷移
 //Initialize -> Playing:チュートリアルが無効の場合遷移
 //Tutorial -> Plying:チュートリアル終了後遷移
 //PLaying -> {GameClear, GameOver} :条件により、どちらかに遷移
 //{GameClear, GameOver} -> Home : 戻るボタンで遷移
+
+//Waiting追加　buttonモードのとき難易度選択する状態
