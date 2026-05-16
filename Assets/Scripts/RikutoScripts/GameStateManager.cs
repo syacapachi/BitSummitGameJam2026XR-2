@@ -294,19 +294,25 @@ public class GameStateManager : NetworkBehaviour
     [OnInspectorButton]
     public void StartEasy()
     {
-        StartGame(Difficulty.Easy);
+        RequestStartGameRpc(Difficulty.Easy);
     }
 
     [OnInspectorButton]
     public void StartNormal()
     {
-        StartGame(Difficulty.Normal);
+        RequestStartGameRpc(Difficulty.Normal);
     }
 
     [OnInspectorButton]
     public void StartHard()
     {
-        StartGame(Difficulty.Hard);
+        RequestStartGameRpc(Difficulty.Hard);
+    }
+
+    [OnInspectorButton]
+    public void StartDebug()
+    {
+        RequestStartGameRpc(Difficulty.Debug);
     }
 
     void StartGame(Difficulty difficulty)
@@ -321,6 +327,12 @@ public class GameStateManager : NetworkBehaviour
         Debug.Log($"Start Difficulty : {difficulty}");
 
         CurrentGameState = GameState.Playing;
+    }
+
+    [Rpc(SendTo.Server)]
+    void RequestStartGameRpc(Difficulty difficulty)
+    {
+        StartGame(difficulty);
     }
     public void OnGameOverServerOnly()
     {
