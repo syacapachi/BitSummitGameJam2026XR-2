@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Syacapachi.Attribute;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -98,6 +99,7 @@ public class WorldViewManager : NetworkBehaviour
         pageIndex.Value--;
     }
 
+    [OnInspectorButton]
     void OnPageChanged(int oldValue, int newValue) => ShowPage(newValue);
 
     void ShowPage(int index)

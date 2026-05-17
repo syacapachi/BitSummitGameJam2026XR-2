@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  maxEnemyCapacity: 10
   waitSpawnType: 0
   waitSpawnRemainCount: 5
   nextPhaseType: 0
@@ -102,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CheckPointParent: {fileID: 0}
   checkPoints:
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -467,6 +467,7 @@ MonoBehaviour:
   enemyJob: []
   enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
   difficultyDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
+  bases: {fileID: 11400000, guid: 4f63a6d870e62af4cb1adb01bdf0f9c3, type: 2}
 --- !u!1 &5655868705551815652
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +620,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  useCustomSeed: 1
+  gameSeed: 12345
   difficulty:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -946,11 +949,11 @@ MonoBehaviour:
   - action: {fileID: -3800612907701892205, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: 4f90a0dcf15ac3346a5d4dc1ef33d19a, type: 2}
     setting: 1
-  - action: {fileID: -2099379676528639254, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
-    gameEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
-    setting: 1
   - action: {fileID: 1218294735510755974, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
+    setting: 1
+  - action: {fileID: -2099379676528639254, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
     setting: 1
   - action: {fileID: 5746621223023547563, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: f9e23ca27358a3f419041719b45bce40, type: 2}

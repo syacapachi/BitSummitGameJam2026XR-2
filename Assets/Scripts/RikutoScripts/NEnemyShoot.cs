@@ -39,7 +39,7 @@ public class NEnemyShoot : GunController
             shootCorutine = StartCoroutine(ShootCorutine());
         }
     }
-    [OnInspectorButton(showOnlyInPlayMode = true)]
+    [OnInspectorButton(ShowOnlyInPlayMode = true)]
     private void InspectorShoot()
     {
         shootCorutine = StartCoroutine(ShootCorutine());

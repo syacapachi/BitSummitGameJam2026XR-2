@@ -1,58 +1,84 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 [Serializable]
 public class RandomTable
 {
     private System.Random rng;
-    private List<float> values;
+    private readonly float[] values;
     private int index;
 
     public RandomTable(int seed, int size = 1000)
     {
+        if (size <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(size));
+        }
         rng = new System.Random(seed);
-        values = new List<float>(size);
+
+        values = new float[size];
         for (int i = 0; i < size; i++)
-            values.Add((float)rng.NextDouble()); // 0.0f �` 1.0f
+            values[i] = ((float)rng.NextDouble()); //0以上1未満 [0.0f 1.0f)
         index = 0;
     }
 
-    // 乱数を1つ取得(0~1.0f)
+    /// <summary>
+    /// 乱数を1つ取得(0~1.0f)
+    /// </summary>
+    /// <returns></returns>
     public float NextFloat()
     {
-        if (values.Count == 0) return 0f;
-        float v = values[index];
-        index = (index + 1) % values.Count; // ����\
+        float v = values[index++];
+        if (index >= values.Length)
+        {
+            index = 0;
+        }
         return v;
     }
 
-    // 浮動小数点型の乱数を所得
-    public float Range(float min, float max)
+    /// <summary>
+    /// 浮動小数点型の乱数を所得
+    /// </summary>
+    /// <param name="minInclusive"></param>
+    /// <param name="maxExclusive"></param>
+    /// <returns></returns>
+    public float Range(float minInclusive, float maxExclusive)
     {
-        return min + (max - min) * NextFloat();
+        return minInclusive + (maxExclusive - minInclusive) * NextFloat();
     }
 
-    public int RangeInt(int min, int max)
+    /// <summary>
+    /// 整数型の乱数を取得
+    /// </summary>
+    /// <param name="minInclusive"></param>
+    /// <param name="maxExclusive"></param>
+    /// <returns></returns>
+    public int RangeInt(int minInclusive, int maxExclusive)
     {
-        return min + Mathf.FloorToInt(NextFloat() * (max - min));
+        return minInclusive + (int)(NextFloat() * (maxExclusive - minInclusive));
     }
 
-    // 再生成
-    public void Rebuild(int seed, int size = -1)
+    /// <summary>
+    /// 再生成
+    /// </summary>
+    /// <param name="seed"></param>
+    public void Rebuild(int seed)
     {
-        if (size < 0) size = values.Count;
         rng = new System.Random(seed);
-        values.Clear();
-        for (int i = 0; i < size; i++)
-            values.Add((float)rng.NextDouble());
+        for (int i = 0; i < values.Length; i++)
+            values[i] = ((float)rng.NextDouble());
         index = 0;
     }
+    /// <summary>
+    /// リストシャッフル
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
     public void ShuffleList<T>(List<T> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
         {
-            int j = rng.Next(0, i + 1);
+            int j = RangeInt(0, i + 1);
             (list[i], list[j]) = (list[j], list[i]);
         }
     }

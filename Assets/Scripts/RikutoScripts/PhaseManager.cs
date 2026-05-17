@@ -56,12 +56,13 @@ public class PhaseManager : NetworkBehaviour
         OnPhaseChangeRpcEvent.Invoke(newValue);
     }
 
-    public void StartPhasesServerOnly()
+    public void StartPhasesServerOnly(int gameSeed)
     {
         if (!IsServer) return;
 #if UNITY_EDITOR
         Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartPhasesServerOnly called", gameObject);
 #endif       
+        SpawnableHandle.SetRandomSeed(gameSeed);
         //ここからサーバーOnlyの処理
         syncedPhaseIndex.Value = -1;
         StartNextPhase();
@@ -115,7 +116,7 @@ public class PhaseManager : NetworkBehaviour
         syncedPhaseIndex.Value = phaseIndex;
 
         var phaseSetting = Phases[phaseIndex];
-        SpawnableHandle.SpawnFromEvent(phaseSetting.SpawnEvents.ToList(), phaseSetting.UseRandomSpawn);
+        SpawnableHandle.SpawnFromEvent(phaseSetting.Setting);
         //別コルーチンとして起動
         StartCoroutine(PhaseProgress(phaseSetting.PhaseTime));
     }

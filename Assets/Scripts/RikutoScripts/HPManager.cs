@@ -42,7 +42,7 @@ public class HPManager : NetworkBehaviour
             aleartRpcEvent.Invoke(false);
         }
     }
-    [OnInspectorButton(showOnlyInPlayMode = true)]
+    [OnInspectorButton(ShowOnlyInPlayMode = true)]
     public void AddBonusHPServerOnly(int value)
     {
         if (!IsServer) return;
@@ -78,7 +78,6 @@ public class HPManager : NetworkBehaviour
     public void SetHPByDifficultyServerOnly()
     {
         int hp = rpcDataBase.CurrentSetting.PlayerHP;
-        Debug.Log($"rpcDataBase diff = {rpcDataBase.CurrectDifficulty} ", gameObject);
         remainHP.Value = hp;
         currentMaxHP = hp;
     }

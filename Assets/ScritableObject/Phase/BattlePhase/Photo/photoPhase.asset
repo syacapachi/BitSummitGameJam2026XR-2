@@ -15,7 +15,9 @@ MonoBehaviour:
   phaseName: {fileID: 11400000, guid: a3a936547c50d8a49bb9f7ee668641a8, type: 2}
   phaseTime: 120
   clearBonus: 5000
-  useRandomSpawn: 0
+  enemyCapacity: 10
+  useRandomSpawn: 1
+  randomSpawnSettings: {fileID: 0}
   spawnEvents:
   - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
     spawnPointIndex: 3
