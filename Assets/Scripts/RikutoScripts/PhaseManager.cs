@@ -52,7 +52,9 @@ public class PhaseManager : NetworkBehaviour
     }
     private void OnPhaseChanedHaldle(int oldValue, int newValue)
     {
+#if UNITY_EDITOR
         Debug.Log($"[NetworkVariable] PhaseChange: {newValue}", gameObject);
+#endif
         OnPhaseChangeRpcEvent.Invoke(newValue);
     }
 
@@ -177,8 +179,9 @@ public class PhaseManager : NetworkBehaviour
         while (count > 0)
         {
             CountdownValue.Value = count;
+#if UNITY_EDITOR
             Debug.Log("End Phase Countdown: " + count, gameObject);
-
+#endif
             yield return waitlast;
             count--;
         }
