@@ -844,8 +844,9 @@ MonoBehaviour:
   phaseBarPrefab: {fileID: 3726993551735620307, guid: 0bf3ca9b243f5b442b094758a364551a, type: 3}
   separatorPrefab: {fileID: 7588150835802480204, guid: ecb63a1604d8a1044be16b3669b27af3, type: 3}
   container: {fileID: 32161907}
-  rect: {fileID: 32161907}
-  GameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
+  fixedBarWidth: 300
+  gameStateEvent: {fileID: 0}
+  onPhaseChangeRpcEvent: {fileID: 0}
 --- !u!114 &32161911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13544,72 +13545,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 548427462}
   m_CullTransparentMesh: 1
---- !u!1 &550031886
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 550031887}
-  - component: {fileID: 550031888}
-  m_Layer: 0
-  m_Name: GameObject (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &550031887
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 550031886}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.329994, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &550031888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 550031886}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83471f19e1b306d4186ffb0a1da944d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  a: 0
-  b: 0
-  vec: {x: 0, y: 0, z: 0}
-  color: {r: 0, g: 0, b: 0, a: 0}
-  obj: {fileID: 0}
-  clazz:
-    name: 
-    ints: 
-  list: []
-  classList: []
-  resultCollector:
-    rid: 7268457207021437043
-  resultCollectors: []
-  resultCollectorList: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 7268457207021437043
-      type: {class: SampleScript/InlineClass, ns: , asm: Assembly-CSharp}
-      data:
-        name: 
-        ints: 
 --- !u!1 &551929783
 GameObject:
   m_ObjectHideFlags: 0
@@ -43980,11 +43915,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1147414449}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1151818106 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8620195493814683290, guid: e0f82a832839a5d46bcd23dbde435105, type: 3}
-  m_PrefabInstance: {fileID: 308848541571781170}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1152763365
 GameObject:
   m_ObjectHideFlags: 0
@@ -68221,14 +68151,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: tutorialLight
-      value: 
-      objectReference: {fileID: 1151818106}
-    - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: difficulty.m_InternalValue
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 5843874078436757177, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: protectArea
       value: 
@@ -69856,4 +69778,3 @@ SceneRoots:
   - {fileID: 3850632494188764729}
   - {fileID: 6191801394104601557}
   - {fileID: 279138898}
-  - {fileID: 550031887}
