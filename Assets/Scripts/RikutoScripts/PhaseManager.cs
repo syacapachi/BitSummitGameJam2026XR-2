@@ -128,12 +128,14 @@ public class PhaseManager : NetworkBehaviour
         float timer = time;
         //最大時間を保存しておくことで、UIに進行度を0~1の範囲で渡すことができる
         float max = time;
+        //逆数をキャッシュしておく
+        float invMax = 1f / max;
         while (timer > 0 && !spawner.IsAllDeadServerOnly)
         {
             //コルーチンは1フレームごとに呼ばれるため、Time.deltaTimeを引いていくことで、フェーズの残り時間を管理する
             timer -= Time.deltaTime;
             if (timer <= 0) timer = 0;
-            phaseProgress.Value = Mathf.Clamp01(timer / max);
+            phaseProgress.Value = Mathf.Clamp01(timer * invMax);
             yield return null;
         }
 

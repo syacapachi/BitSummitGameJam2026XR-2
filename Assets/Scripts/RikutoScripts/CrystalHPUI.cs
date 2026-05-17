@@ -18,12 +18,15 @@ public class CrystalHPUI : MonoBehaviour
     [SerializeField] GameStateEvent GameStateEvent;
 
     private float maxScore;
+    private float invMaxScore;
 
     void UIInitialize()
     {
         maxScore = rpcDataBase.CurrentSetting.PlayerHP;
         // 念のため保険（0除算防止）
         maxScore = Mathf.Max(1f, maxScore);
+
+        invMaxScore = 1f / maxScore;
 
         // 初期表示
         UpdateScoreUI(nGameManager.HPManager.remainHP.Value);
@@ -56,7 +59,7 @@ public class CrystalHPUI : MonoBehaviour
         // バー更新
         if (scoreBar != null)
         {
-            scoreBar.fillAmount = Mathf.Clamp01((float)score / maxScore);
+            scoreBar.fillAmount = Mathf.Clamp01((float)score * invMaxScore);
         }
 
         // テキスト更新

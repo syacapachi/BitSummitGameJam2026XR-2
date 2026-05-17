@@ -38,6 +38,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public EnemyWeaponSettingsSO EnemyWeaponRpc => rpcEnemySO.EnemyWeapon;  
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => rpcEnemySO.Hp;
+    private float invMaxHealth;
     /// <summary>
     /// セットはEditor上のみ
     /// </summary>
@@ -123,6 +124,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             if (IsServer)
             {
                 currentHP.Value = rpcEnemySO.Hp;
+                invMaxHealth = 1f / rpcEnemySO.Hp;
             }
             UpdateHPUI(currentHP.Value);
         }
@@ -301,7 +303,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     void UpdateHPUI(float hp)
     {
         if (hpImage != null)
-            hpImage.fillAmount = hp / rpcEnemySO.Hp;
+            hpImage.fillAmount = hp * invMaxHealth;
 
         if (hpText != null)
             hpText.text = $"{hp} / {rpcEnemySO.Hp}";

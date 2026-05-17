@@ -327,12 +327,13 @@ public class PhaseUI : MonoBehaviour
 
         float t = 0f;
         float duration = 0.05f;
+        float invduration = 1f / duration;
 
         while (t < duration)
         {
             t += Time.deltaTime;
             phaseText.transform.localScale =
-                Vector3.Lerp(big, normal, t / duration);
+                Vector3.Lerp(big, normal, t * invduration);
             yield return null;
         }
 

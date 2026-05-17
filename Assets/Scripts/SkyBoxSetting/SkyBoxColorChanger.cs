@@ -228,9 +228,10 @@ public class SkyBoxColorChanger : MonoBehaviour
     }
     IEnumerator ApplyColorCorutineByTime(SkyBoxColorSetting from, SkyBoxColorSetting to, float changeTime)
     {
+        float invChangeTime = 1f / changeTime;
         for (float timer = 0f; timer <= changeTime; timer += Time.deltaTime)
         {
-            ApplyLerp(from, to, timer / changeTime);
+            ApplyLerp(from, to, timer * invChangeTime);
             yield return null;
         }
         ApplyColor(to);

@@ -68,10 +68,12 @@ public readonly struct HPInfo
 {
     public readonly float CurrentHP;
     public readonly float MaxHP;
+    public readonly float InvMapHP;
     public HPInfo(float currentHp, float maxHp)
     {
         this.CurrentHP = currentHp;
         this.MaxHP = maxHp;
+        InvMapHP = 1f / maxHp;
     }
     public readonly override string ToString()
     {

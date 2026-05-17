@@ -90,10 +90,11 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         {
             PlayReloadSound();
         }
+        float invReloadTime = 1f / ReloadTime;
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         for (float t = 0; t < ReloadTime; t += 0.1f)
         {
-            UpdateProgress(t / ReloadTime);
+            UpdateProgress(t * invReloadTime);
             yield return wait01;
         }
         UpdateProgress(0);
