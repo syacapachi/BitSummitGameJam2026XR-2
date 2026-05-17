@@ -119,7 +119,9 @@ public class StartButton : NetworkBehaviour
 
     private void OnGameInitialize()
     {
-        startUI.SetActive(true);
+        //startUI.SetActive(true);
+        //難易度選択追加したためいったん非表示
+        startUI.SetActive(false);
         resetUI.SetActive(false);
     }
 }

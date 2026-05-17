@@ -124,6 +124,9 @@ public class WorldTutorialManager : NetworkBehaviour
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
 
         TitileAndText[] titileAndText = tutorialTexts.Get(isJapanese);
+        if (index < 0 || index >= titileAndText.Length)
+            return;
+
         if (boardTextGUI != null)
             boardTextGUI.text = titileAndText[index].DescriptionText;
 

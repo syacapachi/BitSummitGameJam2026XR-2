@@ -10758,7 +10758,7 @@ GameObject:
   - component: {fileID: 805776663}
   - component: {fileID: 805776662}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: TutorialCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16671,6 +16671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  enemyDataBase: {fileID: 0}
   EnemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   spawnPoints:
   - {fileID: 1561710060}
@@ -29839,6 +29840,7 @@ MonoBehaviour:
   tutorialManager: {fileID: 1993381231}
   root: {fileID: 944393607}
   text: {fileID: 1841232711}
+  gameStateEvent: {fileID: 0}
   OnTutorialStepChanged: {fileID: 11400000, guid: 4cdbcd5da1b58d048a39f9a786419768, type: 2}
   OnTutorialStepCleared: {fileID: 11400000, guid: 64f3ed58da1abd54bb4e2c3464685d38, type: 2}
 --- !u!1 &1824393318
@@ -32256,6 +32258,7 @@ MonoBehaviour:
   buzzerEffectData: {fileID: 11400000, guid: 23c19a4e96248ac4491ad08ac455867a, type: 2}
   hpInfo: {fileID: 11400000, guid: 4dc65a2fed759be4795b3a96e4d604c8, type: 2}
   alertRpcEvent: {fileID: 11400000, guid: 432a6a4fce97a02429b981e89ed75b9b, type: 2}
+  gameStateEvent: {fileID: 0}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
   WarningStateEvent: {fileID: 11400000, guid: ea950463a1b029947b246f4c310fcef4, type: 2}
 --- !u!1 &1979390471
