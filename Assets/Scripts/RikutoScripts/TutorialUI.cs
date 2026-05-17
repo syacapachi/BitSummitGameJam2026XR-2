@@ -185,12 +185,12 @@ public class TutorialUI : MonoBehaviour
 
         float t = 0f;
         float duration = 0.1f;
-
+        float invduration = 1f / duration;
         while (t < duration)
         {
             t += Time.deltaTime;
             text.transform.localScale =
-                Vector3.Lerp(big, normal, t / duration);
+                Vector3.Lerp(big, normal, t * invduration);
             yield return null;
         }
 
@@ -203,6 +203,7 @@ public class TutorialUI : MonoBehaviour
         Vector3 end = Vector3.one * 1.1f; // 最終サイズ
 
         float duration = 2f; // ゆっくり感はここで調整
+        float invDuration = 1f / duration;
         float t = 0f;
 
         text.transform.localScale = start;
@@ -211,7 +212,7 @@ public class TutorialUI : MonoBehaviour
         {
             t += Time.deltaTime;
 
-            float progress = t / duration;
+            float progress = t * invDuration;
 
             // なめらかに（イージング）
             float ease = Mathf.SmoothStep(0f, 1f, progress);

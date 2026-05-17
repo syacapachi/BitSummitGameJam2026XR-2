@@ -120,7 +120,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
             //初期値があると、軽い
             List<SpawnEvent> randomSpawnEvent = new List<SpawnEvent>();
             //割り算は計算コストがあるので、先に計算。
-            float invPhaseTime = 1 / setting.PhaseTime;
+            float invPhaseTime = 1f / setting.PhaseTime;
             float time = randomSetting.GetSpawnDuration(0f);
             while (time < setting.PhaseTime)
             {

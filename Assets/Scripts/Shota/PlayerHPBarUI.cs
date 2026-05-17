@@ -22,7 +22,7 @@ public class PlayerHPBarUI : MonoBehaviour
     {
         if (hpBarImage != null)
         {
-            hpBarImage.fillAmount = Mathf.Max(0.01f, Mathf.Clamp01(info.CurrentHP / info.MaxHP));
+            hpBarImage.fillAmount = Mathf.Max(0.01f, Mathf.Clamp01(info.CurrentHP * info.InvMapHP));
         }
 
         // テキスト更新
