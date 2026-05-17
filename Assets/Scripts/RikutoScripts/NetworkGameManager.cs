@@ -13,7 +13,6 @@ public class NetworkGameManager : NetworkBehaviour
     [Header("Refernce")]
     [SerializeField] GameObject protectArea;
     [SerializeField] HPManager hpManager;
-    [SerializeField] GameObject tutorialLight;
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] PlayerManager PlayerManager;
     [SerializeField] TutorialManager tutorialManager;
@@ -72,10 +71,8 @@ public class NetworkGameManager : NetworkBehaviour
                 InitializeGameServerOnly(); break;
             case GameState.Playing:
                 StartGameServerOnly();
-                tutorialLight.SetActive(false);
                 break;
             case GameState.Tutorial:
-                tutorialLight.SetActive(true);
                 StartTutorialServerOnly();break;
             default:
                 break;
