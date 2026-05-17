@@ -792,22 +792,31 @@ namespace Syacapachi.Editor
             );
             if (!foldoutStates[nestedSO]) return;
 
-            EditorGUI.indentLevel++;
-            // -------------------------
-            // Editorキャッシュ使用
-            // -------------------------
-            if (!editorCache.TryGetValue(nestedSO, out var cachedEditor) || cachedEditor == null)
+            int prevIndent = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = 0;
+            using (new EditorGUI.IndentLevelScope(1))
             {
-                Editor.CreateCachedEditor(nestedSO, null, ref cachedEditor);
-                editorCache[nestedSO] = cachedEditor;
-            }
+                // -------------------------
+                // Editorキャッシュ使用
+                // -------------------------
+                if (!editorCache.TryGetValue(nestedSO, out var cachedEditor) || cachedEditor == null)
+                {
+                    Editor.CreateCachedEditor(nestedSO, null, ref cachedEditor);
+                    editorCache[nestedSO] = cachedEditor;
+                }
 
-            //エディター描画(この中でも呼ばれするの実質再帰)
-            if (cachedEditor != null)
-            {
-                cachedEditor.OnInspectorGUI();
+                //エディター描画(この中でも呼ばれするの実質再帰)
+                if (cachedEditor != null)
+                {
+                    using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
+                    {
+                        GUILayout.Space(2);
+                        cachedEditor.OnInspectorGUI();
+                        GUILayout.Space(2);
+                    }
+                }
             }
-            EditorGUI.indentLevel--;
+            EditorGUI.indentLevel = prevIndent;
         }
     }
 }

@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class NetworkGameManager : NetworkBehaviour
 {
-    
+
     [Header("ゲーム設定")]
+    [SerializeField] bool useCustomSeed = false;
+    [SerializeField,EnableIf(nameof(useCustomSeed))] int gameSeed;
     [SerializeField] NetworkVariable<Difficulty> difficulty = new(Difficulty.Easy);
     [SerializeField] GameMode gameMode = GameMode.Protect;
     [Header("Refernce")]
@@ -19,8 +21,6 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] GameStateManager gameStateManager;
     [Header("DataBase")]
     [SerializeField] DifficultyDataBase difficultyRpcDataBase;
-    //[Header("Scene Setting")]
-    //[SerializeField, Scene(true)] string homeScene;
     public GameMode CurrentGameMode => gameMode;
     public HPManager HPManager => hpManager;
     public PhaseManager PhaseManager => phaseManager;
@@ -121,7 +121,7 @@ public class NetworkGameManager : NetworkBehaviour
         
         //関数内部でデータベースを参照しているので、引数をとらなくても同期されているはず...
         hpManager.SetHPByDifficultyServerOnly();
-        phaseManager.StartPhasesServerOnly();
+        phaseManager.StartPhasesServerOnly(gameSeed);
     }
     /// <summary>
     /// ゲーム初期化
@@ -130,6 +130,10 @@ public class NetworkGameManager : NetworkBehaviour
     private void InitializeGameServerOnly()
     {
         if (!IsServer) return;
+        if (!useCustomSeed)
+        {
+            gameSeed = Random.Range(int.MinValue, int.MaxValue);
+        }
         phaseManager.ResetPhase();
         phaseManager.KillableHandle.KillAll();
         hpManager.ResetHP();
@@ -172,10 +176,14 @@ public class NetworkGameManager : NetworkBehaviour
         phaseManager.KillableHandle.KillAll();
         phaseManager.StopAllCoroutines();
         resultDataCreater.CreateAndSendResultData(
-            IsGameOver,
-            HPManager.GetHP(),
-            HPManager.TotalBonusHPServerOnly,
-            CurrentDifficulty);
+            new ResultDataCreater.ResultHeaderData(
+                IsGameOver,
+                gameSeed,
+                HPManager.GetHP(),
+                HPManager.TotalBonusHPServerOnly,
+                CurrentDifficulty
+            )
+        );
     }
     public void BulletHitProtectArea(int damage)
     {

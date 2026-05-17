@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 public interface ISpawnable
 {
-    public void SpawnFromEvent(List<SpawnEvent> spawnEvents)
-    {
-        SpawnFromEvent(spawnEvents, false);
-    }
-    public void SpawnFromEvent(List<SpawnEvent> spawnEvents,bool useRandomSpawn);
+    public void SetRandomSeed(int seed);
+    public void SpawnFromEvent(SpawnSetting spawnSetting);
 }

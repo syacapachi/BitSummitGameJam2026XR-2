@@ -13544,6 +13544,72 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 548427462}
   m_CullTransparentMesh: 1
+--- !u!1 &550031886
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 550031887}
+  - component: {fileID: 550031888}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &550031887
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550031886}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 4.329994, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &550031888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550031886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83471f19e1b306d4186ffb0a1da944d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  a: 0
+  b: 0
+  vec: {x: 0, y: 0, z: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
+  obj: {fileID: 0}
+  clazz:
+    name: 
+    ints: 
+  list: []
+  classList: []
+  resultCollector:
+    rid: 7268457207021437043
+  resultCollectors: []
+  resultCollectorList: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 7268457207021437043
+      type: {class: SampleScript/InlineClass, ns: , asm: Assembly-CSharp}
+      data:
+        name: 
+        ints: 
 --- !u!1 &551929783
 GameObject:
   m_ObjectHideFlags: 0
@@ -67996,9 +68062,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 423640509}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: useTutorial
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: connectCanvas
       value: 
       objectReference: {fileID: 2084777998}
+    - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: gameStartMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: languageCanvas
       value: 
@@ -68011,34 +68085,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManagerLocator
       objectReference: {fileID: 0}
-    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: voidEventList.Array.data[4].action
-      value: 
-      objectReference: {fileID: 1218294735510755974, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
-    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: voidEventList.Array.data[5].action
-      value: 
-      objectReference: {fileID: -2099379676528639254, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
-    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: voidEventList.Array.data[4].setting
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: voidEventList.Array.data[5].setting
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: voidEventList.Array.data[6].setting
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: voidEventList.Array.data[4].gameEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
-    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: voidEventList.Array.data[5].gameEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3618414520
@@ -68055,14 +68101,18 @@ PrefabInstance:
       propertyPath: 'targetCameras.Array.data[0]'
       value: 
       objectReference: {fileID: 1479436516}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: bases
+      value: 
+      objectReference: {fileID: 11400000, guid: 9f97307dfeadea7498b21373b21117db, type: 2}
+    - target: {fileID: 4391330651534924166, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: enemyJob.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_CheckPointParent
       value: 
       objectReference: {fileID: 1415695849}
-    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: checkPoints.Array.size
-      value: 17
-      objectReference: {fileID: 0}
     - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'checkPoints.Array.data[0]'
       value: 
@@ -68175,6 +68225,10 @@ PrefabInstance:
       propertyPath: tutorialLight
       value: 
       objectReference: {fileID: 1151818106}
+    - target: {fileID: 5542295562281695918, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: difficulty.m_InternalValue
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5843874078436757177, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: protectArea
       value: 
@@ -69802,3 +69856,4 @@ SceneRoots:
   - {fileID: 3850632494188764729}
   - {fileID: 6191801394104601557}
   - {fileID: 279138898}
+  - {fileID: 550031887}

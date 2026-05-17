@@ -17,7 +17,7 @@ public class SampleScript : AbstructSample
     [ShowInspector, SerializeField] List<InlineClass> classList = new List<InlineClass>();
     [ShowInspector, SerializeField] Dictionary<int, string> adic = new Dictionary<int, string>();
 
-    [SerializeReference, SerializeReferenceView]
+    [SerializeReference, SerializeReferenceView,SerializeField]
     IInLineInterface resultCollector;
     [SerializeReference, SerializeReferenceView]
     IInLineInterface[] resultCollectors;

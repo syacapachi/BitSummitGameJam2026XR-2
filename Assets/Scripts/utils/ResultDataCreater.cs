@@ -9,10 +9,30 @@ public class ResultDataCreater : NetworkBehaviour
     [SerializeField] PlayerManager PlayerManager;
     [Header("Publish Event")]
     [SerializeField] ResultDataEvent resultDataRpcEvent;
-    public void CreateAndSendResultData(bool isGameOver, int totalScore, int totalBonus, Difficulty difficulty)
+
+    public readonly struct ResultHeaderData
+    {
+        public readonly bool IsGameOver { get; }
+        public readonly int Seed { get; }
+        public readonly int TotalScore { get; }
+        public readonly int TotalBonus { get; }
+        public readonly Difficulty Difficulty { get; }
+        public ResultHeaderData(bool isGameOver, int seed, int totalScore, int totalBonus, Difficulty difficulty)
+        {
+            IsGameOver = isGameOver;
+            Seed = seed;
+            TotalScore = totalScore;
+            TotalBonus = totalBonus;
+            Difficulty = difficulty;
+        }
+        public override string ToString()
+        {
+            return $"Seed[{Seed}], isGameOver[{IsGameOver}], TotalScore[{TotalScore}], TotalBonus[{TotalBonus}], Difficulty[{Difficulty}]";
+        }
+    }
+    public void CreateAndSendResultData(ResultHeaderData headerData)
     {
         var list = new List<PlayerResultData>();
-        Debug.Log($"AllPlayers Count = {PlayerManager.AllPlayers.Count}");
 
         foreach (var player in PlayerManager.AllPlayers)
         {
@@ -28,12 +48,12 @@ public class ResultDataCreater : NetworkBehaviour
         ResultData data = new ResultData()
         {
             Time = DateTime.Now.ToString(),
-            RemainHP = totalScore,
-            TotalBonusHP = totalBonus,
+            RemainHP = headerData.TotalScore,
+            TotalBonusHP = headerData.TotalBonus,
             Cooperation = cooporate,
-            IsGameOver = isGameOver,
-            GameSeed = -1,
-            Difficulty = difficulty,
+            IsGameOver = headerData.IsGameOver,
+            GameSeed = headerData.Seed,
+            Difficulty = headerData.Difficulty,
             detail = datas
         };
         OnSendResultRpc(data);
@@ -42,7 +62,6 @@ public class ResultDataCreater : NetworkBehaviour
     void OnSendResultRpc(ResultData result)
     {
         resultDataRpcEvent.Invoke(result);
-        Debug.Log($"[{nameof(NetworkGameManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(result, true)}", gameObject);
     }
     static float CalculateCooperation(PlayerResultData[] results)
     {

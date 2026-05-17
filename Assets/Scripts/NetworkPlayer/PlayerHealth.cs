@@ -25,13 +25,11 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
         {
             currentHP.Value = maxHP;
         }
-        Debug.Log($"PlayerHealth spawned. owner:{OwnerClientId}, NetworkId:{NetworkObjectId}",gameObject);
     }
 
     public override void OnNetworkDespawn()
     {
         currentHP.OnValueChanged -= OnServerHPChanged;
-        Debug.Log($"PlayerHealth despawned. owner:{OwnerClientId}, NetworkId:{NetworkObjectId}",gameObject);
     }
 
     public void TakeDamage(IDamageSender sender, float damage)
@@ -40,7 +38,6 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
 
         if (currentHP.Value <= 0)
         {
-            Debug.Log($"[PlayerHealth] Player {OwnerClientId} is already dead.",gameObject);
             return;
         }
 
@@ -48,14 +45,11 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
 
         if (currentHP.Value <= 0)
         {
-            Debug.Log($"[PlayerHealth] Player {OwnerClientId} has died!",gameObject);
             OnPlayerDead();
         }
     }
     private void OnServerHPChanged(float oldHP, float newHP)
     {
-        Debug.Log($"Player {OwnerClientId} HP changed from {oldHP} to {newHP}",gameObject);
-
         // ★追加: UIにHP変化を通知
         HpInfoRpcEvent.Invoke(new HPInfo(newHP, maxHP));
 

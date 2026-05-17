@@ -64,11 +64,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     private int originalLayerRpc;
 
-    private int spawnPointIndexServerOnly;
-
     private int currentPointIndexServerOnly;
 
-    public int SpawnPointIndexServerOnly => spawnPointIndexServerOnly;
+    public int CurrentPointIndexServerOnly => currentPointIndexServerOnly;
 
 
     //[SerializeField]
@@ -97,7 +95,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     public void InjectSetting(int id,int spawnPointIndex)
     {
         enemyId.Value = id;
-        spawnPointIndexServerOnly = spawnPointIndex;
         currentPointIndexServerOnly = spawnPointIndex;
     }
 
@@ -222,19 +219,30 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     }
     public void MovePositionFromAnimationServerEvent()
     {
-        if(!IsServer) return ;
+        if (!IsServer) return;
         //無敵解除
         canTakeDamage = true;
         if (!rpcEnemySO.CanMove) return;
         var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
         if (CheckPointManager == null) return;
         //次へ移動
-        currentPointIndexServerOnly++;
-        if (currentPointIndexServerOnly >= CheckPointManager.SpawnPoints.Length) currentPointIndexServerOnly = 0;
+        int currentPoint = currentPointIndexServerOnly;
+        int searchPoint = currentPoint + 1;
+        if (searchPoint >= CheckPointManager.SpawnPoints.Length) searchPoint = 0;
+        while (CheckPointManager.IsUsingPoint(searchPoint) && searchPoint != currentPoint)
+        {
+            searchPoint++;
+            if (searchPoint >= CheckPointManager.SpawnPoints.Length) searchPoint = 0;
+        }
+        CheckPointManager.TrySetUsePoint(currentPointIndexServerOnly, false);
+
+        currentPointIndexServerOnly = searchPoint;
+
 
         moveCorutine = StartCoroutine(MoveToNextPos(
             CheckPointManager.SpawnPoints[currentPointIndexServerOnly].transform.position
         ));
+        CheckPointManager.TrySetUsePoint(currentPointIndexServerOnly, true);
     }
     //水野以上    
     IEnumerator MoveToNextPos(Vector3 targetPos)

@@ -11,8 +11,7 @@ public interface IEnemy
     /// </summary>
     public bool CanTakeDamage { get; }
     public void InjectSetting(int enemyId, int spawnPointIndex);
-
-    public int SpawnPointIndexServerOnly { get; }
+    public int CurrentPointIndexServerOnly { get; }
 
     //public void InitEnemyRpc(int id);
 }
