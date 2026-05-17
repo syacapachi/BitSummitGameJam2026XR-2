@@ -148,7 +148,8 @@ public class GameStateManager : NetworkBehaviour
             state == LocalState.Tutorial;
 
         difficultyCanvas.enabled =
-            state == LocalState.SelectDifficulty;
+            state == LocalState.SelectDifficulty ||
+            state == LocalState.WorldView;
     }
 
 

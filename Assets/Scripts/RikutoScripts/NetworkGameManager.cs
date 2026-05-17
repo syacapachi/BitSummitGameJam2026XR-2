@@ -1,6 +1,8 @@
 ﻿using Syacapachi.Attribute;
+using System;
 using Unity.Netcode;
 using UnityEngine;
+using TMPro;
 
 public class NetworkGameManager : NetworkBehaviour
 {
@@ -18,6 +20,8 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] TutorialManager tutorialManager;
     [SerializeField] ResultDataCreater resultDataCreater;
     [SerializeField] GameStateManager gameStateManager;
+    [Header("UIRef")]
+    [SerializeField] TMP_Dropdown difficultyDropDown;
     [Header("DataBase")]
     [SerializeField] DifficultyDataBase difficultyRpcDataBase;
     public GameMode CurrentGameMode => gameMode;
@@ -90,6 +94,7 @@ public class NetworkGameManager : NetworkBehaviour
     {
         //初期化。
         difficultyRpcDataBase.CurrectDifficulty = CurrentDifficulty;
+        difficultyDropDown.value = (int)CurrentDifficulty;
         if (!IsServer) return;
         // 🔗 イベント接続
         OnAllPhaseEndedServerEvent.Register(HandleAllPhaseEndedServerOnly);
@@ -129,7 +134,7 @@ public class NetworkGameManager : NetworkBehaviour
         if (!IsServer) return;
         if (!useCustomSeed)
         {
-            gameSeed = Random.Range(int.MinValue, int.MaxValue);
+            gameSeed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
         }
         phaseManager.ResetPhase();
         phaseManager.KillableHandle.KillAll();
@@ -151,6 +156,7 @@ public class NetworkGameManager : NetworkBehaviour
     void HandleDifficltyChange(Difficulty oldDifficulty, Difficulty newDifficulty)
     {
         difficultyRpcDataBase.CurrectDifficulty = newDifficulty;
+        difficultyDropDown.value = (int)(newDifficulty);
     }
 
     
@@ -186,6 +192,18 @@ public class NetworkGameManager : NetworkBehaviour
     {
         hpManager?.AddHPServerOnly(damage);
         InvokeEventRpc();
+    }
+    [Rpc(SendTo.Server)]
+    public void OnDifficultyChangeByUIRpc(int number)
+    {
+        foreach(var diff in Enum.GetValues(typeof(Difficulty)))
+        {
+            if(number == (int)diff)
+            {
+                difficulty.Value = (Difficulty)diff;
+                break;
+            }
+        }
     }
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Server)]
     private void InvokeEventRpc()

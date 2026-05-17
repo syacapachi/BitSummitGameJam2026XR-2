@@ -467,7 +467,6 @@ MonoBehaviour:
   enemyJob: []
   enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
   difficultyDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
-  bases: {fileID: 11400000, guid: 4f63a6d870e62af4cb1adb01bdf0f9c3, type: 2}
 --- !u!1 &5655868705551815652
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,6 +635,7 @@ MonoBehaviour:
   tutorialManager: {fileID: 8343285116251111980}
   resultDataCreater: {fileID: 5193210326732251977}
   gameStateManager: {fileID: 1142131513230880555}
+  difficultyDropDown: {fileID: 0}
   difficultyRpcDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
   gunEnableRpcEvent: {fileID: 11400000, guid: c8ec81be65a3f1b459a48651324647bc, type: 2}
@@ -1111,8 +1111,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  gameStartMode: 1
-  useTutorial: 1
+  gameStartMode: 0
+  useTutorial: 0
   gameState:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -1121,8 +1121,11 @@ MonoBehaviour:
   languageCanvas: {fileID: 0}
   connectCanvas: {fileID: 0}
   worldViewCanvas: {fileID: 0}
+  tutorialUI: {fileID: 0}
+  difficultyCanvas: {fileID: 0}
   OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   localStateChangeLocalEvent: {fileID: 11400000, guid: 8d864b8e0651a9e4398e513a726a87fc, type: 2}
+  difficultyEvent: {fileID: 11400000, guid: e641f2abcabb4f8449947c45a980c10f, type: 2}
 --- !u!1 &8974977137299023905
 GameObject:
   m_ObjectHideFlags: 0
