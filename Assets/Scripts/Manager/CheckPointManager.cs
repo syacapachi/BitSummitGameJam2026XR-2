@@ -63,6 +63,7 @@ public class CheckPointManager : MonoBehaviour
     [SerializeField] TagToTransfrom[] tagToTransfroms;
     IndexToTransform[] indexToTransformArr;
     bool[] usePointArr;
+    List<IndexToTransform> cacheList = new();
     public IndexToTransform[] SpawnPoints => indexToTransformArr;
     FlagTable<IndexToTransform> flagTable;
     private void Awake()
@@ -96,6 +97,11 @@ public class CheckPointManager : MonoBehaviour
         foreach (var tags in tagToTransfroms)
         {
             int value = (int)tags.SpawnPointTags;
+            //0はフラグにないのでスキップ
+            if (value == 0)
+            {
+                continue;
+            }
             if (value != -1 &&(value & (value - 1)) != 0)
             {
                 Debug.LogError("Multiple flags are not allowed");
@@ -119,6 +125,9 @@ public class CheckPointManager : MonoBehaviour
     }
     static int GetBitIndex(int value)
     {
+        if (value == 0) 
+            throw new ArgumentException(
+            "Value must contain exactly one bit.");
         int bit = 0;
 
         while ((value & 1) == 0)
@@ -130,7 +139,7 @@ public class CheckPointManager : MonoBehaviour
     }
     public void GetSpawnPointByTag(SpawnPointTags tags, List<IndexToTransform> result)
     {
-        flagTable.Collect((int)tags,result);
+        flagTable.Collect((int)tags, result);
     }
     public bool IsUsingPoint(int index)
     {
@@ -151,6 +160,15 @@ public class CheckPointManager : MonoBehaviour
         for(int i = 0;i < usePointArr.Length;i++)
         {
             if(!usePointArr[i]) return i;
+        }
+        return -1;
+    }
+    public int GetEnablePointByTag(SpawnPointTags tags)
+    {
+        GetSpawnPointByTag(tags, cacheList);
+        for (int i = 0; i < cacheList.Count; i++)
+        {
+            if (!usePointArr[cacheList[i].id]) return i;
         }
         return -1;
     }

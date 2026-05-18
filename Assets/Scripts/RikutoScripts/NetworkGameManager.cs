@@ -94,7 +94,7 @@ public class NetworkGameManager : NetworkBehaviour
     {
         //初期化。
         difficultyRpcDataBase.CurrectDifficulty = CurrentDifficulty;
-        difficultyDropDown.value = (int)CurrentDifficulty;
+        //difficultyDropDown.value = (int)CurrentDifficulty;
         if (!IsServer) return;
         // 🔗 イベント接続
         OnAllPhaseEndedServerEvent.Register(HandleAllPhaseEndedServerOnly);
@@ -200,7 +200,7 @@ public class NetworkGameManager : NetworkBehaviour
         {
             if(number == (int)diff)
             {
-                difficulty.Value = (Difficulty)diff;
+                CurrentDifficulty = (Difficulty)diff;
                 break;
             }
         }

@@ -13,6 +13,8 @@ public class FxEffectData : ScriptableObject, IEffect
     LayerMask layerOverride = 1;
     public GameObject FxPrefab => fxPrefab;
     public float LoopFxLifeTime => loopFxLifeTime;
+    private FxEffect cached;
+    private bool initialized = false;
     private bool isApplydLayer = false;
     void ApplyLayer()
     {
@@ -35,8 +37,18 @@ public class FxEffectData : ScriptableObject, IEffect
     // FxEffectへの変換メソッド
     public FxEffect ToRuntimeData()
     {
-        ApplyLayer();
-        return new FxEffect(this);
+        if (!initialized)
+        {
+            ApplyLayer();
+
+            cached = new FxEffect(
+                fxPrefab,
+                loopFxLifeTime);
+
+            initialized = true;
+        }
+
+        return cached;
     }
 #if UNITY_EDITOR
     private void OnValidate()
@@ -46,6 +58,7 @@ public class FxEffectData : ScriptableObject, IEffect
             Debug.LogWarning("CollidersLayer override is enabled but no layer is selected. Please select a layer.");
         }
         isApplydLayer = false;
+        initialized = false;
     }
 #endif
 }

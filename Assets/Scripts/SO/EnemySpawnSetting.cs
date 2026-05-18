@@ -14,9 +14,4 @@ public class EnemySpawnSetting : ScriptableObject
     public int MaxSpawn => maxSpawn;
     public SpawnPointTags SpawnPointTag => spawnPointTag;
     public float SpawnWeight(float phaseprogress) => spanwWeight.Evaluate(phaseprogress);
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-    }
-#endif
 }

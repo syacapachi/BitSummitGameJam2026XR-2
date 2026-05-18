@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using Syacapachi.Attribute;
+﻿using Syacapachi.Attribute;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -66,22 +65,26 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     [SerializeField] Renderer[] renderers;
 
     private int originalLayerRpc;
-    List<CheckPointManager.IndexToTransform> movablePointsServerOnly = new();
+    /// <summary>
+    /// 自身が動ける範囲のリスト
+    /// </summary>
+    readonly List<CheckPointManager.IndexToTransform> movablePointsServerOnly = new();
+    /// <summary>
+    /// チェックポイントマネージャーのキャッシュ
+    /// </summary>
     CheckPointManager checkPointManager;
-
-    private int currentPointIndexServerOnly;
+    /// <summary>
+    /// チェックポイントの何番目か
+    /// </summary>
+    private int currentPointIndexServerOnly = 0;
+    /// <summary>
+    /// 自身が動ける範囲のリストの何番目か
+    /// </summary>
     private int currentMovablePointIndexServerOnly = 0;
-
+    /// <summary>
+    /// チェックポイントの何番目か
+    /// </summary>
     public int CurrentPointIndexServerOnly => currentPointIndexServerOnly;
-
-
-    //[SerializeField]
-    //    private PlayerJob[] jobCycle = new PlayerJob[]
-    //{
-    //    PlayerJob.Demon,
-    //    PlayerJob.Ghost,
-    //    PlayerJob.Tutorial
-    //};
 
     [SerializeField] EnemyDataBase enemyDataBase;
     public bool IsAttackableJob(PlayerJob playerJob)
@@ -117,6 +120,8 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         isInitialize = false;
         isDieServerOnly = false;
         currentHP.OnValueChanged += OnHPChanged;
+        //NetworkVariableを使えば、Spawn()前に設定した値も初期化時に同期される。
+        TryGetEnemySO(enemyId.Value, out rpcEnemySO);
         ApplySettting();
         canTakeDamage = true;
         StartCoroutine(SetupEnemyCoroutine());
@@ -153,9 +158,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             locator.CheckPointManager != null
         );
         checkPointManager = locator.CheckPointManager;
-
-        //NetworkVariableを使えば、Spawn()前に設定した値も初期化時に同期される。
-        yield return new WaitUntil(() => TryGetEnemySO(enemyId.Value, out rpcEnemySO));
         if (IsServer)
         {
             currentHP.Value = rpcEnemySO.Hp;
@@ -165,12 +167,14 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             {
                 if (currentPointIndexServerOnly == movablePointsServerOnly[i].id)
                 {
+                    //出現地点が、自信の動ける範囲の何番目であるかを持っておく。
                     currentMovablePointIndexServerOnly = i;
                     break;
                 }
             }
         }
         UpdateHPUI(currentHP.Value);
+        //オーナーを見つける。
         targetPlayerOwnerOnly = locator.AllPlayerManager.NetworkOwnerPlayer.transform;
         //移動できる点を確認
         
@@ -201,6 +205,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             currentHP.Value = 0;
             if(moveCorutine != null)
             {
+                //移動を停止。
                 StopCoroutine(moveCorutine);
             }
             DieOnServer(sender.ResultCollector);
@@ -217,6 +222,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             }
         }
     }
+    /// <summary>
+    /// Hitアニメーションが終わると呼ばれる。
+    /// </summary>
     public void MovePositionFromAnimationServerEvent()
     {
         if (!IsServer) return;
@@ -234,15 +242,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             searchPoint++;
             if (searchPoint >= movablePointsServerOnly.Count) searchPoint = 0;
         }
-
+        //セマフォ開放
         checkPointManager.TrySetUsePoint(currentPointIndexServerOnly, false);
-
+        //インデックス更新
         currentPointIndexServerOnly = movablePointsServerOnly[searchPoint].id;
-
-
+        currentMovablePointIndexServerOnly = searchPoint;
+        //移動開始
         moveCorutine = StartCoroutine(MoveToNextPos(
             checkPointManager.SpawnPoints[currentPointIndexServerOnly].transform.position
         ));
+        //セマフォ取得
         checkPointManager.TrySetUsePoint(currentPointIndexServerOnly, true);
     }
     //水野以上    
@@ -311,68 +320,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         canTakeDamage = value;
     }
-
-    //[OnInspectorButton]
-    //public void NextJob()
-    //{
-    //    if (!IsServer) return;
-
-    //    if (jobCycle == null || jobCycle.Length == 0)
-    //    {
-    //        Debug.LogError("[Enemy] JobCycle is empty");
-    //        return;
-    //    }
-
-    //    int index = Array.IndexOf(jobCycle, enemyJob);
-
-    //    int nextIndex;
-
-    //    if (index == -1)
-    //    {
-    //        // 見つからない場合は先頭へ
-    //        nextIndex = 0;
-    //    }
-    //    else
-    //    {
-    //        nextIndex = (index + 1) % jobCycle.Length;
-    //    }
-
-    //    ChangeJobServer(jobCycle[nextIndex]);
-    //}
-    //// =========================
-    //// 🌐 サーバー専用：Job変更
-    //// =========================
-    //public void ChangeJobServer(PlayerJob newJob)
-    //{
-    //    if (!IsServer) return;
-
-    //    ApplyJobInternal(newJob);
-    //    // 全クライアントへ同期
-    //    ChangeJobRpc(newJob);
-    //}
-    //// =========================
-    //// 🌐 クライアント同期
-    //// =========================
-    //[Rpc(SendTo.ClientsAndHost)]
-    //private void ChangeJobRpc(PlayerJob newJob)
-    //{
-    //    ApplyJobInternal(newJob);
-    //}
-
-    //// =========================
-    //// 🧠 内部処理
-    //// =========================
-    //private void ApplyJobInternal(PlayerJob newJob)
-    //{
-    //    if (enemyJob == newJob) return;
-
-    //    var oldJob = enemyJob;
-    //    enemyJob = newJob;
-
-    //    ApplySettting(); // ← 既存のLayer変更処理
-
-    //    Debug.Log($"[Enemy] Job Changed: {oldJob} → {enemyJob}",gameObject);
-    //}
 
     public void SetVisibleFromAnimationEvent()
     {

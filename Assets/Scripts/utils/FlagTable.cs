@@ -1,44 +1,59 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public sealed class FlagTable<T>
 {
     //基本テーブル
     readonly T[][] table;
-    //-1用のすべて取得
-    readonly T[] all;
-
+    //キャッシュ
+    readonly Dictionary<int, T[]> cache = new();
+    //0用の空列
+    static readonly T[] empty = Array.Empty<T>();
     public FlagTable(T[][] table)
     {
         this.table = table;
         List<T> result = new();
         for (int i = 0; i < table.Length; i++)
         {
-            result.AddRange(table[i]);
+            if (table[i] != null)
+                result.AddRange(table[i]);
         }
-        all = result.ToArray();
+        cache[-1] = result.ToArray(); ;
+        cache[0] = empty;
     }
 
     public void Collect(int flags, List<T> result)
     {
         result.Clear();
-        if(flags == -1)
+        if (!cache.TryGetValue(flags, out var cached))
         {
-            result.AddRange(all);
-            return;
+            cached = Build(flags);
+            cache[flags] = cached;
         }
-        for (int i = 0; i < table.Length; i++)
-        {
-            if ((flags & (1 << i)) != 0)
-            {
-                if (table[i] != null)
-                    result.AddRange(table[i]);
-            }
-        }
+        result.AddRange(cached);
+        
     }
-    public List<T> Collect(int flags)
+    public IReadOnlyList<T> Collect(int flags)
     {
-        List<T> result = new List<T>();
+        List<T> result = new();
         Collect(flags, result);
         return result;
+    }
+    private T[] Build(int flags)
+    {
+        if (flags == 0)
+        {
+            return empty;
+        }
+        List<T> result = new List<T>();
+        for (int i = 0; i < table.Length; i++)
+        {
+            var arr = table[i];
+            if (arr != null && (flags & (1 << i)) != 0)
+            {
+                result.AddRange(table[i]);
+            }
+        }
+        return result.ToArray();
     }
 }

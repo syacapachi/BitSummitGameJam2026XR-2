@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -31,8 +30,6 @@ public class PhaseManager : NetworkBehaviour
     {
         // 初期値反映（超重要）
         OnPhaseChanedHaldle(-1, syncedPhaseIndex.Value);
-
-
         if (IsServer)
         {
             if (spawner == null)
@@ -75,10 +72,8 @@ public class PhaseManager : NetworkBehaviour
 #if UNITY_EDITOR
         Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartNextPhases called", gameObject);
 #endif
-
         //syncedPhaseIndex.Value++;
         int nextIndex = CurrentPhaseIndex + 1;
-
 
         if (nextIndex >= Phases.Length)
         {
