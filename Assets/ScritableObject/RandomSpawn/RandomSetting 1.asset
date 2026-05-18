@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f44a8a6a91a9dd46839bb44f8ea80c9, type: 3}
-  m_Name: RandomSetting
+  m_Name: RandomSetting 1
   m_EditorClassIdentifier: 
   spawnDuration:
     serializedVersion: 2
@@ -64,5 +64,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   enemySpawnSettings:
+  - {fileID: 11400000, guid: 6880b27f7f398e741bd4973db067bd3b, type: 2}
+  - {fileID: 11400000, guid: 8bf6cce1991bc554ca6413ec592ced08, type: 2}
   - {fileID: 11400000, guid: 4f63a6d870e62af4cb1adb01bdf0f9c3, type: 2}
+  - {fileID: 11400000, guid: 48f3c8e3f9733e84487f9e1e835938e2, type: 2}
   - {fileID: 11400000, guid: dc8d4753d00a33c4aab99b57121bcaf6, type: 2}
+  - {fileID: 11400000, guid: 47209596b4d725e4a857ddde9019aa11, type: 2}
