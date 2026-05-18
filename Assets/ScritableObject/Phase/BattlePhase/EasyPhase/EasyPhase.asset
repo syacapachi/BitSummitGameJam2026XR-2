@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: EasyPhase
   m_EditorClassIdentifier: 
   phaseName: {fileID: 11400000, guid: f4d596d19fbd31347937008d766b9a75, type: 2}
-  phaseTime: 90
+  phaseTime: 180
   clearBonus: 2000
+  enemyCapacity: 10
   useRandomSpawn: 0
+  randomSpawnSettings: {fileID: 0}
   spawnEvents:
   - enemyType: {fileID: 11400000, guid: f9df6ee7cc42a8e42b5b28334ea57e2e, type: 2}
     spawnPointIndex: 0
