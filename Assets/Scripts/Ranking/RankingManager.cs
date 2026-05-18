@@ -1,4 +1,5 @@
 ﻿using Syacapachi.Data;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace Syacapachi.Manager
         private string DailyFilePath => Path.Combine(Application.streamingAssetsPath, DaylyFileName + ".json");
 
         public ResultData CurrentResult;
+        public IReadOnlyList<ResultData> Results => rankingList.Rankings;
         private void Start()
         {
             rankingList = LoadJson(FilePath);

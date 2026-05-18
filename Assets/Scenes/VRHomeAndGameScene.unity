@@ -9629,9 +9629,9 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontSize: 3.4
-  m_fontSizeBase: 60
+  m_fontSizeBase: 3.4
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 0.07
   m_fontSizeMax: 50
   m_fontStyle: 0
@@ -12654,10 +12654,10 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontSize: 3.4
-  m_fontSizeBase: 60
+  m_fontSizeBase: 3.4
   m_fontWeight: 400
-  m_enableAutoSizing: 1
-  m_fontSizeMin: 1
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 3.4
   m_fontSizeMax: 50
   m_fontStyle: 0
   m_HorizontalAlignment: 1
@@ -14553,7 +14553,6 @@ GameObject:
   - component: {fileID: 563469258}
   - component: {fileID: 563469257}
   - component: {fileID: 563469256}
-  - component: {fileID: 563469255}
   - component: {fileID: 563469254}
   - component: {fileID: 563469253}
   - component: {fileID: 563469252}
@@ -14786,19 +14785,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
---- !u!114 &563469255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 563469249}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79272e9093d74a5429f4cb0ce1e8ad96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  titleFlowManager: {fileID: 3481870966104465439}
 --- !u!114 &563469256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14869,18 +14855,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 563469249}
-  m_LocalRotation: {x: -0, y: 0.33942354, z: -0, w: 0.94063365}
-  m_LocalPosition: {x: 0, y: 0, z: 1.142}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.273077}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 564482428}
   - {fileID: 875624585}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 39.684, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 2.05, y: 2.193}
+  m_AnchoredPosition: {x: -0.3840118, y: 1.1676637}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &564482427
@@ -16803,9 +16789,9 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontSize: 3.4
-  m_fontSizeBase: 60
+  m_fontSizeBase: 3.4
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 0.14
   m_fontSizeMax: 50
   m_fontStyle: 0
@@ -37898,7 +37884,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2179057468902719979, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -0.0000009536743
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2179057468902719979, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
       propertyPath: m_SizeDelta.y
@@ -37972,6 +37958,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: List Item Dropdown
       objectReference: {fileID: 0}
+    - target: {fileID: 2179057468902719980, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2179057469866936249, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
@@ -38002,7 +37992,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6507499350661501903, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
       propertyPath: m_Options.m_Options.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6507499350661501903, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
@@ -38070,7 +38060,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6599802744918466922, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6599802744918466922, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
       propertyPath: m_AnchorMin.y
@@ -38090,6 +38080,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6599802744918466922, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6599802745008049889, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6599802745974732892, guid: f47ad6ac315a3ea428b59e2cac6f2a2e, type: 3}
@@ -38748,7 +38742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84c0bcb4d620562408b73f4984590f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 0
+  difficulty: 1
   titleTextGUI: {fileID: 1775531527}
   boardTextGUI: {fileID: 619448914}
   buttonTextGUI: {fileID: 392198436}
@@ -57375,6 +57369,8 @@ MonoBehaviour:
   damageBorders:
   - {fileID: 105284127}
   flashTime: 0.1
+  damageEffect: {fileID: 11400000, guid: 01ba696973d34d140b15906608fbb3c5, type: 2}
+  effectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
 --- !u!114 &1643689038
 MonoBehaviour:
@@ -60800,7 +60796,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84c0bcb4d620562408b73f4984590f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 0
+  difficulty: 2
   titleTextGUI: {fileID: 697565049}
   boardTextGUI: {fileID: 339590852}
   buttonTextGUI: {fileID: 1009451495}
@@ -71315,9 +71311,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1406749563}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: useTutorial
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: connectCanvas
       value: 
       objectReference: {fileID: 2084777998}
+    - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: gameStartMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: languageCanvas
       value: 
@@ -71329,7 +71333,7 @@ PrefabInstance:
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: difficultyCanvas
       value: 
-      objectReference: {fileID: 563469258}
+      objectReference: {fileID: 563469249}
     - target: {fileID: 1615890855193563394, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_Name
       value: ManagerLocator

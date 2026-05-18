@@ -1,7 +1,6 @@
 ﻿using Syacapachi.Attribute;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 
 public class GameStateManager : NetworkBehaviour
 {
@@ -43,7 +42,7 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] GameObject connectCanvas;
     [SerializeField] Canvas worldViewCanvas;
     [SerializeField] Canvas tutorialUI;
-    [SerializeField] Canvas difficultyCanvas;
+    [SerializeField] GameObject difficultyCanvas;
     [Header("Publish Event")]
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     [SerializeField] LocalStateEvent localStateChangeLocalEvent;
@@ -147,9 +146,8 @@ public class GameStateManager : NetworkBehaviour
         tutorialUI.enabled =
             state == LocalState.Tutorial;
 
-        difficultyCanvas.enabled =
-            state == LocalState.SelectDifficulty ||
-            state == LocalState.WorldView;
+        difficultyCanvas.SetActive(
+            state == LocalState.SelectDifficulty);
     }
 
 
@@ -429,7 +427,7 @@ public enum GameState
     /// </summary>
     Waiting,
 }
-[GenerateEvent(typeof(GameEventSOBase<>))]
+//[GenerateEvent(typeof(GameEventSOBase<>))]
 public enum LocalState
 {
     LanguageSelect,//言語設定
@@ -456,4 +454,4 @@ public enum LocalState
 //PLaying -> {GameClear, GameOver} :条件により、どちらかに遷移
 //{GameClear, GameOver} -> Home : 戻るボタンで遷移
 
-//Waiting追加　buttonモードのとき難易度選択する状態
+//Tutorial -> Waiting buttonモードのとき

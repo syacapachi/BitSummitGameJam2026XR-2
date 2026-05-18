@@ -11,7 +11,6 @@ public class NEnemyShoot : GunController
     [SerializeField] GameObject localBulletPrefab;
     [SerializeField] NEnemy nEnemy;
     [SerializeField] AudioEffectData shotAudioEffect;
-    [SerializeField] AudioClip shotClip;
     [Header("Reference")]
     [SerializeField] NetworkAnimator networkAnimator;
     [Header("Publish Event")]
@@ -171,8 +170,8 @@ public class NEnemyShoot : GunController
     }
     public override void PlayShotSound()
     {
-        //gameEffect.Invoke(new GameEffect(shotAudioEffect.ToRuntimeData(), transform.position));
-        gameEffect.Invoke(GameEffect.CreateAudioEffect(shotClip, transform.position));
+        gameEffect.Invoke(new GameEffect(shotAudioEffect.ToRuntimeData(), transform.position));
+        //gameEffect.Invoke(GameEffect.CreateAudioEffect(shotClip, transform.position));
     }
 #if UNITY_EDITOR
     private void Reset()
