@@ -5,6 +5,9 @@ public class PlayerEffects : MonoBehaviour
 {
     [SerializeField] private GameObject[] damageBorders;
     [SerializeField] private float flashTime = 0.3f;
+    [SerializeField] AudioEffectData damageEffect;
+    [Header("Publish Eevnt")]
+    [SerializeField] GameEffectEvent effectEvent;
     [Header("Subscribe event")]
     [SerializeField] VoidEvent OnbulletComeRpcEvent;
     private CanvasGroup[] borderGroups;
@@ -36,7 +39,8 @@ public class PlayerEffects : MonoBehaviour
 
     private void OnBulletComeChanged()
     {
-         StartCoroutine(DamageFlash());        
+         StartCoroutine(DamageFlash());   
+         effectEvent.Invoke(new GameEffect(damageEffect.ToRuntimeData(),transform.position));
     }
 
     private IEnumerator DamageFlash()
