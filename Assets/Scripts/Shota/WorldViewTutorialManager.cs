@@ -32,6 +32,9 @@ public class WorldTutorialManager : NetworkBehaviour
     [SerializeField] LocalizeSimpleText backButtonText;
     [SerializeField] LocalizeSimpleText startButtonText;
 
+    [Header("操作説明画像")]
+    [SerializeField] private GameObject operationGuideImage;
+
     private string[] japaneseTitles = {
         "チュートリアル1",
         "チュートリアル2",
@@ -77,7 +80,6 @@ public class WorldTutorialManager : NetworkBehaviour
     private int maxPage = 0;
 
     /*
-
     void Start()
     {
         ShowPage(currentIndex);
@@ -86,14 +88,22 @@ public class WorldTutorialManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log("=== OnNetworkSpawn Called ===");
+        Debug.Log("operationGuideImage is: " + (operationGuideImage != null ? "ASSIGNED" : "NULL"));
+
+        if (operationGuideImage != null)
+        {
+            operationGuideImage.SetActive(true);
+            Debug.Log("=== OperationGuideImage SetActive(true) ===");
+        }
+
         if (tutorialManager != null)
         {
             tutorialManager.CurrentStep.OnValueChanged += OnStepChanged;
-
-            // 初期表示
             OnStepChanged(default, tutorialManager.CurrentStep.Value);
         }
     }
+
 
     void OnStepChanged(TutorialStep oldStep, TutorialStep newStep)
     {
@@ -117,7 +127,6 @@ public class WorldTutorialManager : NetworkBehaviour
                 : nextButtonText.GetText(isJapanese);
         }
     }
-    
 
     void ShowPage(int index)
     {
@@ -144,7 +153,7 @@ public class WorldTutorialManager : NetworkBehaviour
         if (backButton != null)
             backButton.gameObject.SetActive(index > 0);
 
-        if(nextButton != null)
+        if (nextButton != null)
         {
             nextButton.gameObject.SetActive(index < maxPage);
         }
@@ -154,15 +163,20 @@ public class WorldTutorialManager : NetworkBehaviour
     {
         if (currentPage == totalPages - 1)
         {
+            // チュートリアル終了時に操作説明画像を非表示
+            if (operationGuideImage != null)
+                operationGuideImage.SetActive(false);
+
             tutorialManager.NextStepRequretRpc();
             return;
         }
-        if(currentPage < totalPages -1)
+        if (currentPage < totalPages - 1)
         {
             currentPage++;
             ShowPage(currentPage);
         }
     }
+
     /*
     public void OnNextButtonClicked()
     {
