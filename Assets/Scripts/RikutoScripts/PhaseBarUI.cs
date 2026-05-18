@@ -99,8 +99,8 @@ public class PhaseBarUI : MonoBehaviour
     {
         ClearCurrentBar();
 
-        PhaseSO phase =
-            rpcDataBase.CurrentSetting.Phases[phaseIndex];
+        //PhaseSO phase =
+        //    rpcDataBase.CurrentSetting.Phases[phaseIndex];
 
         // =====================================
         // Separator

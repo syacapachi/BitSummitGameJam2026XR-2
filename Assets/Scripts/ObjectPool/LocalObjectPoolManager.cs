@@ -18,6 +18,7 @@ public class LocalObjectPoolManager : MonoBehaviour
     /// </summary>
     readonly Dictionary<int, ObjectPool<GameObject>> objectPoolDic = new();
     readonly Dictionary<int,int> instanceToPrefabDic = new();
+    readonly List<GameObject> cacheList = new();
 
     private void Start()
     {
@@ -52,13 +53,13 @@ public class LocalObjectPoolManager : MonoBehaviour
                 defaultCapacity: PrewarmCount * 10,
                 maxSize: 100
             );
-        
-        List<GameObject> list = new ();
-        for(int i=0; i < PrewarmCount; i++)
+
+        cacheList.Clear();
+        for (int i=0; i < PrewarmCount; i++)
         {
-            list.Add(objectPoolDic[prefab.GetInstanceID()].Get());
+            cacheList.Add(objectPoolDic[prefab.GetInstanceID()].Get());
         }
-        foreach(GameObject obj in list)
+        foreach(GameObject obj in cacheList)
         {
             objectPoolDic[prefab.GetInstanceID()].Release(obj);
         }

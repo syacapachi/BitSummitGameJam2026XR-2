@@ -48,11 +48,11 @@ namespace Syacapachi.util
         }
         public bool IsRunning { get; private set; }
 
-        public void StartSearchRefernce(Object target, Action<List<Object>,List<Object>> onComplete)
+        public void StartSearchRefernce(Object target, Action<List<Object>, List<Object>> onComplete)
         {
             if (IsRunning)
             {
-                EditorUtility.DisplayDialog("Search Progress", "Search Progress","ok");
+                EditorUtility.DisplayDialog("Search Progress", "Search Progress", "ok");
                 return;
             }
             this.target = target;

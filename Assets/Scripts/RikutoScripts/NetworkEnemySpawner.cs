@@ -1,5 +1,6 @@
 ﻿using Syacapachi.Attribute;
 using Syacapachi.util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +69,11 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     public bool IsAllDeadServerOnly => isAllDead;
     private readonly List<IEnemy> spawnedEnemies = new();
     private readonly Queue<SpawnEvent> waitSpawnEnemyQueue = new();
+    /// <summary>
+    /// キャッシュリストGCを防ぐ
+    /// </summary>
+    readonly List<SpawnEvent> randomSpawnEventCacheList = new();
+    readonly List<CheckPointManager.IndexToTransform> spawnablePosCacheList = new();
     Coroutine waitForSpawn;
     Coroutine spawnCorutine;
     public override void OnNetworkSpawn()
@@ -117,11 +123,12 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
             var randomSetting = setting.RandomSpawnSettings;
             //初期化
             randomSetting.ResetSpawnCount();
-            //初期値があると、軽い
-            List<SpawnEvent> randomSpawnEvent = new List<SpawnEvent>();
             //割り算は計算コストがあるので、先に計算。
             float invPhaseTime = 1f / setting.PhaseTime;
             float time = randomSetting.GetSpawnDuration(0f);
+            //初期値があると、軽い
+            randomSpawnEventCacheList.Clear();
+            spawnablePosCacheList.Clear();
             while (time < setting.PhaseTime)
             {
                 float progress = Mathf.Clamp01(time * invPhaseTime);
@@ -132,15 +139,16 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
                         table.NextFloat());
                 if (spawnEnemy != null)
                 {
+                    checkPointManager.GetSpawnPointByTag(spawnEnemy.SpawnPointTag, spawnablePosCacheList);
                     SpawnEvent spawnEvent = new SpawnEvent(
                             spawnEnemy.TargetEnemy,
-                            spawnEnemy.SpawnIndexes[
-                                table.RangeInt(0, spawnEnemy.SpawnIndexes.Length)
-                            ],
+                            spawnablePosCacheList[
+                                table.RangeInt(0, spawnablePosCacheList.Count)
+                            ].id,
                             time);
-                    randomSpawnEvent.Add(spawnEvent);
+                    randomSpawnEventCacheList.Add(spawnEvent);
 
-                    Debug.Log($"Create Random Spaen {spawnEvent}", gameObject);
+                    Debug.Log($"Create Random Spaen {spawnEvent}, Tag {spawnEnemy.SpawnPointTag}", gameObject);
                 }
                 else
                 {
@@ -156,10 +164,10 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
 
                 time += duration;
             }
-            events.AddRange(randomSpawnEvent);
+            events.AddRange(randomSpawnEventCacheList);
         }
         //最大を更新
-        maxEnemyCapacity = Mathf.Min(setting.MaxSpawn, checkPointManager.SpawnPoints.Length);
+        maxEnemyCapacity = Math.Min(setting.MaxSpawn, checkPointManager.SpawnPoints.Length);
         spawnCorutine = StartCoroutine(SpawnRoutine(events));
     }
     public void StopSpaw()
@@ -310,8 +318,6 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
         enemy.InjectSetting(enemyDataBase.GetIdFromEnemyData(enemyData), spawnIndex);
         spawnedEnemies.Add(enemy);
         networkObject.Spawn();
-        //int id = enemyDataBase.GetIdFromEnemyData(enemyData);
-        //enemy.InitEnemyRpc(id);
         return true;
     }
 
