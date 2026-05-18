@@ -9,6 +9,9 @@ public class TutorialUI : MonoBehaviour
     [SerializeField] GameObject root;
     [SerializeField] TextMeshProUGUI text; // ← 1つだけ
 
+    [Header("操作説明画像")]
+    [SerializeField] private GameObject operationGuideImage;
+
     [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
     [SerializeField] IntEvent OnTutorialStepChanged;
@@ -29,6 +32,8 @@ public class TutorialUI : MonoBehaviour
     private void Start()
     {
         root.SetActive(false);
+        if (operationGuideImage != null)
+            operationGuideImage.SetActive(false);
     }
 
     void OnEnable()
@@ -55,19 +60,31 @@ public class TutorialUI : MonoBehaviour
             return;
         ChangeState(TutorialUIState.StepIntro, newStep);
     }
+
     void OnStateChange(GameState state)
     {
-        if(state == GameState.Tutorial)
+        if (state == GameState.Tutorial)
         {
             isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
             root.SetActive(false);
+
+            // チュートリアル開始時に操作説明画像を表示
+            if (operationGuideImage != null)
+                operationGuideImage.SetActive(true);
 
             if (tutorialManager != null)
             {
                 OnStepChangedNetwork(default, tutorialManager.CurrentStep.Value);
             }
         }
+        else
+        {
+            // チュートリアル以外では操作説明画像を非表示
+            if (operationGuideImage != null)
+                operationGuideImage.SetActive(false);
+        }
     }
+
     // =========================
     // 状態管理
     // =========================
@@ -174,6 +191,7 @@ public class TutorialUI : MonoBehaviour
     void Hide()
     {
         root.SetActive(false);
+        // 操作説明画像はチュートリアル中は非表示にしない
     }
 
     IEnumerator PopAnimation()
@@ -200,9 +218,9 @@ public class TutorialUI : MonoBehaviour
     IEnumerator GrowAnimation()
     {
         Vector3 start = Vector3.one;
-        Vector3 end = Vector3.one * 1.1f; // 最終サイズ
+        Vector3 end = Vector3.one * 1.1f;
 
-        float duration = 2f; // ゆっくり感はここで調整
+        float duration = 2f;
         float invDuration = 1f / duration;
         float t = 0f;
 
@@ -213,8 +231,6 @@ public class TutorialUI : MonoBehaviour
             t += Time.deltaTime;
 
             float progress = t * invDuration;
-
-            // なめらかに（イージング）
             float ease = Mathf.SmoothStep(0f, 1f, progress);
 
             text.transform.localScale = Vector3.Lerp(start, end, ease);
