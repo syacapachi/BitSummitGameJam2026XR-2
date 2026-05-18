@@ -1,10 +1,8 @@
-﻿using Meta.WitAi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using static CheckPointManager;
 
 /// <summary>
 /// NavMeshを使って、敵を移動させる。
@@ -26,28 +24,113 @@ public class CheckPointManager : MonoBehaviour
         {
             return id == other.id;
         }
+        public override bool Equals(object obj)
+        {
+            return obj is IndexToTransform other && Equals(other);
+        }
+        public override int GetHashCode()
+        {
+            return id;
+        }
+        public static bool operator ==(
+            IndexToTransform left,
+            IndexToTransform right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(
+            IndexToTransform left,
+            IndexToTransform right)
+        {
+            return !left.Equals(right);
+        }
+    }
+    [Serializable]
+    public class TagToTransfrom
+    {
+        [SerializeField] SpawnPointTags spawnPointTag;
+        [SerializeField] SpawnPointMarker[] spawnPointmarkers;
+
+        public SpawnPointTags SpawnPointTags => spawnPointTag;
+        public SpawnPointMarker[] SpawnPointMarkers => spawnPointmarkers;
     }
 #if UNITY_EDITOR
     [SerializeField] GameObject m_CheckPointParent;
     private GameObject lastCheckPoint;
 #endif
     [SerializeField] Transform[] checkPoints;
+    [SerializeField] TagToTransfrom[] tagToTransfroms;
     IndexToTransform[] indexToTransformArr;
     bool[] usePointArr;
-    readonly Dictionary<IndexToTransform, int> transformToIndexDic = new();
-
     public IndexToTransform[] SpawnPoints => indexToTransformArr;
+    FlagTable<IndexToTransform> flagTable;
     private void Awake()
     {
-        transformToIndexDic.Clear();
+        //全てのスポーンポイントの配列化
         indexToTransformArr = new IndexToTransform[checkPoints.Length];
         for (int i = 0; i < checkPoints.Length; i++)
         {
             IndexToTransform indexToTransform = new(i, checkPoints[i]);
             indexToTransformArr[i] = indexToTransform;
-            transformToIndexDic[indexToTransform] = i;
         }
         usePointArr = new bool[checkPoints.Length];
+
+        //最大bit取得
+        int maxBit = 0;
+        foreach (var tags in tagToTransfroms)
+        {
+            int value = (int)tags.SpawnPointTags;
+
+            if (value > 0)
+            {
+                int bit = GetBitIndex(value);
+
+                if (bit > maxBit)
+                    maxBit = bit;
+            }
+        }
+
+        //タグ(Flag)ごとの場所
+        IndexToTransform[][] indexToTransforms = new IndexToTransform[maxBit + 1][];
+        foreach (var tags in tagToTransfroms)
+        {
+            int value = (int)tags.SpawnPointTags;
+            if (value != -1 &&(value & (value - 1)) != 0)
+            {
+                Debug.LogError("Multiple flags are not allowed");
+                continue;
+            }
+            int bit = GetBitIndex(value);
+
+            if (indexToTransforms[bit] != null)
+            {
+                Debug.LogError($"{tags.SpawnPointTags} is Already Assginned", gameObject);
+                continue;
+            }
+            IndexToTransform[] inlineArray = new IndexToTransform[tags.SpawnPointMarkers.Length];
+            for(int i = 0;i < tags.SpawnPointMarkers.Length; i++)
+            {
+                inlineArray[i] = indexToTransformArr[tags.SpawnPointMarkers[i].SpawnPointId];
+            }
+            indexToTransforms[bit] = inlineArray;
+        }
+        flagTable = new FlagTable<IndexToTransform>(indexToTransforms);
+    }
+    static int GetBitIndex(int value)
+    {
+        int bit = 0;
+
+        while ((value & 1) == 0)
+        {
+            value >>= 1;
+            bit++;
+        }
+        return bit;
+    }
+    public void GetSpawnPointByTag(SpawnPointTags tags, List<IndexToTransform> result)
+    {
+        flagTable.Collect((int)tags,result);
     }
     public bool IsUsingPoint(int index)
     {
@@ -71,61 +154,11 @@ public class CheckPointManager : MonoBehaviour
         }
         return -1;
     }
-    //public bool IsLastPoint(IndexToTransform transform)
-    //{
-    //    if (transformToIndexDic.TryGetValue(transform, out int val))
-    //    {
-    //        return val == checkPoints.Length - 1;
-    //    }
-    //    Debug.LogError("Transform is not assinged");
-    //    return false;
-    //}
-    //public bool TryGetNextPoint(IndexToTransform transform, out IndexToTransform nextPoint)
-    //{
-    //    nextPoint = default;
-    //    if (transformToIndexDic.TryGetValue(transform, out int val))
-    //    {
-    //        if (val < checkPoints.Length - 1)
-    //        {
-    //            nextPoint = indexToTransformArr[val + 1];
-    //            return true;
-    //        }
-    //        else
-    //        {
-    //            Debug.LogWarning("This is the last point. No next point available.");
-    //            return false;
-    //        }
-    //    }
-    //    Debug.LogError("Transform is not assinged");
-    //    return false;
-    //}
-    //public IndexToTransform GetNextPoint(IndexToTransform transform)
-    //{
-    //    if (transformToIndexDic.TryGetValue(transform, out int val))
-    //    {
-    //        return GetNextPoint(val);
-    //    }
-    //    Debug.LogError("Transform is not assinged");
-    //    return default;
-    //}
-    //public IndexToTransform GetNextPoint(int index)
-    //{
-    //    if(index < 0 || index >= checkPoints.Length)
-    //    {
-    //        Debug.LogError("List out Range");
-    //        return GetRandomPoint();
-    //    }
-    //    return (index == checkPoints.Length - 1) ? indexToTransformArr[0] : indexToTransformArr[index+1];
-    //}
     public IndexToTransform GetRandomPoint()
     {
         return indexToTransformArr[UnityEngine.Random.Range(0, checkPoints.Length)];
     }
 #if UNITY_EDITOR
-    private void Reset()
-    {
-
-    }
     private void OnValidate()
     {
         if (m_CheckPointParent != null)
@@ -185,4 +218,11 @@ public class CheckPointManager : MonoBehaviour
         spawnPoint.SpawnPointId = id;
     }
 #endif
+}
+[Flags]
+public enum SpawnPointTags
+{
+    Nothing = 0,
+    Front = 1,
+    Back = 2
 }

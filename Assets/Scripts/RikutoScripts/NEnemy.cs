@@ -1,5 +1,7 @@
-﻿using Syacapachi.Attribute;
+﻿using NUnit.Framework;
+using Syacapachi.Attribute;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -31,7 +33,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     //水野以上
     private bool isInitialize = false;
 
-    private Transform targetPlayerServerOnly;
+    private Transform targetPlayerOwnerOnly;
     private EnemySO rpcEnemySO;
     public GameObject GameObject => this.gameObject;
     NetworkObject IEnemy.NetworkObject => this.NetworkObject;
@@ -64,8 +66,11 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     [SerializeField] Renderer[] renderers;
 
     private int originalLayerRpc;
+    List<CheckPointManager.IndexToTransform> movablePointsServerOnly = new();
+    CheckPointManager checkPointManager;
 
     private int currentPointIndexServerOnly;
+    private int currentMovablePointIndexServerOnly = 0;
 
     public int CurrentPointIndexServerOnly => currentPointIndexServerOnly;
 
@@ -101,12 +106,6 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
 
     public bool TryGetEnemySO(int id,out EnemySO enemySO)
     {
-        enemySO = null;
-        if (enemyDataBase == null)
-        {
-            Debug.LogError($"[{nameof(TryGetEnemySO)}] enemyDataBase is NULL! {gameObject.name}");
-            return false;
-        }
         //内部で大きさを測ってるのでnullかEnemySOがかえる
         enemySO = enemyDataBase.GetEnemyDataFromId(id);
 
@@ -118,32 +117,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         isInitialize = false;
         isDieServerOnly = false;
         currentHP.OnValueChanged += OnHPChanged;
-        //NetworkVariableを使えば、Spawn()前に設定した値も初期化時に同期される。
-        if (TryGetEnemySO(enemyId.Value, out rpcEnemySO))
-        {
-            if (IsServer)
-            {
-                currentHP.Value = rpcEnemySO.Hp;
-                invMaxHealth = 1f / rpcEnemySO.Hp;
-            }
-            UpdateHPUI(currentHP.Value);
-        }
-        else
-        {
-            StartCoroutine(WaitForEnemySO());
-        }
         ApplySettting();
         canTakeDamage = true;
-        StartCoroutine(SetupPlayerCoroutine());
-    }
-    IEnumerator WaitForEnemySO()
-    {   
-        yield return new WaitUntil(() => TryGetEnemySO(enemyId.Value, out rpcEnemySO));
-        if (IsServer)
-        {
-            currentHP.Value = rpcEnemySO.Hp;
-        }
-        UpdateHPUI(currentHP.Value);
+        StartCoroutine(SetupEnemyCoroutine());
     }
     private void ApplySettting()
     {
@@ -165,17 +141,39 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         isInitialize = false;
     }
-    private IEnumerator SetupPlayerCoroutine()
+    private IEnumerator SetupEnemyCoroutine()
     {
         ManagerLocator locator = ManagerLocator.Instance;
+        //
         yield return new WaitUntil(() =>
             locator != null &&
             locator.AllPlayerManager != null &&
             locator.AllPlayerManager.NetworkOwnerPlayer != null &&
-            locator.AllPlayerManager.NetworkOwnerPlayer.transform != null
+            locator.AllPlayerManager.NetworkOwnerPlayer.transform != null &&
+            locator.CheckPointManager != null
         );
+        checkPointManager = locator.CheckPointManager;
 
-        targetPlayerServerOnly = locator.AllPlayerManager.NetworkOwnerPlayer.transform;
+        //NetworkVariableを使えば、Spawn()前に設定した値も初期化時に同期される。
+        yield return new WaitUntil(() => TryGetEnemySO(enemyId.Value, out rpcEnemySO));
+        if (IsServer)
+        {
+            currentHP.Value = rpcEnemySO.Hp;
+            invMaxHealth = 1f / rpcEnemySO.Hp;
+            checkPointManager.GetSpawnPointByTag(rpcEnemySO.MovablePointTag, movablePointsServerOnly);
+            for(int i = 0;i<movablePointsServerOnly.Count; i++)
+            {
+                if (currentPointIndexServerOnly == movablePointsServerOnly[i].id)
+                {
+                    currentMovablePointIndexServerOnly = i;
+                    break;
+                }
+            }
+        }
+        UpdateHPUI(currentHP.Value);
+        targetPlayerOwnerOnly = locator.AllPlayerManager.NetworkOwnerPlayer.transform;
+        //移動できる点を確認
+        
         isInitialize = true;
     }
 
@@ -186,9 +184,9 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         if (rootTransfrom != null)
         {
             //プレーヤーをずっと見てくる
-            rootTransfrom.LookAt(targetPlayerServerOnly);
+            rootTransfrom.LookAt(targetPlayerOwnerOnly);
         }
-        hpCanvas.transform.LookAt(targetPlayerServerOnly);
+        hpCanvas.transform.LookAt(targetPlayerOwnerOnly);
         hpCanvas.transform.Rotate(0, 180f, 0);
     }
     //水野編集
@@ -225,26 +223,27 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         //無敵解除
         canTakeDamage = true;
         if (!rpcEnemySO.CanMove) return;
-        var CheckPointManager = ManagerLocator.Instance.CheckPointManager;
-        if (CheckPointManager == null) return;
         //次へ移動
-        int currentPoint = currentPointIndexServerOnly;
-        int searchPoint = currentPoint + 1;
-        if (searchPoint >= CheckPointManager.SpawnPoints.Length) searchPoint = 0;
-        while (CheckPointManager.IsUsingPoint(searchPoint) && searchPoint != currentPoint)
+        int currentPoint = currentMovablePointIndexServerOnly;
+        int searchPoint = currentMovablePointIndexServerOnly + 1;
+        //はみ出したなら初期値
+        if (searchPoint >= movablePointsServerOnly.Count) searchPoint = 0;
+        //動ける範囲で次へ
+        while (checkPointManager.IsUsingPoint(movablePointsServerOnly[searchPoint].id) && searchPoint != currentPoint)
         {
             searchPoint++;
-            if (searchPoint >= CheckPointManager.SpawnPoints.Length) searchPoint = 0;
+            if (searchPoint >= movablePointsServerOnly.Count) searchPoint = 0;
         }
-        CheckPointManager.TrySetUsePoint(currentPointIndexServerOnly, false);
 
-        currentPointIndexServerOnly = searchPoint;
+        checkPointManager.TrySetUsePoint(currentPointIndexServerOnly, false);
+
+        currentPointIndexServerOnly = movablePointsServerOnly[searchPoint].id;
 
 
         moveCorutine = StartCoroutine(MoveToNextPos(
-            CheckPointManager.SpawnPoints[currentPointIndexServerOnly].transform.position
+            checkPointManager.SpawnPoints[currentPointIndexServerOnly].transform.position
         ));
-        CheckPointManager.TrySetUsePoint(currentPointIndexServerOnly, true);
+        checkPointManager.TrySetUsePoint(currentPointIndexServerOnly, true);
     }
     //水野以上    
     IEnumerator MoveToNextPos(Vector3 targetPos)

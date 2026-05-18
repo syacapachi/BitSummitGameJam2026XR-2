@@ -122,6 +122,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
             //割り算は計算コストがあるので、先に計算。
             float invPhaseTime = 1f / setting.PhaseTime;
             float time = randomSetting.GetSpawnDuration(0f);
+            List<CheckPointManager.IndexToTransform> spawnablePos = new();
             while (time < setting.PhaseTime)
             {
                 float progress = Mathf.Clamp01(time * invPhaseTime);
@@ -132,11 +133,12 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
                         table.NextFloat());
                 if (spawnEnemy != null)
                 {
+                    checkPointManager.GetSpawnPointByTag(spawnEnemy.SpawnPointTag, spawnablePos);
                     SpawnEvent spawnEvent = new SpawnEvent(
                             spawnEnemy.TargetEnemy,
-                            spawnEnemy.SpawnIndexes[
-                                table.RangeInt(0, spawnEnemy.SpawnIndexes.Length)
-                            ],
+                            spawnablePos[
+                                table.RangeInt(0, spawnablePos.Count)
+                            ].id,
                             time);
                     randomSpawnEvent.Add(spawnEvent);
 
