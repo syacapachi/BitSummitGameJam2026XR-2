@@ -99,16 +99,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236cd14e1e5783c468e66a2f1d2dd8f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_CheckPointParent: {fileID: 0}
   checkPoints:
-  - difficulty: 0
-    m_CheckPointParent: {fileID: 0}
-    checkPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  tagToTransfroms:
+  - spawnPointTag: 0
+    spawnPointmarkers: []
+  - spawnPointTag: 2
+    spawnPointmarkers:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
+  - spawnPointTag: 1
+    spawnPointmarkers:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
@@ -120,68 +142,6 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-  - difficulty: 1
-    m_CheckPointParent: {fileID: 0}
-    checkPoints:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-  - difficulty: 2
-    m_CheckPointParent: {fileID: 0}
-    checkPoints:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-  - difficulty: 3
-    m_CheckPointParent: {fileID: 0}
-    checkPoints:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-  m_GameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
-  rpcDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
 --- !u!1 &1615890855193563394
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,7 +649,7 @@ MonoBehaviour:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 1
+    m_InternalValue: 3
   gameMode: 1
   protectArea: {fileID: 0}
   hpManager: {fileID: 7622921992766210704}
@@ -1175,7 +1135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   gameStartMode: 0
-  useTutorial: 0
+  useTutorial: 1
   gameState:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
