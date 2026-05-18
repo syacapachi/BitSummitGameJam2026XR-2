@@ -55,7 +55,11 @@ public class NGun : GunController
     {
         base.Activate();
         //ローカルで弾を打つ打つことで、ラグさを見せない
-        if (CurrentAmmo <= 0) return;
+        if (CurrentAmmo <= 0)
+        {
+            PlayCantSound();
+            return;
+        }
         var Locator = ManagerLocator.Instance;
         if (Locator == null || Locator.GameStateManager == null || Locator.LocalObjectPool == null) return;
         if (!Locator.GameStateManager.IsGamePlaying) return;
@@ -171,6 +175,11 @@ public class NGun : GunController
     {
         audioObserver.PlayReloadSound();
     }
+    public override void PlayCantSound()
+    {
+        audioObserver.PlayCantSound();
+    }
+
     public override void PlayShotSound()
     {
         audioObserver.PlayShotSound();

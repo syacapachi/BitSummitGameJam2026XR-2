@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6df8e7571e05a4468818a61a1effb1a, type: 3}
-  m_Name: conutPhase1
+  m_Script: {fileID: 11500000, guid: 521e3edab1bd07e45b4e383ea8a8404d, type: 3}
+  m_Name: PlayerCantShootAudio
   m_EditorClassIdentifier: 
-  phaseDisplayName: Phase1
-  phaseTime: 30
-  clearBonus: 500
-  spawnEvents: []
+  effectType: 3
+  clip: {fileID: 8300000, guid: 10b1b24ef8b97bf49ad691876f8412a1, type: 3}
+  volume: 1
+  pitch: 1
+  loop: 0

@@ -853,6 +853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   shotAudioEffect: {fileID: 11400000, guid: 46c5218051f758f4a98a58270a86b33b, type: 2}
+  noAudioEffect: {fileID: 11400000, guid: 00a4a09cdea22d14b8affae5b76885a8, type: 2}
   reloadAudioEffect: {fileID: 11400000, guid: 451aaabc63e31524189cef59b049f733, type: 2}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &7389243056239226300
@@ -12751,8 +12752,6 @@ MonoBehaviour:
   handOffsetAngle: 90
   calibrationCount: 10
   isDebugMode: 0
-  avatarEyeHeight: 0
-  avatarScale: 0
 --- !u!4 &8862074458254340242 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ab9aaea20be34134295e2d2b50b83922, type: 3}

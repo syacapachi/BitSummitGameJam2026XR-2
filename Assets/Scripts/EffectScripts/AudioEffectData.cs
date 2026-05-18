@@ -17,7 +17,7 @@ public class AudioEffectData : ScriptableObject, IEffect
     public AudioClip Clip => clip;
     public bool Loop => loop;
     public float Volume => volume;
-    public float Pitch => pitch;    
+    public float Pitch => pitch;  
     // AudioEffectへの変換メソッド
     public AudioEffect ToRuntimeData()
     {

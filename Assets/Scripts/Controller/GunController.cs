@@ -58,7 +58,13 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     [Rpc(SendTo.Server)]
     private void ShootRpc()
     {
-        if (isReloading) return;
+        if (isReloading) {
+            if (!IsOwner && IsClient)
+            {
+                PlayCantSound();
+            }
+            return;
+        }
         if (Time.time < nextFire) return;
         OnShootServer();
     }
@@ -135,6 +141,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     public virtual void UpdateProgress(float progress){}
 
     public virtual void PlayShotSound(){}
-
+    public virtual void PlayCantSound(){}
     public virtual void PlayReloadSound(){} 
 }
