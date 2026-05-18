@@ -257,7 +257,8 @@ MonoBehaviour:
   rpcDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
   timeOffset: 15
   clearChangeTime: 10
-  tutorialToEveningTime: 10
+  tutorialToEveningTime: 1.5
+  morningToNoonTime: 100
   skyboxMats:
   - {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
   - {fileID: 2100000, guid: 5abac05424d24a74abdb61b5e24d8acd, type: 2}
@@ -279,6 +280,7 @@ MonoBehaviour:
   noonSky: {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
   gameOverSky: {fileID: 11400000, guid: dd51ec17ce49ad34aae6d4bdc7296619, type: 2}
   currentSky: {fileID: 11400000, guid: 4ea2e62182cceac4b84e3c79b996b16e, type: 2}
+  copySky: {fileID: 11400000, guid: b1fec5d40db27d249936b91d9e96f6ac, type: 2}
   gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   IsDebug: 0
   debugEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
@@ -412,8 +414,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 1, g: 0.99607843, b: 0.78431374, a: 1}
-  m_Intensity: 1.5
+  m_Color: {r: 1, g: 0.78431374, b: 0.54901963, a: 1}
+  m_Intensity: 0.1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -455,7 +457,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 0.5
+  m_BounceIntensity: 0.4
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}

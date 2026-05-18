@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a733a3c2f3c8240aeeb3a2e112824b, type: 3}
   m_Name: currentSky
   m_EditorClassIdentifier: 
-  timeOfDay: 7
-  topColor: {r: 0.14779866, g: 0.14779866, b: 1, a: 1}
-  horizonColor: {r: 0, g: 0, b: 1, a: 1}
-  bottomColor: {r: 0.00018347947, g: 0.00015011957, b: 0.011878964, a: 1}
-  intensity: 8.01
-  exponentTop: 2.15
-  exponentBottom: 0.31
-  sunColor: {r: 0.19624941, g: 0.2158072, b: 0.31377554, a: 1}
-  sunIntensity: 50.7
-  sunMultiplier: 20.6
+  timeOfDay: 12
+  topColor: {r: 0.23529412, g: 0.54901963, b: 0.8627451, a: 1}
+  horizonColor: {r: 0.50980395, g: 0.78431374, b: 1, a: 1}
+  bottomColor: {r: 0.78431374, g: 0.8627451, b: 0.9411765, a: 1}
+  intensity: 4
+  exponentTop: 0.5
+  exponentBottom: 8
+  sunColor: {r: 1, g: 0.84455025, b: 0.78431374, a: 1}
+  sunIntensity: 1.73
+  sunMultiplier: 0.5
   moonColor: {r: 1, g: 0, b: 0, a: 1}
-  moonIntensity: 7.02
-  moonMultiplier: 1.9997873
+  moonIntensity: 16.29
+  moonMultiplier: 1
   textureStrength: 1
   textureRotation: 1
-  skyRootEular: {x: 285, y: 170, z: 0}
+  skyRootEular: {x: 360, y: 170, z: 0}

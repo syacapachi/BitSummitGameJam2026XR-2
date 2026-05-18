@@ -9,6 +9,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     [SerializeField] float timeOffset = 30f;
     [SerializeField] float clearChangeTime = 5f;
     [SerializeField] float tutorialToEveningTime = 3f;
+    [SerializeField] float morningToNoonTime = 100f;
     [Header("SkyBox Material")]
     [SerializeField] Material[] skyboxMats;
     [Header("太陽と月のルート")]
@@ -27,6 +28,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     [SerializeField] SkyBoxColorSetting gameOverSky;
     [Header("書き込み専用")]
     [SerializeField] SkyBoxColorSetting currentSky;
+    [SerializeField] SkyBoxColorSetting copySky;
     [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
     [Header("デバックモード")]
@@ -35,6 +37,7 @@ public class SkyBoxColorChanger : MonoBehaviour
 
     private int currentIndex = 0;
     private GameState previousState;
+
 
     private void Awake()
     {
@@ -66,7 +69,8 @@ public class SkyBoxColorChanger : MonoBehaviour
                 ApplyColor(noonSky); break;
 
             case GameState.Tutorial:
-                StartCoroutine(ApplyColorCorutineByTime(currentSky, startSky, tutorialToEveningTime));break;
+                copySky.CopySky(currentSky);
+                StartCoroutine(ApplyColorCorutineByTime(copySky, startSky, tutorialToEveningTime)); break;
 
             case GameState.Playing:
                 if (previousState != GameState.Tutorial)
@@ -85,7 +89,8 @@ public class SkyBoxColorChanger : MonoBehaviour
 
             case GameState.GameOver:
                 StopAllCoroutines();
-                StartCoroutine(ApplyColorCorutineByTime(currentSky, gameOverSky, clearChangeTime));
+                copySky.CopySky(currentSky);
+                StartCoroutine(ApplyColorCorutineByTime(copySky, gameOverSky, clearChangeTime));
                 break;
         }
         previousState = newState;
@@ -103,9 +108,9 @@ public class SkyBoxColorChanger : MonoBehaviour
     {
         int startTime = (int)skyBoxColorSettings[0].timeOfDay;
         int endTime = (int)skyBoxColorSettings[^1].timeOfDay;
-        int duratinTime = endTime - startTime > 0 
+        int duratinTime = endTime - startTime > 0
             ? endTime - startTime
-            :(24 - startTime) + (endTime);
+            : (24 - startTime) + (endTime);
 
         float hourTime = maxTime / duratinTime;
 
@@ -118,9 +123,10 @@ public class SkyBoxColorChanger : MonoBehaviour
 
     IEnumerator TutorialToGameCoroutine()
     {
+        copySky.CopySky(currentSky);
         // noon → evening を急速変化
         yield return ApplyColorCorutineByTime(
-            currentSky,
+            copySky,
             startSky,
             tutorialToEveningTime);
 
@@ -129,8 +135,9 @@ public class SkyBoxColorChanger : MonoBehaviour
     }
     private IEnumerator GameClearSkyCoroutine()
     {
-        yield return ApplyColorCorutineByTime(currentSky, clearSky, clearChangeTime);
-        yield return ApplyColorCorutineByTime(clearSky, noonSky, 100f);
+        copySky.CopySky(currentSky);
+        yield return ApplyColorCorutineByTime(copySky, clearSky, clearChangeTime);
+        yield return ApplyColorCorutineByTime(clearSky, noonSky, morningToNoonTime);
     }
     /// <summary>
     /// 即時変更用。
@@ -185,19 +192,19 @@ public class SkyBoxColorChanger : MonoBehaviour
     }
     private void ApplyWithCorutine(int index)
     {
-        if(index == 0)
+        if (index == 0)
         {
             StartCoroutine(ApplyColorCorutineByHour(skyBoxColorSettings[^1], skyBoxColorSettings[index], clearChangeTime));
             return;
         }
-        if(index < 1 || index >= skyBoxColorSettings.Length) return;
-        StartCoroutine(ApplyColorCorutineByHour(skyBoxColorSettings[index-1], skyBoxColorSettings[index], clearChangeTime));
+        if (index < 1 || index >= skyBoxColorSettings.Length) return;
+        StartCoroutine(ApplyColorCorutineByHour(skyBoxColorSettings[index - 1], skyBoxColorSettings[index], clearChangeTime));
     }
-    IEnumerator ApplyColorCorutineByHour(int fromIndex,int toIndex,float hourTime)
+    IEnumerator ApplyColorCorutineByHour(int fromIndex, int toIndex, float hourTime)
     {
-        if(fromIndex < 0 || fromIndex >= skyBoxColorSettings.Length)
+        if (fromIndex < 0 || fromIndex >= skyBoxColorSettings.Length)
         {
-            Debug.LogWarning("from is out of range",gameObject);
+            Debug.LogWarning("from is out of range", gameObject);
             yield break;
         }
         yield return ApplyColorCorutineByHour(skyBoxColorSettings[fromIndex], skyBoxColorSettings[toIndex], hourTime);
@@ -205,7 +212,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     IEnumerator ApplyColorCorutineByHour(SkyBoxColorSetting from, SkyBoxColorSetting to, float hourTime)
     {
         int hours = to.timeOfDay - from.timeOfDay;
-        if(hours < 0)
+        if (hours < 0)
         {
             hours += 24;
         }
@@ -258,7 +265,7 @@ public class SkyBoxColorChanger : MonoBehaviour
             if (skyboxMat.HasFloat("_TextureStrength"))
             {
                 skyboxMat.SetFloat("_TextureStrength", currentSky.textureStrength);
-                skyboxMat.SetFloat("_Rotate",currentSky.textureRotation);
+                skyboxMat.SetFloat("_Rotate", currentSky.textureRotation);
             }
         }
         sunLight.color = currentSky.sunColor;
