@@ -26,27 +26,39 @@ public class PhaseManager : NetworkBehaviour
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] BoolEvent WarningStateEvent;
 
+    // コメントアウト：OnEnable/OnDisableでのNetworkVariable購読は
+    // タイミング問題が発生するためOnNetworkSpawn/OnNetworkDespawnに移動
+    // private void OnEnable()
+    // {
+    //     syncedPhaseIndex.OnValueChanged += OnPhaseChanedHaldle;
+    // }
+    // private void OnDisable()
+    // {
+    //     syncedPhaseIndex.OnValueChanged -= OnPhaseChanedHaldle;
+    // }
+
     public override void OnNetworkSpawn()
     {
+        syncedPhaseIndex.OnValueChanged += OnPhaseChanedHaldle;
+
+        Debug.Log($"=== PhaseManager OnNetworkSpawn === IsServer:{IsServer} syncedPhaseIndex:{syncedPhaseIndex.Value}");
+
         // 初期値反映（超重要）
         OnPhaseChanedHaldle(-1, syncedPhaseIndex.Value);
+
         if (IsServer)
         {
             if (spawner == null)
                 spawner = GetComponentInChildren<NetworkEnemySpawner>();
         }
     }
+
     public override void OnNetworkDespawn()
     {
-    }
-    private void OnEnable()
-    {
-        syncedPhaseIndex.OnValueChanged += OnPhaseChanedHaldle;
-    }
-    private void OnDisable()
-    {
+        // NetworkVariableの購読解除はOnNetworkDespawnで行う
         syncedPhaseIndex.OnValueChanged -= OnPhaseChanedHaldle;
     }
+
     private void OnPhaseChanedHaldle(int oldValue, int newValue)
     {
 #if UNITY_EDITOR
@@ -62,8 +74,11 @@ public class PhaseManager : NetworkBehaviour
         Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartPhasesServerOnly called", gameObject);
 #endif       
         SpawnableHandle.SetRandomSeed(gameSeed);
-        //ここからサーバーOnlyの処理
-        syncedPhaseIndex.Value = -1;
+
+        // コメントアウト：-1リセット後すぐStartNextPhaseを呼ぶと
+        // -1→-1で変化なしとみなされOnValueChangedが発火しないため
+        // 直接StartNextPhaseを呼ぶ形に変更
+        // syncedPhaseIndex.Value = -1;
         StartNextPhase();
     }
 
@@ -72,7 +87,6 @@ public class PhaseManager : NetworkBehaviour
 #if UNITY_EDITOR
         Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartNextPhases called", gameObject);
 #endif
-        //syncedPhaseIndex.Value++;
         int nextIndex = CurrentPhaseIndex + 1;
 
         if (nextIndex >= Phases.Length)
@@ -83,23 +97,25 @@ public class PhaseManager : NetworkBehaviour
         }
         StartCoroutine(StartPhaseWithCountdown(nextIndex));
     }
+
     IEnumerator StartPhaseWithCountdown(int phaseIndex)
     {
-        yield return new WaitWhile(() => IsCountingDown); // カウントダウン中は待機
+        Debug.Log($"=== StartPhaseWithCountdown called phaseIndex:{phaseIndex} IsServer:{IsServer}");
+        yield return new WaitWhile(() => IsCountingDown);
+        yield return new WaitWhile(() => IsCountingDown);
         IsCountingDown = true;
 
         if (phaseIndex == Phases.Length - 1)
         {
             yield return new WaitForSeconds(1f);
-            WarningStateRpc(true); // ★全員に開始通知
+            WarningStateRpc(true);
 
             yield return new WaitForSeconds(5f);
 
-            WarningStateRpc(false); // ★全員に終了通知
+            WarningStateRpc(false);
         }
 
         int count = uiSettings.CountdownStart;
-        //キャッシュを作ることでGCを減らす
         var waitBase = new WaitForSeconds(uiSettings.CountDownBaseDuration);
         while (count > 0)
         {
@@ -110,24 +126,22 @@ public class PhaseManager : NetworkBehaviour
 
         CountdownValue.Value = 0;
         IsCountingDown = false;
+
+        Debug.Log($"=== syncedPhaseIndex changing to {phaseIndex} IsServer:{IsServer}");
         syncedPhaseIndex.Value = phaseIndex;
 
         var phaseSetting = Phases[phaseIndex];
         SpawnableHandle.SpawnFromEvent(phaseSetting.Setting);
-        //別コルーチンとして起動
         StartCoroutine(PhaseProgress(phaseSetting.PhaseTime));
     }
+
     IEnumerator PhaseProgress(float time)
     {
-        //フェーズの残り時間を管理するためのタイマー
         float timer = time;
-        //最大時間を保存しておくことで、UIに進行度を0~1の範囲で渡すことができる
         float max = time;
-        //逆数をキャッシュしておく
         float invMax = 1f / max;
         while (timer > 0 && !spawner.IsAllDeadServerOnly)
         {
-            //コルーチンは1フレームごとに呼ばれるため、Time.deltaTimeを引いていくことで、フェーズの残り時間を管理する
             timer -= Time.deltaTime;
             if (timer <= 0) timer = 0;
             phaseProgress.Value = Mathf.Clamp01(timer * invMax);
@@ -141,17 +155,12 @@ public class PhaseManager : NetworkBehaviour
     {
         if (CurrentPhaseIndex == Phases.Length - 1)
         {
-
             yield return EndPhaseWithCountdown();
         }
-
         else if (spawner.IsAllDeadServerOnly)
         {
-
             int bonus = Phases[CurrentPhaseIndex].ClearBonus;
-
-            scoreManager.AddBonusHPServerOnly(bonus); // ← ここ重要
-
+            scoreManager.AddBonusHPServerOnly(bonus);
             yield return AllDeadSequence();
         }
 
@@ -161,9 +170,7 @@ public class PhaseManager : NetworkBehaviour
     IEnumerator AllDeadSequence()
     {
         IsCountingDown = true;
-
         yield return new WaitForSeconds(3.1f);
-
         IsCountingDown = false;
     }
 
@@ -184,7 +191,6 @@ public class PhaseManager : NetworkBehaviour
         }
 
         CountdownValue.Value = 0;
-
         IsCountingDown = false;
     }
 
