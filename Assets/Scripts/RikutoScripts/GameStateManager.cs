@@ -41,6 +41,7 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] GameObject languageCanvas;
     [SerializeField] GameObject connectCanvas;
     [SerializeField] Canvas worldViewCanvas;
+    [SerializeField] Collider worldViewCollider;
     [SerializeField] Canvas tutorialUI;
     [SerializeField] GameObject difficultyCanvas;
     [Header("Publish Event")]
@@ -140,8 +141,9 @@ public class GameStateManager : NetworkBehaviour
             state == LocalState.NetworkConnect ||
             state == LocalState.WorldView);
 
-        worldViewCanvas.enabled =
-            state == LocalState.WorldView;
+        bool worldViewEnable = state == LocalState.WorldView;
+        worldViewCanvas.enabled = worldViewEnable;
+        worldViewCollider.enabled = worldViewEnable;
 
         tutorialUI.enabled =
             state == LocalState.Tutorial;

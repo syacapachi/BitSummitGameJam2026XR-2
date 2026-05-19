@@ -61,7 +61,7 @@ namespace Syacapachi.Editor
         // 抽象クラスやインターフェースと、それを実装/継承する具体的なクラスのキャッシュ (描画できない型を識別するため)
         private readonly Dictionary<string, Type> abstructToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
-        private readonly Dictionary<object, bool> foldouts = new();
+        private readonly Dictionary<string, bool> foldouts = new();
         // パラメータのFoldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<MethodInfo, bool> parametersfoldouts = new();
         // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
@@ -431,7 +431,7 @@ namespace Syacapachi.Editor
             for (int i = 0; i < list.Count; i++)
             {
                 //要素を描画して更新
-                list[i] = DrawField(elementType, $"{path}Element[{i}]", list[i], $"{path}#Element[{i}]");
+                list[i] = DrawField(elementType, $"{name} Element[{i}]", list[i], $"{path}#Element[{i}]");
             }
             if (GUILayout.Button("Add"))
             {

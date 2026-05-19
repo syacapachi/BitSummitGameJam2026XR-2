@@ -38,8 +38,14 @@ public class PhaseUI : MonoBehaviour
     }
 
     private UIState currentState = UIState.Idle;
-
-    void Start()
+    private void Start()
+    {
+        UpdateLangage();
+    }
+    /// <summary>
+    /// 言語設定を更新します。Startは一回しか呼ばれない。
+    /// </summary>
+    void UpdateLangage()
     {
         isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
         ApplyFont();
@@ -98,6 +104,11 @@ public class PhaseUI : MonoBehaviour
         if (newState == GameState.GameOver || newState == GameState.GameClear)
         {
             ChangeState(UIState.GameFinish);
+        }
+        else
+        {
+            //ゲーム状態が変わった場合も呼ぶ
+            UpdateLangage();
         }
     }
 

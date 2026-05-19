@@ -122,8 +122,8 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     private void OnAmmoChanged(int oldVal, int newVal)
     {
         if (isReloading) return;
-        if(oldVal < newVal) return;
         UpdateCount(newVal, MaxAmmo);
+        if (oldVal < newVal) return;        
         //オーナー以外
         if (!IsOwner && IsClient)
         {

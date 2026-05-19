@@ -29,7 +29,6 @@ public class DifficultyBoardUI : MonoBehaviour
     {
         bool isJapanese =
             PlayerPrefs.GetString("Language", "JP") == "JP";
-
         SetTitle(isJapanese);
         SetBoard(isJapanese);
         SetButton(isJapanese);
@@ -72,6 +71,8 @@ public class DifficultyBoardUI : MonoBehaviour
 
         boardTextGUI.text =
             texts[index].DescriptionText;
+
+        boardTextGUI.fontSize = isJapanese ? 3.4f : 2.6f;
     }
 
     void SetButton(bool isJapanese)
