@@ -9,11 +9,12 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
-
+/// <summary>
+/// NetCode.Extensions.NetworkDiscoveryより、Androidに対応したスクリプトを追加するため大部分をコピペ。
+/// </summary>
 [DisallowMultipleComponent]
 public class MyNetworkDiscovery : MonoBehaviour 
 { 
-    
     [Serializable]
     public class ServerFoundEvent : UnityEvent<IPEndPoint, DiscoveryResponseData>
     {

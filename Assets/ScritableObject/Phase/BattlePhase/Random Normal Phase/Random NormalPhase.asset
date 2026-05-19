@@ -16,6 +16,17 @@ MonoBehaviour:
   phaseTime: 180
   clearBonus: 1000
   enemyCapacity: 6
+  waitSpawnType: 0
+  waitSpawnRemainCount: 5
+  nextPhaseType: 0
   useRandomSpawn: 1
   randomSpawnSettings: {fileID: 11400000, guid: 18d534891abdea647b1f5c473aa34138, type: 2}
-  spawnEvents: []
+  spawnEvents:
+  - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
+    spawnPointIndex: 0
+    spawnTime: 0
+    forceSpawn: 0
+  - enemyType: {fileID: 11400000, guid: f9df6ee7cc42a8e42b5b28334ea57e2e, type: 2}
+    spawnPointIndex: 12
+    spawnTime: 4
+    forceSpawn: 0

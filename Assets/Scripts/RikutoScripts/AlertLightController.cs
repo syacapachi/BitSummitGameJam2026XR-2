@@ -45,6 +45,7 @@ public class AlertLightController : MonoBehaviour
         {
             case GameState.Home:
             case GameState.Initializing:
+            case GameState.GameClear:
                 OnAlert(false);break;
         }
     }
