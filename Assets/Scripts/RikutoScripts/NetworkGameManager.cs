@@ -115,7 +115,6 @@ public class NetworkGameManager : NetworkBehaviour
     {
         tutorialManager.OnTutorialStartServerOnly();
     }
-    [OnInspectorButton("Start Game")]
     private void StartGameServerOnly()
     {
         Debug.Log("[NetworkGameManager] StartGameServerOnly");

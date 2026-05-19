@@ -141,8 +141,6 @@ MonoBehaviour:
     spawnPointmarkers: []
   - spawnPointTag: 8
     spawnPointmarkers: []
-  - spawnPointTag: 8
-    spawnPointmarkers: []
 --- !u!1 &1615890855193563394
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133,7 +1131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   gameStartMode: 1
-  useTutorial: 0
+  useTutorial: 1
   gameState:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
