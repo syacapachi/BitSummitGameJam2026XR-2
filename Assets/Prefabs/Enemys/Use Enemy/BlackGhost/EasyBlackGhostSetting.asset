@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15e16320c5bd95e478e5065abcf659bb, type: 3}
-  m_Name: BlackGhostSetting
+  m_Name: EasyBlackGhostSetting
   m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
+  targetEnemy: {fileID: 11400000, guid: a7d4aa5ab88fe1e4eb26aefc4888bbeb, type: 2}
   spanwWeight:
     serializedVersion: 2
     m_Curve:
@@ -38,4 +38,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxSpawn: 5
-  spawnPointTag: -1
+  spawnPointTag: 1
