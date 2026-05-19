@@ -7,7 +7,6 @@ public class GameClearEffectManager : MonoBehaviour
     [SerializeField] GameStateEvent gameStateRpcEvent;
 
     [Header("Effect Targets")]
-    [SerializeField] GameObject moonQuad;
     [SerializeField] Light[] roomLights;
     [SerializeField] float clearLightIntensity = 2f;
     [SerializeField] float lightFadeDuration = 2f;
@@ -19,11 +18,6 @@ public class GameClearEffectManager : MonoBehaviour
     [SerializeField] float confettiLifeTime = 5f;
     [SerializeField] float confettiInterval = 0.8f;
     [SerializeField] int confettiCount = 3;
-
-    [Header("Clear Sound")]
-    [SerializeField] AudioClip clearSoundClip;
-    [SerializeField, Range(0f, 1f)] float clearSoundVolume = 1f;
-    [SerializeField] float clearSoundPitch = 1f;
 
     private bool clearApplied;
     private float[] defaultLightIntensities;
@@ -48,21 +42,11 @@ public class GameClearEffectManager : MonoBehaviour
         if (clearApplied) return;
         clearApplied = true;
 
-        // MoonQuad非表示
-        if (moonQuad) moonQuad.SetActive(false);
-
         // ライトをフェードアップ
         if (roomLights != null && roomLights.Length > 0)
         {
             if (lightFadeCoroutine != null) StopCoroutine(lightFadeCoroutine);
             lightFadeCoroutine = StartCoroutine(FadeLights(clearLightIntensity, lightFadeDuration));
-        }
-
-        // クリアSE再生
-        if (gameEffectEvent != null && clearSoundClip != null)
-        {
-            var audio = new AudioEffect(clearSoundClip, clearSoundVolume, clearSoundPitch);
-            gameEffectEvent.Invoke(new GameEffect(audio, confettiPosition));
         }
 
         // 紙吹雪
@@ -78,7 +62,6 @@ public class GameClearEffectManager : MonoBehaviour
         clearApplied = false;
         if (lightFadeCoroutine != null) { StopCoroutine(lightFadeCoroutine); lightFadeCoroutine = null; }
         if (confettiCoroutine != null) { StopCoroutine(confettiCoroutine); confettiCoroutine = null; }
-        if (moonQuad) moonQuad.SetActive(true);
         if (roomLights != null)
         {
             for (int i = 0; i < roomLights.Length; i++)

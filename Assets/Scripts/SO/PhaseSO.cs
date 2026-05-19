@@ -12,6 +12,8 @@ public class PhaseSO : ScriptableObject
     public string PhaseDisplayNameJP => phaseName.GetText(true);
 
     [Header("Phase Settings")]
+    [SerializeField] PhaseTimeMode phaseMode = PhaseTimeMode.TimeLimit;
+    [Tooltip("TimeLimitなら、終わる時間、")]
     [SerializeField] float phaseTime = 30f;
     [SerializeField] int clearBonus = 500;
     [SerializeField] int enemyCapacity = 10;
@@ -38,6 +40,10 @@ public class PhaseSO : ScriptableObject
         }
     }
     /// <summary>
+    /// フェイズの終了モード
+    /// </summary>
+    public PhaseTimeMode PhaseMode => phaseMode;
+    /// <summary>
     /// 1フェイズの時間
     /// </summary>
     public float PhaseTime => phaseTime;
@@ -54,6 +60,21 @@ public class PhaseSO : ScriptableObject
         setting = null;
     }
 #endif
+}
+public enum PhaseTimeMode
+{
+    /// <summary>
+    /// 終わる時間があります。
+    /// </summary>
+    TimeLimit,
+    /// <summary>
+    /// すべての敵が死ぬまで終わらないモードです。
+    /// </summary>
+    AllEnemyKill,
+    /// <summary>
+    /// HPがなくなるまで終わらないモードです。
+    /// </summary>
+    Endress
 }
 
 [System.Serializable]
@@ -101,7 +122,7 @@ public struct SpawnEvent
     }
     public readonly override string ToString()
     {
-        return $"Name = {enemyType.EnemyName}, Index = {spawnPointIndex}, Time = {spawnTime}, IsForce = {ForceSpawn}";
+        return $"Name = {enemyType.EnemyName}, Index = {spawnPointIndex}, TimeLimit = {spawnTime}, IsForce = {ForceSpawn}";
     }
 }
 [Serializable]
