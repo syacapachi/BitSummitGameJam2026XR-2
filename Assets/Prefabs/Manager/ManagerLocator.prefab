@@ -114,12 +114,12 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   tagToTransfroms:
   - spawnPointTag: 0
     spawnPointmarkers: []
   - spawnPointTag: 2
     spawnPointmarkers:
-    - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
@@ -136,11 +136,13 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    - {fileID: 0}
   - spawnPointTag: 4
-    spawnPointmarkers: []
+    spawnPointmarkers:
+    - {fileID: 0}
+    - {fileID: 0}
   - spawnPointTag: 8
-    spawnPointmarkers: []
+    spawnPointmarkers:
+    - {fileID: 0}
 --- !u!1 &1615890855193563394
 GameObject:
   m_ObjectHideFlags: 0
@@ -642,7 +644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  useCustomSeed: 1
+  useCustomSeed: 0
   gameSeed: 12345
   difficulty:
     UpdateTraits:

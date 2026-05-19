@@ -59,16 +59,15 @@ public class GameStateManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (localState == LocalState.NetworkConnect)
-        {
-            LocalState = LocalState.WorldView;
-        }
         //初期同期
-        OnGameStateChangeRpcEvent.Invoke(CurrentGameState);
+        HandleGameStateChanged(default, CurrentGameState);
     }
     public override void OnNetworkDespawn()
     {
-        LocalState = LocalState.LanguageSelect;
+        //強制初期化
+        localState = LocalState.LanguageSelect;
+        gameState.Value = GameState.Home;
+        localStateChangeLocalEvent.Invoke(LocalState.LanguageSelect);
     }
     private void OnEnable()
     {
@@ -102,7 +101,9 @@ public class GameStateManager : NetworkBehaviour
         switch (newState)
         {
             case GameState.Home:
-                LocalState = LocalState.LanguageSelect;
+                LocalState = localState == LocalState.NetworkConnect
+                ? LocalState.WorldView
+                : LocalState.LanguageSelect;
                 break;
 
             case GameState.Waiting:
