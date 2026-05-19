@@ -18,7 +18,7 @@ public class NetworkGameManager : NetworkBehaviour
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] PlayerManager PlayerManager;
     [SerializeField] TutorialManager tutorialManager;
-    [SerializeField] ResultDataCreater resultDataCreater;
+    [SerializeField] ResultDataCreator resultDataCreator;
     [SerializeField] GameStateManager gameStateManager;
     [Header("UIRef")]
     [SerializeField] TMP_Dropdown difficultyDropDown;
@@ -178,8 +178,8 @@ public class NetworkGameManager : NetworkBehaviour
     {
         phaseManager.KillableHandle.KillAll();
         phaseManager.StopAllCoroutines();
-        resultDataCreater.CreateAndSendResultData(
-            new ResultDataCreater.ResultHeaderData(
+        resultDataCreator.CreateAndSendResultData(
+            new ResultDataCreator.ResultHeaderData(
                 IsGameOver,
                 gameSeed,
                 HPManager.GetHP(),
