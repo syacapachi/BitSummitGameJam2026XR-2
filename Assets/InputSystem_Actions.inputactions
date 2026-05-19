@@ -129,7 +129,16 @@
                     "id": "c94b32bb-fc85-4d40-835d-8444c230fc53",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UICancel",
+                    "type": "Button",
+                    "id": "c5b0cfc6-97a8-4888-9cc2-b2bf46a42acd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
                     "initialStateCheck": false
                 }
             ],
@@ -604,6 +613,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "ShowUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b9b990f-895c-4e70-a196-442dd9060321",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";XR",
+                    "action": "UICancel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

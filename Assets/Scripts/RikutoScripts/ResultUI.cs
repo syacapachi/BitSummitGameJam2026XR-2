@@ -1,9 +1,11 @@
-﻿using Syacapachi.Data;
+﻿using Syacapachi.Attribute;
+using Syacapachi.Data;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class ResultUI : MonoBehaviour
@@ -11,6 +13,7 @@ public class ResultUI : MonoBehaviour
     private static readonly WaitForSeconds _waitForSeconds1 = new WaitForSeconds(1f);
 
     [SerializeField] GameObject panel;
+    [SerializeField] Button enableButton;
     [SerializeField] LazyFollow follow;
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI titleText;
@@ -47,12 +50,18 @@ public class ResultUI : MonoBehaviour
     private readonly List<GameObject> spawnedUIObjects = new();
     void Start()
     {
-        InitializeUI();
+        UIActive(false);
+        enableButton.onClick.AddListener(PanelReverce);
     }
-
-    void InitializeUI()
+    private void PanelReverce()
     {
-        panel.SetActive(false);
+        panel.SetActive(!panel.activeSelf);
+    }
+    private void UIActive(bool enable)
+    {
+        panel.SetActive(enable);
+        enableButton.gameObject.SetActive(enable);
+        follow.enabled = enable;
     }
     private void OnEnable()
     {
@@ -65,18 +74,20 @@ public class ResultUI : MonoBehaviour
         OnGameResultRpc.Unregister(OnGameFinished);
         gameStateEvent.Unregister(OnGameStateChanged);
     }
-
     void OnGameFinished(ResultData resultData)
     {
         Debug.Log($"OnGameFinished called: {Time.frameCount}");
         bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
         ShowResult(resultData, isJapanese);
         ShowDetail(resultData, isJapanese);
-        panel.SetActive(true);
-        follow.enabled = true;
+        UIActive(true);
         StartCoroutine(DisableLazyFollow());
 
     }
+    /// <summary>
+    /// 個人的には、このUIがずっとついてくるのはうざいので1秒後に無力感
+    /// </summary>
+    /// <returns></returns>
     IEnumerator DisableLazyFollow()
     {
         yield return _waitForSeconds1;
@@ -88,7 +99,7 @@ public class ResultUI : MonoBehaviour
         {
             case GameState.Home:
             case GameState.Initializing:
-                InitializeUI(); break;
+                UIActive(false); break;
         }
     }
     void ShowResult(ResultData data, bool isJapanese)
@@ -118,7 +129,6 @@ public class ResultUI : MonoBehaviour
         }
         // （必要なら）前回削除
         ClearSpawnedUI();
-        panel.SetActive(true);
 
         titleText.text = results.IsGameOver
             ? gameOverText.GetText(isJapanese)

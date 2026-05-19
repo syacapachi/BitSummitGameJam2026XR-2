@@ -41,6 +41,7 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] GameObject languageCanvas;
     [SerializeField] GameObject connectCanvas;
     [SerializeField] Canvas worldViewCanvas;
+    [SerializeField] Collider worldViewCollider;
     [SerializeField] Canvas tutorialUI;
     [SerializeField] GameObject difficultyCanvas;
     [Header("Publish Event")]
@@ -58,14 +59,16 @@ public class GameStateManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (localState == LocalState.NetworkConnect)
-        {
-            LocalState = LocalState.WorldView;
-        }
         //初期同期
-        OnGameStateChangeRpcEvent.Invoke(CurrentGameState);
+        HandleGameStateChanged(default, CurrentGameState);
     }
-
+    public override void OnNetworkDespawn()
+    {
+        //強制初期化
+        localState = LocalState.LanguageSelect;
+        gameState.Value = GameState.Home;
+        localStateChangeLocalEvent.Invoke(LocalState.LanguageSelect);
+    }
     private void OnEnable()
     {
         gameState.OnValueChanged += HandleGameStateChanged;
@@ -98,7 +101,9 @@ public class GameStateManager : NetworkBehaviour
         switch (newState)
         {
             case GameState.Home:
-                LocalState = LocalState.LanguageSelect;
+                LocalState = localState == LocalState.NetworkConnect
+                ? LocalState.WorldView
+                : LocalState.LanguageSelect;
                 break;
 
             case GameState.Waiting:
@@ -140,8 +145,9 @@ public class GameStateManager : NetworkBehaviour
             state == LocalState.NetworkConnect ||
             state == LocalState.WorldView);
 
-        worldViewCanvas.enabled =
-            state == LocalState.WorldView;
+        bool worldViewEnable = state == LocalState.WorldView;
+        worldViewCanvas.enabled = worldViewEnable;
+        worldViewCollider.enabled = worldViewEnable;
 
         tutorialUI.enabled =
             state == LocalState.Tutorial;
@@ -180,6 +186,8 @@ public class GameStateManager : NetworkBehaviour
 
     private bool CanTransition(LocalState fromState, LocalState toState)
     {
+        //切断されたらLangageSelectへ行く。
+        if (!IsSpawned && toState == LocalState.LanguageSelect) return true;
         return fromState switch
         {
             LocalState.LanguageSelect
@@ -211,6 +219,8 @@ public class GameStateManager : NetworkBehaviour
 
     private bool CanTransition(GameState fromState, GameState toState)
     {
+        //切断されたらHomeへ行く。
+        if (!IsSpawned && toState == GameState.Home) return true;
         return fromState switch
         {
             GameState.Home
@@ -290,25 +300,25 @@ public class GameStateManager : NetworkBehaviour
         }
     }
 
-    [OnInspectorButton]
+    [OnInspectorButton(order = 3)]
     public void StartEasy()
     {
         RequestStartGameRpc(Difficulty.Easy);
     }
 
-    [OnInspectorButton]
+    [OnInspectorButton(order = 3)]
     public void StartNormal()
     {
         RequestStartGameRpc(Difficulty.Normal);
     }
 
-    [OnInspectorButton]
+    [OnInspectorButton(order = 1)]
     public void StartHard()
     {
         RequestStartGameRpc(Difficulty.Hard);
     }
 
-    [OnInspectorButton]
+    [OnInspectorButton(order = 0)]
     public void StartDebug()
     {
         RequestStartGameRpc(Difficulty.Debug);
@@ -443,6 +453,7 @@ public enum LocalState
 //Lang -> worldView :言語選択後、ネット接続している場合遷移
 //connect -> worldView:ネット接続した場合遷移
 //worlldView -> Playing:クライアント全員がworldViewの時、進むを押したとき。
+//Any -> Langネット接続が切れたとき。
 
 
 //GameState

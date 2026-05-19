@@ -121,8 +121,9 @@ MonoBehaviour:
   phaseBarPrefab: {fileID: 3726993551735620307, guid: 0bf3ca9b243f5b442b094758a364551a, type: 3}
   separatorPrefab: {fileID: 7588150835802480204, guid: ecb63a1604d8a1044be16b3669b27af3, type: 3}
   container: {fileID: 7801505109371665529}
-  rect: {fileID: 7801505109371665529}
-  GameStateEvent: {fileID: 0}
+  fixedBarWidth: 300
+  gameStateEvent: {fileID: 0}
+  onPhaseChangeRpcEvent: {fileID: 0}
 --- !u!114 &3316737053532548226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1230,6 +1231,8 @@ MonoBehaviour:
   damageBorders:
   - {fileID: 7453324963103222195}
   flashTime: 0.3
+  damageEffect: {fileID: 0}
+  effectEvent: {fileID: 0}
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
 --- !u!1 &9051391430683515357
 GameObject:

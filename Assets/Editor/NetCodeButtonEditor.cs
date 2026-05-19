@@ -36,13 +36,17 @@ namespace Syacapachi.Editor
         }
         //全てのキャッシュを初期化して持っておく
         private static readonly MethodCache[] allMethods =
+            //TypeCacheで高速化(さらに高速化するなら、for文で回そう)
             TypeCache.GetMethodsWithAttribute<OnInspectorButtonAttribute>()
             .Select(method =>
                 new MethodCache(
                     method,
-                    method.GetCustomAttribute<OnInspectorButtonAttribute>())
+                    //method.GetCustomAttribute<OnInspectorButtonAttribute>()より軽い
+                    (OnInspectorButtonAttribute)
+                    Attribute.GetCustomAttribute(method, typeof(OnInspectorButtonAttribute)))
                 )
             .ToArray();
+
         //staticは、アセンブリロード時(スクリプト編集後など)や、Play時に再生成される。
         //クラスとOnInspectorButtonをもつ関数のキャッシュ,このデータは静的なのでstaticにすることでパフォーマンス向上
         private static readonly Dictionary<Type, MethodCache[]> methodCaches = new();
@@ -50,7 +54,7 @@ namespace Syacapachi.Editor
         private static readonly Dictionary<Type, FieldInfo[]> fieldCache = new();
         //関数の引数情報のキャッシュ(具体的な値ではないのでstatic)
         private static readonly Dictionary<MethodInfo, ParameterInfo[]> parameterInfoCaches = new();
-        // メソッド名と引数のキャッシュ (パフォーマンス向上のため),インスペクターごとに値が違うので非static
+        // メソッドと引数のキャッシュ (パフォーマンス向上のため),インスペクターごとに値が違うので非static
         private readonly Dictionary<MethodInfo, object[]> methodParameters = new();
         // 値更新時に自動で発火する場合、有効かどうか
         private readonly Dictionary<MethodInfo, bool> valiedInvokeEnabled = new();
@@ -79,7 +83,7 @@ namespace Syacapachi.Editor
             //base.OnInspectorGUI(); //これを呼ぶと、全てのフィールドが描画される。DrawDefaultInspector()と同様。
             //通常のインスペクター描画を行う。これを呼ばないと、通常のフィールドが表示されない。
             DrawDefaultInspector();
-
+            //インスペクター上に関数を呼び出すためのボタンを描画する。対象のオブジェクトの型をリフレクションで調べて、[OnInspectorButton]属性が付いているメソッドを探し、ボタンを表示する。
             DrawInspectorButtons(target);
 
             // ネストしたScriptableObjectを再帰的に描画
@@ -114,8 +118,6 @@ namespace Syacapachi.Editor
                 //        })
                 //    .ToArray();
 
-                //全関数を
-                //TypeCacheで高速化(さらに高速化するなら、for文で回そう)
                 methods = allMethods
                     .Where(cache =>
                         //描画クラスが、関数を定義したクラスの子か
@@ -127,6 +129,7 @@ namespace Syacapachi.Editor
                             || cache.Method.DeclaringType == targetType
                         )
                     )
+                    .OrderBy(cache => cache.Attribute.Order)
                     .ToArray();
 
                 methodCaches[targetType] = methods;
@@ -145,6 +148,7 @@ namespace Syacapachi.Editor
         {
             //ラベルがない場合は関数名で上書き
             string buttonLabel = string.IsNullOrEmpty(attr.Label) ? method.Name : attr.Label;
+
             //引数を取得して引数情報を初期化
             if (!parameterInfoCaches.TryGetValue(method, out var parameters))
             {
@@ -183,7 +187,6 @@ namespace Syacapachi.Editor
                     //変更を検知するエリア
                     EditorGUI.BeginChangeCheck();
                     var param = parameters[i];
-                    //pathは、{インスタンスID}{関数名}{引数ID}なので多分かぶらないはず
                     values[i] = DrawField(param.ParameterType, param.Name, values[i], $"{target.GetInstanceID()}#{method.Name}#{param.MetadataToken}");
                     //変更を検知
                     if (EditorGUI.EndChangeCheck())
@@ -191,6 +194,7 @@ namespace Syacapachi.Editor
                         isValueChangedThisFrame = true;
                     }
                     //isValueChangedThisFrame |= GUI.changed;//GUI全体で値が変わったか
+
                 }
                 EditorGUI.indentLevel--;
             }
@@ -427,7 +431,7 @@ namespace Syacapachi.Editor
             for (int i = 0; i < list.Count; i++)
             {
                 //要素を描画して更新
-                list[i] = DrawField(elementType, $"{path}Element[{i}]", list[i], $"{path}#Element[{i}]");
+                list[i] = DrawField(elementType, $"{name} Element[{i}]", list[i], $"{path}#Element[{i}]");
             }
             if (GUILayout.Button("Add"))
             {
@@ -648,17 +652,17 @@ namespace Syacapachi.Editor
 
             //Unity内部のキャッシュで検索高速化
             var types = TypeCache.GetTypesDerivedFrom(baseType);
+            if (types.Count == 0)
+            {
+                EditorUtility.DisplayDialog("No Concrete Class Found", $"No concrete class found that implements/inherits {baseType.Name}.", "OK");
+                return;
+            }
             foreach (var type in types)
             {
                 menu.AddItem(new GUIContent(type.FullName), false, () =>
                 {
                     abstructToClass[path] = type;
                 });
-            }
-            if (types.Count == 0)
-            {
-                EditorUtility.DisplayDialog("No Concrete Class Found", $"No concrete class found that implements/inherits {baseType.Name}.", "OK");
-                return;
             }
             menu.ShowAsContext();
         }
@@ -679,7 +683,6 @@ namespace Syacapachi.Editor
 
             EditorGUILayout.EndVertical();
         }
-
         static object GetDefault(Type t)
         {
             if (t == null)
@@ -700,21 +703,20 @@ namespace Syacapachi.Editor
                 return null;
             }
         }
-
-        bool GetFoldout(string key)
+        bool GetFoldout(string pathkey)
         {
-            if (!foldouts.TryGetValue(key, out bool value))
+            if (!foldouts.TryGetValue(pathkey, out bool value))
             {
                 value = false;
-                foldouts[key] = value;
+                foldouts[pathkey] = value;
             }
 
             return value;
         }
 
-        void SetFoldout(string key, bool value)
+        void SetFoldout(string pathkey, bool value)
         {
-            foldouts[key] = value;
+            foldouts[pathkey] = value;
         }
 
         /// <summary>
@@ -776,9 +778,10 @@ namespace Syacapachi.Editor
             if (!EditorUtility.IsPersistent(nestedSO))
                 return;
 
-            if (!foldoutStates.ContainsKey(nestedSO))
+            if (!foldoutStates.TryGetValue(nestedSO, out var enable))
             {
-                foldoutStates[nestedSO] = false; // 初期状態は折りたたみ
+                enable = false;// 初期状態は折りたたみ
+                foldoutStates[nestedSO] = enable;
             }
             string label = overrideLabel ?? prop.displayName;
             label = $"{label} ▶ {nestedSO.name} ({nestedSO.GetType().Name})";
@@ -786,7 +789,7 @@ namespace Syacapachi.Editor
             EditorGUILayout.Space(3);
 
             foldoutStates[nestedSO] = EditorGUILayout.Foldout(
-                foldoutStates[nestedSO],
+                enable,
                 label,
                 true
             );

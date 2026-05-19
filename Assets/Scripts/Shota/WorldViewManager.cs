@@ -37,25 +37,24 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] LocalizeSimpleText backText;
     [Header("Subscribe Event")]
     [SerializeField] LocalStateEvent localStateEvent;
+    /// <summary>
+    /// このオブジェクトは持てるので、位置を戻すために使う。
+    /// </summary>
+    Vector3 initialPos;
 
-    /*
-    [Header("シーン設定")]
-    SerializeField,Scene(true)] string tutorialScene;
-    SerializeField,Scene(true)] string gameScene;
-
-    [SerializeField,Scene(true)] string gameSceneName;
-    */
-    /*
-    private void Start()
+    /// <summary>
+    /// 再接続時に初期化
+    /// </summary>
+    public override void OnNetworkSpawn()
     {
-        // connectCanvasEvent?.Invoke(); ← 削除：Start()では呼ばない
-        if (!IsSpawned)
-        {
-            if (boardCanvas != null)
-                boardCanvas.enabled = false;
-        }
+        this.transform.SetPositionAndRotation(initialPos, Quaternion.identity);
     }
-    */
+
+    private void Awake()
+    {
+        initialPos = gameObject.transform.position;
+    }
+
     private void OnEnable()
     {
         localStateEvent.Register(OnLocalStateChanged);
@@ -71,6 +70,8 @@ public class WorldViewManager : NetworkBehaviour
     {
         if(localState == LocalState.WorldView)
         {
+            //初期化
+            this.transform.SetPositionAndRotation(initialPos,Quaternion.identity);
             ShowPage(pageIndex.Value);
         }
     }

@@ -1,6 +1,5 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DifficultyBoardUI : MonoBehaviour
 {
@@ -15,16 +14,21 @@ public class DifficultyBoardUI : MonoBehaviour
     [Header("Localized")]
     [SerializeField] LocalizedText difficultyTexts;
 
-    void Start()
+    /// <summary>
+    /// オブジェクトが、SetActive(true)されると呼ばれる。
+    /// Start()は、初回SetActive(true)だけなので注意。
+    /// </summary>
+    void OnEnable()
     {
         Refresh();
     }
-
+    /// <summary>
+    /// 言語設定を更新する。
+    /// </summary>
     public void Refresh()
     {
         bool isJapanese =
             PlayerPrefs.GetString("Language", "JP") == "JP";
-
         SetTitle(isJapanese);
         SetBoard(isJapanese);
         SetButton(isJapanese);
@@ -38,17 +42,17 @@ public class DifficultyBoardUI : MonoBehaviour
         {
             case Difficulty.Easy:
                 titleTextGUI.text =
-                    isJapanese ? "�C�[�W�[" : "Easy";
+                    isJapanese ? "イージー" : "Easy";
                 break;
 
             case Difficulty.Normal:
                 titleTextGUI.text =
-                    isJapanese ? "�m�[�}��" : "Normal";
+                    isJapanese ? "ノーマル" : "Normal";
                 break;
 
             case Difficulty.Hard:
                 titleTextGUI.text =
-                    isJapanese ? "�n�[�h" : "Hard";
+                    isJapanese ? "ハード" : "Hard";
                 break;
         }
     }
@@ -67,12 +71,14 @@ public class DifficultyBoardUI : MonoBehaviour
 
         boardTextGUI.text =
             texts[index].DescriptionText;
+
+        boardTextGUI.fontSize = isJapanese ? 3.4f : 2.6f;
     }
 
     void SetButton(bool isJapanese)
     {
         if (buttonTextGUI == null) return;
 
-        buttonTextGUI.text = isJapanese ? "�I��" : "Select";
+        buttonTextGUI.text = isJapanese ? "選択" : "Select";
     }
 }
