@@ -113019,7 +113019,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4667826402908098960}
-  - component: {fileID: 4627066668415075513}
   m_Layer: 12
   m_Name: VE-66LRA
   m_TagString: Untagged
@@ -113045,27 +113044,6 @@ Transform:
   - {fileID: 1959945384678204575}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -10.368, y: 0, z: 0}
---- !u!65 &4627066668415075513
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5659498723423374067}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1.9678708, y: 4.4320245, z: 16.986134}
-  m_Center: {x: -0.61275476, y: 4.9599214, z: -3.4930582}
 --- !u!1 &5661385646295750857
 GameObject:
   m_ObjectHideFlags: 0

@@ -62,6 +62,7 @@ public class PhaseBarUI : MonoBehaviour
 
             case GameState.GameOver:
             case GameState.GameClear:
+            case GameState.Initializing:
             case GameState.Home:
 
                 timerCanvas.enabled = false;

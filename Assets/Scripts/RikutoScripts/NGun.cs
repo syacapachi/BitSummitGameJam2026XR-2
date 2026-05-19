@@ -67,6 +67,7 @@ public class NGun : GunController
         {
             case GameState.Home:
             case GameState.Initializing:
+            case GameState.Playing://チュートリアルで消費してるのを初期化
                 syncedAmmo.Value = WeaponSettings.maxAmmo; break;
         }
     }

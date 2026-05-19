@@ -66,7 +66,10 @@ public class GameStateManager : NetworkBehaviour
         //初期同期
         OnGameStateChangeRpcEvent.Invoke(CurrentGameState);
     }
-
+    public override void OnNetworkDespawn()
+    {
+        LocalState = LocalState.LanguageSelect;
+    }
     private void OnEnable()
     {
         gameState.OnValueChanged += HandleGameStateChanged;
@@ -182,6 +185,8 @@ public class GameStateManager : NetworkBehaviour
 
     private bool CanTransition(LocalState fromState, LocalState toState)
     {
+        //切断されたらLangageSelectへ行く。
+        if (!IsSpawned && toState == LocalState.LanguageSelect) return true;
         return fromState switch
         {
             LocalState.LanguageSelect
@@ -213,6 +218,8 @@ public class GameStateManager : NetworkBehaviour
 
     private bool CanTransition(GameState fromState, GameState toState)
     {
+        //切断されたらHomeへ行く。
+        if (!IsSpawned && toState == GameState.Home) return true;
         return fromState switch
         {
             GameState.Home
@@ -445,6 +452,7 @@ public enum LocalState
 //Lang -> worldView :言語選択後、ネット接続している場合遷移
 //connect -> worldView:ネット接続した場合遷移
 //worlldView -> Playing:クライアント全員がworldViewの時、進むを押したとき。
+//Any -> Langネット接続が切れたとき。
 
 
 //GameState
