@@ -7,46 +7,26 @@ using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
-
+/// <summary>
+/// 敵を出現させるクラスです。出現した敵の参照を持ち、現在出現している数や出現待ちの敵を管理します。
+/// </summary>
+/// <remarks>
+/// Responsibilities:
+/// <br /> - 敵の出現
+/// <br /> - 現在出現している敵の数
+/// <br /> - 出現待ちの敵の数
+/// <br /> - 出現中の敵を一斉に殺す
+/// <br />
+/// Requires:
+/// <br /> - 出現ルール
+///
+/// <br />
+/// Events:
+/// <br /> - OnAllEnemyDeadRpcEvent:すべての敵がプレーヤーよってに死亡したら発行
+/// </remarks>
 public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpawnable, IKillable
 {
-    /// <summary>
-    /// 待ってる敵が出てくるタイプ
-    /// </summary>
-    enum WaitSpawnType
-    {
-        /// <summary>
-        /// 敵が分けるようになったらすぐに次の敵を出す
-        /// </summary>
-        WaitForNext,
-        /// <summary>
-        /// 全ての敵が倒されるまで次の敵を出さない
-        /// </summary>
-        WaitForAllEnemyDead,
-        /// <summary>
-        /// 一部の敵が倒されるまで次の敵を出さない
-        /// </summary>
-        WaitForSomeEnemyDead
-    }
-    /// <summary>
-    /// 次のフェイズに行った時の条件
-    /// </summary>
-    enum NextPhaseType
-    {
-        /// <summary>
-        /// 待ち行列を残す
-        /// </summary>
-        Remain,
-        /// <summary>
-        /// 待ち行列を削除する
-        /// </summary>
-        Delete
-    }
     [Header("Setting")]
-    [SerializeField] WaitSpawnType waitSpawnType = WaitSpawnType.WaitForNext;
-    [SerializeField, EnableIfEnum(nameof(waitSpawnType), true, WaitSpawnType.WaitForSomeEnemyDead)]
-    int waitSpawnRemainCount = 5;
-    [SerializeField] NextPhaseType nextPhaseType = NextPhaseType.Remain;
     [SerializeField] EnemyDataBase enemyDataBase;
     [Header("Reference")]
     [SerializeField] NetworkObjectPool networkPool;
@@ -58,14 +38,25 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     [Header("SubScribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
     //出現可能地点と、最大出現数のうち、小さいほうが採用される。
+    int waitSpawnRemainCount = 5;
+    WaitSpawnType waitSpawnType = WaitSpawnType.WaitForNext;
     private RandomTable table;
     private int gameSeedServerOnly;
     private int maxEnemyCapacity = 10;
     private int remain;
+    /// <summary>
+    /// 残ってる敵　サーバーのみ
+    /// </summary>
     public int RemainServerOnly => remain;
     private bool isSpawnFinished = false;
     private bool isAllDead = false;
+    /// <summary>
+    /// スポーンが終わったか、サーバーのみ
+    /// </summary>
     public bool IsSpawnFinishedServerOnly => isSpawnFinished;
+    /// <summary>
+    /// 全敵が死んでいるか、サーバーのみ
+    /// </summary>
     public bool IsAllDeadServerOnly => isAllDead;
     private readonly List<IEnemy> spawnedEnemies = new();
     private readonly Queue<SpawnEvent> waitSpawnEnemyQueue = new();
@@ -90,13 +81,26 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     {
         OnEnemyKilled(killled.KilledEnemy);
     }
-    public void SetRandomSeed(int gameSeed)
+    /// <summary>
+    /// シード値を設定します。サーバーしか使わないので、サーバーのみです。
+    /// </summary>
+    /// <param name="gameSeed">
+    /// シード値
+    /// </param>
+    public void SetRandomSeedServerOnly(int gameSeed)
     {
         gameSeedServerOnly = gameSeed;
         table = new RandomTable(gameSeedServerOnly, 5000);
         //代替案
         //Unity.Mathematics.Random random;
     }
+    /// <summary>
+    /// 敵を出現させるコルーチンを起動します。
+    /// サーバーかつゲームがプレイ中でないと実行されません。
+    /// </summary>
+    /// <param name="setting">
+    /// 出現設定
+    /// </param>
     public void SpawnFromEvent(SpawnSetting setting)
     {
         if (!IsServer) return;
@@ -106,7 +110,9 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
         {
             StopCoroutine(spawnCorutine);
         }
-        if (nextPhaseType == NextPhaseType.Delete)
+        waitSpawnType = setting.WaitSpawnType;
+        waitSpawnRemainCount = setting.WaitSpawnRemainCount;
+        if (setting.NextPhaseType == NextPhaseType.Delete)
         {
             waitForSpawn = null;
             waitSpawnEnemyQueue.Clear();
@@ -154,7 +160,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
                 {
                     Debug.Log("EnemySpawnSetting is null", gameObject);
                 }
-                    float duration = randomSetting.GetSpawnDuration(progress);
+                float duration = randomSetting.GetSpawnDuration(progress);
 
                 //無限ループ防止
                 if (duration <= 0f)
@@ -373,4 +379,36 @@ public class EnemyKilled
 {
     public IEnemy KilledEnemy;
     public Vector3 positon;
+}
+/// <summary>
+/// 待ってる敵が出てくるタイプ
+/// </summary>
+public enum WaitSpawnType
+{
+    /// <summary>
+    /// 敵が分けるようになったらすぐに次の敵を出す
+    /// </summary>
+    WaitForNext,
+    /// <summary>
+    /// 全ての敵が倒されるまで次の敵を出さない
+    /// </summary>
+    WaitForAllEnemyDead,
+    /// <summary>
+    /// 一部の敵が倒されるまで次の敵を出さない
+    /// </summary>
+    WaitForSomeEnemyDead
+}
+/// <summary>
+/// 次のフェイズに行った時の待ち敵行列の条件
+/// </summary>
+public enum NextPhaseType
+{
+    /// <summary>
+    /// 待ち行列を残す
+    /// </summary>
+    Remain,
+    /// <summary>
+    /// 待ち行列を削除する
+    /// </summary>
+    Delete
 }
