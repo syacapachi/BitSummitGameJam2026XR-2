@@ -233,8 +233,8 @@ public class PhaseUI : MonoBehaviour
             phaseText.gameObject.SetActive(true);
             yield return new WaitForSeconds(1f);
 
-            phaseText.text = isJapanese ? "基本戦" : "Combat Phase";
-            yield return new WaitForSeconds(1f);
+            // phaseText.text = isJapanese ? "戦闘開始" : "Combat Phase";
+            // yield return new WaitForSeconds(1f);
         }
         // 最終フェーズ（ボス戦）の開始表示
         else if (index == lastIndex)
