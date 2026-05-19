@@ -70158,7 +70158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8620195493814683290, guid: e0f82a832839a5d46bcd23dbde435105, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -71480,6 +71480,26 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 97278249}
     - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: tagToTransfroms.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: tagToTransfroms.Array.data[3].spawnPointTag
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: tagToTransfroms.Array.data[4].spawnPointTag
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: tagToTransfroms.Array.data[3].spawnPointmarkers.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: tagToTransfroms.Array.data[4].spawnPointmarkers.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'tagToTransfroms.Array.data[1].spawnPointmarkers.Array.data[0]'
       value: 
       objectReference: {fileID: 154002831}
@@ -71545,6 +71565,86 @@ PrefabInstance:
       objectReference: {fileID: 1265524738}
     - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'tagToTransfroms.Array.data[2].spawnPointmarkers.Array.data[9]'
+      value: 
+      objectReference: {fileID: 1165828901}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 780583140}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 43273098}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1672518657}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[3]'
+      value: 
+      objectReference: {fileID: 951168592}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1099297094}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[5]'
+      value: 
+      objectReference: {fileID: 1725796290}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[6]'
+      value: 
+      objectReference: {fileID: 1270831520}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[7]'
+      value: 
+      objectReference: {fileID: 1010363771}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[8]'
+      value: 
+      objectReference: {fileID: 1265524738}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[9]'
+      value: 
+      objectReference: {fileID: 1165828901}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 780583140}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 43273098}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1672518657}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[3]'
+      value: 
+      objectReference: {fileID: 951168592}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1099297094}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[5]'
+      value: 
+      objectReference: {fileID: 1725796290}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[6]'
+      value: 
+      objectReference: {fileID: 1270831520}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[7]'
+      value: 
+      objectReference: {fileID: 1010363771}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[8]'
+      value: 
+      objectReference: {fileID: 1265524738}
+    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[9]'
       value: 
       objectReference: {fileID: 1165828901}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
