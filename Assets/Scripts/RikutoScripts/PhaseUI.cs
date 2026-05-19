@@ -113,7 +113,7 @@ public class PhaseUI : MonoBehaviour
     {
         Debug.Log($"[PhaseUI][State] {currentState} → {next}");
 
-        // 修正：PhaseIntro は同じ状態でも必ず実行する（フェーズ番号が変わるため）
+        // PhaseIntro は同じ状態でも必ず実行する（フェーズ番号が変わるため）
         if (currentState == next && next != UIState.Countdown && next != UIState.PhaseIntro)
         {
             Debug.Log($"[PhaseUI][State] Skipped (same state): {next}");
@@ -226,28 +226,30 @@ public class PhaseUI : MonoBehaviour
 
         phaseText.fontSize = 120;
 
-        // 最初のフェーズだけ特別表示
+        // 最初のフェーズ（基本戦）の開始表示
         if (index == 0)
         {
-            phaseText.text = isJapanese ? "任務開始！" : "Game Start!";
+            phaseText.text = isJapanese ? "任務開始！" : "Mission Start!";
+            phaseText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1f);
+
+            phaseText.text = isJapanese ? "基本戦" : "Combat Phase";
+            yield return new WaitForSeconds(1f);
+        }
+        // 最終フェーズ（ボス戦）の開始表示
+        else if (index == lastIndex)
+        {
+            phaseText.text = isJapanese ? "ボス戦突入！" : "Boss Battle!";
             phaseText.gameObject.SetActive(true);
             yield return new WaitForSeconds(1f);
         }
-
-        if (index == lastIndex)
-        {
-            phaseText.text = text;
-        }
+        // 中間フェーズがある場合はフェーズ名をそのまま表示
         else
         {
-            phaseText.text = isJapanese
-                ? $"第{index + 1}フェーズ"
-                : $"Phase {index + 1}";
+            phaseText.text = text;
+            phaseText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1f);
         }
-
-        phaseText.gameObject.SetActive(true);
-
-        yield return new WaitForSeconds(1f);
 
         phaseText.fontSize = 150;
         phaseText.text = isJapanese ? "スタート!!" : "START!!";
@@ -287,7 +289,7 @@ public class PhaseUI : MonoBehaviour
         SetupNormal();
 
         phaseText.fontSize = 150;
-        phaseText.text = isJapanese ? "任務終了!" : "FINISH!";
+        phaseText.text = isJapanese ? "任務完了！" : "Mission Complete!";
         phaseText.gameObject.SetActive(true);
 
         yield return PopAnimation();
