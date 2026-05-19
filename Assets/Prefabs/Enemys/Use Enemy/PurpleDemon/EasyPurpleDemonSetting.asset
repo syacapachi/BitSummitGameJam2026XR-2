@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15e16320c5bd95e478e5065abcf659bb, type: 3}
-  m_Name: BlackGhostSetting
+  m_Name: EasyPurpleDemonSetting
   m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 11400000, guid: c197999682f2c384fbdb83f1597e590c, type: 2}
+  targetEnemy: {fileID: 11400000, guid: abbb46ebf923ee4479dccb75c0b07e75, type: 2}
   spanwWeight:
     serializedVersion: 2
     m_Curve:
@@ -38,4 +38,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxSpawn: 5
-  spawnPointTag: -1
+  spawnPointTag: 1

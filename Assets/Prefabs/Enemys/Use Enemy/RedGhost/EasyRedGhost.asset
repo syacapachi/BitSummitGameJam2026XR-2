@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
-  m_Name: BlueDemonFixed
+  m_Name: EasyRedGhost
   m_EditorClassIdentifier: 
-  Name: BlueDemon
-  icon: {fileID: 21300000, guid: 73ac6aec49651824fa09d4489b547c63, type: 3}
-  enemyJob: 1
+  Name: RedGhost
+  icon: {fileID: 21300000, guid: 70a7a1f518bdc9d42b1275adc31eeed9, type: 3}
+  enemyJob: 2
   HP: 100
   scoreValue: 300
   canMove: 0
   MoveSpeed: 0
   movablePointTag: -1
-  prefab: {fileID: 936894702766740473, guid: 4794981bedeccaf4c9a30bb177c3cecd, type: 3}
+  prefab: {fileID: 5862711303839627052, guid: 030407a78c4c98c4aa404df8bc5faa62, type: 3}
   canAttack: 1
-  enemyWeapon: {fileID: 11400000, guid: b6d7fcc3398f92940af5131dfbd67d12, type: 2}
+  enemyWeapon: {fileID: 11400000, guid: 01d57ad43a4b4cc458319eb71fd9e72a, type: 2}

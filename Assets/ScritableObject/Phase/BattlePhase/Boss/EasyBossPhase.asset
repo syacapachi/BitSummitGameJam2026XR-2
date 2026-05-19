@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a6df8e7571e05a4468818a61a1effb1a, type: 3}
-  m_Name: BossPhase
+  m_Name: EasyBossPhase
   m_EditorClassIdentifier: 
   phaseName: {fileID: 11400000, guid: 9357740b3ac1f494e99395556ab7079c, type: 2}
   phaseTime: 120
   clearBonus: 10000
-  enemyCapacity: 5
-  useRandomSpawn: 0
-  randomSpawnSettings: {fileID: 0}
+  enemyCapacity: 2
+  useRandomSpawn: 1
+  randomSpawnSettings: {fileID: 11400000, guid: 9fa13817e7d230647a873748b45a850b, type: 2}
   spawnEvents:
   - enemyType: {fileID: 11400000, guid: e629d58e157b68f49b089f0612381bd7, type: 2}
     spawnPointIndex: 4

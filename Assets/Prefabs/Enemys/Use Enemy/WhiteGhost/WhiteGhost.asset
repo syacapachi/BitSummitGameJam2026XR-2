@@ -17,9 +17,9 @@ MonoBehaviour:
   enemyJob: 2
   HP: 100
   scoreValue: 100
-  canMove: 1
+  canMove: 0
   MoveSpeed: 0
-  movablePointTag: -1
+  movablePointTag: 1
   prefab: {fileID: 8647665299197419302, guid: 086603525c4aece419b3e9b98abcc509, type: 3}
   canAttack: 1
   enemyWeapon: {fileID: 11400000, guid: c26a60b458e18e148a462121f31fcd89, type: 2}
