@@ -26,24 +26,21 @@ public class PhaseManager : NetworkBehaviour
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] BoolEvent WarningStateEvent;
 
-    // コメントアウト：OnEnable/OnDisableでのNetworkVariable購読は
-    // タイミング問題が発生するためOnNetworkSpawn/OnNetworkDespawnに移動
-    // private void OnEnable()
-    // {
-    //     syncedPhaseIndex.OnValueChanged += OnPhaseChanedHaldle;
-    // }
-    // private void OnDisable()
-    // {
-    //     syncedPhaseIndex.OnValueChanged -= OnPhaseChanedHaldle;
-    // }
+    private void OnEnable()
+    {
+        syncedPhaseIndex.OnValueChanged += OnPhaseChanedHaldle;
+    }
+
+    private void OnDisable()
+    {
+        syncedPhaseIndex.OnValueChanged -= OnPhaseChanedHaldle;
+    }
 
     public override void OnNetworkSpawn()
     {
-        syncedPhaseIndex.OnValueChanged += OnPhaseChanedHaldle;
-
         Debug.Log($"=== PhaseManager OnNetworkSpawn === IsServer:{IsServer} syncedPhaseIndex:{syncedPhaseIndex.Value}");
 
-        // 初期値反映（超重要）
+        // 初期値反映
         OnPhaseChanedHaldle(-1, syncedPhaseIndex.Value);
 
         if (IsServer)
@@ -55,8 +52,6 @@ public class PhaseManager : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        // NetworkVariableの購読解除はOnNetworkDespawnで行う
-        syncedPhaseIndex.OnValueChanged -= OnPhaseChanedHaldle;
     }
 
     private void OnPhaseChanedHaldle(int oldValue, int newValue)
@@ -72,12 +67,13 @@ public class PhaseManager : NetworkBehaviour
         if (!IsServer) return;
 #if UNITY_EDITOR
         Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartPhasesServerOnly called", gameObject);
-#endif       
+#endif
         SpawnableHandle.SetRandomSeed(gameSeed);
 
-        // コメントアウト：-1リセット後すぐStartNextPhaseを呼ぶと
-        // -1→-1で変化なしとみなされOnValueChangedが発火しないため
-        // 直接StartNextPhaseを呼ぶ形に変更
+        // syncedPhaseIndex.Value = -1 をコメントアウトしている理由：
+        // ResetPhase() で既に -1 にリセット済みのため、ここで再度 -1 を代入すると
+        // -1 → -1 で値の変化なしとみなされ OnValueChanged が発火しない。
+        // そのためリセットせず直接 StartNextPhase() を呼ぶ。
         // syncedPhaseIndex.Value = -1;
         StartNextPhase();
     }
