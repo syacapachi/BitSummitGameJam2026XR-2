@@ -30552,6 +30552,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 8805889176675939562, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
+      propertyPath: m_Name
+      value: Hide when TooNear
+      objectReference: {fileID: 0}
     - target: {fileID: 8821684619350963268, guid: f32f9eba3a0133f43903e35bd948816a, type: 3}
       propertyPath: m_Layer
       value: 12
@@ -31004,7 +31008,7 @@ MonoBehaviour:
   root: {fileID: 444079529}
   text: {fileID: 300900559}
   operationGuideImage: {fileID: 0}
-  gameStateEvent: {fileID: 0}
+  gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   OnTutorialStepChanged: {fileID: 11400000, guid: 4cdbcd5da1b58d048a39f9a786419768, type: 2}
   OnTutorialStepCleared: {fileID: 11400000, guid: 64f3ed58da1abd54bb4e2c3464685d38, type: 2}
 --- !u!114 &894835684
@@ -49482,8 +49486,8 @@ MonoBehaviour:
   damageBorders:
   - {fileID: 105284127}
   flashTime: 0.1
-  damageEffect: {fileID: 0}
-  effectEvent: {fileID: 0}
+  damageEffect: {fileID: 11400000, guid: 01ba696973d34d140b15906608fbb3c5, type: 2}
+  effectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
 --- !u!114 &1643689038
 MonoBehaviour:
@@ -60385,6 +60389,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5992330147667127163, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: transport
+      value: 
+      objectReference: {fileID: 1917126892}
+    - target: {fileID: 5992330147667127163, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: m_Discovery
+      value: 
+      objectReference: {fileID: 1917126891}
+    - target: {fileID: 5992330147667127163, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: m_NetworkManager
+      value: 
+      objectReference: {fileID: 1917126893}
+    - target: {fileID: 5992330147667127163, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
+      propertyPath: titleFlowManager
+      value: 
+      objectReference: {fileID: 4265914712845988599}
     - target: {fileID: 6613000505737927264, guid: 290ebffbd4b4a774988542810950a3f7, type: 3}
       propertyPath: basisObject
       value: 
@@ -62679,6 +62699,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07f51410c6523454580003730b31cfff, type: 3}
+--- !u!114 &4265914712845988599 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
+  m_PrefabInstance: {fileID: 4265914712845988598}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63b4d3ca92506e8438778ee52695cabc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4870831369144877344
 PrefabInstance:
   m_ObjectHideFlags: 0
