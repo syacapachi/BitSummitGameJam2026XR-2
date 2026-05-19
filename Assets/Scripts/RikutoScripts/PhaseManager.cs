@@ -68,7 +68,7 @@ public class PhaseManager : NetworkBehaviour
 #if UNITY_EDITOR
         Debug.Log($"[{nameof(PhaseManager)}] {this.name} StartPhasesServerOnly called", gameObject);
 #endif
-        SpawnableHandle.SetRandomSeed(gameSeed);
+        SpawnableHandle.SetRandomSeedServerOnly(gameSeed);
 
         // syncedPhaseIndex.Value = -1 をコメントアウトしている理由：
         // ResetPhase() で既に -1 にリセット済みのため、ここで再度 -1 を代入すると
