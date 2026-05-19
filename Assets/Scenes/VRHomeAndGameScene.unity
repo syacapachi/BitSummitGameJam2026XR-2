@@ -9645,7 +9645,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.1, y: 0.35}
   m_AnchorMax: {x: 0.9, y: 0.8}
-  m_AnchoredPosition: {x: 0, y: -6.7}
+  m_AnchoredPosition: {x: 0, y: -3.3}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &339590852
@@ -12670,7 +12670,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.1, y: 0.35}
   m_AnchorMax: {x: 0.9, y: 0.8}
-  m_AnchoredPosition: {x: -0.39999962, y: -6.2}
+  m_AnchoredPosition: {x: -0.39999962, y: -4}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &485163892
@@ -71357,12 +71357,16 @@ PrefabInstance:
       objectReference: {fileID: 1406749563}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: useTutorial
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: connectCanvas
       value: 
       objectReference: {fileID: 2084777998}
+    - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: gameStartMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: languageCanvas
       value: 
