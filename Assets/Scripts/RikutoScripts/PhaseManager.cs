@@ -102,7 +102,6 @@ public class PhaseManager : NetworkBehaviour
     {
         Debug.Log($"=== StartPhaseWithCountdown called phaseIndex:{phaseIndex} IsServer:{IsServer}");
         yield return new WaitWhile(() => IsCountingDown);
-        yield return new WaitWhile(() => IsCountingDown);
         IsCountingDown = true;
 
         if (phaseIndex == Phases.Length - 1)
