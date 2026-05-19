@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ResultDataCreater : NetworkBehaviour
+public class ResultDataCreator : NetworkBehaviour
 {
     [SerializeField] PlayerManager PlayerManager;
     [Header("Publish Event")]
@@ -44,7 +44,7 @@ public class ResultDataCreater : NetworkBehaviour
             list.Add(stats.CreateResultDataServerOnly());
         }
         PlayerResultData[] datas = list.ToArray();
-        float cooporate = ResultDataCreater.CalculateCooperation(datas);
+        float cooporate = ResultDataCreator.CalculateCooperation(datas);
         ResultData data = new ResultData()
         {
             Time = DateTime.Now.ToString(),
