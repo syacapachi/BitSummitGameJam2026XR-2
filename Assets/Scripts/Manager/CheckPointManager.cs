@@ -241,6 +241,8 @@ public class CheckPointManager : MonoBehaviour
 public enum SpawnPointTags
 {
     Nothing = 0,
-    Front = 1,
-    Back = 2
+    Front = 1 << 0,
+    Back = 1 << 1,
+    Left = 1 << 2,
+    Right = 1 << 3
 }
