@@ -1,8 +1,9 @@
-using System.Collections;
+ï»¿using System.Collections;
 using TMPro;
 using UnityEngine;
 using Syacapachi.Manager;
 using Syacapachi.Data;
+using System;
 
 public class RankingUI : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class RankingUI : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] float showDelay = 3f;
+    [SerializeField] int showRankings = 5;
 
     private bool isJapanese;
 
@@ -43,9 +45,9 @@ public class RankingUI : MonoBehaviour
         gameStateEvent.Unregister(OnGameStateChanged);
     }
 
-    // ResultDataEvent‚ğó‚¯æ‚Á‚½‚ç•\¦ŠJn
-    // RankingManager‚ÌSaveJson‚Æ“¯‚¶ƒCƒxƒ“ƒg‚È‚Ì‚Å
-    // 1ƒtƒŒ[ƒ€‘Ò‚Ä‚ÎSaveJsonŠ®—¹Œã‚ÉŠmÀ‚Éƒf[ƒ^‚ª‘µ‚Á‚Ä‚¢‚é
+    // ResultDataEventã‚’å—ã‘å–ã£ãŸã‚‰è¡¨ç¤ºé–‹å§‹
+    // RankingManagerã®SaveJsonã¨åŒã˜ã‚¤ãƒ™ãƒ³ãƒˆãªã®ã§
+    // 1ãƒ•ãƒ¬ãƒ¼ãƒ å¾…ã¦ã°SaveJsonå®Œäº†å¾Œã«ç¢ºå®Ÿã«ãƒ‡ãƒ¼ã‚¿ãŒæƒã£ã¦ã„ã‚‹
     void OnResultReceived(ResultData data)
     {
         StartCoroutine(ShowRankingDelayed());
@@ -59,7 +61,7 @@ public class RankingUI : MonoBehaviour
 
     IEnumerator ShowRankingDelayed()
     {
-        // RankingManager‚ÌSaveJson‚ªŠ®—¹‚·‚é‚Ì‚ğ1ƒtƒŒ[ƒ€‘Ò‚Â
+        // RankingManagerã®SaveJsonãŒå®Œäº†ã™ã‚‹ã®ã‚’1ãƒ•ãƒ¬ãƒ¼ãƒ å¾…ã¤
         yield return null;
         yield return new WaitForSeconds(showDelay);
         ShowRanking();
@@ -68,27 +70,27 @@ public class RankingUI : MonoBehaviour
     void ShowRanking()
     {
         rankingCanvas.enabled = true;
-        titleText.text = isJapanese ? "ƒ‰ƒ“ƒLƒ“ƒO" : "RANKING";
+        titleText.text = isJapanese ? "ãƒ©ãƒ³ã‚­ãƒ³ã‚°" : "RANKING";
 
-        // Šù‘¶ƒGƒ“ƒgƒŠ[‚ğƒNƒŠƒA
+        // æ—¢å­˜ã‚¨ãƒ³ãƒˆãƒªãƒ¼ã‚’ã‚¯ãƒªã‚¢
         foreach (Transform child in entryParent)
             Destroy(child.gameObject);
 
-        // ƒ‰ƒ“ƒLƒ“ƒOƒf[ƒ^‚ğ•\¦
+        // ãƒ©ãƒ³ã‚­ãƒ³ã‚°ãƒ‡ãƒ¼ã‚¿ã‚’è¡¨ç¤º
         var rankings = rankingManager.Results;
-        for (int i = 0; i < rankings.Count; i++)
+        for (int i = 0; i < Math.Min(showRankings, rankings.Count); i++)
         {
             var entry = Instantiate(entryPrefab, entryParent);
             var entryUI = entry.GetComponent<RankingEntryUI>();
             entryUI.Setup(i + 1, rankings[i], isJapanese);
         }
 
-        // ¡‰ñ‚ÌƒXƒRƒA‚ğƒnƒCƒ‰ƒCƒg•\¦
+        // ä»Šå›ã®ã‚¹ã‚³ã‚¢ã‚’ãƒã‚¤ãƒ©ã‚¤ãƒˆè¡¨ç¤º
         var current = rankingManager.CurrentResult;
         if (current != null)
         {
             currentResultText.text = isJapanese
-                ? $"¡‰ñ‚Ì‹¦—Í“xF{current.Cooperation:F1}%"
+                ? $"ä»Šå›ã®å”åŠ›åº¦ï¼š{current.Cooperation:F1}%"
                 : $"Your Score: {current.Cooperation:F1}%";
         }
     }
