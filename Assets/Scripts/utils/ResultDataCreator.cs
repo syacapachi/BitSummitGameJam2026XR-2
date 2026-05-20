@@ -47,7 +47,7 @@ public class ResultDataCreator : NetworkBehaviour
         float cooporate = ResultDataCreator.CalculateCooperation(datas);
         ResultData data = new ResultData()
         {
-            Time = DateTime.Now.ToString(),
+            DateTime = DateTime.Now.ToString(),
             RemainHP = headerData.TotalScore,
             TotalBonusHP = headerData.TotalBonus,
             Cooperation = cooporate,

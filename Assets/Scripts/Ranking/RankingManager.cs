@@ -57,7 +57,7 @@ namespace Syacapachi.Manager
                     //ランキング数がmaxを超えた場合はソートしてmax数分だけ保存
                     dailyWrapper.Rankings = dailyWrapper.Rankings
                         .OrderByDescending(r => r.Cooperation)
-                        .ThenBy(r => r.Time)
+                        .ThenBy(r => r.DateTime)
                         .Take(rankingMaxCount)
                         .ToList();
                 }
@@ -96,7 +96,7 @@ namespace Syacapachi.Manager
             // スコアの降順にソート（高いほど上位）
             wrapper.Rankings = wrapper.Rankings
                 .OrderByDescending(r => r.Cooperation)
-                .ThenBy(r => r.Time) // 同点ならタイム順
+                .ThenBy(r => r.DateTime) // 同点ならタイム順
                 .Take(rankingMaxCount) //上位以外は消す。
                 .ToList();
         }

@@ -21,9 +21,9 @@ namespace Syacapachi.Data
     {
         //共通情報
         /// <summary>
-        /// 時間
+        /// プレイした日時
         /// </summary>
-        public string Time;
+        public string DateTime;
         /// <summary>
         /// 残りスコア
         /// </summary>
@@ -56,7 +56,7 @@ namespace Syacapachi.Data
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
-            serializer.SerializeValue(ref Time);
+            serializer.SerializeValue(ref DateTime);
             serializer.SerializeValue(ref RemainHP);
             serializer.SerializeValue(ref TotalBonusHP);
             serializer.SerializeValue(ref GameSeed);
