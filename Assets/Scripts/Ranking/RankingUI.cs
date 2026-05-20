@@ -78,7 +78,8 @@ public class RankingUI : MonoBehaviour
 
         // ランキングデータを表示
         var rankings = rankingManager.Results;
-        for (int i = 0; i < Math.Min(showRankings, rankings.Count); i++)
+        showRankings = Math.Min(showRankings, rankings.Count);
+        for (int i = 0; i < showRankings; i++)
         {
             var entry = Instantiate(entryPrefab, entryParent);
             var entryUI = entry.GetComponent<RankingEntryUI>();
