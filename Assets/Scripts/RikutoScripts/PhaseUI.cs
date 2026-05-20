@@ -108,7 +108,9 @@ public class PhaseUI : MonoBehaviour
         else
         {
             //ゲーム状態が変わった場合も呼ぶ
-            UpdateLangage();
+            //UpdateLangage();
+            isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+            ApplyFont();
         }
     }
 
