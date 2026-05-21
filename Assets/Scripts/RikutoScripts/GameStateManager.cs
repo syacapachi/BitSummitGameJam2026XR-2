@@ -300,25 +300,25 @@ public class GameStateManager : NetworkBehaviour
         }
     }
 
-    [OnInspectorButton(order = 3)]
+    [OnInspectorButton(drawOrder: 3)]
     public void StartEasy()
     {
         RequestStartGameRpc(Difficulty.Easy);
     }
 
-    [OnInspectorButton(order = 3)]
+    [OnInspectorButton(drawOrder: 2)]
     public void StartNormal()
     {
         RequestStartGameRpc(Difficulty.Normal);
     }
 
-    [OnInspectorButton(order = 1)]
+    [OnInspectorButton(drawOrder: 1)]
     public void StartHard()
     {
         RequestStartGameRpc(Difficulty.Hard);
     }
 
-    [OnInspectorButton(order = 0)]
+    [OnInspectorButton(drawOrder: 0)]
     public void StartDebug()
     {
         RequestStartGameRpc(Difficulty.Debug);

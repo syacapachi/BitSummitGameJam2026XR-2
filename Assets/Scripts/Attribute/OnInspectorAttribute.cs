@@ -29,10 +29,10 @@
 
         /// <param name="label">ボタンのラベル（nullならメソッド名）</param>
         /// <param name="showOnlyInPlayMode">実行中のみ表示するか</param>
-        public OnInspectorButtonAttribute(string label = null,int order = 0, bool showOnlyInPlayMode = false, bool validateInvoke = false, bool hideWhenChildClass = false)
+        public OnInspectorButtonAttribute(string label = null,int drawOrder = 0, bool showOnlyInPlayMode = false, bool validateInvoke = false, bool hideWhenChildClass = false)
         {
             this.Label = label;
-            this.Order = order;
+            this.Order = drawOrder;
             this.ShowOnlyInPlayMode = showOnlyInPlayMode;
             this.ValidateInvoke = validateInvoke;
             this.HideWhenChildClass = hideWhenChildClass;

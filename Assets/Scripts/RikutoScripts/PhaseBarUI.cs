@@ -87,6 +87,8 @@ public class PhaseBarUI : MonoBehaviour
         if (progressCoroutine != null)
         {
             StopCoroutine(progressCoroutine);
+            //残ってる途中にしない
+            ClearCurrentBar();
         }
 
         progressCoroutine = StartCoroutine(PhaseProgress());
@@ -107,7 +109,7 @@ public class PhaseBarUI : MonoBehaviour
         // Separator
         // =====================================
 
-        if (separatorPrefab != null)
+        if (currentSeparator == null && separatorPrefab != null)
         {
             GameObject sepObj =
                 Instantiate(separatorPrefab, container);
@@ -120,12 +122,15 @@ public class PhaseBarUI : MonoBehaviour
         // Bar
         // =====================================
 
-        GameObject barObj =
-            Instantiate(phaseBarPrefab, container);
+        if(currentBar == null && phaseBarPrefab != null)
+        {
+            GameObject barObj =
+                Instantiate(phaseBarPrefab, container);
 
-        currentBar =
-            barObj.GetComponent<Image>();
-
+            currentBar =
+                barObj.GetComponent<Image>();
+        }
+        
         defaultColor = currentBar.color;
 
         // =====================================
@@ -152,15 +157,9 @@ public class PhaseBarUI : MonoBehaviour
     {
         if (currentBar != null)
         {
-            Destroy(currentBar.gameObject);
-            currentBar = null;
+            currentBar.fillAmount = 0f;
         }
 
-        if (currentSeparator != null)
-        {
-            Destroy(currentSeparator.gameObject);
-            currentSeparator = null;
-        }
     }
 
     // =========================================================

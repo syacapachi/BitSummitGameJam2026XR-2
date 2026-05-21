@@ -19,11 +19,11 @@ public class RankingEntryUI : MonoBehaviour
         };
 
         cooperationText.text = isJapanese
-                                ? $"協力度{data.Cooperation:F1}%"
-                                : $"Cooperation{data.Cooperation:F1}%";
+                                ? $"協力度 {data.Cooperation:F1}%"
+                                : $"Cooperation {data.Cooperation:F1}%";
         remainHPText.text = isJapanese
-                                ? $"残り体力{data.RemainHP:F1}%"
-                                : $"RemainHP {data.RemainHP:F1}%";
+                                ? $"残り体力 {data.RemainHP:F1}"
+                                : $"RemainHP {data.RemainHP:F1}";
 
         // 順位によってテキスト色を変える
         Color rankColor = rank switch
