@@ -24,6 +24,10 @@ public class RankingUI : MonoBehaviour
     [Header("Settings")]
     [SerializeField] float showDelay = 3f;
     [SerializeField] int showRankings = 5;
+    [Header("Text")]
+    [SerializeField] LocalizeSimpleText rankingTitleText;
+    [SerializeField] LocalizeSimpleText cooperationText;
+    [SerializeField] LocalizeSimpleText startText;
 
     private bool isJapanese;
 
@@ -91,8 +95,8 @@ public class RankingUI : MonoBehaviour
         if (current != null)
         {
             currentResultText.text = isJapanese
-                ? $"今回の協力度：{current.Cooperation:F1}%"
-                : $"Your Score: {current.Cooperation:F1}%";
+                ? $"今回の協力度：{current.Cooperation:F1}%, 残り体力 {current.RemainHP}"
+                : $"Your Cooperation: {current.Cooperation:F1}%, RemainHP {current.RemainHP}";
         }
     }
 

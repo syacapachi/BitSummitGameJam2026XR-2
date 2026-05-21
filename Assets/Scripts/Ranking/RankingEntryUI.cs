@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using Syacapachi.Data;
 
@@ -7,7 +7,6 @@ public class RankingEntryUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI rankText;
     [SerializeField] TextMeshProUGUI cooperationText;
     [SerializeField] TextMeshProUGUI remainHPText;
-    [SerializeField] TextMeshProUGUI difficultyText;
 
     public void Setup(int rank, ResultData data, bool isJapanese)
     {
@@ -19,25 +18,19 @@ public class RankingEntryUI : MonoBehaviour
             _ => $"{rank}th"
         };
 
-        cooperationText.text = $"{data.Cooperation:F1}%";
-        remainHPText.text = $"{data.RemainHP}";
+        cooperationText.text = isJapanese
+                                ? $"å”åŠ›åº¦{data.Cooperation:F1}%"
+                                : $"Cooperation{data.Cooperation:F1}%";
+        remainHPText.text = isJapanese
+                                ? $"æ®‹ã‚Šä½“åŠ›{data.RemainHP:F1}%"
+                                : $"RemainHP {data.RemainHP:F1}%";
 
-        difficultyText.text = isJapanese
-            ? data.Difficulty switch
-            {
-                Difficulty.Easy => "ƒC[ƒW[",
-                Difficulty.Normal => "ƒm[ƒ}ƒ‹",
-                Difficulty.Hard => "ƒn[ƒh",
-                _ => data.Difficulty.ToString()
-            }
-            : data.Difficulty.ToString();
-
-        // ‡ˆÊ‚É‚æ‚Á‚ÄƒeƒLƒXƒgF‚ð•Ï‚¦‚é
+        // é †ä½ã«ã‚ˆã£ã¦ãƒ†ã‚­ã‚¹ãƒˆè‰²ã‚’å¤‰ãˆã‚‹
         Color rankColor = rank switch
         {
-            1 => new Color(1f, 0.84f, 0f),        // ‹à
-            2 => new Color(0.75f, 0.75f, 0.75f),  // ‹â
-            3 => new Color(0.8f, 0.5f, 0.2f),     // “º
+            1 => new Color(1f, 0.84f, 0f),        // é‡‘
+            2 => new Color(0.75f, 0.75f, 0.75f),  // éŠ€
+            3 => new Color(0.8f, 0.5f, 0.2f),     // éŠ…
             _ => Color.white
         };
 
