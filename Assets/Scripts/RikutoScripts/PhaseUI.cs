@@ -19,6 +19,10 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] TMP_FontAsset englishFont;
     [SerializeField] TMP_FontAsset warningFont;
     [SerializeField] LoopScrollUI[] warningScrollers;
+    //[Header("Text")]
+    //[SerializeField] LocalizeSimpleText firstPhaseText;
+    //[SerializeField] LocalizeSimpleText lastPhaseText;
+    //[SerializeField] LocalizeSimpleText startText;
 
     private Coroutine currentRoutine;
     private int currentPhaseIndex;

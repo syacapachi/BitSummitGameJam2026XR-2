@@ -13,18 +13,21 @@ namespace Syacapachi.Manager
         [SerializeField] bool useDailyFile = false;
         [SerializeField] string DaylyFileName = "DailyRanking";
         [SerializeField] ResultDataEvent resultEvent;
-        [SerializeField] RankingListWrapper rankingList = new();
-        public RankingListWrapper RankingList => rankingList;
+        private RankingListWrapper rankingList = new();
         private RankingListWrapper daylyRankingList = new();
         public RankingListWrapper DaylyRankingList => daylyRankingList;
         private string FilePath => Path.Combine(Application.streamingAssetsPath, FileName + ".json");
         private string DailyFilePath => Path.Combine(Application.streamingAssetsPath, DaylyFileName + ".json");
+        private readonly Dictionary<Difficulty, string> difficultyRankingDictionary = new();
 
         public ResultData CurrentResult;
         public IReadOnlyList<ResultData> Results => rankingList.Rankings;
-        private void Start()
+        private void Awake()
         {
-            rankingList = LoadJson(FilePath);
+            difficultyRankingDictionary[Difficulty.Easy] = Path.Combine(Application.streamingAssetsPath, Difficulty.Easy + FileName + ".json");
+            difficultyRankingDictionary[Difficulty.Normal] = Path.Combine(Application.streamingAssetsPath, Difficulty.Normal + FileName + ".json");
+            difficultyRankingDictionary[Difficulty.Hard] = Path.Combine(Application.streamingAssetsPath, Difficulty.Hard + FileName + ".json");
+            difficultyRankingDictionary[Difficulty.Debug] = Path.Combine(Application.streamingAssetsPath, Difficulty.Debug + FileName + ".json");
         }
         private void OnEnable()
         {
@@ -41,35 +44,43 @@ namespace Syacapachi.Manager
             Debug.Log($"[{nameof(RankingManager)}] {gameObject.name} Recived Data \n Detail = {JsonUtility.ToJson(data, true)}", gameObject);
 #endif
             if (!isSaveJson) return;
-            RankingListWrapper wrapper = LoadJson(FilePath);
+            //最新ランキングを取得
+            RankingListWrapper wrapper = LoadJson(difficultyRankingDictionary[CurrentResult.Difficulty]);
+            //ゲームオーバーなら保存しない。
+            if (data.IsGameOver) 
+            {
+                //ランキングデータ更新
+                rankingList = wrapper;
+                return; 
+            }
             wrapper.Rankings.Add(data);
             SortJson(wrapper);
-            ExportJson(wrapper, FilePath);
+            ExportJson(wrapper, difficultyRankingDictionary[CurrentResult.Difficulty]);
             
             //ランキングデータ更新
             rankingList = wrapper;
-            if (useDailyFile)
-            {
-                RankingListWrapper dailyWrapper = LoadJson(DailyFilePath);
-                dailyWrapper.Rankings.Add(data);
-                if (dailyWrapper.Rankings.Count > rankingMaxCount)
-                {
-                    //ランキング数がmaxを超えた場合はソートしてmax数分だけ保存
-                    dailyWrapper.Rankings = dailyWrapper.Rankings
-                        .OrderByDescending(r => r.Cooperation)
-                        .ThenBy(r => r.DateTime)
-                        .Take(rankingMaxCount)
-                        .ToList();
-                }
-                else
-                {
-                    //ランキング数がmaxに満たない場合はソートのみ}
-                    SortJson(dailyWrapper);
-                }
-                ExportJson(dailyWrapper, DailyFilePath);
-                //日別ランキングデータ更新
-                daylyRankingList = dailyWrapper;
-            }
+            //if (useDailyFile)
+            //{
+            //    RankingListWrapper dailyWrapper = LoadJson(DailyFilePath);
+            //    dailyWrapper.Rankings.Add(data);
+            //    if (dailyWrapper.Rankings.Count > rankingMaxCount)
+            //    {
+            //        //ランキング数がmaxを超えた場合はソートしてmax数分だけ保存
+            //        dailyWrapper.Rankings = dailyWrapper.Rankings
+            //            .OrderByDescending(r => r.Cooperation)
+            //            .ThenBy(r => r.DateTime)
+            //            .Take(rankingMaxCount)
+            //            .ToList();
+            //    }
+            //    else
+            //    {
+            //        //ランキング数がmaxに満たない場合はソートのみ}
+            //        SortJson(dailyWrapper);
+            //    }
+            //    ExportJson(dailyWrapper, DailyFilePath);
+            //    //日別ランキングデータ更新
+            //    daylyRankingList = dailyWrapper;
+            //}
         }
         private void ExportJson(RankingListWrapper wrapper, string filePath)
         {
@@ -96,7 +107,7 @@ namespace Syacapachi.Manager
             // スコアの降順にソート（高いほど上位）
             wrapper.Rankings = wrapper.Rankings
                 .OrderByDescending(r => r.Cooperation)
-                .ThenBy(r => r.DateTime) // 同点ならタイム順
+                .ThenBy(r => r.RemainHP) // 同点なら残り体力順
                 .Take(rankingMaxCount) //上位以外は消す。
                 .ToList();
         }
