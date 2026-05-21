@@ -1,4 +1,5 @@
-﻿using Syacapachi.Data;
+﻿using Syacapachi.Attribute;
+using Syacapachi.Data;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -47,16 +48,16 @@ namespace Syacapachi.Manager
             //最新ランキングを取得
             RankingListWrapper wrapper = LoadJson(difficultyRankingDictionary[CurrentResult.Difficulty]);
             //ゲームオーバーなら保存しない。
-            if (data.IsGameOver) 
+            if (data.IsGameOver)
             {
                 //ランキングデータ更新
                 rankingList = wrapper;
-                return; 
+                return;
             }
             wrapper.Rankings.Add(data);
             SortJson(wrapper);
             ExportJson(wrapper, difficultyRankingDictionary[CurrentResult.Difficulty]);
-            
+
             //ランキングデータ更新
             rankingList = wrapper;
             //if (useDailyFile)
@@ -111,5 +112,17 @@ namespace Syacapachi.Manager
                 .Take(rankingMaxCount) //上位以外は消す。
                 .ToList();
         }
+
+#if UNITY_EDITOR
+        [OnInspectorButton(showOnlyInPlayMode: true)]
+        void DebugLoad(Difficulty difficulty) 
+        {
+            rankingList = LoadJson(difficultyRankingDictionary[difficulty]);
+            foreach(var data in rankingList.Rankings)
+            {
+                Debug.Log($"Cooperation: {data.Cooperation}, RemainHP: {data.RemainHP}, DateTime: {data.DateTime}");
+            }
+        }
+#endif
     }
 }
