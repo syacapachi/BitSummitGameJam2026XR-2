@@ -115,6 +115,9 @@ public class SkyBoxColorSetting : ScriptableObject
         moonIntensity = setting.moonIntensity;
         moonMultiplier = setting.moonMultiplier;
 
+        textureStrength = setting.textureStrength;
+        textureRotation = setting.textureRotation;
+
         skyRootEular = setting.skyRootEular;
     }
 }

@@ -9,7 +9,9 @@ public class SkyBoxColorChanger : MonoBehaviour
     [SerializeField] float timeOffset = 30f;
     [SerializeField] float clearChangeTime = 5f;
     [SerializeField] float tutorialToEveningTime = 3f;
-    [SerializeField] float morningToNoonTime = 100f;
+    [SerializeField] float oneHourTime = 10f;
+    [Header("空を回し始める時間")]
+    [SerializeField] float startDayLoopTime = 30f;
     [Header("SkyBox Material")]
     [SerializeField] Material[] skyboxMats;
     [Header("太陽と月のルート")]
@@ -20,8 +22,9 @@ public class SkyBoxColorChanger : MonoBehaviour
     [Header("月")]
     [SerializeField] Light moonLight;
     [SerializeField] Material moonMat;
-    [Header("時間の設定")]
+    [Header("空の設定")]
     [SerializeField] SkyBoxColorSetting[] skyBoxColorSettings;
+    [SerializeField] SkyBoxColorSetting[] dayLoopSkyColorSettings;
     [SerializeField] SkyBoxColorSetting startSky;
     [SerializeField] SkyBoxColorSetting clearSky;
     [SerializeField] SkyBoxColorSetting noonSky;
@@ -31,21 +34,33 @@ public class SkyBoxColorChanger : MonoBehaviour
     [SerializeField] SkyBoxColorSetting copySky;
     [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
+    [SerializeField] LocalStateEvent localStateEvent;
     [Header("デバックモード")]
     [SerializeField] bool IsDebug;
     [SerializeField, EnableIf(nameof(IsDebug))] VoidEvent debugEvent;
 
     private int currentIndex = 0;
-    private GameState previousState;
+    private GameState previousState = GameState.Home;
+    /// <summary>
+    /// プレーヤーが一定時間操作しなかったとき、待つ
+    /// </summary>
+    private static WaitForSeconds waitForStartSkyTime;
+    /// <summary>
+    /// 一日の状態変化を行うコルーチン
+    /// </summary>
+    private Coroutine dayLoopCoroutine;
 
 
     private void Awake()
     {
+        waitForStartSkyTime = new WaitForSeconds(startDayLoopTime);
         ApplyColor(noonSky);
+        OnLocalStateChanged(LocalState.LanguageSelect);
     }
     private void OnEnable()
     {
         gameStateEvent.Register(OnGameStateChanged);
+        localStateEvent.Register(OnLocalStateChanged);
         if (IsDebug)
         {
             debugEvent.Register(DebugApply);
@@ -54,11 +69,16 @@ public class SkyBoxColorChanger : MonoBehaviour
     private void OnDisable()
     {
         gameStateEvent.Unregister(OnGameStateChanged);
+        localStateEvent.Unregister(OnLocalStateChanged);
         if (IsDebug)
         {
             debugEvent.Unregister(DebugApply);
         }
     }
+    /// <summary>
+    /// ゲーム状態が変化したときに呼ばれるイベント受信関数。
+    /// </summary>
+    /// <param name="newState"> 次の状態 </param>
     private void OnGameStateChanged(GameState newState)
     {
         switch (newState)
@@ -69,10 +89,18 @@ public class SkyBoxColorChanger : MonoBehaviour
                 ApplyColor(noonSky); break;
 
             case GameState.Tutorial:
+                if (dayLoopCoroutine != null)
+                {
+                    StopCoroutine(dayLoopCoroutine);
+                }
                 copySky.CopySky(currentSky);
                 StartCoroutine(ApplyColorCorutineByTime(copySky, startSky, tutorialToEveningTime)); break;
 
             case GameState.Playing:
+                if (dayLoopCoroutine != null)
+                {
+                    StopCoroutine(dayLoopCoroutine);
+                }
                 if (previousState != GameState.Tutorial)
                 {
                     StartCoroutine(TutorialToGameCoroutine());
@@ -94,6 +122,18 @@ public class SkyBoxColorChanger : MonoBehaviour
                 break;
         }
         previousState = newState;
+    }
+    /// <summary>
+    /// UI状態が変化したら呼ばれる
+    /// </summary>
+    /// <param name="newLocalState"> 次のローカル状態 </param>
+    private void OnLocalStateChanged(LocalState newLocalState)
+    {
+        if(dayLoopCoroutine != null)
+        {
+            StopCoroutine(dayLoopCoroutine);
+        }
+        dayLoopCoroutine = StartCoroutine(DayLoopSkyCoroutine());
     }
     private void StartSkyBoxChange()
     {
@@ -137,7 +177,22 @@ public class SkyBoxColorChanger : MonoBehaviour
     {
         copySky.CopySky(currentSky);
         yield return ApplyColorCorutineByTime(copySky, clearSky, clearChangeTime);
-        yield return ApplyColorCorutineByTime(clearSky, noonSky, morningToNoonTime);
+        yield return ApplyColorCorutineByHour(clearSky, noonSky, oneHourTime);
+    }
+    private IEnumerator DayLoopSkyCoroutine()
+    {
+        ApplyColor(noonSky);
+        yield return waitForStartSkyTime;
+        while (previousState == GameState.Home)
+        {
+            foreach (var nextSky in dayLoopSkyColorSettings)
+            {
+                copySky.CopySky(currentSky);
+                if (copySky.timeOfDay == nextSky.timeOfDay) continue;
+                yield return ApplyColorCorutineByHour(copySky, nextSky, oneHourTime);
+                ApplyColor(nextSky);
+            }
+        }
     }
     /// <summary>
     /// 即時変更用。
@@ -233,14 +288,33 @@ public class SkyBoxColorChanger : MonoBehaviour
         }
         yield return ApplyColorCorutineByTime(skyBoxColorSettings[fromIndex], skyBoxColorSettings[toIndex], changeTime);
     }
+    /// <summary>
+    /// From設定からTo設定をChangeTimeで遷移。
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="changeTime"> not 0 and negative</param>
+    /// <returns></returns>
     IEnumerator ApplyColorCorutineByTime(SkyBoxColorSetting from, SkyBoxColorSetting to, float changeTime)
     {
-        float invChangeTime = 1f / changeTime;
-        for (float timer = 0f; timer <= changeTime; timer += Time.deltaTime)
+        float timer = 0f;
+        if (changeTime <= 0f)
         {
-            ApplyLerp(from, to, timer * invChangeTime);
+            Debug.LogError("ChangeTime is not negative", gameObject);
+            yield break;
+        }
+        float invChangeTime = 1f / changeTime;
+        while (timer < changeTime)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer * invChangeTime;
+
+            ApplyLerp(from, to, t);
+
             yield return null;
         }
+
         ApplyColor(to);
     }
     /// <summary>
