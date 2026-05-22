@@ -258,7 +258,8 @@ MonoBehaviour:
   timeOffset: 15
   clearChangeTime: 10
   tutorialToEveningTime: 1.5
-  morningToNoonTime: 100
+  oneHourTime: 10
+  startDayLoopTime: 60
   skyboxMats:
   - {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
   - {fileID: 2100000, guid: 5abac05424d24a74abdb61b5e24d8acd, type: 2}
@@ -275,6 +276,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 22c980c46d86d70478b73be59f2e9fd6, type: 2}
   - {fileID: 11400000, guid: ce0e06e46263c4e4c9b0bde9b09858e0, type: 2}
   - {fileID: 11400000, guid: ca98012adb5c8f14c94b798da5ae9df8, type: 2}
+  dayLoopSkyColorSettings:
+  - {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
+  - {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
+  - {fileID: 11400000, guid: cdf2344405367c94e9d5aeb6eb72f5a8, type: 2}
+  - {fileID: 11400000, guid: aab534e90c923dd47b02f4361b9128fb, type: 2}
+  - {fileID: 11400000, guid: 22c980c46d86d70478b73be59f2e9fd6, type: 2}
+  - {fileID: 11400000, guid: ce0e06e46263c4e4c9b0bde9b09858e0, type: 2}
+  - {fileID: 11400000, guid: ca98012adb5c8f14c94b798da5ae9df8, type: 2}
+  - {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
   startSky: {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
   clearSky: {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
   noonSky: {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
@@ -282,6 +292,7 @@ MonoBehaviour:
   currentSky: {fileID: 11400000, guid: 4ea2e62182cceac4b84e3c79b996b16e, type: 2}
   copySky: {fileID: 11400000, guid: b1fec5d40db27d249936b91d9e96f6ac, type: 2}
   gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
+  localStateEvent: {fileID: 11400000, guid: 8d864b8e0651a9e4398e513a726a87fc, type: 2}
   IsDebug: 0
   debugEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
 --- !u!1 &8893774260936343903
