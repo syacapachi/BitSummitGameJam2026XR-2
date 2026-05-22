@@ -41,21 +41,27 @@ public class NBullet : BulletBaseController
             }
         }
         else if (reciever is PlayerCollider player)
-        {
+        {/*
             if (ResultCollector.ClientId == player.OwnerClientId) return;
 
             //自身は無視
             // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
             Debug.Log("Shield by Player", other);
             SpawnShieldFxRpc(transform.position);
+        */
+        //展示用 すり抜けるようにする
+        return;
         }
         else if(reciever is PlayerHealth health)
-        {
+        {/*
             //自身は無視
             // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
             if (ResultCollector.ClientId == health.OwnerClientId) return;
             Debug.Log("Shield by Player", other);
             SpawnShieldFxRpc(transform.position);
+        */
+        //展示用 すり抜けるようにする
+        return;
         }
         else
         {

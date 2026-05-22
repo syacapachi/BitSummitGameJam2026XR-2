@@ -43,7 +43,7 @@ public class Step2_Block : TutorialBase
 
         foreach (int count in counts.Values)
         {
-            if (count < 3)
+            if (count < 1)
             {
                 allDone = false;
                 break;
