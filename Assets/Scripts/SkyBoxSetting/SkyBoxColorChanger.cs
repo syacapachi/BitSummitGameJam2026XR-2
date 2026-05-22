@@ -11,6 +11,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     [SerializeField] float tutorialToEveningTime = 3f;
     [SerializeField] float oneHourTime = 10f;
     [Header("空を回し始める時間")]
+    [SerializeField] bool useDayLoop = true;
     [SerializeField] float startDayLoopTime = 30f;
     [Header("SkyBox Material")]
     [SerializeField] Material[] skyboxMats;
@@ -129,6 +130,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     /// <param name="newLocalState"> 次のローカル状態 </param>
     private void OnLocalStateChanged(LocalState newLocalState)
     {
+        if (!useDayLoop) return;
         if(dayLoopCoroutine != null)
         {
             StopCoroutine(dayLoopCoroutine);
@@ -183,7 +185,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     {
         ApplyColor(noonSky);
         yield return waitForStartSkyTime;
-        while (previousState == GameState.Home)
+        while (previousState == GameState.Home && useDayLoop)
         {
             foreach (var nextSky in dayLoopSkyColorSettings)
             {
