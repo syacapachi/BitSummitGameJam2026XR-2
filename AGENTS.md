@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Overlay UI, Water, UI, Avatar, Demon, Ghost, Hide, Tutorial, Player
 - Active game object:
-  - Name: Text
+  - Name: Protect Cristal
   - Tag: Untagged
-  - Layer: Player
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
