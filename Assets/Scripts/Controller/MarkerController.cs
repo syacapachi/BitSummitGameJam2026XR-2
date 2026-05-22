@@ -17,6 +17,8 @@ public class MarkerController : NetworkBehaviour
     [SerializeField] int laserDistance = 50;
     [SerializeField] float markerBackTime = 5f;
     [SerializeField] MarkerAudioController markerAudioController;
+    [Header("")]
+    [SerializeField] bool hasMarkerChargeTime = false;
     [Header("Publish Event")]
     [SerializeField] ULongEvent MarkerPlaceEventServerOnly;
     [Header("Subscribe Event")]
@@ -153,10 +155,16 @@ public class MarkerController : NetworkBehaviour
             Debug.LogWarning("Player marker not found. Cannot place marker.", gameObject);
             return;
         }
+        //マーカーが出てない
         if (isMarkAttachedServerOnly)
         {
             attachServerOnly.Detach();
             isMarkAttachedServerOnly = false;
+        }
+        //マーカー出てる & 出てる間移動不可
+        else if (hasMarkerChargeTime)
+        {
+            return;
         }
         else
         {
