@@ -52993,7 +52993,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786624247185409141, guid: 800658db6a9b15345b032ec9bfa8f644, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5786624247185409141, guid: 800658db6a9b15345b032ec9bfa8f644, type: 3}
       propertyPath: m_SizeDelta.y
@@ -81112,6 +81112,18 @@ PrefabInstance:
     - target: {fileID: 1615890855193563394, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_Name
       value: ManagerLocator
+      objectReference: {fileID: 0}
+    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: voidEventList.Array.data[4].setting
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: voidEventList.Array.data[5].setting
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: voidEventList.Array.data[6].setting
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
