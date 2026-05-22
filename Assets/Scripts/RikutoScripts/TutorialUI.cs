@@ -144,7 +144,7 @@ public class TutorialUI : MonoBehaviour
 
             case TutorialStep.Step2:
                 title = isJapanese ? "チュートリアル2" : "Tutorial 2";
-                desc = isJapanese ? "見えている敵を3回攻撃しろ！" : "Attack visible enemies 3 times!";
+                desc = isJapanese ? "見えている敵を攻撃しろ！" : "Attack visible enemies!";
                 break;
 
             case TutorialStep.Step3:

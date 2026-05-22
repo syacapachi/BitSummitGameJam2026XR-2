@@ -89,7 +89,7 @@ public class ResultDataCreator : NetworkBehaviour
         float cooperation =
             (accuracy * 0.5f +
              killEfficiency * 0.5f
-             - waste * 0.2f) * 100f;
+             - waste * 0.2f) * 200f;
 
         return Mathf.Clamp(cooperation, 0f, 100f);
     }
