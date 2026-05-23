@@ -105,9 +105,13 @@ public class PhaseUI : MonoBehaviour
 
     private void OnGameStateChanged(GameState newState)
     {
-        if (newState == GameState.GameOver || newState == GameState.GameClear)
+        if (newState == GameState.GameOver)
         {
-            ChangeState(UIState.GameFinish);
+            ChangeState(UIState.GameFinish, true);
+        }
+        else if (newState == GameState.GameClear)
+        {
+            ChangeState(UIState.GameFinish, false);
         }
         else
         {
@@ -161,7 +165,7 @@ public class PhaseUI : MonoBehaviour
                 break;
 
             case UIState.GameFinish:
-                currentRoutine = StartCoroutine(GameFinishRoutine());
+                currentRoutine = StartCoroutine(GameFinishRoutine((bool)payload));
                 break;
 
             case UIState.AllEnemyDead:
@@ -301,12 +305,17 @@ public class PhaseUI : MonoBehaviour
         ChangeState(UIState.Idle);
     }
 
-    IEnumerator GameFinishRoutine()
+    IEnumerator GameFinishRoutine(bool isGameOver)
     {
         SetupNormal();
 
         phaseText.fontSize = 150;
-        phaseText.text = isJapanese ? "任務完了！" : "Mission Complete!";
+        phaseText.text = isGameOver
+                            ? isJapanese
+                                ? "任務失敗..." : "Mission Failed..."
+                            : isJapanese
+                                ? "任務完了！" : "Mission Complete!";
+
         phaseText.gameObject.SetActive(true);
 
         yield return PopAnimation();
