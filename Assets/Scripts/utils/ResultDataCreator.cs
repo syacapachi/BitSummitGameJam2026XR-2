@@ -91,6 +91,6 @@ public class ResultDataCreator : NetworkBehaviour
              killEfficiency * 0.5f
              - waste * 0.2f) * 200f;
 
-        return Mathf.Clamp(cooperation, 0f, 100f);
+        return Mathf.Clamp(cooperation, 0f, 200f);
     }
 }
