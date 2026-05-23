@@ -101,12 +101,13 @@ public class GameStateManager : NetworkBehaviour
         switch (newState)
         {
             case GameState.Home:
-                LocalState = localState == LocalState.NetworkConnect
-                ? LocalState.WorldView
-                : LocalState.LanguageSelect;
+                LocalState = 
+                    localState == LocalState.NetworkConnect
+                    ? LocalState.WorldView
+                    : LocalState.LanguageSelect;
                 break;
 
-            case GameState.Waiting:
+            case GameState.SelecrDifficulty:
                 LocalState = LocalState.SelectDifficulty;
                 break;
 
@@ -183,38 +184,16 @@ public class GameStateManager : NetworkBehaviour
         };
     }
     */
-
+    /// <summary>
+    /// UI状態の変化。
+    /// とりあえず、全部許可。
+    /// </summary>
+    /// <param name="fromState"></param>
+    /// <param name="toState"></param>
+    /// <returns></returns>
     private bool CanTransition(LocalState fromState, LocalState toState)
     {
-        //切断されたらLangageSelectへ行く。
-        if (!IsSpawned && toState == LocalState.LanguageSelect) return true;
-        return fromState switch
-        {
-            LocalState.LanguageSelect
-                => IsSpawned
-                ? toState == LocalState.WorldView
-                : toState == LocalState.NetworkConnect,
-
-            LocalState.NetworkConnect
-                => toState == LocalState.WorldView,
-
-            LocalState.WorldView
-                => toState == LocalState.Tutorial
-                || toState == LocalState.SelectDifficulty
-                || toState == LocalState.Playing,
-
-            LocalState.Tutorial
-                => toState == LocalState.SelectDifficulty
-                || toState == LocalState.Playing,
-
-            LocalState.SelectDifficulty
-                => toState == LocalState.Playing,
-
-            LocalState.Playing
-                => toState == LocalState.LanguageSelect,
-
-            _ => false,
-        };
+        return true;
     }
 
     private bool CanTransition(GameState fromState, GameState toState)
@@ -229,13 +208,13 @@ public class GameStateManager : NetworkBehaviour
             GameState.Initializing
                 => toState == GameState.Tutorial
                 || toState == GameState.Playing
-                || toState == GameState.Waiting,
+                || toState == GameState.SelecrDifficulty,
 
             GameState.Tutorial
-                => toState == GameState.Waiting
+                => toState == GameState.SelecrDifficulty
                 || toState == GameState.Playing,
 
-            GameState.Waiting
+            GameState.SelecrDifficulty
                 => toState == GameState.Playing,
 
             GameState.Playing
@@ -292,7 +271,7 @@ public class GameStateManager : NetworkBehaviour
 
         if (gameStartMode == GameStartMode.Button)
         {
-            CurrentGameState = GameState.Waiting;
+            CurrentGameState = GameState.SelecrDifficulty;
         }
         else
         {
@@ -328,7 +307,7 @@ public class GameStateManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (CurrentGameState != GameState.Waiting)
+        if (CurrentGameState != GameState.SelecrDifficulty)
             return;
 
         difficultyEvent.Invoke(difficulty);
@@ -371,7 +350,7 @@ public class GameStateManager : NetworkBehaviour
             }
             else
             {
-                CurrentGameState = GameState.Waiting;
+                CurrentGameState = GameState.SelecrDifficulty;
             }
         }
     }
@@ -433,9 +412,9 @@ public enum GameState
     /// </summary>
     Home,
     /// <summary>
-    /// ゲーム開始前の待機状態
+    /// ゲーム開始前の難易度選択
     /// </summary>
-    Waiting,
+    SelecrDifficulty,
 }
 //[GenerateEvent(typeof(GameEventSOBase<>))]
 public enum LocalState

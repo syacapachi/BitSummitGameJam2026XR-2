@@ -375,10 +375,15 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     }
 }
 //[GenerateEvent(typeof(GameEventSOBase<>))]
-public class EnemyKilled 
+public readonly struct EnemyKilled 
 {
-    public IEnemy KilledEnemy;
-    public Vector3 positon;
+    public readonly IEnemy KilledEnemy;
+    public readonly Vector3 Positon;
+    public EnemyKilled(Vector3 pos, IEnemy killedEnemy)
+    {
+        this.Positon = pos;
+        this.KilledEnemy = killedEnemy;
+    }
 }
 /// <summary>
 /// 待ってる敵が出てくるタイプ

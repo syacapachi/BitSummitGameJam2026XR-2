@@ -1,13 +1,10 @@
-﻿public class AttackBlocked
+﻿public readonly struct AttackBlocked
 {
-    public IResultCollector Collector;
-    public IEnemy Enemy;
-}
-public class AttackBlockedExpand : AttackBlocked
-{
-    public readonly string message;
-    public AttackBlockedExpand(string message)
+    public readonly IResultCollector Collector;
+    public readonly IEnemy Enemy;
+    public AttackBlocked(IResultCollector collector, IEnemy enemy)
     {
-        this.message = message;
+        this.Collector = collector;
+        this.Enemy = enemy;
     }
 }

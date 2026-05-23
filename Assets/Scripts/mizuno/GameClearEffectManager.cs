@@ -13,9 +13,8 @@ public class GameClearEffectManager : MonoBehaviour
 
     [Header("Confetti Effect")]
     [SerializeField] GameEffectEvent gameEffectEvent;
-    [SerializeField] GameObject confettiPrefab;
+    [SerializeField] FxEffectData confettiEffectData;
     [SerializeField] Vector3 confettiPosition = new Vector3(0f, 3f, 0f);
-    [SerializeField] float confettiLifeTime = 5f;
     [SerializeField] float confettiInterval = 0.8f;
     [SerializeField] int confettiCount = 3;
 
@@ -23,11 +22,19 @@ public class GameClearEffectManager : MonoBehaviour
     private float[] defaultLightIntensities;
     private Coroutine lightFadeCoroutine;
     private Coroutine confettiCoroutine;
+    private static WaitForSeconds waitForInterval;
 
     void Start() => CacheDefaults();
 
     void OnEnable() => gameStateRpcEvent.Register(OnStateChanged);
     void OnDisable() => gameStateRpcEvent.Unregister(OnStateChanged);
+    void CacheDefaults()
+    {
+        waitForInterval = new WaitForSeconds(confettiInterval);
+        defaultLightIntensities = new float[roomLights != null ? roomLights.Length : 0];
+        for (int i = 0; i < defaultLightIntensities.Length; i++)
+            defaultLightIntensities[i] = roomLights[i] ? roomLights[i].intensity : 1f;
+    }
 
     void OnStateChanged(GameState newState)
     {
@@ -50,7 +57,7 @@ public class GameClearEffectManager : MonoBehaviour
         }
 
         // 紙吹雪
-        if (gameEffectEvent != null && confettiPrefab != null)
+        if (gameEffectEvent != null && confettiEffectData != null)
         {
             if (confettiCoroutine != null) StopCoroutine(confettiCoroutine);
             confettiCoroutine = StartCoroutine(PlayConfettiSequence());
@@ -69,12 +76,7 @@ public class GameClearEffectManager : MonoBehaviour
         }
     }
 
-    void CacheDefaults()
-    {
-        defaultLightIntensities = new float[roomLights != null ? roomLights.Length : 0];
-        for (int i = 0; i < defaultLightIntensities.Length; i++)
-            defaultLightIntensities[i] = roomLights[i] ? roomLights[i].intensity : 1f;
-    }
+    
 
     IEnumerator FadeLights(float target, float duration)
     {
@@ -99,9 +101,8 @@ public class GameClearEffectManager : MonoBehaviour
     {
         for (int i = 0; i < confettiCount; i++)
         {
-            var fx = new FxEffect(confettiPrefab, confettiLifeTime);
-            gameEffectEvent.Invoke(new GameEffect(fx, confettiPosition));
-            yield return new WaitForSeconds(confettiInterval);
+            gameEffectEvent.Invoke(new GameEffect(confettiEffectData.ToRuntimeData(), confettiPosition));
+            yield return waitForInterval;
         }
     }
 }

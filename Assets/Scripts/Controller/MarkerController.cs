@@ -17,8 +17,8 @@ public class MarkerController : NetworkBehaviour
     [SerializeField] int laserDistance = 50;
     [SerializeField] float markerBackTime = 5f;
     [SerializeField] MarkerAudioController markerAudioController;
-    [Header("")]
-    [SerializeField] bool hasMarkerChargeTime = false;
+    [Header("HasMarkerCharge")]
+    [SerializeField] bool hasMarkerChargeTimeServerOnly = false;
     [Header("Publish Event")]
     [SerializeField] ULongEvent MarkerPlaceEventServerOnly;
     [Header("Subscribe Event")]
@@ -29,7 +29,7 @@ public class MarkerController : NetworkBehaviour
     //以上
     bool isMarkAttachedServerOnly = false;
     Coroutine markerCoroutine;
-    private WaitForSeconds wait;
+    private static WaitForSeconds wait;
 
     public Transform FirePoint
     {
@@ -54,7 +54,7 @@ public class MarkerController : NetworkBehaviour
             lineRenderer.enabled = false;
             return;
         }
-        markerEvent.Register(PlaceMarkerRpc);
+        markerEvent.Register(PlaceMarkerWhenEnabled);
         StartCoroutine(LaserUpdateCoroutine());
         lineRenderer.enabled = XRSettings.isDeviceActive;
     }
@@ -91,7 +91,7 @@ public class MarkerController : NetworkBehaviour
         }
         if (IsOwner)
         {
-            markerEvent.Unregister(PlaceMarkerRpc);
+            markerEvent.Unregister(PlaceMarkerWhenEnabled);
         }
     }
     //オーナー以外で毎フレームチェックさせるオーバーヘッドをなくすためコルーチン化
@@ -125,6 +125,13 @@ public class MarkerController : NetworkBehaviour
             lineRenderer.SetPosition(1, FirePoint.position + forward * laserDistance);
         }
     }
+    /// <summary>
+    /// 一度おいてから、一定時間が立たないと移動できません
+    /// </summary>
+    private void PlaceMarkerWhenEnabled()
+    {
+        PlaceMarkerRpc();
+    }
     [Rpc(SendTo.Server)]
     private void PlaceMarkerRpc()
     {
@@ -138,17 +145,10 @@ public class MarkerController : NetworkBehaviour
 
         if (Physics.Raycast(FirePoint.position, forward, out RaycastHit hit, laserDistance, markerHitLayerMask))
         {
-            MoveMarkerServerRpc(hit.point);
-            markerAudioController.OnMarkerSondPlayRpc(hit.point);
-
-            MarkerPlaceEventServerOnly.Invoke(OwnerClientId);
-            //if (ManagerLocator.Instance.GameStateManager.CurrentGameState == GameState.Tutorial)
-            //    ManagerLocator.Instance.TutorialManager.OnMarkerPlacedServer(OwnerClientId);
+            MoveMarkerServerOnly(hit.point);
         }
     }
-
-    [Rpc(SendTo.Server)]
-    private void MoveMarkerServerRpc(Vector3 pos)
+    private void MoveMarkerServerOnly(Vector3 pos)
     {
         if (attachServerOnly == null)
         {
@@ -158,22 +158,25 @@ public class MarkerController : NetworkBehaviour
         //マーカーが出てない
         if (isMarkAttachedServerOnly)
         {
+            //マーカーをプレーヤーから引き剝がす。(基本はプレーヤーにくっついて、見えない)
             attachServerOnly.Detach();
             isMarkAttachedServerOnly = false;
         }
         //マーカー出てる & 出てる間移動不可
-        else if (hasMarkerChargeTime)
+        else if (hasMarkerChargeTimeServerOnly)
         {
             return;
         }
         else
         {
+            //マーカーの消失コルーチンをリセット
             if (markerCoroutine != null)
             {
                 StopCoroutine(markerCoroutine);
                 markerCoroutine = null;
             }
         }
+        //マーカーの位置を更新
         attachServerOnly.gameObject.transform.position = pos;
 
         // 水野が追加した 非サーバーに点滅を指示
@@ -184,9 +187,8 @@ public class MarkerController : NetworkBehaviour
         // 水野が追加した
 
         markerCoroutine = StartCoroutine(MarkerBackCorutine());
-
-        //var renderer = playerMarker.GetComponent<MeshRenderer>();
-        //renderer.enabled = true;
+        markerAudioController.OnMarkerSondPlayRpc(pos);
+        MarkerPlaceEventServerOnly.Invoke(OwnerClientId);
     }
     private IEnumerator MarkerBackCorutine()
     {

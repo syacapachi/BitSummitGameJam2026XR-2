@@ -114,7 +114,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
   tagToTransfroms:
   - spawnPointTag: 0
     spawnPointmarkers: []
@@ -138,7 +137,6 @@ MonoBehaviour:
     - {fileID: 0}
   - spawnPointTag: 4
     spawnPointmarkers:
-    - {fileID: 0}
     - {fileID: 0}
   - spawnPointTag: 8
     spawnPointmarkers:
@@ -897,9 +895,8 @@ MonoBehaviour:
   clearLightIntensity: 4
   lightFadeDuration: 2
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
-  confettiPrefab: {fileID: 4812777098084798749, guid: a24db55e1f9277f459f8a602b53a9bb0, type: 3}
+  confettiEffectData: {fileID: 11400000, guid: 722a39bee118bee4d8c73be260f0a92a, type: 2}
   confettiPosition: {x: 0, y: 3, z: 0}
-  confettiLifeTime: 5
   confettiInterval: 0.8
   confettiCount: 3
 --- !u!1 &7513993489619834028
@@ -972,13 +969,13 @@ MonoBehaviour:
     setting: 1
   - action: {fileID: 1218294735510755974, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
-    setting: 1
+    setting: 0
   - action: {fileID: -2099379676528639254, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
-    setting: 1
+    setting: 0
   - action: {fileID: 5746621223023547563, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: f9e23ca27358a3f419041719b45bce40, type: 2}
-    setting: 1
+    setting: 0
 --- !u!1 &7718049192321448518
 GameObject:
   m_ObjectHideFlags: 0
