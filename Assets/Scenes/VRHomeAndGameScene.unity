@@ -52993,7 +52993,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786624247185409141, guid: 800658db6a9b15345b032ec9bfa8f644, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5786624247185409141, guid: 800658db6a9b15345b032ec9bfa8f644, type: 3}
       propertyPath: m_SizeDelta.y
@@ -80805,18 +80805,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ManagerLocator
       objectReference: {fileID: 0}
-    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: voidEventList.Array.data[4].setting
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: voidEventList.Array.data[5].setting
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2796378616358460872, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: voidEventList.Array.data[6].setting
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4316947998156742355, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3618414520
@@ -80829,10 +80817,6 @@ PrefabInstance:
       propertyPath: m_CheckPointParent
       value: 
       objectReference: {fileID: 760920525}
-    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: checkPoints.Array.size
-      value: 16
-      objectReference: {fileID: 0}
     - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'checkPoints.Array.data[0]'
       value: 
@@ -80898,14 +80882,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2007977915}
     - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'checkPoints.Array.data[16]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: tagToTransfroms.Array.data[3].spawnPointmarkers.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'tagToTransfroms.Array.data[1].spawnPointmarkers.Array.data[0]'
       value: 
       objectReference: {fileID: 154002831}
@@ -80965,10 +80941,6 @@ PrefabInstance:
       propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[0]'
       value: 
       objectReference: {fileID: 43273098}
-    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'tagToTransfroms.Array.data[3].spawnPointmarkers.Array.data[1]'
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[0]'
       value: 

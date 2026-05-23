@@ -30,7 +30,7 @@ public class ResultDataCreator : NetworkBehaviour
             return $"Seed[{Seed}], isGameOver[{IsGameOver}], TotalScore[{TotalScore}], TotalBonus[{TotalBonus}], Difficulty[{Difficulty}]";
         }
     }
-    public void CreateAndSendResultData(ResultHeaderData headerData)
+    public void CreateAndSendResultData(in ResultHeaderData headerData)
     {
         var list = new List<PlayerResultData>();
 
