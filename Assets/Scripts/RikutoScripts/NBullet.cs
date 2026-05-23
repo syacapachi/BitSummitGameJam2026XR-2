@@ -41,7 +41,8 @@ public class NBullet : BulletBaseController
             }
         }
         else if (reciever is PlayerCollider player)
-        {/*
+        {
+        /*
             if (ResultCollector.ClientId == player.OwnerClientId) return;
 
             //自身は無視
@@ -50,10 +51,11 @@ public class NBullet : BulletBaseController
             SpawnShieldFxRpc(transform.position);
         */
         //展示用 すり抜けるようにする
-        return;
+            return;
         }
         else if(reciever is PlayerHealth health)
-        {/*
+        {
+        /*
             //自身は無視
             // 当たるのは敵かプレイヤーなので、敵でなければプレイヤーに当たったとみなす
             if (ResultCollector.ClientId == health.OwnerClientId) return;
@@ -61,7 +63,7 @@ public class NBullet : BulletBaseController
             SpawnShieldFxRpc(transform.position);
         */
         //展示用 すり抜けるようにする
-        return;
+            return;
         }
         else
         {
@@ -89,18 +91,18 @@ public class NBullet : BulletBaseController
             //シールドがでなかったのと見えない敵を撃ってもstep2クリア可能だったため構造変更
             if (isAttackable)
             {
-                Debug.Log($"NotDamage By System");
+                Debug.Log($"NotDamage By System", enemy.NetworkObject);
             }
             else
             {
-                attackBlockedEvent.Invoke(new AttackBlocked()
-                {
-                    Collector = ResultCollector,
-                    Enemy = enemy
-                });
+                attackBlockedEvent.Invoke(
+                    new AttackBlocked(
+                        ResultCollector,
+                        enemy
+                    ));
                 // [追加] 攻撃が無効な敵に当たった場合のデバッグログ
                 SpawnShieldFxRpc(transform.position);
-                Debug.Log($"NotDamage By Job");
+                Debug.Log($"NotDamage By Job", enemy.NetworkObject);
 
             }
             if (NetworkObject.IsSpawned)
@@ -130,11 +132,11 @@ public class NBullet : BulletBaseController
         {
             // シールド
             stats.AddShield();
-            attackBlockedEvent.Invoke(new AttackBlocked()
-            {
-                Collector = ResultCollector,
-                Enemy = enemy
-            });
+            attackBlockedEvent.Invoke(
+                new AttackBlocked(
+                    ResultCollector,
+                    enemy
+                ));
             //水野編集
             SpawnShieldFxRpc(transform.position);
             //水野以上

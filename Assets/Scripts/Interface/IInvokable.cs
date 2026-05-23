@@ -2,7 +2,7 @@
 
 public interface IInvokable<T>
 {
-      public void Invoke(T value);
+      public void Invoke(in T value);
 }
 public interface IInvokable
 {

@@ -266,7 +266,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
             yield return nextFixed;
         }
     }
-    
+
     void DieOnServer(IResultCollector collector)
     {
         if (collector != null && collector is PlayerStats stats)
@@ -275,10 +275,10 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
         }
         else
         {
-            Debug.LogError("collector is null!",gameObject);
+            Debug.LogError("collector is null!", gameObject);
         }
 
-        enemyKilled.Invoke(new EnemyKilled() { KilledEnemy = this, positon = transform.position });
+        enemyKilled.Invoke(new EnemyKilled(transform.position, this));
         if (enemyJob == PlayerJob.Tutorial)
         {
             DieFromAnimationServerEvent();
