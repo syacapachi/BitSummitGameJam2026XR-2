@@ -1,5 +1,4 @@
-﻿using Syacapachi.Attribute;
-using Syacapachi.util;
+﻿using Syacapachi.util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,13 +57,22 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     /// 全敵が死んでいるか、サーバーのみ
     /// </summary>
     public bool IsAllDeadServerOnly => isAllDead;
-    private readonly List<IEnemy> spawnedEnemies = new();
-    private readonly Queue<SpawnEvent> waitSpawnEnemyQueue = new();
+    //出現している敵のリスト　サーバーのみ,　最大数はスポーンポイントの数
+    private readonly List<IEnemy> spawnedEnemies = new(32);
+    //出現待ちの敵のキュー　サーバーのみ,最大数はない
+    private readonly Queue<SpawnEvent> waitSpawnEnemyQueue = new(32);
     /// <summary>
-    /// キャッシュリストGCを防ぐ
+    /// スポーンイベントのキャッシュリスト。GCを防ぐ,とりあえず、32で初期化。必要に応じて増やす。
     /// </summary>
-    readonly List<SpawnEvent> randomSpawnEventCacheList = new();
-    readonly List<CheckPointManager.IndexToTransform> spawnablePosCacheList = new();
+    readonly List<SpawnEvent> spawnEventCacheList = new(32);
+    /// <summary>
+    /// キャッシュリスト。GCを防ぐ,とりあえず、32で初期化。必要に応じて増やす。
+    /// </summary>
+    readonly List<SpawnEvent> randomSpawnEventCacheList = new(32);
+    /// <summary>
+    /// 出現可能な場所のキャッシュリスト。GCを防ぐ,とりあえず、32で初期化。必要に応じて増やす。
+    /// </summary>
+    readonly List<CheckPointManager.IndexToTransform> spawnablePosCacheList = new(32);
     Coroutine waitForSpawn;
     Coroutine spawnCorutine;
     public override void OnNetworkSpawn()
@@ -118,10 +126,11 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
             waitSpawnEnemyQueue.Clear();
         }
         //remain = 0;
-        // 追加（次のフェーズでリセット）　
+        //次のフェーズでリセット　
         isAllDead = false;
         isSpawnFinished = false;
-        List<SpawnEvent> events = setting.CustomSpawnEvents.ToList();
+        spawnEventCacheList.Clear();
+        spawnEventCacheList.AddRange(setting.CustomSpawnEvents);
         //前もってランダムイベントを作成。
         if (setting.UseRandomSpawn)
         {
@@ -170,20 +179,25 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
 
                 time += duration;
             }
-            events.AddRange(randomSpawnEventCacheList);
+            spawnEventCacheList.AddRange(randomSpawnEventCacheList);
         }
         //最大を更新
         maxEnemyCapacity = Math.Min(setting.MaxSpawn, checkPointManager.SpawnPoints.Length);
-        spawnCorutine = StartCoroutine(SpawnRoutine(events));
+        spawnCorutine = StartCoroutine(SpawnRoutine(spawnEventCacheList));
     }
-    public void StopSpaw()
+    public void StopSpawn()
     {
         if (!IsServer) return;
         StopAllCoroutines();
         waitForSpawn = null;
     }
-    //IListにすると、配列(読み取り専用)でも良くなる。
-    IEnumerator SpawnRoutine(IList<SpawnEvent> spawnEvents)
+    /// <summary>
+    /// 敵を出現させるコルーチンです。spawnEventsの内容に従って敵を出現させます。
+    /// </summary>
+    /// <param name="spawnEvents">出現させる敵のイベントリストか配列</param>
+    /// <returns></returns>
+    /// <remarks>IReadOnlyListにすると、配列でも良くなる。</remarks>
+    IEnumerator SpawnRoutine(IReadOnlyList<SpawnEvent> spawnEvents)
     {
         float timer = 0f;
 

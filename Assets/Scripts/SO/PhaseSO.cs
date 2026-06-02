@@ -18,7 +18,7 @@ public class PhaseSO : ScriptableObject
     [SerializeField] int clearBonus = 500;
     [SerializeField] int enemyCapacity = 10;
     [SerializeField] WaitSpawnType waitSpawnType = WaitSpawnType.WaitForNext;
-    [SerializeField, EnableIfEnum(nameof(waitSpawnType), true, WaitSpawnType.WaitForSomeEnemyDead)]
+    [SerializeField, EnableIfEnum(nameof(waitSpawnType), true, (int)WaitSpawnType.WaitForSomeEnemyDead)]
     int waitSpawnRemainCount = 5;
     [SerializeField] NextPhaseType nextPhaseType = NextPhaseType.Remain;
     [SerializeField] bool useRandomSpawn = false;

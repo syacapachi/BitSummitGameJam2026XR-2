@@ -4,9 +4,12 @@ using System.Collections.Generic;
 public class Step1_Target : TutorialBase
 {
     readonly int playerCount;
-    readonly List<EnemySO> step1Enemies;
+    /// <summary>
+    /// スポーンする敵のリストかArray。プレイヤーごとに1体ずつスポーンするため、プレイヤー数と同数必要。
+    /// </summary>
+    readonly IReadOnlyList<EnemySO> step1Enemies;
 
-    public Step1_Target(int playerCount, TutorialSpawner spawner, Action onComplete, List<EnemySO> step1Enemies): base(spawner, onComplete)
+    public Step1_Target(int playerCount, TutorialSpawner spawner, Action onComplete, IReadOnlyList<EnemySO> step1Enemies): base(spawner, onComplete)
     {
         this.playerCount = playerCount;
         this.step1Enemies = step1Enemies;

@@ -6,7 +6,7 @@ public class ChatSystem : NetworkBehaviour
 {
     public static ChatSystem Instance { get; private set; }
     /// サーバー側でチャットメッセージの履歴を管理するためのリスト
-    private List<ChatMessage> messageHistory = new();
+    private readonly List<ChatMessage> messageHistory = new();
     [SerializeField] UI_Board UI_Board;
     private void Awake()
     {

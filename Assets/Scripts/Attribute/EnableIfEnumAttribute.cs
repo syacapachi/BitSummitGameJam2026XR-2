@@ -17,19 +17,29 @@
         public string enumFiledName; //条件を判定するフィールド名
         public int[] enumValues;   //有効か対象のenumの値
         public bool hideWhenFalse;
+        public bool useFlagMask;
 
-        public EnableIfEnumAttribute(string enumFiledName, bool hideWhenFalse = false, params object[] enumValues)
+        // PropertyAttribute(bool applyToCollection)
+        // true にすると Array/List の要素ではなく
+        // コレクション本体に Drawer を適用する
+        public EnableIfEnumAttribute(string enumFiledName, bool hideWhenFalse = false, bool useFlagMask = false, params int[] enumValues) : base(true)
         {
             this.enumFiledName = enumFiledName;
+            //enumValuesをint型の配列として受け取る
             this.enumValues = new int[enumValues.Length];
             for (int i = 0; i < enumValues.Length; i++)
             {
-                this.enumValues[i] = (int)enumValues[i];
+                this.enumValues[i] = enumValues[i];
             }
 
             this.hideWhenFalse = hideWhenFalse;
+            this.useFlagMask = useFlagMask;
         }
-        //public EnableIfEnumAttribute(string enumFiledName, params object[] enumValues)
+        //別コンストラクタ呼び出し。
+        public EnableIfEnumAttribute(string enumFiledName,bool hideWhenFalse, params int[] enumValues) : this(enumFiledName, hideWhenFalse, false, enumValues) { }
+        public EnableIfEnumAttribute(string enumFiledName, params int[] enumValues) : this(enumFiledName, false, false, enumValues) { }
+
+        //public EnableIfEnumAttribute(string enumFiledName, params object[] enumValues): base(true)
         //{
         //    this.enumFiledName = enumFiledName;
         //    this.enumValues = new int[enumValues.Length];

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -120,9 +119,9 @@ public class InputReciever : MonoBehaviour
             gameEvent.Invoke();
         }
     }
-    [SerializeField] List<InputEventConfig<Vector2>> vector2EventList;
-    [SerializeField] List<InputEventConfig<bool>> boolEventList;
-    [SerializeField] List<InputEventConfig> voidEventList;
+    [SerializeField] InputEventConfig<Vector2>[] vector2EventList;
+    [SerializeField] InputEventConfig<bool>[] boolEventList;
+    [SerializeField] InputEventConfig[] voidEventList;
     Vector2 moveInput = Vector2.zero;
     Vector2 lookInput = Vector2.zero;
     public Vector2 MoveInput => moveInput;

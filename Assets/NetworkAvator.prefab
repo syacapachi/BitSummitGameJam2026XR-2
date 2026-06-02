@@ -249,7 +249,6 @@ MonoBehaviour:
   markerPlacedAudioDataAll: {fileID: 11400000, guid: 128455d11d69de24ea815f876ca42afb, type: 2}
   markerPlacedFxDataAll: {fileID: 11400000, guid: a9c5974956f61fc4bbd6d79257531ddc, type: 2}
   markerPlacedClipAll: {fileID: 8300000, guid: 84de006a9c69e05469e8e7402c58543f, type: 3}
-  markerFxPrefabAll: {fileID: 976249959754663240, guid: 06d26555edf3166479e9fee5631ea60c, type: 3}
   markerPlacedVolumeAll: 1
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &1788839377707714819
@@ -1689,12 +1688,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  ownerLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  noOwnerLayer:
-    serializedVersion: 2
-    m_Bits: 1
+  ownerLayer: 9
+  noOwnerLayer: 0
   m_Renderer:
   - {fileID: 4096393781274725136}
   - {fileID: 1590501788724576743}
@@ -8828,12 +8823,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  ownerLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  noOwnerLayer:
-    serializedVersion: 2
-    m_Bits: 1
+  ownerLayer: 9
+  noOwnerLayer: 0
   m_Renderer:
   - {fileID: 5769032792379107435}
   - {fileID: 4174919459532210812}
@@ -12773,12 +12764,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  ownerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  noOwnerLayer:
-    serializedVersion: 2
-    m_Bits: 1
+  ownerLayer: 6
+  noOwnerLayer: 0
   m_Renderer:
   - {fileID: 6810250427484395343}
   - {fileID: 6148034718219833433}
