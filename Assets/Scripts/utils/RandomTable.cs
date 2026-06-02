@@ -39,8 +39,8 @@ public class RandomTable
     /// <summary>
     /// 浮動小数点型の乱数を所得
     /// </summary>
-    /// <param name="minInclusive"></param>
-    /// <param name="maxExclusive"></param>
+    /// <param name="minInclusive">最小値(含まれる)</param>
+    /// <param name="maxExclusive">最大値(含まれない)</param>
     /// <returns></returns>
     public float Range(float minInclusive, float maxExclusive)
     {
@@ -50,8 +50,8 @@ public class RandomTable
     /// <summary>
     /// 整数型の乱数を取得
     /// </summary>
-    /// <param name="minInclusive"></param>
-    /// <param name="maxExclusive"></param>
+    /// <param name="minInclusive">最小値(含まれる)</param>
+    /// <param name="maxExclusive">最大値(含まれない)</param>
     /// <returns></returns>
     public int RangeInt(int minInclusive, int maxExclusive)
     {
@@ -61,7 +61,7 @@ public class RandomTable
     /// <summary>
     /// 再生成
     /// </summary>
-    /// <param name="seed"></param>
+    /// <param name="seed">新しいシード値</param>
     public void Rebuild(int seed)
     {
         rng = new System.Random(seed);
@@ -73,8 +73,8 @@ public class RandomTable
     /// リストシャッフル
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="list"></param>
-    public void ShuffleList<T>(List<T> list)
+    /// <param name="list">シャッフルするリスト</param>
+    public void ShuffleList<T>(IList<T> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
         {

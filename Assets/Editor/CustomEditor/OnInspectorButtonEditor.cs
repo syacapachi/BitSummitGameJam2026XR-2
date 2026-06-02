@@ -38,6 +38,7 @@ namespace Syacapachi.Editor
         private static readonly MethodCache[] allMethods =
             //TypeCacheで高速化(さらに高速化するなら、for文で回そう)
             TypeCache.GetMethodsWithAttribute<OnInspectorButtonAttribute>()
+            //リフレクションで全てのメソッドを取得して、OnInspectorButtonAttributeが付いているものだけを抽出してキャッシュに保存
             .Select(method =>
                 new MethodCache(
                     method,
@@ -47,6 +48,7 @@ namespace Syacapachi.Editor
                 )
             .ToArray();
 
+        //DrawInspectorButtonsで使用する、クラスごとのOnInspectorButtonをもつ関数のキャッシュ。クラスごとにキャッシュすることで、同じクラスのオブジェクトを複数描画している場合でも、リフレクションのコストを削減できる。
         //staticは、アセンブリロード時(スクリプト編集後など)や、Play時に再生成される。
         //クラスとOnInspectorButtonをもつ関数のキャッシュ,このデータは静的なのでstaticにすることでパフォーマンス向上
         private static readonly Dictionary<Type, MethodCache[]> methodCaches = new();
@@ -59,11 +61,13 @@ namespace Syacapachi.Editor
         // 値更新時に自動で発火する場合、有効かどうか
         private readonly Dictionary<MethodInfo, bool> valiedInvokeEnabled = new();
         // 抽象クラスやインターフェースと、それを実装/継承する具体的なクラスのキャッシュ (描画できない型を識別するため)
-        private readonly Dictionary<string, Type> abstructToClass = new();
+        private readonly Dictionary<string, Type> abstractToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<string, bool> foldouts = new();
         // パラメータのFoldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<MethodInfo, bool> parametersfoldouts = new();
+
+        //DrawNestedScriptableObjectsで使用する、ScriptableObjectごとのFoldout状態のキャッシュ。ScriptableObjectはUnityEngine.Objectを継承しているので、インスタンスごとに状態を管理できる。
         // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<UnityEngine.Object, bool> foldoutStates = new();
         // ネストしたEditorキャッシュ (パフォーマンス向上のため)
@@ -187,6 +191,7 @@ namespace Syacapachi.Editor
                     //変更を検知するエリア
                     EditorGUI.BeginChangeCheck();
                     var param = parameters[i];
+                    //引数の値を描画して更新,パスは、targetのインスタンスIDと関数名と引数名で一意になるようにする。これで、同じ関数を複数描画している場合でも、引数の値が混ざらないようにする。
                     values[i] = DrawField(param.ParameterType, param.Name, values[i], $"{target.GetInstanceID()}#{method.Name}#{param.MetadataToken}");
                     //変更を検知
                     if (EditorGUI.EndChangeCheck())
@@ -252,6 +257,7 @@ namespace Syacapachi.Editor
                 currentValue ??= GetDefault(underlyingType);
                 return DrawField(underlyingType, name, currentValue, path);
             }
+            //この辺あとで、型と描画方法の対応表みたいなの作って整理するかも
             if (t == typeof(int))
                 return EditorGUILayout.IntField(name, currentValue != null ? (int)currentValue : 0);
             if (t == typeof(byte))
@@ -379,7 +385,7 @@ namespace Syacapachi.Editor
             // 抽象クラスやインターフェースは直接描画できないので、実装/継承する具体的なクラスを選択して描画する。選択されていない場合は、選択ボタンを表示する。
             if (t.IsAbstract || t.IsInterface)
             {
-                return DrawAbstructOrInterface(name, t, currentValue, path);
+                return DrawAbstractOrInterface(name, t, currentValue, path);
             }
             //リスト、辞書、抽象クラス/インターフェース以外のジェネリック型
             if (t.IsGenericType)
@@ -617,16 +623,16 @@ namespace Syacapachi.Editor
         /// <param name="type"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        object DrawAbstructOrInterface(string name, Type type, object value, string path)
+        object DrawAbstractOrInterface(string name, Type type, object value, string path)
         {
-            if (abstructToClass.TryGetValue(path, out var concreteType))
+            if (abstractToClass.TryGetValue(path, out var concreteType))
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     EditorGUILayout.LabelField($"{type.Name} ▶ {concreteType.Name}", EditorStyles.boldLabel);
                     if (GUILayout.Button("Delete", GUILayout.Width(100)))
                     {
-                        abstructToClass.Remove(path);
+                        abstractToClass.Remove(path);
                         return null;
                     }
                 }
@@ -661,7 +667,7 @@ namespace Syacapachi.Editor
             {
                 menu.AddItem(new GUIContent(type.FullName), false, () =>
                 {
-                    abstructToClass[path] = type;
+                    abstractToClass[path] = type;
                 });
             }
             menu.ShowAsContext();

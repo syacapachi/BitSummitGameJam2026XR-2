@@ -47,7 +47,7 @@ namespace Syacapachi.util
 
             foreach (var group in groupedEvents)
             {
-                List<ScriptableObject> filtered = new();
+                IReadOnlyList<ScriptableObject> filtered = new List<ScriptableObject>();
                 if (isSearchClass && MatchSearch(group.Key.Name))
                 {
                     filtered = group.Value;
@@ -69,7 +69,7 @@ namespace Syacapachi.util
             GUILayout.EndScrollView();
         }
 
-        void DrawGroup(System.Type type, List<ScriptableObject> list)
+        void DrawGroup(System.Type type, IReadOnlyList<ScriptableObject> list)
         {
             using (new GUILayout.HorizontalScope())
             {

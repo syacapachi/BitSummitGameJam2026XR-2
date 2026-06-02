@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Syacapachi.Attribute;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "SkyBoxColorSetting", menuName = "Game/SkyBoxColorSetting")]
 public class SkyBoxColorSetting : ScriptableObject
@@ -45,7 +46,7 @@ public class SkyBoxColorSetting : ScriptableObject
     //6時-> -90 or 270
     //12時 -> 0 or 360
     //18時 -> 90
-    [SerializeField] private Vector3 skyRootEular;
+    [SerializeField,ReadOnly] private Vector3 skyRootEular;
     public Vector3 SkyRootEular => skyRootEular;
     public Quaternion SkyRotation => Quaternion.Euler(skyRootEular);
 

@@ -215,7 +215,8 @@ namespace Syacapachi.Editor
 
             EditorGUI.indentLevel++;
 
-            List<object> keys = new();
+            //辞書のキーは変更できるようにするため、キーのリストを作成してループする。そうしないと、ループ中にキーが変更されたときに、辞書の状態が不安定になる。
+            List<object> keys = new(dict.Keys.Count + 10);
 
             foreach (var k in dict.Keys)
                 keys.Add(k);

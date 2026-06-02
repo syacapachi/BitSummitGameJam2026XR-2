@@ -20,8 +20,8 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
 
     TutorialBase currentStepLogic;
 
-    [SerializeField] List<EnemySO> step1Enemies;
-    [SerializeField] List<EnemySO> step2Enemies;
+    [SerializeField] EnemySO[] step1Enemies;
+    [SerializeField] EnemySO[] step2Enemies;
     [Header("Subscribe Event")]
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
     [SerializeField] VoidEvent OnTutorialStepCleared;

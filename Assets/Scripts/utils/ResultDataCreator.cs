@@ -9,6 +9,7 @@ public class ResultDataCreator : NetworkBehaviour
     [SerializeField] PlayerManager PlayerManager;
     [Header("Publish Event")]
     [SerializeField] ResultDataEvent resultDataRpcEvent;
+    private readonly List<PlayerResultData> playerResultDataCacheList = new();
 
     public readonly struct ResultHeaderData
     {
@@ -32,7 +33,7 @@ public class ResultDataCreator : NetworkBehaviour
     }
     public void CreateAndSendResultData(in ResultHeaderData headerData)
     {
-        var list = new List<PlayerResultData>();
+        playerResultDataCacheList.Clear();
 
         foreach (var player in PlayerManager.AllPlayers)
         {
@@ -41,9 +42,9 @@ public class ResultDataCreator : NetworkBehaviour
             var stats = player.stats;
             if (stats == null) continue;
 
-            list.Add(stats.CreateResultDataServerOnly());
+            playerResultDataCacheList.Add(stats.CreateResultDataServerOnly());
         }
-        PlayerResultData[] datas = list.ToArray();
+        PlayerResultData[] datas = playerResultDataCacheList.ToArray();
         float cooporate = ResultDataCreator.CalculateCooperation(datas);
         ResultData data = new ResultData()
         {
@@ -63,7 +64,7 @@ public class ResultDataCreator : NetworkBehaviour
     {
         resultDataRpcEvent.Invoke(result);
     }
-    static float CalculateCooperation(PlayerResultData[] results)
+    static float CalculateCooperation(IReadOnlyList<PlayerResultData> results)
     {
         float totalShots = 0;
         float totalHits = 0;

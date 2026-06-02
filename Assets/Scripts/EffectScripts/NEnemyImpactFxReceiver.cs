@@ -28,6 +28,8 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
 
     // 同じ弾で多重ヒットしないようにする
     private readonly HashSet<BulletBaseController> handledBullets = new();
+    // 同じ弾で多重ヒットしないようにするためのIDリスト
+    private readonly List<ulong> clientCasheIds = new();
 
     // 出現直後の接触を無視するためのフラグ
     private bool canReceiveHit = false;
@@ -59,7 +61,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
     }
     private ulong[] CollectVisibleClientIdsServer()
     {
-        List<ulong> ids = new();
+        clientCasheIds.Clear();
 
         foreach (var pair in NetworkManager.Singleton.ConnectedClients)
         {
@@ -72,11 +74,11 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
             if (JobSetting.TryGetPlayerLayerSettings(propaty.Job, out var playerLayerSettings)
                 && playerLayerSettings.IsVisibleLayer(gameObject.layer))
             {
-                ids.Add(pair.Key);
+                clientCasheIds.Add(pair.Key);
             }
         }
 
-        return ids.ToArray();
+        return clientCasheIds.ToArray();
 }    private void TryHandleBulletHitServer(Collider other)
     {
         if (other == null) return;
