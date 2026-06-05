@@ -20,6 +20,10 @@ public class TutorialUI : MonoBehaviour
     private Coroutine currentRoutine;
     private bool isJapanese;
 
+    private static readonly WaitForSeconds wait1500ms = new WaitForSeconds(1.5f);
+    private static readonly WaitForSeconds wait1s = new WaitForSeconds(1f);
+    private static readonly WaitForSeconds wait2s = new WaitForSeconds(2f);
+
     enum TutorialUIState
     {
         Idle,
@@ -54,7 +58,9 @@ public class TutorialUI : MonoBehaviour
 
     void OnStepChangedNetwork(TutorialStep oldStep, TutorialStep newStep)
     {
+#if UNITY_EDITOR
         Debug.Log($"[UI] StepChangedNetwork: {oldStep} → {newStep} / currentState={currentState}");
+#endif
 
         if (currentState == TutorialUIState.StepClear)
             return;
@@ -129,7 +135,9 @@ public class TutorialUI : MonoBehaviour
     // =========================
     IEnumerator StepIntroRoutine(TutorialStep step)
     {
+#if UNITY_EDITOR
         Debug.Log($"[UI] StepIntro START: {step}");
+#endif
         root.SetActive(true);
 
         string title = "";
@@ -160,13 +168,13 @@ public class TutorialUI : MonoBehaviour
 
         // --- タイトル表示（1秒） ---
         text.text = title;
-        yield return new WaitForSeconds(1f);
+        yield return wait1s;
 
         // --- 内容表示（1.5秒） ---
         text.transform.localScale = Vector3.one;
         text.text = desc;
         yield return GrowAnimation();
-        yield return new WaitForSeconds(1.5f);
+        yield return wait1500ms;
 
         ChangeState(TutorialUIState.Idle);
     }
@@ -176,11 +184,11 @@ public class TutorialUI : MonoBehaviour
     // =========================
     IEnumerator StepClearRoutine()
     {
-        yield return new WaitForSeconds(1f);
+        yield return wait1s;
         root.SetActive(true);
 
         text.text = "SUCCEED!";
-        yield return new WaitForSeconds(2f);
+        yield return wait2s;
 
         ChangeState(TutorialUIState.Idle);
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class GameEffectAudioManager : MonoBehaviour
@@ -76,7 +77,11 @@ public class GameEffectAudioManager : MonoBehaviour
         if (source.loop)
             yield break;
 
-        yield return new WaitWhile(() => source != null && source.isPlaying);
+        //再生が終わるまで待つ
+        while(source != null && source.isPlaying)
+        {
+            yield return null;
+        }
 
         if (source != null)
         {
@@ -164,17 +169,10 @@ public class GameEffectAudioManager : MonoBehaviour
     private IEnumerator ReleaseFxWhenFinished(GameObject obj, ParticleSystem[] particleSystems)
     {
         // 全てのパーティクルシステムが死ぬのを待つ
-        yield return new WaitUntil(() =>
+        while (!IsParticleSystemEnded(particleSystems))
         {
-            foreach (var ps in particleSystems)
-            {
-                if (ps != null && ps.IsAlive(true))
-                {
-                    return false;
-                }
-            }
-            return true;
-        });
+            yield return null;
+        }
 
         if (obj != null)
         {
@@ -184,6 +182,17 @@ public class GameEffectAudioManager : MonoBehaviour
         fxReleaseCoroutines.Remove(obj);
     }
 
+    private static bool IsParticleSystemEnded(ParticleSystem[] particleSystems)
+    {
+        foreach (var ps in particleSystems)
+        {
+            if (ps != null && ps.IsAlive(true))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     private IEnumerator StopLoopFxAfterLifetime(GameObject obj, ParticleSystem[] particleSystems, float lifeTime)
     {
         yield return new WaitForSeconds(lifeTime);

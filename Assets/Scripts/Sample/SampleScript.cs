@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class SampleScript : AbstructSample
 {
     [ShowInspector, SerializeField] int a;
+    [ShowInspector, SerializeField] int? nullableA;
     [ShowInspector, SerializeField] float b;
     [ShowInspector, SerializeField] Vector3 vec;
     [ShowInspector, SerializeField] Color color;
@@ -53,10 +54,14 @@ public class SampleScript : AbstructSample
         public SampleEnum inlineEnum;
         [EnableIfEnum(nameof(inlineEnum), false, (int)SampleEnum.Value3, (int)SampleEnum.Value1), Tag]
         public string name;
+        public int? intValue;
         public bool boolValue;
         [EnableIf(nameof(boolValue), true)]
         public int[] ints;
         public string Name => name;
+        
+        [EnableIf(nameof(boolValue), true)]
+        public Vector2? vector2;
         [OnInspectorButton("Throw Exception")]
         public void InlineMethod()
         {
@@ -111,6 +116,26 @@ public class SampleScript : AbstructSample
             Debug.Log($"This is an inline method. name = {name}, value = {value}");
         }
     }
+    public sealed class HideConstructorClass
+    {
+        public readonly string Name;
+        public HideConstructorClass CreateByMethod(string Name)
+        {
+            return new HideConstructorClass(Name);
+        }
+        private HideConstructorClass(string Name) 
+        { 
+            this.Name = Name;
+        }
+    }
+    public static class StaticClass
+    {
+        public static string Name;
+        public static void SetName(string newName)
+        {
+            Name = newName;
+        }
+    }
     [Serializable]
     public class GeneticClass<T>
     {
@@ -163,6 +188,11 @@ public class SampleScript : AbstructSample
     public override void AbstructMethod()
     {
         Debug.Log("This is a abstruct Methid", gameObject);
+    }
+    [OnInspectorButton]
+    public void HideClass(HideConstructorClass hidedClass)
+    {
+        Debug.Log($"This is {hidedClass.Name} sample method.", gameObject);
     }
     [OnInspectorButton(ValidateInvoke = true)]
     public void ValidateImvokeMethodWithSerializableClass(InlineClass lass)

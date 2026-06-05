@@ -1,5 +1,4 @@
-﻿using Syacapachi.Attribute;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 public class NBullet : BulletBaseController
 {
@@ -67,7 +66,7 @@ public class NBullet : BulletBaseController
         }
         else
         {
-            Debug.Log($"Unkown type", other);
+            Debug.LogWarning($"Unkown type", other);
         }
     }
     private void CheckEnemy(IDamageReciever reciever,IEnemy enemy)
@@ -78,13 +77,14 @@ public class NBullet : BulletBaseController
             NetworkObject.Despawn(true);
             return;
         }
-
+#if UNITY_EDITOR
         Debug.Log(
             $"ShooterJob={ShooterJob}, " +
             $"EnemyJob={enemy.EnemyJob}, " +
             $"AttackableJob={layerMaskSetting.AttackableJobs}, " +
             $"CanTakeDamage={layerMaskSetting.IsAttackableJob(enemy.EnemyJob)}"
         );
+#endif
         bool isAttackable = layerMaskSetting.IsAttackableJob(enemy.EnemyJob);
         if (!enemy.CanTakeDamage)
         {
@@ -114,7 +114,7 @@ public class NBullet : BulletBaseController
 
         if (ResultCollector == null || ResultCollector is not PlayerStats stats)
         {
-            Debug.Log($"ResultCollector is not {nameof(PlayerStats)}");
+            Debug.LogWarning($"ResultCollector is not {nameof(PlayerStats)}");
             return;
         }
 

@@ -28,6 +28,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     [SerializeField] IntEvent OnTutorialStepChanged;
     [SerializeField] ULongEvent markerPlaceServerEvent;
     private bool isTutorlalStartedServerOnly;
+    private static readonly WaitForSeconds wait3100ms = new WaitForSeconds(3.1f);
     
     public override void OnNetworkSpawn()
     {
@@ -125,7 +126,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
         // UIに通知
         NotifyStepClearedClientRpc();
 
-        yield return new WaitForSeconds(3.1f);
+        yield return wait3100ms;
 
         isWaitingNext = false;
         NextStep();

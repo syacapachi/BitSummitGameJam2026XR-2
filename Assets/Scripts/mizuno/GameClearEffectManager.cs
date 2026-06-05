@@ -85,10 +85,11 @@ public class GameClearEffectManager : MonoBehaviour
             start[i] = roomLights[i] ? roomLights[i].intensity : 0f;
 
         float elapsed = 0f;
+        float invDuration = 1f / duration;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
+            float t = Mathf.Clamp01(elapsed * invDuration);
             for (int i = 0; i < roomLights.Length; i++)
                 if (roomLights[i]) roomLights[i].intensity = Mathf.Lerp(start[i], target, t);
             yield return null;

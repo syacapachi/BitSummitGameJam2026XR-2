@@ -1,5 +1,4 @@
-﻿using Syacapachi.Attribute;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.XR;
 public class NGun : GunController

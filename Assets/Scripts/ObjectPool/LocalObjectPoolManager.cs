@@ -63,8 +63,6 @@ public class LocalObjectPoolManager : MonoBehaviour
         {
             objectPoolDic[prefab.GetInstanceID()].Release(obj);
         }
-
-
     }
     public GameObject Get(GameObject prefab)
     {

@@ -4,6 +4,7 @@ using UnityEngine;
 using Syacapachi.Manager;
 using Syacapachi.Data;
 using System;
+using System.Collections.Generic;
 
 public class RankingUI : MonoBehaviour
 {
@@ -28,13 +29,15 @@ public class RankingUI : MonoBehaviour
     [SerializeField] LocalizeSimpleText rankingTitleText;
     [SerializeField] LocalizeSimpleText cooperationText;
     [SerializeField] LocalizeSimpleText startText;
+    private static WaitForSeconds waitForShow;
 
     private bool isJapanese;
 
     void Start()
     {
         isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
-        rankingCanvas.enabled =false;
+        rankingCanvas.enabled = false;
+        waitForShow = new WaitForSeconds(showDelay);
     }
 
     void OnEnable()
@@ -67,7 +70,7 @@ public class RankingUI : MonoBehaviour
     {
         // RankingManagerのSaveJsonが完了するのを1フレーム待つ
         yield return null;
-        yield return new WaitForSeconds(showDelay);
+        yield return waitForShow;
         ShowRanking();
     }
 
@@ -78,14 +81,15 @@ public class RankingUI : MonoBehaviour
 
         // 既存エントリーをクリア
         foreach (Transform child in entryParent)
-            Destroy(child.gameObject);
+            ManagerLocator.Instance.LocalObjectPool.Release(child.gameObject);
 
         // ランキングデータを表示
         var rankings = rankingManager.Results;
         float showCount = Math.Min(showRankings, rankings.Count);
         for (int i = 0; i < showCount; i++)
         {
-            var entry = Instantiate(entryPrefab, entryParent);
+            var entry = ManagerLocator.Instance.LocalObjectPool.Get(entryPrefab);
+            entry.transform.SetParent(entryParent);
             var entryUI = entry.GetComponent<RankingEntryUI>();
             entryUI.Setup(i + 1, rankings[i], isJapanese);
         }

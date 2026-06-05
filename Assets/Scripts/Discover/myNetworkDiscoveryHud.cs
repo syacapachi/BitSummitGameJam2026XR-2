@@ -26,10 +26,15 @@ public class MyNetworkDiscoveryHud : MonoBehaviour
 
     public Vector2 DrawOffset = new Vector2(10, 210);
 
+    private Rect m_Rect;
+
+    [SerializeField] bool showGUI = true;
+
     void Awake()
     {
         m_Discovery = GetComponent<MyNetworkDiscovery>();
         m_NetworkManager = GetComponent<NetworkManager>();
+        m_Rect = new Rect(DrawOffset, new Vector2(200, 600));
     }
 
 #if UNITY_EDITOR
@@ -51,7 +56,8 @@ public class MyNetworkDiscoveryHud : MonoBehaviour
 
     void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(DrawOffset, new Vector2(200, 600)));
+        if (!showGUI) return;
+        GUILayout.BeginArea(m_Rect);
 
         if (m_NetworkManager.IsServer || m_NetworkManager.IsClient)
         {
