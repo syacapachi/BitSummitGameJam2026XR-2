@@ -172,7 +172,8 @@ public class GameStateManager : NetworkBehaviour
         return fromState switch
         {
             GameState.Home => toState == GameState.Initializing,
-            GameState.Initializing => toState == GameState.Tutorial || toState == GameState.Playing,
+            GameState.Initializing => toState == GameState.SelecrDifficulty || toState == GameState.Tutorial || toState == GameState.Playing,
+            GameState.SelecrDifficulty => toState == GameState.Tutorial || toState == GameState.Playing,
             GameState.Tutorial => toState == GameState.Playing,
             GameState.Playing => toState == GameState.GameClear || toState == GameState.GameOver,
             GameState.GameClear or GameState.GameOver => toState == GameState.Home,
@@ -214,16 +215,16 @@ public class GameStateManager : NetworkBehaviour
                 => toState == GameState.Initializing,
 
             GameState.Initializing
-                => toState == GameState.Tutorial
-                || toState == GameState.Playing
-                || toState == GameState.SelecrDifficulty,
-
-            GameState.Tutorial
                 => toState == GameState.SelecrDifficulty
+                || toState == GameState.Tutorial
                 || toState == GameState.Playing,
 
-            GameState.SelecrDifficulty
+            GameState.Tutorial
                 => toState == GameState.Playing,
+
+            GameState.SelecrDifficulty
+                => toState == GameState.Tutorial
+                || toState == GameState.Playing,
 
             GameState.Playing
                 => toState == GameState.GameClear
@@ -277,14 +278,7 @@ public class GameStateManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (gameStartMode == GameStartMode.Button)
-        {
-            CurrentGameState = GameState.SelecrDifficulty;
-        }
-        else
-        {
-            CurrentGameState = GameState.Playing;
-        }
+        CurrentGameState = GameState.Playing;
     }
 
     [OnInspectorButton(drawOrder: 3)]
@@ -347,7 +341,9 @@ public class GameStateManager : NetworkBehaviour
 
         Debug.Log($"Start Difficulty : {difficulty}");
 
-        CurrentGameState = GameState.Playing;
+        CurrentGameState = useTutorial
+            ? GameState.Tutorial
+            : GameState.Playing;
     }
 
     [Rpc(SendTo.Server)]
@@ -371,20 +367,17 @@ public class GameStateManager : NetworkBehaviour
 
         CurrentGameState = GameState.Initializing;
 
-        if (useTutorial)
+        if (gameStartMode == GameStartMode.Button)
+        {
+            CurrentGameState = GameState.SelecrDifficulty;
+        }
+        else if (useTutorial)
         {
             CurrentGameState = GameState.Tutorial;
         }
         else
         {
-            if (gameStartMode == GameStartMode.Auto)
-            {
-                CurrentGameState = GameState.Playing;
-            }
-            else
-            {
-                CurrentGameState = GameState.SelecrDifficulty;
-            }
+            CurrentGameState = GameState.Playing;
         }
     }
     public void OnGameStartServerOnly()
@@ -469,12 +462,11 @@ public enum LocalState
 
 
 //GameState
-//Initialize -> (tutorial) -> (SelecrDifficulty) -> Playing -> {GameClear, GameOver} -> Home;
-//Initialize(チュートリアルの分岐を判断する枝)ついでに初期化
-//Initialize -> Tutorial:チュートリアルが有効の場合遷移
-//Initialize -> Playing:チュートリアルが無効の場合遷移
-//Tutorial -> Plying:チュートリアル終了後遷移
+//Initialize -> (SelecrDifficulty) -> (Tutorial) -> Playing -> {GameClear, GameOver} -> Home;
+//Initialize(難易度選択/チュートリアル/プレイ開始の分岐を判断する枝)ついでに初期化
+//Initialize -> SelecrDifficulty: buttonモードの場合遷移
+//SelecrDifficulty -> Tutorial:チュートリアルが有効の場合遷移
+//SelecrDifficulty -> Playing:チュートリアルが無効の場合遷移
+//Tutorial -> Playing:チュートリアル終了後遷移
 //PLaying -> {GameClear, GameOver} :条件により、どちらかに遷移
 //{GameClear, GameOver} -> Home : 戻るボタンで遷移
-
-//Tutorial -> SelecrDifficulty buttonモードのとき
