@@ -59,7 +59,7 @@ namespace Syacapachi.Editor
         // 値更新時に自動で発火する場合、有効かどうか
         private readonly Dictionary<MethodInfo, bool> valiedInvokeEnabled = new();
         // 抽象クラスやインターフェースと、それを実装/継承する具体的なクラスのキャッシュ (描画できない型を識別するため)
-        private readonly Dictionary<string, Type> abstructToClass = new();
+        private readonly Dictionary<string, Type> abstractToClass = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
         private readonly Dictionary<string, bool> foldouts = new();
         // パラメータのFoldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
@@ -379,7 +379,7 @@ namespace Syacapachi.Editor
             // 抽象クラスやインターフェースは直接描画できないので、実装/継承する具体的なクラスを選択して描画する。選択されていない場合は、選択ボタンを表示する。
             if (t.IsAbstract || t.IsInterface)
             {
-                return DrawAbstructOrInterface(name, t, currentValue, path);
+                return DrawAbstractOrInterface(name, t, currentValue, path);
             }
             //リスト、辞書、抽象クラス/インターフェース以外のジェネリック型
             if (t.IsGenericType)
@@ -617,16 +617,16 @@ namespace Syacapachi.Editor
         /// <param name="type"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        object DrawAbstructOrInterface(string name, Type type, object value, string path)
+        object DrawAbstractOrInterface(string name, Type type, object value, string path)
         {
-            if (abstructToClass.TryGetValue(path, out var concreteType))
+            if (abstractToClass.TryGetValue(path, out var concreteType))
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     EditorGUILayout.LabelField($"{type.Name} ▶ {concreteType.Name}", EditorStyles.boldLabel);
                     if (GUILayout.Button("Delete", GUILayout.Width(100)))
                     {
-                        abstructToClass.Remove(path);
+                        abstractToClass.Remove(path);
                         return null;
                     }
                 }
@@ -661,7 +661,7 @@ namespace Syacapachi.Editor
             {
                 menu.AddItem(new GUIContent(type.FullName), false, () =>
                 {
-                    abstructToClass[path] = type;
+                    abstractToClass[path] = type;
                 });
             }
             menu.ShowAsContext();

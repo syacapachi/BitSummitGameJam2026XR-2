@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CanvasManager : MonoBehaviour
 {
-    [SerializeField] List<Canvas> canvasList = new();
+    [SerializeField] Canvas[] canvases;
     LocalCameraSetting ownerSetting;
     public void ResistOwner(LocalCameraSetting cameraSetting)
     {
@@ -16,7 +16,7 @@ public class CanvasManager : MonoBehaviour
     }
     private void CameraChange(Camera camera)
     {
-        foreach (Canvas canvas in canvasList)
+        foreach (Canvas canvas in canvases)
         {
             canvas.worldCamera = camera;
         }

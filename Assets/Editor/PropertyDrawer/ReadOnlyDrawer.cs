@@ -12,12 +12,12 @@ namespace Syacapachi.Editor
         {
             ReadOnlyAttribute attr = (ReadOnlyAttribute)attribute;
             if (attr.showOnlyPlayMode && !Application.isPlaying) return;
-            bool enabled = GUI.enabled;
-            GUI.enabled = false;
-            //描画中GUIを無効化
-            EditorGUI.PropertyField(position, property, label);
-            //戻す
-            GUI.enabled = enabled;
+            // ここでDisabledScopeを使用して、プロパティを読み取り専用にします。
+            //スコープを抜けると、プロパティは元に戻ります。
+            using (new EditorGUI.DisabledScope(true))
+            {
+                EditorGUI.PropertyField(position, property, label, true);
+            }
         }
     }
 }

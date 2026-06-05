@@ -9,9 +9,9 @@ public class RespawnField : MonoBehaviour
         Vector3
     }
     [SerializeField] SettingType settingType;
-    [EnableIfEnum(nameof(settingType), true,SettingType.Vector3)] 
+    [EnableIfEnum(nameof(settingType), true, (int)SettingType.Vector3)] 
     [SerializeField] Vector3 respawnPositon = new Vector3(0, 5, 0);
-    [EnableIfEnum(nameof(settingType), true, SettingType.Transform)]
+    [EnableIfEnum(nameof(settingType), true, (int)SettingType.Transform)]
     [SerializeField] Transform respawnTransform;
     private void Start()
     {

@@ -47,7 +47,7 @@ namespace Syacapachi.Editor
                 EditorGUI.LabelField(position, label.text, "Use with string fields only.");
             }
         }
-        private SceneAsset GetSceneAsset(string sceneObjectName)
+        private static SceneAsset GetSceneAsset(string sceneObjectName)
         {
             if (string.IsNullOrEmpty(sceneObjectName)) return null;
             //エディターで登録されている使われているシーンを検索

@@ -13,11 +13,24 @@ public class SampleScript : AbstructSample
     [ShowInspector, SerializeField] Color color;
     [ShowInspector, SerializeField] GameObject obj;
     [SerializeField] InlineClass clazz;
+    [SerializeField] InLineClass2 clazz2;
     [ShowInspector, SerializeField] List<float> list = new List<float>();
     [ShowInspector, SerializeField] List<InlineClass> classList = new List<InlineClass>();
     [ShowInspector, SerializeField] Dictionary<int, string> adic = new Dictionary<int, string>();
-
-    [SerializeReference, SerializeReferenceView,SerializeField]
+    [SerializeField] bool boolValue;
+    [SerializeField] bool boolValue2;
+    [SerializeField] SampleEnum sampleEnum;
+    //左に書いた方から優先される
+    [SerializeField, EnableIf(nameof(boolValue), true), Tag] string sceneName;
+    [SerializeField, EnableIf(nameof(boolValue), true), Tag] string[] sceneNameArray;
+    [SerializeField, EnableIf(nameof(boolValue2)), Tag] List<string> sceneNameList;
+    [SerializeField, EnableIf(nameof(boolValue2), true)] List<InlineClass> classes = new List<InlineClass>();
+    [SerializeField, Layer] Vector2 vector1;
+    [SerializeField, Scene] Vector2 vector2;
+    [SerializeField, SingleFlagOnly] Vector2 vector3;
+    [SerializeField, EnableIfEnum(nameof(sampleEnum), false, true, (int)SampleEnum.Value1)] Vector2 vector4;
+    [SerializeField, Tag] Vector2 vector5;
+    [SerializeReference, SerializeReferenceView, SerializeField]
     IInLineInterface resultCollector;
     [SerializeReference, SerializeReferenceView]
     IInLineInterface[] resultCollectors;
@@ -25,38 +38,45 @@ public class SampleScript : AbstructSample
     List<IInLineInterface> resultCollectorList;
     public interface IInLineInterface
     {
-        public string Name { get;}
+        public string Name { get; }
         [OnInspectorButton("Interface")]
         public void InlineMethod();
     }
     public interface IInLineGenericInterface<T>
     {
-        public T InlineValue {  get;}
+        public T InlineValue { get; }
         public void InlineMethod(T value);
     }
     [Serializable]
     public class InlineClass : IInLineInterface
     {
+        public SampleEnum inlineEnum;
+        [EnableIfEnum(nameof(inlineEnum), false, (int)SampleEnum.Value3, (int)SampleEnum.Value1), Tag]
         public string name;
+        public bool boolValue;
+        [EnableIf(nameof(boolValue), true)]
         public int[] ints;
         public string Name => name;
         [OnInspectorButton("Throw Exception")]
         public void InlineMethod()
         {
-            Debug.Log($"This is an inline method. name = {name}, ints ={string.Join(",",ints)}");
+            Debug.Log($"This is an inline method. name = {name}, ints ={string.Join(",", ints)}");
             throw new Exception();
         }
     }
+    [Serializable]
     public class InLineClass2 : IInLineInterface
     {
         public int number;
         public string name;
         public string Name => name;
+        public InlineClass clazz;
         public void InlineMethod()
         {
             Debug.Log($"This is an inline method. number = {number}");
         }
     }
+    [Serializable]
     public class InLineClass3 : IInLineGenericInterface<string>
     {
         public string name;
@@ -75,6 +95,7 @@ public class SampleScript : AbstructSample
             Debug.Log($"curve {curve.Evaluate(0f)}", this.gameObject);
         }
     }
+    [Serializable]
     public struct InLineStruct : IInLineInterface, IInLineGenericInterface<string>
     {
         public string name;
@@ -90,6 +111,7 @@ public class SampleScript : AbstructSample
             Debug.Log($"This is an inline method. name = {name}, value = {value}");
         }
     }
+    [Serializable]
     public class GeneticClass<T>
     {
         public T value;
@@ -98,34 +120,36 @@ public class SampleScript : AbstructSample
     [Flags]
     public enum SampleEnum
     {
-        Value1,
-        Value2,
-        Value3
+        None = 0,
+        Value1 = 1,
+        Value2 = 2,
+        Value3 = 4,
+        Value12 = Value1 | Value2
     }
     //privateにすると見えない
-    [OnInspectorButton(Order = -1)]
+    [OnInspectorButton(Order = -6)]
     public void PublicMethod()
     {
         Debug.Log($"This is a public method invoked by {this.GetType()}", gameObject);
     }
     //privateにすると見えない
-    [OnInspectorButton(Order = -1)]
+    [OnInspectorButton(Order = -5)]
     protected void ProtectedMethod()
     {
         Debug.Log($"This is a protected method invoked by {this.GetType()}.", gameObject);
     }
     //privateにすると見えない
-    [OnInspectorButton(Order = -1)]
+    [OnInspectorButton(Order = -4)]
     internal void InternalMethod()
     {
         Debug.Log($"This is a internal method invoked by {this.GetType()}.", gameObject);
     }
-    [OnInspectorButton(Order = -1)]
+    [OnInspectorButton(Order = -3)]
     private void PrivateMethod()
     {
         Debug.Log($"This is a private methodinvoked by {this.GetType()}", gameObject);
     }
-    [OnInspectorButton(Order = -1)]
+    [OnInspectorButton(Order = -2)]
     public virtual void VirtualMethod()
     {
         Debug.Log($"This is a base method invoked by {this.GetType()}", gameObject);
@@ -151,10 +175,10 @@ public class SampleScript : AbstructSample
         Debug.Log("This is a sample method.", gameObject);
         lass.name = lass.name + name;
     }
-    [OnInspectorButton(ValidateInvoke = true,HideWhenChildClass = true,Order = -2)]
+    [OnInspectorButton(ValidateInvoke = true, HideWhenChildClass = true, Order = -2)]
     public void ValidateImvokeMethodWithSerializableClassArray(InLineStruct[] script)
     {
-        Debug.Log(string.Join(",",script.Select(t => t.name)), gameObject);
+        Debug.Log(string.Join(",", script.Select(t => t.name)), gameObject);
     }
     [OnInspectorButton(HideWhenChildClass = true)]
     public void SampleMethodWithValueTYpe(string message, int number)
@@ -179,8 +203,8 @@ public class SampleScript : AbstructSample
     [OnInspectorButton(HideWhenChildClass = true)]
     public void SampleMethodWithDic(Dictionary<InlineClass, IInLineInterface> dic, Dictionary<IInLineGenericInterface<string>, IInLineGenericInterface<int>> dic2)
     {
-        string dicString = string.Join(", ", dic.Keys,dic.Values);
-        string dic2String = string.Join(", ", dic2.Keys,dic2.Values);
+        string dicString = string.Join(", ", dic.Keys, dic.Values);
+        string dic2String = string.Join(", ", dic2.Keys, dic2.Values);
         Debug.Log("Message: " + dicString + ", " + dic2String, gameObject);
     }
     [OnInspectorButton(HideWhenChildClass = true)]
@@ -199,12 +223,12 @@ public class SampleScript : AbstructSample
         Debug.Log(string.Join
             ("\n",
                 string.Join(",", arr),
-                string.Join(",", inlineClasses.Select(t => t.name +" "+ string.Join(",",t.ints))),
+                string.Join(",", inlineClasses.Select(t => t.name + " " + string.Join(",", t.ints))),
                 string.Join(",", inlineInterfaces.Select(t => t.Name)),
                 string.Join(",", inLineGenericInterface.Select(t => t.InlineValue))
             )
-            ,gameObject);
-                
+            , gameObject);
+
     }
     [OnInspectorButton(HideWhenChildClass = true)]
     public void SampleMethodWithGeneticClass<F>(GeneticClass<F> invokeEvent)
@@ -216,7 +240,7 @@ public class SampleScript : AbstructSample
     {
         Debug.Log("Value: " + invokeEvent.value, gameObject);
     }
-    [OnInspectorButton(HideWhenChildClass = true,Order = -2)]
+    [OnInspectorButton(HideWhenChildClass = true, Order = -2)]
     public void SampleMethodWithInterface(IInLineInterface resisterable, IInLineGenericInterface<string> invokeEvent)
     {
         resisterable.InlineMethod();
