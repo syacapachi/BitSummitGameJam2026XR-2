@@ -12,6 +12,7 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] GameStateEvent GameStateChangeRpcEvent;
     [SerializeField] BoolEvent WarningStateEvent;
+    [SerializeField] LanguageEvent LanguageEvent;
     [Header("Reference")]
     [SerializeField] DifficultyDataBase rpcDataBase;
     [SerializeField] private NetworkGameManager nGameManager;
@@ -51,7 +52,11 @@ public class PhaseUI : MonoBehaviour
     /// </summary>
     void UpdateLangage()
     {
-        isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+        GameStateManager gameStateManager = ManagerLocator.Instance != null
+            ? ManagerLocator.Instance.GameStateManager
+            : null;
+        isJapanese = gameStateManager == null
+            || gameStateManager.CurrentLanguage == Language.Japanese;
         ApplyFont();
         InitializeUI();
     }
@@ -86,6 +91,8 @@ public class PhaseUI : MonoBehaviour
         OnPhaseChangeRpcEvent.Register(OnPhaseChanged);
         GameStateChangeRpcEvent.Register(OnGameStateChanged);
         WarningStateEvent.Register(OnWarningChanged);
+        LanguageEvent.Register(OnLanguageChanged);
+        OnLanguageChanged(LanguageEvent.CurrentValue);
     }
 
     private void OnDisable()
@@ -94,6 +101,7 @@ public class PhaseUI : MonoBehaviour
         OnPhaseChangeRpcEvent.Unregister(OnPhaseChanged);
         GameStateChangeRpcEvent.Unregister(OnGameStateChanged);
         WarningStateEvent.Unregister(OnWarningChanged);
+        LanguageEvent.Unregister(OnLanguageChanged);
 
         // CountdownValue の購読解除
         if (isCountdownSubscribed && nGameManager != null && nGameManager.PhaseManager != null)
@@ -117,9 +125,21 @@ public class PhaseUI : MonoBehaviour
         {
             //ゲーム状態が変わった場合も呼ぶ
             //UpdateLangage();
-            isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+            GameStateManager gameStateManager = ManagerLocator.Instance != null
+                ? ManagerLocator.Instance.GameStateManager
+                : null;
+            isJapanese = gameStateManager == null
+                || gameStateManager.CurrentLanguage == Language.Japanese;
             ApplyFont();
         }
+    }
+
+    private void OnLanguageChanged(Language newLanguage)
+    {
+        bool newIsJapanese = newLanguage == Language.Japanese;
+        if (isJapanese == newIsJapanese) return;
+        isJapanese = newIsJapanese;
+        ApplyFont();
     }
 
     private void OnAllEnemyKilled()

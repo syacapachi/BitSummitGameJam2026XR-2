@@ -7,7 +7,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
+public class NEnemy : NetworkBehaviour, IDamageReciever, IEnemy
 {
     [SerializeField] Transform rootTransfrom;
     [SerializeField] JobSettingGenerator enemyJobSetting;
@@ -23,7 +23,7 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     [SerializeField] private Image hpImage; // Filled Image
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] PlayerJob enemyJob;
-    [SerializeField] NetworkAnimator networkAnimator;   
+    [SerializeField] NetworkAnimator networkAnimator;
     [Header("Publish Event")]
     [SerializeField] EnemyKilledEvent enemyKilled;
     [SerializeField] GameEffectEvent dieEffectEvent;
@@ -36,14 +36,14 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     private EnemySO rpcEnemySO;
     public GameObject GameObject => this.gameObject;
     NetworkObject IEnemy.NetworkObject => this.NetworkObject;
-    public EnemyWeaponSettingsSO EnemyWeaponRpc => rpcEnemySO.EnemyWeapon;  
+    public EnemyWeaponSettingsSO EnemyWeaponRpc => rpcEnemySO.EnemyWeapon;
     public float CurrentHealth => currentHP.Value;
     public float MaxHealth => rpcEnemySO.Hp;
     private float invMaxHealth;
     /// <summary>
     /// セットはEditor上のみ
     /// </summary>
-    public PlayerJob EnemyJob 
+    public PlayerJob EnemyJob
     {
         get => enemyJob;
 #if UNITY_EDITOR
@@ -89,25 +89,25 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     [SerializeField] EnemyDataBase enemyDataBase;
     public bool IsAttackableJob(PlayerJob playerJob)
     {
-        if(enemyJobSetting == null)
+        if (enemyJobSetting == null)
         {
-            Debug.LogError($"enemyJobSetting is null! {gameObject.name}",gameObject);
+            Debug.LogError($"enemyJobSetting is null! {gameObject.name}", gameObject);
             return false;
         }
-        if(enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)){
+        if (enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)) {
             return setting.IsAttackableJob(playerJob);
         }
-        Debug.LogError($"LayerMask setting not found for job: {playerJob}",gameObject);
+        Debug.LogError($"LayerMask setting not found for job: {playerJob}", gameObject);
         return false;
     }
     [OnInspectorButton(ShowOnlyInPlayMode = true)]
-    public void InjectSetting(int id,int spawnPointIndex)
+    public void InjectSetting(int id, int spawnPointIndex)
     {
         enemyId.Value = id;
         currentPointIndexServerOnly = spawnPointIndex;
     }
 
-    public bool TryGetEnemySO(int id,out EnemySO enemySO)
+    public bool TryGetEnemySO(int id, out EnemySO enemySO)
     {
         //内部で大きさを測ってるのでnullかEnemySOがかえる
         enemySO = enemyDataBase.GetEnemyDataFromId(id);
@@ -128,16 +128,16 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     }
     private void ApplySettting()
     {
-        if(enemyJobSetting == null)
+        if (enemyJobSetting == null)
         {
             Debug.LogError("enemyJonSetting is null!");
             return;
         }
 
-        if (enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)){
+        if (enemyJobSetting.TryGetPlayerLayerSettings(EnemyJob, out var setting)) {
             foreach (Transform childs in transform.GetComponentsInChildren<Transform>())
             {
-                childs.gameObject.layer = setting.CollidersLayer;                
+                childs.gameObject.layer = setting.CollidersLayer;
             }
             originalLayerRpc = setting.CollidersLayer;
         }
@@ -150,13 +150,15 @@ public class NEnemy : NetworkBehaviour,IDamageReciever,IEnemy
     {
         ManagerLocator locator = ManagerLocator.Instance;
         //
-        yield return new WaitUntil(() =>
-            locator != null &&
-            locator.AllPlayerManager != null &&
-            locator.AllPlayerManager.NetworkOwnerPlayer != null &&
-            locator.AllPlayerManager.NetworkOwnerPlayer.transform != null &&
-            locator.CheckPointManager != null
-        );
+        while (
+            locator == null ||
+            locator.AllPlayerManager == null ||
+            locator.AllPlayerManager.NetworkOwnerPlayer == null ||
+            locator.AllPlayerManager.NetworkOwnerPlayer.transform == null ||
+            locator.CheckPointManager == null)
+        {
+            yield return null;
+        }
         checkPointManager = locator.CheckPointManager;
         if (IsServer)
         {

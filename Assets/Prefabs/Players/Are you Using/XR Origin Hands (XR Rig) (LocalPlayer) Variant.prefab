@@ -3535,9 +3535,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7211544049521143121, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8183446668185451150}
-    - targetCorrespondingSourceObject: {fileID: 7211544049521143121, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 5114117993183840635}
     - targetCorrespondingSourceObject: {fileID: 7211544049521143121, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       insertIndex: -1
@@ -3706,23 +3703,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7211544049521143121, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
   m_PrefabInstance: {fileID: 3956772877621310153}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8183446668185451150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5980159000183742360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0170c5522a87bda40b14cad7ed8f999e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftHand: {fileID: 4983985600312387237}
-  rightHand: {fileID: 4983985599767242308}
-  leftLaser: {fileID: 0}
-  rightLaser: {fileID: 0}
-  distance: 20
 --- !u!114 &5114117993183840635
 MonoBehaviour:
   m_ObjectHideFlags: 0

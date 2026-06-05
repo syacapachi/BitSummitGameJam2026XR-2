@@ -46,8 +46,13 @@ public class ResultUI : MonoBehaviour
     [Header("SubscribeEvent")]
     [SerializeField] GameStateEvent gameStateEvent;
     [SerializeField] ResultDataEvent OnGameResultRpc;
+    [SerializeField] LanguageEvent LanguageEvent;
 
     private readonly List<GameObject> spawnedUIObjects = new();
+    private Language language = Language.Japanese;
+    private bool IsJapanese => language == Language.Japanese;
+    private ResultData currentResultData;
+
     void Start()
     {
         UIActive(false);
@@ -68,21 +73,36 @@ public class ResultUI : MonoBehaviour
         // イベント登録
         OnGameResultRpc.Register(OnGameFinished);
         gameStateEvent.Register(OnGameStateChanged);
+        LanguageEvent.Register(OnLanguageChanged);
+        language = LanguageEvent.CurrentValue;
     }
     private void OnDisable()
     {
         OnGameResultRpc.Unregister(OnGameFinished);
         gameStateEvent.Unregister(OnGameStateChanged);
+        LanguageEvent.Unregister(OnLanguageChanged);
     }
     void OnGameFinished(ResultData resultData)
     {
         Debug.Log($"OnGameFinished called: {Time.frameCount}");
-        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
-        ShowResult(resultData, isJapanese);
-        ShowDetail(resultData, isJapanese);
+        currentResultData = resultData;
+        ShowResult(resultData, IsJapanese);
+        ShowDetail(resultData, IsJapanese);
         UIActive(true);
         StartCoroutine(DisableLazyFollow());
 
+    }
+
+    private void OnLanguageChanged(Language newLanguage)
+    {
+        if (language == newLanguage) return;
+        language = newLanguage;
+
+        if (currentResultData == null || panel == null || !panel.activeSelf)
+            return;
+
+        ShowResult(currentResultData, IsJapanese);
+        ShowDetail(currentResultData, IsJapanese);
     }
     /// <summary>
     /// 個人的には、このUIがずっとついてくるのはうざいので1秒後に無力感

@@ -37,6 +37,9 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] LocalizeSimpleText backText;
     [Header("Subscribe Event")]
     [SerializeField] LocalStateEvent localStateEvent;
+    [SerializeField] LanguageEvent languageEvent;
+    private Language language;
+    private bool IsJapanese => language == Language.Japanese;
     /// <summary>
     /// このオブジェクトは持てるので、位置を戻すために使う。
     /// </summary>
@@ -47,6 +50,7 @@ public class WorldViewManager : NetworkBehaviour
     /// </summary>
     public override void OnNetworkSpawn()
     {
+        language = languageEvent.CurrentValue;
         this.transform.SetPositionAndRotation(initialPos, Quaternion.identity);
     }
 
@@ -57,25 +61,33 @@ public class WorldViewManager : NetworkBehaviour
 
     private void OnEnable()
     {
+        language = languageEvent.CurrentValue;
         localStateEvent.Register(OnLocalStateChanged);
+        languageEvent.Register(OnLanguageChanged);
         pageIndex.OnValueChanged += OnPageChanged;
     }
     private void OnDisable()
     {
         localStateEvent.Unregister(OnLocalStateChanged);
+        languageEvent.Unregister(OnLanguageChanged);
         pageIndex.OnValueChanged -= OnPageChanged;
     }
     //OnNetworkSpanは、ネット接続時にSetActive(true)でないと呼ばれないので、Canvsのみ無効にする。
     private void OnLocalStateChanged(LocalState localState)
     {
-        if(localState == LocalState.WorldView)
+        if (localState == LocalState.WorldView)
         {
             //初期化
-            this.transform.SetPositionAndRotation(initialPos,Quaternion.identity);
-            ShowPage(pageIndex.Value);
+            this.transform.SetPositionAndRotation(initialPos, Quaternion.identity);
+            ShowPage(pageIndex.Value, IsJapanese);
         }
     }
-    
+    private void OnLanguageChanged(Language newLanguage)
+    {
+        if (language == newLanguage) return;
+        language = newLanguage;
+        ShowPage(pageIndex.Value, IsJapanese);
+    }
 
     public void OnNextButtonClicked() => RequestNextPageRpc();
 
@@ -101,12 +113,10 @@ public class WorldViewManager : NetworkBehaviour
     }
 
     [OnInspectorButton]
-    void OnPageChanged(int oldValue, int newValue) => ShowPage(newValue);
+    void OnPageChanged(int oldValue, int newValue) => ShowPage(newValue, IsJapanese);
 
-    void ShowPage(int index)
+    void ShowPage(int index, bool isJapanese)
     {
-        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
-
         if (boardText != null)
             boardText.text = isJapanese
                 ? worldViewData.japaneseTexts[index].Replace("\\n", "\n")

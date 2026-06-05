@@ -4,6 +4,7 @@ using UnityEngine;
 using Syacapachi.Manager;
 using Syacapachi.Data;
 using System;
+using System.Collections.Generic;
 
 public class RankingUI : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class RankingUI : MonoBehaviour
     [Header("Subscribe Event")]
     [SerializeField] ResultDataEvent resultDataEvent;
     [SerializeField] GameStateEvent gameStateEvent;
+    [SerializeField] LanguageEvent langageEvent;
 
     [Header("Settings")]
     [SerializeField] float showDelay = 3f;
@@ -28,25 +30,31 @@ public class RankingUI : MonoBehaviour
     [SerializeField] LocalizeSimpleText rankingTitleText;
     [SerializeField] LocalizeSimpleText cooperationText;
     [SerializeField] LocalizeSimpleText startText;
-
-    private bool isJapanese;
+    private static WaitForSeconds waitForShow;
+    private Language language;
+    private bool IsJapanese => language == Language.Japanese;
+    private readonly Queue<RankingEntryUI> createdUIQueue = new(5);
 
     void Start()
     {
-        isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
-        rankingCanvas.enabled =false;
+        language = langageEvent.CurrentValue;
+        rankingCanvas.enabled = false;
+        waitForShow = new WaitForSeconds(showDelay);
     }
 
     void OnEnable()
     {
+        language = langageEvent.CurrentValue;
         resultDataEvent.Register(OnResultReceived);
         gameStateEvent.Register(OnGameStateChanged);
+        langageEvent.Register(OnLangageChanged);
     }
 
     void OnDisable()
     {
         resultDataEvent.Unregister(OnResultReceived);
         gameStateEvent.Unregister(OnGameStateChanged);
+        langageEvent.Unregister(OnLangageChanged);
     }
 
     // ResultDataEventを受け取ったら表示開始
@@ -62,39 +70,65 @@ public class RankingUI : MonoBehaviour
         if (newState == GameState.Initializing || newState == GameState.Home)
             HideRanking();
     }
-
+    void OnLangageChanged(Language newlangage)
+    {
+        //同じなら無視
+        if (language == newlangage) return;
+        //状態更新
+        language = newlangage;
+        if (rankingCanvas != null && rankingCanvas.enabled)
+        {
+            ShowRanking(false);
+        }
+    }
     IEnumerator ShowRankingDelayed()
     {
         // RankingManagerのSaveJsonが完了するのを1フレーム待つ
         yield return null;
-        yield return new WaitForSeconds(showDelay);
-        ShowRanking();
+        yield return waitForShow;
+        ShowRanking(true);
     }
 
-    void ShowRanking()
+    void ShowRanking(bool createNewRankings)
     {
         rankingCanvas.enabled = true;
-        titleText.text = isJapanese ? "ランキング" : "RANKING";
+        titleText.text = IsJapanese ? "ランキング" : "RANKING";
 
-        // 既存エントリーをクリア
-        foreach (Transform child in entryParent)
-            Destroy(child.gameObject);
-
-        // ランキングデータを表示
-        var rankings = rankingManager.Results;
-        float showCount = Math.Min(showRankings, rankings.Count);
-        for (int i = 0; i < showCount; i++)
+        if (createNewRankings)
         {
-            var entry = Instantiate(entryPrefab, entryParent);
-            var entryUI = entry.GetComponent<RankingEntryUI>();
-            entryUI.Setup(i + 1, rankings[i], isJapanese);
+            // 既存エントリーをクリア
+            foreach (RankingEntryUI child in createdUIQueue)
+            {
+                if (child != null)
+                    ManagerLocator.Instance.LocalObjectPool.Release(child.gameObject);
+            }
+            createdUIQueue.Clear();
+
+            // ランキングデータを表示
+            var rankings = rankingManager.Results;
+            int showCount = Math.Min(showRankings, rankings.Count);
+            for (int i = 0; i < showCount; i++)
+            {
+                var entry = ManagerLocator.Instance.LocalObjectPool.Get(entryPrefab);
+                entry.transform.SetParent(entryParent);
+                var entryUI = entry.GetComponent<RankingEntryUI>();
+                entryUI.Setup(i + 1, rankings[i], IsJapanese);
+                createdUIQueue.Enqueue(entryUI);
+            }
+        }
+        else
+        {
+            foreach (var ui in createdUIQueue)
+            {
+                ui.UpdateLanguage(language);
+            }
         }
 
         // 今回のスコアをハイライト表示
         var current = rankingManager.CurrentResult;
         if (current != null)
         {
-            currentResultText.text = isJapanese
+            currentResultText.text = IsJapanese
                 ? $"今回の協力度：{current.Cooperation:F1}%, 残り体力 {current.RemainHP}"
                 : $"Your Cooperation: {current.Cooperation:F1}%, RemainHP {current.RemainHP}";
         }
