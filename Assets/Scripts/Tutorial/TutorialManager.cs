@@ -9,7 +9,7 @@ public enum TutorialStep
     Step1, Step2, Step3, Step4, End
 }
 
-public class TutorialManager : NetworkBehaviour,ITutorialStart
+public class TutorialManager : NetworkBehaviour, ITutorialStart
 {
     [Header("Reference")]
     [SerializeField] GameStateManager stateManager;
@@ -29,7 +29,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     [SerializeField] ULongEvent markerPlaceServerEvent;
     private bool isTutorlalStartedServerOnly;
     private static readonly WaitForSeconds wait3100ms = new WaitForSeconds(3.1f);
-    
+
     public override void OnNetworkSpawn()
     {
         isTutorlalStartedServerOnly = false;
@@ -39,7 +39,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
             markerPlaceServerEvent.Register(OnMarkerPlacedServer);
         }
         CurrentStep.OnValueChanged += OnStepChanged;
-    }    
+    }
     public override void OnNetworkDespawn()
     {
         CurrentStep.OnValueChanged -= OnStepChanged;
@@ -135,7 +135,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     [Rpc(SendTo.ClientsAndHost)]
     void NotifyStepClearedClientRpc()
     {
-        OnTutorialStepCleared?.Invoke();
+        OnTutorialStepCleared.Invoke();
     }
 
     [OnInspectorButton("Next Step")]
@@ -180,7 +180,7 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
     private void OnAttackBlocked(AttackBlocked blocked)
     {
         if (!IsServer) return;
-        if(!isTutorlalStartedServerOnly) return;
+        if (!isTutorlalStartedServerOnly) return;
         currentStepLogic?.OnAttackBlocked(blocked.Collector.ClientId);
     }
 

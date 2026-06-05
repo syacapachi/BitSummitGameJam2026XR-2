@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class GameEffectAudioManager : MonoBehaviour
@@ -78,7 +77,7 @@ public class GameEffectAudioManager : MonoBehaviour
             yield break;
 
         //再生が終わるまで待つ
-        while(source != null && source.isPlaying)
+        while (source != null && source.isPlaying)
         {
             yield return null;
         }
@@ -117,7 +116,7 @@ public class GameEffectAudioManager : MonoBehaviour
             return;
         }
 
-        if(delay < 0.1f)
+        if (delay < 0.1f)
         {
             PlayFx(fxEffect, obj, particleSystems);
         }
@@ -126,7 +125,7 @@ public class GameEffectAudioManager : MonoBehaviour
             StartCoroutine(PlayFxAfterDelay(fxEffect, obj, particleSystems, delay));
         }
     }
-    private void PlayFx(in FxEffect fxEffect,GameObject obj, ParticleSystem[] particleSystems)
+    private void PlayFx(in FxEffect fxEffect, GameObject obj, ParticleSystem[] particleSystems)
     {
         bool hasLoopParticle = false;
         foreach (var ps in particleSystems)
@@ -160,10 +159,10 @@ public class GameEffectAudioManager : MonoBehaviour
         }
         // fxLifeTime <= 0 のときは手動停止まで残る
     }
-    private IEnumerator PlayFxAfterDelay(FxEffect fxEffect,GameObject fxPrefab, ParticleSystem[] particleSystems, float delay)
+    private IEnumerator PlayFxAfterDelay(FxEffect fxEffect, GameObject fxPrefab, ParticleSystem[] particleSystems, float delay)
     {
         yield return new WaitForSeconds(delay);
-        PlayFx(fxEffect,fxPrefab, particleSystems);
+        PlayFx(fxEffect, fxPrefab, particleSystems);
     }
 
     private IEnumerator ReleaseFxWhenFinished(GameObject obj, ParticleSystem[] particleSystems)

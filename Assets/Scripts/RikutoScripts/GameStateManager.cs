@@ -8,10 +8,15 @@ public class GameStateManager : NetworkBehaviour
     enum GameStartMode
     {
         Auto,
-        Button
+        SelectDifficulty
     }
-    [SerializeField] GameStartMode gameStartMode = GameStartMode.Button;
+    [Header("ゲームをどのように始めるか")]
+    [SerializeField] GameStartMode gameStartMode = GameStartMode.SelectDifficulty;
+    [Header("チュートリアルを有効にするか")]
     [SerializeField] bool useTutorial = true;
+    [Header("言語選択をUIで行うか")]
+    [SerializeField] bool useLanguableSelect = true;
+    [Header("世界観説明をするかどうか")]
     [SerializeField] bool showWorldView = false;
     [SerializeField] Language currentLanguage = Language.Japanese;
     [SerializeField]
@@ -20,6 +25,7 @@ public class GameStateManager : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+    public bool ShowWorldView => showWorldView;
     public GameState CurrentGameState
     {
         get => gameState.Value;
@@ -128,25 +134,14 @@ public class GameStateManager : NetworkBehaviour
                 break;
         }
     }
-    /*
     private void SetState(LocalState state)
     {
-        languageCanvas.SetActive(
-            state == LocalState.LanguageSelect);
-
-        connectCanvas.SetActive(
-            state == LocalState.NetworkConnect ||
-            state == LocalState.WorldView);
-
-        worldViewCanvas.enabled =
-            state == LocalState.WorldView;
-
-        UpdateTutorialUI();
-    }
-    */
-
-    private void SetState(LocalState state)
-    {
+        //言語選択をしない場合スキップ
+        if(state == LocalState.LanguageSelect && !useLanguableSelect)
+        {
+            OnLangageDefined();
+            return;
+        }
         languageCanvas.SetActive(
             state == LocalState.LanguageSelect);
 
@@ -281,25 +276,25 @@ public class GameStateManager : NetworkBehaviour
         CurrentGameState = GameState.Playing;
     }
 
-    [OnInspectorButton(drawOrder: 3)]
+    [OnInspectorButton(drawOrder: 0)]
     public void StartEasy()
     {
         RequestStartGameRpc(Difficulty.Easy);
     }
 
-    [OnInspectorButton(drawOrder: 2)]
+    [OnInspectorButton(drawOrder: 1)]
     public void StartNormal()
     {
         RequestStartGameRpc(Difficulty.Normal);
     }
 
-    [OnInspectorButton(drawOrder: 1)]
+    [OnInspectorButton(drawOrder: 2)]
     public void StartHard()
     {
         RequestStartGameRpc(Difficulty.Hard);
     }
 
-    [OnInspectorButton(drawOrder: 0)]
+    [OnInspectorButton(drawOrder: 3)]
     public void StartDebug()
     {
         RequestStartGameRpc(Difficulty.Debug);
@@ -320,9 +315,9 @@ public class GameStateManager : NetworkBehaviour
 
     private void PublishLanguageChanged()
     {
-        langageEvent?.Invoke(currentLanguage);
+        langageEvent.Invoke(currentLanguage);
     }
-    [OnInspectorButton(drawOrder: 6)]
+    [OnInspectorButton(drawOrder: 4,validateInvoke: true)]
     public void ChangeLanguage(Language language)
     {
         currentLanguage = language;
@@ -367,7 +362,7 @@ public class GameStateManager : NetworkBehaviour
 
         CurrentGameState = GameState.Initializing;
 
-        if (gameStartMode == GameStartMode.Button)
+        if (gameStartMode == GameStartMode.SelectDifficulty)
         {
             CurrentGameState = GameState.SelecrDifficulty;
         }
