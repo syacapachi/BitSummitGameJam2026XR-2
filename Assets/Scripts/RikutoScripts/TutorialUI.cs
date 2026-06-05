@@ -16,6 +16,7 @@ public class TutorialUI : MonoBehaviour
     [SerializeField] GameStateEvent gameStateEvent;
     [SerializeField] IntEvent OnTutorialStepChanged;
     [SerializeField] VoidEvent OnTutorialStepCleared;
+    [SerializeField] LanguageEvent LanguageEvent;
 
     private Coroutine currentRoutine;
     private bool isJapanese;
@@ -46,6 +47,8 @@ public class TutorialUI : MonoBehaviour
         OnTutorialStepCleared.Register(OnStepCleared);
         tutorialManager.CurrentStep.OnValueChanged += OnStepChangedNetwork;
         gameStateEvent.Register(OnStateChange);
+        LanguageEvent.Register(OnLanguageChanged);
+        OnLanguageChanged(LanguageEvent.CurrentValue);
     }
 
     void OnDisable()
@@ -54,6 +57,7 @@ public class TutorialUI : MonoBehaviour
         OnTutorialStepCleared.Unregister(OnStepCleared);
         tutorialManager.CurrentStep.OnValueChanged -= OnStepChangedNetwork;
         gameStateEvent.Unregister(OnStateChange);
+        LanguageEvent.Unregister(OnLanguageChanged);
     }
 
     void OnStepChangedNetwork(TutorialStep oldStep, TutorialStep newStep)
@@ -71,7 +75,11 @@ public class TutorialUI : MonoBehaviour
     {
         if (state == GameState.Tutorial)
         {
-            isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+            GameStateManager gameStateManager = ManagerLocator.Instance != null
+                ? ManagerLocator.Instance.GameStateManager
+                : null;
+            isJapanese = gameStateManager == null
+                || gameStateManager.CurrentLanguage == Language.Japanese;
             root.SetActive(false);
 
             // チュートリアル開始時に操作説明画像を表示
@@ -89,6 +97,11 @@ public class TutorialUI : MonoBehaviour
             if (operationGuideImage != null)
                 operationGuideImage.SetActive(false);
         }
+    }
+
+    private void OnLanguageChanged(Language newLanguage)
+    {
+        isJapanese = newLanguage == Language.Japanese;
     }
 
     // =========================

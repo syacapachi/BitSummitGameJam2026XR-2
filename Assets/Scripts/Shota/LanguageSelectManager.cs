@@ -6,16 +6,14 @@ public class LanguageSelectManager : MonoBehaviour
     // 日本語ボタンが押されたとき
     public void OnJapaneseButtonClicked()
     {
-        PlayerPrefs.SetString("Language", "JP");
-        PlayerPrefs.Save();
+        titleFlowManager.ChangeLanguage(Language.Japanese);
         titleFlowManager.OnLangageDefined();
     }
 
     // 英語ボタンが押されたとき
     public void OnEnglishButtonClicked()
     {
-        PlayerPrefs.SetString("Language", "EN");
-        PlayerPrefs.Save();
+        titleFlowManager.ChangeLanguage(Language.English);
         titleFlowManager.OnLangageDefined();
     }
 }

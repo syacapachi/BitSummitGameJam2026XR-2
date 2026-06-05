@@ -7,9 +7,25 @@ public class RankingEntryUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI rankText;
     [SerializeField] TextMeshProUGUI cooperationText;
     [SerializeField] TextMeshProUGUI remainHPText;
+    private int currentRank;
+    private float currentCooperation;
+    private int currentRemainHP;
+
+    public void UpdateLanguage(Language langage)
+    {
+        SetUpInternal(currentRank, currentCooperation,currentRemainHP,langage);
+    }
 
     public void Setup(int rank, ResultData data, bool isJapanese)
     {
+        SetUpInternal(rank, data.Cooperation, data.RemainHP, isJapanese ? Language.Japanese : Language.English);
+    }
+    private void SetUpInternal(int rank,float cooperation,int remainHP,Language langage)
+    {
+        currentRank = rank;
+        currentCooperation = cooperation;
+        currentRemainHP = remainHP;
+
         rankText.text = rank switch
         {
             1 => "1st",
@@ -18,12 +34,12 @@ public class RankingEntryUI : MonoBehaviour
             _ => $"{rank}th"
         };
 
-        cooperationText.text = isJapanese
-                                ? $"協力度 {data.Cooperation:F1}%"
-                                : $"Cooperation {data.Cooperation:F1}%";
-        remainHPText.text = isJapanese
-                                ? $"残り体力 {data.RemainHP:F1}"
-                                : $"RemainHP {data.RemainHP:F1}";
+        cooperationText.text = langage == Language.Japanese
+                                ? $"協力度 {cooperation:F1}%"
+                                : $"Cooperation {cooperation:F1}%";
+        remainHPText.text = langage == Language.Japanese
+                                ? $"残り体力 {remainHP:F1}"
+                                : $"RemainHP {remainHP:F1}";
 
         // 順位によってテキスト色を変える
         Color rankColor = rank switch

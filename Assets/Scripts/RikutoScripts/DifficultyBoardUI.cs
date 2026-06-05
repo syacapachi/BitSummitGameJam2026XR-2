@@ -14,12 +14,31 @@ public class DifficultyBoardUI : MonoBehaviour
     [Header("Localized")]
     [SerializeField] LocalizedText difficultyTexts;
 
+    [Header("Sunscribe Event")]
+    [SerializeField] LanguageEvent langageEvent;
+
+    private Language language = Language.Japanese;
+    private bool IsJapanese => language == Language.Japanese;
+
     /// <summary>
     /// オブジェクトが、SetActive(true)されると呼ばれる。
     /// Start()は、初回SetActive(true)だけなので注意。
     /// </summary>
     void OnEnable()
     {
+        langageEvent.Register(OnLangageChanged);
+        language = langageEvent.CurrentValue;
+        Refresh();
+    }
+    private void OnDisable()
+    {
+        langageEvent.Unregister(OnLangageChanged);
+    }
+
+    private void OnLangageChanged(Language langage)
+    {
+        if (language == langage) return;
+        language = langage;
         Refresh();
     }
     /// <summary>
@@ -27,11 +46,9 @@ public class DifficultyBoardUI : MonoBehaviour
     /// </summary>
     public void Refresh()
     {
-        bool isJapanese =
-            PlayerPrefs.GetString("Language", "JP") == "JP";
-        SetTitle(isJapanese);
-        SetBoard(isJapanese);
-        SetButton(isJapanese);
+        SetTitle(IsJapanese);
+        SetBoard(IsJapanese);
+        SetButton(IsJapanese);
     }
 
     void SetTitle(bool isJapanese)
