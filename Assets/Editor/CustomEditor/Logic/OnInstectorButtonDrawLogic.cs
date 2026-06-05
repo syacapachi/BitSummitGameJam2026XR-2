@@ -54,6 +54,20 @@
                 Attribute = attribute;
             }
         }
+        readonly struct CreateFailure
+        {
+            public readonly CreateFailureReason Reason;
+            public readonly string Message;
+
+            public CreateFailure(CreateFailureReason reason, Type type)
+            {
+                Reason = reason;
+                Message = 
+                    reason == CreateFailureReason.None
+                    ? string.Empty
+                    : $"{type.Name} は自動生成できません By {reason}";
+            }
+        }
         sealed class MethodDetails
         {
             /// <summary>
@@ -61,23 +75,44 @@
             /// </summary>
             public readonly ParameterInfo[] ParameterInfos;
             /// <summary>
+            /// パラメータのキャッシュ
+            /// </summary>
+            public readonly GUIContent ParameterLabel;
+            /// <summary>
+            /// 関数名前のキャッシュ
+            /// </summary>
+            public readonly GUIContent MethodLabel;
+            /// <summary>
+            /// 自動発火のラベル
+            /// </summary>
+            public readonly GUIContent AutoInvokeLabel;
+            /// <summary>
             /// 動的発火機能が有効かどうか
             /// </summary>
-            public bool valiedInvokeEnabled = false;
+            public bool validateInvokeEnabled = false;
             /// <summary>
             /// パラメータを描画するか
             /// </summary>
-            public bool parametersfoldouts = true;
+            public bool parametersFoldouts = true;
 
-            public MethodDetails(ParameterInfo[] parameterInfos)
+            public MethodDetails(ParameterInfo[] parameterInfos, string methodName, string methodLabel)
             {
                 this.ParameterInfos = parameterInfos;
+                //stringを保持 or GUIContentで保持
+                ParameterLabel = new GUIContent($"{methodName} Parameters", methodName);
+                MethodLabel = new GUIContent(methodLabel, methodName);
+                AutoInvokeLabel = new GUIContent($"Auto Invoke {methodName}", methodName);
             }
-
         }
+        /// <summary>
+        /// GUIContentのキャッシュ
+        /// </summary>
+        private static readonly GUIContent Size = new GUIContent("Size","Size");
+        private static readonly GUIContent Add = new GUIContent("Add", "Add");
         //全てのキャッシュを初期化して持っておく
         private static readonly MethodCache[] allMethods;
         private static readonly FieldCache[] allFields;
+        private static readonly List<MethodCache> tmpCacheList = new();
 
         //static初期化
         static OnInstectorButtonDrawLogic()
@@ -110,7 +145,7 @@
         //非UnityEngine.Onbjectのフィールド変数情報のキャッシュ
         private static readonly Dictionary<Type, FieldInfo[]> fieldCache = new();
         //自動生成できるかのキャッシュ
-        private static readonly Dictionary<Type, CreateFailureReason> createFailureReasonCache = new();
+        private static readonly Dictionary<Type, CreateFailure> createFailureReasonCache = new();
         // メソッドと引数のキャッシュ (パフォーマンス向上のため),(InstanceID,MethodInfoの組みなので)static
         private static readonly Dictionary<(int, MethodInfo), object[]> methodParameters = new();
         // パラメータのFoldout,関数の引数情報,自動発火機能のキャッシュ
@@ -135,23 +170,29 @@
             // キャッシュからメソッドを取得、なければリフレクションで取得してキャッシュに保存
             if (!methodCaches.TryGetValue(targetType, out var methods))
             {
-                //forで回すとGC少ない。
-                methods = allMethods
-                    .Where(cache =>
+                tmpCacheList.Clear();
+                foreach (var cache in allMethods)
+                {
+                    if(
                         //描画クラスが、関数を定義したクラスの子か
                         cache.Method.DeclaringType.IsAssignableFrom(targetType)
-                        &&
+                        && 
                         (
                             !cache.Attribute.HideWhenChildClass
                             //子クラスのみなら、一致してるか
                             || cache.Method.DeclaringType == targetType
                         )
                     )
-                    .OrderBy(cache => cache.Attribute.Order)
-                    .ToArray();
+                    {
+                        tmpCacheList.Add(cache);
+                    }
+                }
+                //ここもforで作るとGC少ないちなみに、ToArrayが一番Alloc。
+                methods = tmpCacheList.OrderBy(cache => cache.Attribute.Order).ToArray();
 
                 methodCaches[targetType] = methods;
             }
+
             InspectorButtonResult result = InspectorButtonResult.None;
             foreach (var method in methods)
             {
@@ -166,19 +207,22 @@
         private static InspectorButtonResult DrawButtonForMethod(object invokeTarget, MethodInfo method, OnInspectorButtonAttribute attr)
         {
             //ラベルがない場合は関数名で上書き
-            string buttonLabel = string.IsNullOrEmpty(attr.Label) ? method.Name : attr.Label;
+
             if (!methodDetails.TryGetValue(method, out var details))
             {
+                //関数名のラベルを初期化(毎回やるとGC)
+                string buttonLabel = string.IsNullOrEmpty(attr.Label) ? method.Name : attr.Label;
                 //引数を取得して引数情報を初期化
                 ParameterInfo[] param = method.GetParameters(); ;
-                details = new(param);
+                details = new(param, method.Name, buttonLabel);
                 methodDetails[method] = details;
             }
 
 
             if (details.ParameterInfos.Length == 0)
             {
-                if (GUILayout.Button(buttonLabel))
+                //stringだと、一時GUIContextが生成されるので、GUIContentをキャッシュ化
+                if (GUILayout.Button(details.MethodLabel))
                 {
                     return InvokeMethod(invokeTarget, method, null);
                 }
@@ -192,16 +236,16 @@
                 values = new object[details.ParameterInfos.Length];
                 methodParameters[(invokeTarget.GetHashCode(), method)] = values;
             }
-            
+
             //この描画中に値が更新されたか
             bool isValueChangedThisFrame = false;
             InspectorButtonResult result = InspectorButtonResult.None;
             using (new EditorGUILayout.VerticalScope("box"))
             {
-                details.parametersfoldouts = EditorGUILayout.Foldout(details.parametersfoldouts, $"{method.Name} Parameters", true);
-                
+                details.parametersFoldouts = EditorGUILayout.Foldout(details.parametersFoldouts, details.ParameterLabel, true);
 
-                if (details.parametersfoldouts)
+
+                if (details.parametersFoldouts)
                 {
                     EditorGUI.indentLevel++;
                     for (int i = 0; i < details.ParameterInfos.Length; i++)
@@ -226,8 +270,8 @@
                 {
                     result |= InspectorButtonResult.ParameterChanged;
                 }
-                
-                if (GUILayout.Button(buttonLabel))
+
+                if (GUILayout.Button(details.MethodLabel))
                 {
                     return InvokeMethod(invokeTarget, method, values);
                 }
@@ -235,12 +279,12 @@
                 //自動発火機能がある場合
                 if (attr.ValidateInvoke)
                 {
-                    details.valiedInvokeEnabled = EditorGUILayout.ToggleLeft(
-                        $"Auto Invoke{method.Name}",
-                        details.valiedInvokeEnabled
+                    details.validateInvokeEnabled = EditorGUILayout.ToggleLeft(
+                        details.AutoInvokeLabel,
+                        details.validateInvokeEnabled
                         );
 
-                    if (details.valiedInvokeEnabled && isValueChangedThisFrame)
+                    if (details.validateInvokeEnabled && isValueChangedThisFrame)
                     {
                         return InspectorButtonResult.ParameterChanged | InvokeMethod(invokeTarget, method, values);
                     }
@@ -447,7 +491,7 @@
             //展開されている場合は要素を描画
             EditorGUI.indentLevel++;
 
-            int size = EditorGUILayout.IntField("Size", list.Count);
+            int size = EditorGUILayout.IntField(Size, list.Count);
 
             while (list.Count < size)
                 list.Add(GetDefaultOrNull(elementType));
@@ -460,7 +504,7 @@
                 //要素を描画して更新
                 list[i] = DrawField(elementType, $"{name} Element[{i}]", list[i], $"{path}#Element[{i}]");
             }
-            if (GUILayout.Button("Add"))
+            if (GUILayout.Button(Add))
             {
                 list.Add(GetDefaultOrNull(elementType));
             }
@@ -497,7 +541,7 @@
             EditorGUI.indentLevel++;
 
 
-            int newSize = EditorGUILayout.IntField("Size", array.Length);
+            int newSize = EditorGUILayout.IntField(Size, array.Length);
 
             if (array == null || newSize != array.Length)
             {
@@ -511,7 +555,7 @@
                     DrawField(elementType, $"{name} Element[{i}]", array.GetValue(i), $"{path}#ArrayElement[{i}]"),
                     i);
             }
-            if (GUILayout.Button("Add"))
+            if (GUILayout.Button(Add))
             {
                 array = ArrayResize(array, array.Length + 1, elementType);
             }
@@ -575,7 +619,7 @@
                 EditorGUILayout.EndVertical();
             }
 
-            if (GUILayout.Button("Add"))
+            if (GUILayout.Button(Add))
             {
                 var key = GetDefaultOrNull(keyType);
                 if (key == null)
@@ -593,11 +637,11 @@
 
         static object DrawObject(Type type, string name, object value, string path)
         {
-            CreateFailureReason result = CanCreate(type);
+            CreateFailure result = CanCreate(type);
 
-            if(result != CreateFailureReason.None)
+            if(result.Reason != CreateFailureReason.None)
             {
-                EditorGUILayout.HelpBox($"{type.Name} は自動生成できません By {result}", MessageType.Error);
+                EditorGUILayout.HelpBox(result.Message, MessageType.Error);
                 return value;
             }
 
@@ -652,17 +696,19 @@
 
             return value;
         }
-        static CreateFailureReason CanCreate(Type type)
+        static CreateFailure CanCreate(Type type)
         {
-            if(createFailureReasonCache.TryGetValue(type, out var result))
+            if (createFailureReasonCache.TryGetValue(type, out var cache))
             {
-                return result;
+                return cache;
             }
+            CreateFailure result;
             //イミュータブル系は、デフォルト値を持つのでOK
             if (type.IsValueType)
             {
-                createFailureReasonCache[type] = CreateFailureReason.None;
-                return CreateFailureReason.None;
+                result = new CreateFailure(CreateFailureReason.None, type);
+                createFailureReasonCache[type] = result;
+                return result;
             }
 
             var publicCtor = type.GetConstructor(Type.EmptyTypes);
@@ -670,8 +716,9 @@
             //デフォルトコンストラクタ&publicでOK
             if (publicCtor != null)
             {
-                createFailureReasonCache[type] = CreateFailureReason.None;
-                return CreateFailureReason.None;
+                result = new CreateFailure(CreateFailureReason.None, type);
+                createFailureReasonCache[type] = result;
+                return result;
             }
 
             var anyCtor =
@@ -685,12 +732,14 @@
 
             if (anyCtor != null)
             {
-                createFailureReasonCache[type] = CreateFailureReason.PrivateDefaultConstructorOnly;
-                return CreateFailureReason.PrivateDefaultConstructorOnly;
+                result = new CreateFailure(CreateFailureReason.PrivateDefaultConstructorOnly, type);
+                createFailureReasonCache[type] = result;
+                return result;
             }
 
-            createFailureReasonCache[type] = CreateFailureReason.NoDefaultConstructor;
-            return CreateFailureReason.NoDefaultConstructor;
+            result = new CreateFailure(CreateFailureReason.NoDefaultConstructor, type);
+            createFailureReasonCache[type] = result;
+            return result;
         }
         /// <summary>
         /// 抽象クラスやインターフェースは直接描画できないので、実装/継承する具体的なクラスを選択して描画する。選択されていない場合は、選択ボタンを表示する。

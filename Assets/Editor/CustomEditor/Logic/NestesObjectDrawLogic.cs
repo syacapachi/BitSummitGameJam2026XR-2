@@ -50,7 +50,7 @@
 
             //最新情報に更新
             so.Update();
-            //[Serializable]の先頭(Unity6以降はDisposeがある、以前はない)
+            //[Serializable]の先頭(Unity6のどこか以降はDisposeがある、以前はない)
             var prop = so.GetIterator();
 
             bool enterChildren = true;
@@ -87,7 +87,7 @@
             if (refObj is not ScriptableObject nestedSO)
             {
                 // ScriptableObjectじゃない場合は再帰
-                DrawNestedScriptableObjectsRecrusiveInternal(refObj, depth + 1, visited, $"{refObj.name} ");
+                DrawNestedScriptableObjectsRecrusiveInternal(refObj, depth + 1, visited, refObj.name);
                 return;
             }
             //非永続オブジェクト(一時オブジェクト)を拒否

@@ -22,12 +22,6 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] Button backButton;
     [SerializeField] WorldViewData worldViewData;
 
-    /*
-    [Header("Canvas管理")]
-    [SerializeField] private BoolEvent connectCanvasEvent;
-    [SerializeField] private Canvas boardCanvas;
-    */
-
     [Header("ページ設定")]
     [SerializeField] private int totalBoards = 5;
 
@@ -44,6 +38,7 @@ public class WorldViewManager : NetworkBehaviour
     /// このオブジェクトは持てるので、位置を戻すために使う。
     /// </summary>
     Vector3 initialPos;
+    private int maxShowBoards;
 
     /// <summary>
     /// 再接続時に初期化
@@ -77,6 +72,10 @@ public class WorldViewManager : NetworkBehaviour
     {
         if (localState == LocalState.WorldView)
         {
+            maxShowBoards =
+                gameStateManager.ShowWorldView
+                ? totalBoards 
+                : 1;
             //初期化
             this.transform.SetPositionAndRotation(initialPos, Quaternion.identity);
             ShowPage(pageIndex.Value, IsJapanese);
@@ -94,7 +93,7 @@ public class WorldViewManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     void RequestNextPageRpc()
     {
-        if (pageIndex.Value >= totalBoards - 1)
+        if (pageIndex.Value >= maxShowBoards - 1)
         {
             gameStateManager.OnGameInitializeServerOnly();
             pageIndex.Value = 0;
@@ -128,7 +127,7 @@ public class WorldViewManager : NetworkBehaviour
                 : worldViewData.englishTitles[index];
 
         if (buttonText != null)
-            buttonText.text = index >= totalBoards - 1
+            buttonText.text = index >= maxShowBoards - 1
                 ? closeText.GetText(isJapanese)
                 : nextButtonText.GetText(isJapanese);
 
