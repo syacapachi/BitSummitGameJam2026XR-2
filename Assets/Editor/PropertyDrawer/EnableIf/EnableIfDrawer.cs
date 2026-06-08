@@ -24,19 +24,19 @@ namespace Syacapachi.Editor
                 attributeId = attribute.GetHashCode();
             }
 
-            public bool Equals(EvaluationCacheKey other)
+            public readonly bool Equals(EvaluationCacheKey other)
             {
                 return targetId == other.targetId
                     && attributeId == other.attributeId
                     && propertyPath == other.propertyPath;
             }
 
-            public override bool Equals(object obj)
+            public readonly override bool Equals(object obj)
             {
                 return obj is EvaluationCacheKey other && Equals(other);
             }
 
-            public override int GetHashCode()
+            public readonly override int GetHashCode()
             {
                 return HashCode.Combine(targetId, attributeId, propertyPath);
             }

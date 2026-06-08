@@ -14,10 +14,25 @@
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class EnableIfEnumAttribute : PropertyAttribute
     {
-        public readonly string enumFiledName; //条件を判定するフィールド名
-        public readonly int[] enumValues;   //有効か対象のenumの値
+        /// <summary>
+        /// 条件を判定するフィールド名
+        /// </summary>
+        public readonly string enumFiledName;
+        /// <summary>
+        /// 有効化対象のenumの値
+        /// </summary>
+        public readonly int[] enumValues;
+        /// <summary>
+        /// 偽の場合隠すかどうか
+        /// </summary>
         public readonly bool hideWhenFalse;
+        /// <summary>
+        /// Maskで判定する
+        /// </summary>
         public readonly bool useFlagMask;
+        /// <summary>
+        /// 先頭に!がある場合否定とする
+        /// </summary>
         public readonly bool negate;
 
         // PropertyAttribute(bool applyToCollection)

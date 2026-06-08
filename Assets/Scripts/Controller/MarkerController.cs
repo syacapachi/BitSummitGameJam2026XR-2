@@ -45,7 +45,7 @@ public class MarkerController : NetworkBehaviour
 
     private void Awake()
     {
-        wait = new WaitForSeconds(markerBackTime);
+        wait = WaitForSecondsCache.Get(markerBackTime);
     }
     public override void OnNetworkSpawn()
     {

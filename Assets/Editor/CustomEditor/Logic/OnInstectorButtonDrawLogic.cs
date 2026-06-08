@@ -225,7 +225,6 @@
                 if (method.Attribute.ShowOnlyInPlayMode && !Application.isPlaying)
                     continue;
 
-                result |= InspectorButtonResult.DrawedButton;
                 result |= DrawButtonForMethod(obj, method.Method, method.Attribute);
             }
             return result;

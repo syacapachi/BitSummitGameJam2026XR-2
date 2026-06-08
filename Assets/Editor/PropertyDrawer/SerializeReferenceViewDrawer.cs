@@ -39,7 +39,7 @@ namespace Syacapachi.Editor
                 if (GUI.Button(position, selectButtonLabel))
                 {
                     //Debug.Log($"Search {fieldInfo.FieldType}");
-                    ShowTypeMenu(property, attr.BaseType);
+                    ShowTypeMenu(property, attr, fieldInfo.FieldType);
                 }
             }
             else
@@ -78,12 +78,15 @@ namespace Syacapachi.Editor
 
             return EditorGUI.GetPropertyHeight(property, label, true) + EditorGUIUtility.singleLineHeight;
         }
-
-        private void ShowTypeMenu(SerializedProperty property, Type baseType)
+        /// <summary>
+        /// 派生クラスを決定するGenericMenuを作成する。
+        /// </summary>
+        /// <param name="property"> 描画するSerializedProperty </param>
+        /// <param name="attr">FieldのSerializeReferenceViewAttribute </param>
+        /// <param name="fieldType">　filedInfo.FieldType </param>
+        private static void ShowTypeMenu(SerializedProperty property, SerializeReferenceViewAttribute attr, Type fieldType)
         {
             GenericMenu menu = new GenericMenu();
-
-            Type fieldType = fieldInfo.FieldType;
             //Array
             if (fieldType.IsArray)
             {
@@ -94,7 +97,7 @@ namespace Syacapachi.Editor
             {
                 fieldType = fieldType.GetGenericArguments()[0];
             }
-            Type targetBase = baseType ?? fieldType;
+            Type targetBase = attr.BaseType ?? fieldType;
 
             // ジェネリックなども含め全型,基底クラスを継承するクラスを探索
             //var types = AppDomain.CurrentDomain.GetAssemblies()
@@ -108,7 +111,7 @@ namespace Syacapachi.Editor
             var types = TypeCache.GetTypesDerivedFrom(targetBase);
 
             //自身
-            if(!targetBase.IsAbstract && !targetBase.IsInterface)
+            if (!targetBase.IsAbstract && !targetBase.IsInterface)
             {
                 var cache = GetOrCreateCache(targetBase);
                 menu.AddItem(cache.GUIContent, false, () =>

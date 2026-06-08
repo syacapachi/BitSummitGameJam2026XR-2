@@ -4,7 +4,6 @@ namespace Syacapachi.Editor
     using Syacapachi.Attribute;
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Runtime.CompilerServices;
     using UnityEditor;
     using UnityEditorInternal;
@@ -17,50 +16,20 @@ namespace Syacapachi.Editor
         // Flags enum キャッシュ
         // ========================================
 
-        static readonly HashSet<Type> flagsEnumTypes = new();
+        static readonly Dictionary<Type, bool> isFlagsCache = new();
 
-        // 静的コンストラクタでAppDomain全体からFlags属性が付与されたenumを収集してキャッシュします。
-        //TypeCache.GetTypesWithAttribute<FlagsAttribute>()を使用する方法もありますが、UnityのTypeCacheはCLR標準属性で、Unityの TypeCache が高速化対象として完全に最適化していないケースもあるため、独自に収集しています。
-        static SingleFlagOnlyDrawer()
-        {
-            // AppDomain全体からenumを収集
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                Type[] types;
-
-                try
-                {
-                    types = assembly.GetTypes();
-                }
-                catch
-                {
-                    continue;
-                }
-
-                foreach (Type type in types)
-                {
-                    if (!type.IsEnum)
-                        continue;
-
-                    if (type.IsDefined(typeof(FlagsAttribute), false))
-                    {
-                        flagsEnumTypes.Add(type);
-                    }
-                }
-            }
-        }
         private static readonly GUIContent warningLabel = new GUIContent($"Use with Enum or LayerMask fields only.");
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var attr = (SingleFlagOnlyAttribute)attribute;
             EditorGUI.BeginProperty(position, label, property);
-            
+
             switch (property.propertyType)
             {
                 // Enum型の場合、単一選択のUIを表示するためにカスタム描画を行います。
                 case SerializedPropertyType.Enum:
                     //EditorGUI.BeginChangeCheck();// 変更の開始を通知
-                    DrawEnumWithArrayOrList(position, property, label, attr);
+                    DrawEnumWithArrayOrList(position, fieldInfo.FieldType, property, label, attr);
                     break;
                 case SerializedPropertyType.LayerMask:
                     DrawLayerMask(position, property, label, attr);
@@ -86,10 +55,10 @@ namespace Syacapachi.Editor
         // =========================
         // Enum
         // =========================
-        void DrawEnum(in Rect position, SerializedProperty property, GUIContent label, SingleFlagOnlyAttribute attr)
+        static void DrawEnum(in Rect position, Type type, SerializedProperty property, GUIContent label, SingleFlagOnlyAttribute attr)
         {
             int rawValue = property.intValue;
-            Enum enumValue = (Enum)Enum.ToObject(fieldInfo.FieldType, rawValue);
+            Enum enumValue = (Enum)Enum.ToObject(type, rawValue);
 
             // EnumPopupで表示(単一表示)
             Enum newValue = EditorGUI.EnumPopup(position, label, enumValue);
@@ -98,9 +67,9 @@ namespace Syacapachi.Editor
             int intValue = Convert.ToInt32(newValue);
 
             // 単一化
-            if (!IsSingleFlag(intValue,attr) && flagsEnumTypes.Contains(fieldInfo.FieldType))
+            if (!IsSingleFlag(intValue, attr) && IsFlagsEnum(type))
             {
-                intValue = FixEnum(intValue, attr);
+                intValue = FixEnum(type, intValue, attr);
                 GUI.color = Color.red;
                 // ここで警告を表示することもできますが、頻繁に表示されると煩わしい可能性があるため、今回はコメントアウトしています。
                 //EditorUtility.DisplayDialog("Invalid Selection", "Only one flag can be selected at a time.", "OK");
@@ -115,7 +84,7 @@ namespace Syacapachi.Editor
         /// <param name="property"></param>
         /// <param name="label"></param>
         /// <param name="attr"></param>
-        private void DrawEnumWithArrayOrList(in Rect position, SerializedProperty property, GUIContent label, SingleFlagOnlyAttribute attr)
+        private static void DrawEnumWithArrayOrList(in Rect position, Type type, SerializedProperty property, GUIContent label, SingleFlagOnlyAttribute attr)
         {
             // enum情報取得
             string[] displayNames = property.enumDisplayNames;
@@ -139,7 +108,8 @@ namespace Syacapachi.Editor
             {
                 return;
             }
-            Type enumType = GetEnumType();
+
+            Type enumType = GetEnumType(type);
             // enum実値取得
             int intValue = Convert.ToInt32(
                 //index をenumに変換
@@ -148,36 +118,47 @@ namespace Syacapachi.Editor
                     property.enumNames[newIndex]));
 
             // Flags enum の場合のみ単一化チェック
-            if (flagsEnumTypes.Contains(enumType))
+            if (!IsSingleFlag(intValue, attr) && IsFlagsEnum(enumType))
             {
-                if (!IsSingleFlag(intValue, attr))
+                intValue = FixEnum(enumType, intValue, attr);
+
+                GUI.color = Color.red;
+
+                // Fix後の値に対応するindexへ戻す
+                string fixedName = Enum.GetName(enumType, intValue);
+
+                if (!string.IsNullOrEmpty(fixedName))
                 {
-                    intValue = FixEnum(intValue, attr);
+                    int fixedIndex = Array.IndexOf(
+                        property.enumNames,
+                        fixedName);
 
-                    GUI.color = Color.red;
-
-                    // Fix後の値に対応するindexへ戻す
-                    string fixedName = Enum.GetName(GetEnumType(), intValue);
-
-                    if (!string.IsNullOrEmpty(fixedName))
+                    if (fixedIndex >= 0)
                     {
-                        int fixedIndex = Array.IndexOf(
-                            property.enumNames,
-                            fixedName);
-
-                        if (fixedIndex >= 0)
-                        {
-                            newIndex = fixedIndex;
-                        }
+                        newIndex = fixedIndex;
                     }
                 }
             }
 
             property.enumValueIndex = newIndex;
         }
-        private Type GetEnumType()
+        static bool IsFlagsEnum(Type type)
         {
-            Type type = fieldInfo.FieldType;
+            if (isFlagsCache.TryGetValue(type, out bool result))
+                return result;
+
+            result =
+                type.IsEnum &&
+                type.IsDefined(typeof(FlagsAttribute), false);
+
+            isFlagsCache[type] = result;
+
+            return result;
+        }
+
+        private static Type GetEnumType(Type type)
+        {
+            if (type.IsEnum) return type;
 
             if (type.IsArray)
             {
@@ -229,10 +210,10 @@ namespace Syacapachi.Editor
             return (attr.allowNothing || value != 0) && (value & (value - 1)) == 0;
         }
 
-        int FixEnum(int value, SingleFlagOnlyAttribute attr)
+        static int FixEnum(Type enumType, int value, SingleFlagOnlyAttribute attr)
         {
             if (value == 0 && !attr.allowNothing)
-                return GetFirstEnumValue();
+                return GetFirstEnumValue(enumType);
 
             return GetFirstBit(value);
         }
@@ -243,9 +224,9 @@ namespace Syacapachi.Editor
             return value & -value; // 最下位ビットだけ残す
         }
 
-        int GetFirstEnumValue()
+        static int GetFirstEnumValue(Type enumType)
         {
-            foreach (int v in Enum.GetValues(fieldInfo.FieldType))
+            foreach (int v in Enum.GetValues(enumType))
             {
                 if (v != 0) return v;
             }
@@ -279,14 +260,15 @@ namespace Syacapachi.Editor
         {
             // レイヤー名配列取得
             string[] layers = InternalEditorUtility.layers;
-            foreach (string layerName in layers) 
+            foreach (string layerName in layers)
             {
                 int value = LayerMask.NameToLayer(layerName);
                 if (value != -1)
                 {
                     return 1 << value;
                 }
-            };
+            }
+            ;
             return 0;//Defaultにする
         }
         /// <summary>

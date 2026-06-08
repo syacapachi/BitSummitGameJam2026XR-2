@@ -122,7 +122,7 @@ public class NGun : GunController
             laserLine.SetPosition(1, FirePoint.position + forward * WeaponSettings.laserDistance);
         }
     }
-    protected override void OnShootServer()
+    protected  override void OnShootServer()
     {
         base.OnShootServer();
         if (playerStats != null)

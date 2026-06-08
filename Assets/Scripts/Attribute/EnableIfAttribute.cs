@@ -21,6 +21,9 @@
         /// 名前の先頭に!をつけた場合否定になる
         /// </summary>
         public readonly string[] conditionFieldNames;
+        /// <summary>
+        /// 名前の先頭に!があったやつ
+        /// </summary>
         public readonly bool[] conditionNegates;
         public readonly bool hideWhenFalse;
         public readonly ConditionLogic logic;

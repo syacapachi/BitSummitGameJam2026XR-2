@@ -39,7 +39,7 @@ public class RankingUI : MonoBehaviour
     {
         language = langageEvent.CurrentValue;
         rankingCanvas.enabled = false;
-        waitForShow = new WaitForSeconds(showDelay);
+        waitForShow = WaitForSecondsCache.Get(showDelay);
     }
 
     void OnEnable()

@@ -55,7 +55,7 @@ namespace Syacapachi.Manager
                 return;
             }
             wrapper.Rankings.Add(data);
-            SortJson(wrapper);
+            SortJson(wrapper,rankingMaxCount);
             ExportJson(wrapper, difficultyRankingDictionary[CurrentResult.Difficulty]);
 
             //ランキングデータ更新
@@ -83,27 +83,27 @@ namespace Syacapachi.Manager
             //    daylyRankingList = dailyWrapper;
             //}
         }
-        private void ExportJson(RankingListWrapper wrapper, string filePath)
+        private static void ExportJson(RankingListWrapper wrapper, string filePath)
         {
             string jsonText = JsonUtility.ToJson(wrapper, true);
             //ファイルがない場合は作成。そして書き込む。
             File.WriteAllText(filePath, jsonText);
 #if UNITY_EDITOR
-            Debug.Log($"ExportedJson:\n{jsonText}at{filePath}", gameObject);
+            Debug.Log($"ExportedJson:\n{jsonText}at{filePath}");
 #endif
         }
-        private RankingListWrapper LoadJson(string filepath)
+        private static RankingListWrapper LoadJson(string filepath)
         {
             if (!System.IO.File.Exists(filepath))
             {
-                Debug.LogError("[Ranking Manager]No ranking file found", gameObject);
+                Debug.LogError("[Ranking Manager]No ranking file found");
                 return new RankingListWrapper();
             }
 
             string json = File.ReadAllText(filepath);
             return JsonUtility.FromJson<RankingListWrapper>(json);
         }
-        private void SortJson(RankingListWrapper wrapper)
+        private static void SortJson(RankingListWrapper wrapper, int rankingMaxCount)
         {
             // スコアの降順にソート（高いほど上位）
             wrapper.Rankings = wrapper.Rankings

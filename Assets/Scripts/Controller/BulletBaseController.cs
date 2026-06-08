@@ -58,7 +58,7 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
     }
     private IEnumerator DespawnCorutine(float time)
     {
-        yield return new WaitForSeconds(time);
+        yield return WaitForSecondsCache.Get(time);
         if(NetworkObject.IsSpawned)
             NetworkObject.Despawn(true);
     }

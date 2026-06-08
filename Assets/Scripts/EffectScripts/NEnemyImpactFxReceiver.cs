@@ -44,7 +44,7 @@ public class NEnemyImpactFxReceiver : NetworkBehaviour
 
     private IEnumerator EnableHitAfterOneFixedUpdate()
     {
-        yield return new WaitForFixedUpdate();
+        yield return WaitForSecondsCache.FixedUpdate;
         canReceiveHit = true;
     }
 

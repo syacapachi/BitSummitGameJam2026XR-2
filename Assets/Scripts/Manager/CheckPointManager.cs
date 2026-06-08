@@ -63,7 +63,7 @@ public class CheckPointManager : MonoBehaviour
     [SerializeField] TagToTransfrom[] tagToTransfroms;
     IndexToTransform[] indexToTransformArr;
     bool[] usePointArr;
-    List<IndexToTransform> cacheList = new();
+    readonly List<IndexToTransform> cacheList = new();
     public IndexToTransform[] SpawnPoints => indexToTransformArr;
     FlagTable<IndexToTransform> flagTable;
     private void Awake()
@@ -126,8 +126,7 @@ public class CheckPointManager : MonoBehaviour
     static int GetBitIndex(int value)
     {
         if (value == 0) 
-            throw new ArgumentException(
-            "Value must contain exactly one bit.");
+            return -1;
         int bit = 0;
 
         while ((value & 1) == 0)

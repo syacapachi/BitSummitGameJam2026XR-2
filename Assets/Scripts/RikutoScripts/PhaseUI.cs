@@ -24,7 +24,6 @@ public class PhaseUI : MonoBehaviour
     //[SerializeField] LocalizeSimpleText firstPhaseText;
     //[SerializeField] LocalizeSimpleText lastPhaseText;
     //[SerializeField] LocalizeSimpleText startText;
-
     private Coroutine currentRoutine;
     private int currentPhaseIndex;
     private bool isCountdownSubscribed = false;
@@ -272,7 +271,7 @@ public class PhaseUI : MonoBehaviour
         {
             phaseText.text = isJapanese ? "任務開始！" : "Mission Start!";
             phaseText.gameObject.SetActive(true);
-            yield return new WaitForSeconds(1f);
+            yield return WaitForSecondsCache.Get(1f);
 
             // phaseText.text = isJapanese ? "戦闘開始" : "Combat Phase";
             // yield return new WaitForSeconds(1f);
@@ -282,14 +281,14 @@ public class PhaseUI : MonoBehaviour
         {
             phaseText.text = isJapanese ? "ボス戦突入！" : "Boss Battle!";
             phaseText.gameObject.SetActive(true);
-            yield return new WaitForSeconds(1f);
+            yield return WaitForSecondsCache.Get(1f);
         }
         // 中間フェーズがある場合はフェーズ名をそのまま表示
         else
         {
             phaseText.text = text;
             phaseText.gameObject.SetActive(true);
-            yield return new WaitForSeconds(1f);
+            yield return WaitForSecondsCache.Get(1f);
         }
 
         phaseText.fontSize = 150;
@@ -297,7 +296,7 @@ public class PhaseUI : MonoBehaviour
 
         yield return PopAnimation();
 
-        yield return new WaitForSeconds(1.5f);
+        yield return WaitForSecondsCache.Get(1.5f);
 
         ChangeState(UIState.Idle);
     }
@@ -320,7 +319,7 @@ public class PhaseUI : MonoBehaviour
         phaseText.text = $"Phase {currentPhaseIndex + 1} FINISH!\nScore: {score}";
         phaseText.gameObject.SetActive(true);
 
-        yield return new WaitForSeconds(3f);
+        yield return WaitForSecondsCache.Get(3f);
 
         ChangeState(UIState.Idle);
     }
@@ -340,7 +339,7 @@ public class PhaseUI : MonoBehaviour
 
         yield return PopAnimation();
 
-        yield return new WaitForSeconds(2f);
+        yield return WaitForSecondsCache.Get(2f);
 
         ChangeState(UIState.Idle);
     }
@@ -356,15 +355,15 @@ public class PhaseUI : MonoBehaviour
         phaseText.gameObject.SetActive(true);
 
         yield return PopAnimation();
-        yield return new WaitForSeconds(1f);
+        yield return WaitForSecondsCache.Get(1f);
 
         phaseText.text = isJapanese ? "クリアボーナス" : "CLEAR BONUS";
         yield return PopAnimation();
-        yield return new WaitForSeconds(1f);
+        yield return WaitForSecondsCache.Get(1f);
 
         phaseText.text = isJapanese ? $"スコア: +{bonus}" : $"SCORE: +{bonus}";
         yield return PopAnimation();
-        yield return new WaitForSeconds(1f);
+        yield return WaitForSecondsCache.Get(1f);
 
         ChangeState(UIState.Idle);
     }
@@ -429,14 +428,14 @@ public class PhaseUI : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             phaseText.enabled = false;
-            yield return new WaitForSeconds(0.4f);
+            yield return WaitForSecondsCache.Get(0.4f);
 
             phaseText.enabled = true;
-            yield return new WaitForSeconds(0.4f);
+            yield return WaitForSecondsCache.Get(0.4f);
         }
 
         phaseText.enabled = true;
-        yield return new WaitForSeconds(0.5f);
+        yield return WaitForSecondsCache.Get(0.5f);
 
         foreach (var scroller in warningScrollers)
         {

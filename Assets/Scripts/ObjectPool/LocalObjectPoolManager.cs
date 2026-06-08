@@ -102,7 +102,7 @@ public class LocalObjectPoolManager : MonoBehaviour
     }
     private IEnumerator ReleaseAfterDelay(GameObject prefab, float delay)
     {
-        yield return new WaitForSeconds(delay);
+        yield return WaitForSecondsCache.Get(delay);
         Release(prefab);
     }
 }

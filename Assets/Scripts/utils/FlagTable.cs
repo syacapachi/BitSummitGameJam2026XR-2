@@ -45,7 +45,7 @@ public sealed class FlagTable<T>
         {
             return empty;
         }
-        List<T> result = new List<T>();
+        List<T> result = new List<T>(table.Length);
         for (int i = 0; i < table.Length; i++)
         {
             var arr = table[i];

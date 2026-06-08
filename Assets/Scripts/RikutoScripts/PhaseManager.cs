@@ -106,16 +106,16 @@ public class PhaseManager : NetworkBehaviour
 
         if (phaseIndex == Phases.Length - 1)
         {
-            yield return new WaitForSeconds(1f);
+            yield return WaitForSecondsCache.Get(1f);
             WarningStateRpc(true);
 
-            yield return new WaitForSeconds(5f);
+            yield return WaitForSecondsCache.Get(5f);
 
             WarningStateRpc(false);
         }
 
         int count = uiSettings.CountdownStart;
-        var waitBase = new WaitForSeconds(uiSettings.CountDownBaseDuration);
+        var waitBase = WaitForSecondsCache.Get(uiSettings.CountDownBaseDuration);
         while (count > 0)
         {
             CountdownValue.Value = count;
@@ -169,7 +169,7 @@ public class PhaseManager : NetworkBehaviour
     IEnumerator AllDeadSequence()
     {
         IsCountingDown = true;
-        yield return new WaitForSeconds(3.1f);
+        yield return WaitForSecondsCache.Get(3.1f);
         IsCountingDown = false;
     }
 
@@ -178,7 +178,7 @@ public class PhaseManager : NetworkBehaviour
         IsCountingDown = true;
 
         int count = uiSettings.CountdownStart;
-        var waitlast = new WaitForSeconds(uiSettings.CountdownLastDuration);
+        var waitlast = WaitForSecondsCache.Get(uiSettings.CountdownLastDuration);
         while (count > 0)
         {
             CountdownValue.Value = count;
