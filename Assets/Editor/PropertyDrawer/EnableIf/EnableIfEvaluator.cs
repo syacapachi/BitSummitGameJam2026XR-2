@@ -2,6 +2,7 @@
 {
     using Syacapachi.Attribute;
     using System;
+    using System.Runtime.CompilerServices;
     using UnityEditor;
     using UnityEngine;
     /// <summary>
@@ -36,20 +37,16 @@
                     Debug.LogWarning($"[EnableIfDrawer] Empty condition field name in EnableIfAttribute on {property.serializedObject.targetObject.GetType().Name}.{property.name}", targetObject as UnityEngine.Object);
                     return true;
                 }
-                //!で始まる場合は条件を反転させる（例: "!isEnabled" は isEnabled が false のときに有効）
-                bool negate = name.Length > 0 && name[0] == '!';
-                string fieldName = negate ? name.Substring(1) : name;
-
                 //Unity固有の検索機能を使う方法（ただしプロパティのネストや配列要素のアクセスには対応が難しい)(後遅い)
                 //string path = property.propertyPath.Replace(property.name, attribute.name);
                 //SerializedProperty prop = property.serializedObject.FindProperty(path);
 
                 //動的アクセス関数のキャッシュにより高速化
-                Func<object, object> getter = EditorReflectionCache.GetOrCreateGetter(containingObject.GetType(), fieldName);
+                Func<object, object> getter = EditorReflectionCache.GetOrCreateGetter(containingObject.GetType(), name);
 
                 if (getter == null)
                 {
-                    Debug.LogWarning($"[EnableIfDrawer] Condition field '{fieldName}' not found in {containingObject.GetType().Name}", targetObject as UnityEngine.Object);
+                    Debug.LogWarning($"[EnableIfDrawer] Condition field '{name}' not found in {containingObject.GetType().Name}", targetObject as UnityEngine.Object);
                     return true;
                 }
                 // 条件フィールドの値を取得
@@ -61,7 +58,7 @@
                     _ => fieldValue != null
                 };
 
-                result = negate ? !result : result;
+                result = attribute.conditionNegates[i] ? !result : result;
                 switch (attribute.logic)
                 {
                     case ConditionLogic.AND:
@@ -112,21 +109,18 @@
                 Debug.LogWarning($"[EnableIfDrawer] Empty condition field name in EnableIfAttribute on {property.serializedObject.targetObject.GetType().Name}.{property.name}", targetObject as UnityEngine.Object);
                 return true;
             }
-            //!で始まる場合は条件を反転させる（例: "!isEnabled" は isEnabled が false のときに有効）
-            bool negate = name.Length > 0 && name[0] == '!';
-            string fieldName = negate ? name.Substring(1) : name;
             //Unity固有の検索機能を使う方法（ただしプロパティのネストや配列要素のアクセスには対応が難しい)(後遅い)
             //string path = property.propertyPath.Replace(property.name, attribute.name);
             //SerializedProperty prop = property.serializedObject.FindProperty(path);
             //動的アクセス関数のキャッシュにより高速化
-            Func<object, object> getter = EditorReflectionCache.GetOrCreateGetter(containingObject.GetType(), fieldName);
+            Func<object, object> getter = EditorReflectionCache.GetOrCreateGetter(containingObject.GetType(), name);
             if (getter == null)
             {
-                Debug.LogWarning($"[EnableIfDrawer] Condition field '{fieldName}' not found in {containingObject.GetType().Name}", targetObject as UnityEngine.Object);
+                Debug.LogWarning($"[EnableIfDrawer] Condition field '{name}' not found in {containingObject.GetType().Name}", targetObject as UnityEngine.Object);
                 return true;
 
             }
-            // 条件フィールドの値を取得
+            // 条件フィールドの値を取得(どちらかと言えば参照)
             object fieldValue = getter(containingObject);
 
             foreach (int enumValue in attribute.enumValues)
@@ -136,14 +130,32 @@
                 {
                     Enum e => attribute.useFlagMask 
                         ? ((int)Convert.ToInt64(e) & enumValue) != 0
-                        : Convert.ToInt64(e) == enumValue,
+                        : (int)Convert.ToInt64(e) == enumValue,
                     _ => false
                 };
-                result = negate ? !result : result;
+                result = attribute.negate ? !result : result;
                 if (result)
                     return true; // OR 条件なので、一つでも条件を満たせば true を返す
             }
             return false; // 条件を満たすものがなければ false を返す
+        }
+        /// <summary>
+        /// Enumをulongに読み替える(object)(参照)->Enum(値)だと結局boxingが起きるので意味ない。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static ulong EnumToUInt64<T>(T value) where T : unmanaged, Enum
+        {
+            return Unsafe.SizeOf<T>() switch
+            {
+                1 => Unsafe.As<T, byte>(ref value),
+                2 => Unsafe.As<T, ushort>(ref value),
+                4 => Unsafe.As<T, uint>(ref value),
+                8 => Unsafe.As<T, ulong>(ref value),
+                _ => throw new InvalidOperationException()
+            };
         }
     }
 }

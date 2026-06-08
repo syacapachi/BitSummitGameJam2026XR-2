@@ -110,17 +110,21 @@
         internal static object GetParentTarget(SerializedProperty property)
         {
             //最上位のオブジェクト
-            object obj = property.serializedObject.targetObject;
-            Func<object, object> getter = CreateOrGetPropertyPathGetter(property);
+            var rootObject = property.serializedObject.targetObject;
+            Type rootType = rootObject.GetType();
+            //propertyPathは呼ぶたびに生成されるので、一回で止める。
+            //キャッシュ化したいが、SerializedPropertyは毎フレーム再生成される->HashCodeが異なるので辞書がムズイ。
+            string propertyPath = property.propertyPath;
+            Func<object, object> getter = CreateOrGetPropertyPathGetter(rootObject, propertyPath);
             if (getter == null)
             {
-                Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to create getter for property path '{property.propertyPath}' on type '{property.serializedObject.targetObject.GetType()}'. Please check the property path and ensure it is valid for the target type.", obj as UnityEngine.Object);
+                Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to create getter for property path '{propertyPath}' on type '{rootType}'. Please check the property path and ensure it is valid for the target type.", rootObject as UnityEngine.Object);
                 return null;
             }
             //一応キャッシュにあるはずだが、念のため確認しておく。
-            if (!pathCache.TryGetValue((obj.GetType(), property.propertyPath), out var cachedPathInfo))
+            if (!pathCache.TryGetValue((rootType, propertyPath), out var cachedPathInfo))
             {
-                Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to find cached path info for property path '{property.propertyPath}' on type '{property.serializedObject.targetObject.GetType()}'. This should not happen if the getter was created successfully. Please check the caching logic.", obj as UnityEngine.Object);
+                Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to find cached path info for property path '{propertyPath}' on type '{rootType}'. This should not happen if the getter was created successfully. Please check the caching logic.", rootObject as UnityEngine.Object);
                 return null;
             }
             //SerializeReferenceは実装の型を動的に決定するため、直前までキャッシュを作りそれ以降は自力で辿る。
@@ -128,10 +132,10 @@
             {
                 try
                 {
-                    object parent = getter(obj);
+                    object parent = getter(rootObject);
                     if (parent == null)
                     {
-                        Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to access parent object for property path '{property.propertyPath}' on type '{property.serializedObject.targetObject.GetType()}'. The parent object is null, which may indicate an issue with the property path or the target object's state.", obj as UnityEngine.Object);
+                        Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to access parent object for property path '{propertyPath}' on type '{rootType}'. The parent object is null, which may indicate an issue with the property path or the target object's state.", rootObject as UnityEngine.Object);
                         return null;
                     }
                     return GetValueByPath(parent, cachedPathInfo.ReflectionPath);
@@ -140,23 +144,23 @@
                 {
                     Debug.LogException(
                         new Exception(
-                            $"[{nameof(EditorReflectionCache)}] Failed to access parent object for property path '{property.propertyPath}' on type '{property.serializedObject.targetObject.GetType()}'. Please check the property path and ensure it is valid for the target type.",
+                            $"[{nameof(EditorReflectionCache)}] Failed to access parent object for property path '{propertyPath}' on type '{rootType}'. Please check the property path and ensure it is valid for the target type.",
                             e),
-                        obj as UnityEngine.Object);
+                        rootObject as UnityEngine.Object);
                     return null;
                 }
             }
             try
             {
-                return getter(obj);
+                return getter(rootObject);
             }
             catch (Exception e)
             {
                 Debug.LogException(
                     new Exception(
-                        $"[{nameof(EditorReflectionCache)}] Failed to access property path '{property.propertyPath}' on type '{property.serializedObject.targetObject.GetType()}'."
+                        $"[{nameof(EditorReflectionCache)}] Failed to access property path '{propertyPath}' on type '{rootType}'."
                         , e),
-                    obj as UnityEngine.Object);
+                    rootObject as UnityEngine.Object);
                 return null;
             }
         }
@@ -199,7 +203,7 @@
         }
         internal static Func<object, object> GetOrCreateGetter(FieldInfo fieldInfo)
         {
-            if(getterCache.TryGetValue((fieldInfo.DeclaringType, fieldInfo.Name), out var getter))
+            if (getterCache.TryGetValue((fieldInfo.DeclaringType, fieldInfo.Name), out var getter))
             {
                 return getter;
             }
@@ -216,9 +220,9 @@
         /// <param name="root">開始する点</param>
         /// <param name="pathes">自力でたどる点</param>
         /// <returns></returns>
-        private static object GetValueByPath(object root, PathElement[] pathes)
+        private static object GetValueByPath(object root,in PathElement[] pathes)
         {
-            if(root == null) return null;
+            if (root == null) return null;
             object current = root;
             Type currentType = root.GetType();
             //1つ手前まで行く
@@ -284,28 +288,30 @@
             return current;
         }
         /// <summary>
-        /// return Monobehaviour.InlineClassA.InlineClassB.targetField のように ネストされたプロパティパスをたどるためのゲッターを作成する関数
+        /// Monobehaviour.InlineClassA.InlineClassB.targetField のような ネストされたプロパティパスをたどる
+        /// return InlineClassB のゲッターを作成する関数
         /// </summary>
-        /// <param name="property">評価対象のプロパティ</param>
-        /// <returns>ゲッター</returns>
-        private static Func<object, object> CreateOrGetPropertyPathGetter(SerializedProperty property)
+        /// <param name="rootObject"> 検索を始める基底(UnityEngine.Object) </param>
+        /// <param name="propertyPath"> 対象のプロパティpath </param>
+        /// <returns> propertyPathの直接の親クラスのゲッター </returns>
+        private static Func<object, object> CreateOrGetPropertyPathGetter(UnityEngine.Object rootObject, string propertyPath)
         {
             //最上位のオブジェクト
-            Type rootType = property.serializedObject.targetObject.GetType();
-            if (propertyPathGetterCache.TryGetValue((rootType, property.propertyPath), out var getter))
+            Type rootType = rootObject.GetType();
+            if (propertyPathGetterCache.TryGetValue((rootType, propertyPath), out var getter))
             {
                 return getter;
             }
             PathElement[] cachedPath;
-            if (pathCache.TryGetValue((rootType, property.propertyPath), out var cachedInfo))
+            if (pathCache.TryGetValue((rootType, propertyPath), out var cachedInfo))
             {
                 cachedPath = cachedInfo.FullElements;
             }
             else
             {
                 // propertyPath を簡単な配列に変換する（例: "myList.Array.data[0].myField" -> ["myList[0]", "myField"]）
-                cachedPath = PathElement.Parse(property.propertyPath);
-                //Debug.Log($"[{nameof(EditorReflectionCache)}] Creating new getter for property path '{property.propertyPath}' on type '{rootType}'. This may take some time, but it will be cached for future use.");
+                cachedPath = PathElement.Parse(propertyPath);
+                //Debug.Log($"[{nameof(EditorReflectionCache)}] Creating new getter for property path '{propertyPath}' on type '{rootType}'. This may take some time, but it will be cached for future use.");
             }
 
             //インデックスアクセス用に今の型を記憶
@@ -331,7 +337,7 @@
                 FieldInfo field = GetFieldRecursive(currentType, fieldName);
                 if (field == null)
                 {
-                    Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to find field '{fieldName}' on type '{currentType}' while processing property path '{property.propertyPath}'. Please check the field name and ensure it exists in the target type.");
+                    Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to find field '{fieldName}' on type '{currentType}' while processing property path '{propertyPath}'. Please check the field name and ensure it exists in the target type.");
                     return null;
                 }
                 //SerializeReference 属性が付いているフィールドは、途中まで作る。(残りは自分で探索してもらう。)
@@ -353,7 +359,7 @@
 
                     if (indexed == null)
                     {
-                        Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to build indexer for '{fieldName}' on type '{currentType}' while processing property path '{property.propertyPath}'. Please check the field type and ensure it supports indexing.");
+                        Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to build indexer for '{fieldName}' on type '{currentType}' while processing property path '{propertyPath}'. Please check the field type and ensure it supports indexing.");
                         return null;
                     }
 
@@ -373,14 +379,14 @@
             // キャッシュに保存（SerializeReference 属性が付いているフィールドを含むかどうかの情報も一緒に保存）
             if (breakIndex >= 0)
             {
-                pathCache[(property.serializedObject.targetObject.GetType(), property.propertyPath)] = new PathInfo(true, cachedPath, cachedPath.Skip(breakIndex).ToArray());
+                pathCache[(rootType, propertyPath)] = new PathInfo(true, cachedPath, cachedPath.Skip(breakIndex).ToArray());
             }
             else
             {
-                pathCache[(property.serializedObject.targetObject.GetType(), property.propertyPath)] = new PathInfo(false, cachedPath, null);
+                pathCache[(rootType, propertyPath)] = new PathInfo(false, cachedPath, null);
             }
             //Debug.Log($"[{nameof(EditorReflectionCache)}] Created new getter for property path '{property.propertyPath}' on type '{rootType}'. This getter will be cached for future use.");
-            propertyPathGetterCache[(rootType, property.propertyPath)] = compiledGetter;
+            propertyPathGetterCache[(rootType, propertyPath)] = compiledGetter;
 
             return compiledGetter;
         }
@@ -391,7 +397,7 @@
         /// <param name="currentType">コレクション自体のType</param>
         /// <param name="index">アクセスインデックス</param>
         /// <returns></returns>
-        private static Expression BuildIndexer(Expression currentExpression,Type currentType,int index)
+        private static Expression BuildIndexer(Expression currentExpression, Type currentType, int index)
         {
             if (currentType.IsArray)
             {
@@ -413,7 +419,7 @@
                     nameof(Enumerable.ElementAt),//ElementAt 関数
                     new Type[] { collectionType },//ジェネリック引数<collectionType>
                     currentExpression,//引数の列挙可能なオブジェクト
-                    Expression.Constant(index)); 
+                    Expression.Constant(index));
             }
             return null; // インデックスアクセス非対応の型
         }

@@ -14,17 +14,19 @@
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class EnableIfEnumAttribute : PropertyAttribute
     {
-        public string enumFiledName; //条件を判定するフィールド名
-        public int[] enumValues;   //有効か対象のenumの値
-        public bool hideWhenFalse;
-        public bool useFlagMask;
+        public readonly string enumFiledName; //条件を判定するフィールド名
+        public readonly int[] enumValues;   //有効か対象のenumの値
+        public readonly bool hideWhenFalse;
+        public readonly bool useFlagMask;
+        public readonly bool negate;
 
         // PropertyAttribute(bool applyToCollection)
         // true にすると Array/List の要素ではなく
         // コレクション本体に Drawer を適用する
         public EnableIfEnumAttribute(string enumFiledName, bool hideWhenFalse = false, bool useFlagMask = false, params int[] enumValues) : base(true)
         {
-            this.enumFiledName = enumFiledName;
+            negate = !string.IsNullOrEmpty(enumFiledName) && enumFiledName[0] == '!';
+            this.enumFiledName = negate ? enumFiledName.Substring(1) : enumFiledName;
             //enumValuesをint型の配列として受け取る
             this.enumValues = new int[enumValues.Length];
             for (int i = 0; i < enumValues.Length; i++)

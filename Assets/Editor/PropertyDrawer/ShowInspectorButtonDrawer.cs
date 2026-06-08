@@ -15,20 +15,13 @@ namespace Syacapachi.Editor
     public class ShowInspectorDrawer : PropertyDrawer
     {
         // メソッドと引数のキャッシュ (パフォーマンス向上のため)
-        private readonly Dictionary<FieldInfo, object> fieldParameter = new();
+        private static readonly Dictionary<FieldInfo, object> fieldParameter = new();
         // Foldoutの状態のキャッシュ (複数インスペクターでの状態管理のため)
-        private readonly Dictionary<object, bool> foldouts = new();
+        private static readonly Dictionary<object, bool> foldouts = new();
         // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
-        private readonly Dictionary<UnityEngine.Object, bool> foldoutStates = new();
+        private static readonly Dictionary<UnityEngine.Object, bool> foldoutStates = new();
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            // メインスレッドで安全に描画できるか確認
-            if (!IsMainThreadSafe())
-            {
-                // メインスレッドに戻したときに再描画するよう登録しておく
-                EditorApplication.delayCall += () => SafeRepaint(property);
-                return;
-            }
             var attr = (ShowInspectorAttribute)attribute;
             Type targetType = fieldInfo.FieldType;
             SerializedPropertyType type = property.propertyType;
@@ -67,9 +60,6 @@ namespace Syacapachi.Editor
         }
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            if (!IsMainThreadSafe())
-                return 0f;
-
             return EditorGUI.GetPropertyHeight(property, label, true);
         }
         //ネストにも対応させる
@@ -331,32 +321,6 @@ namespace Syacapachi.Editor
         void SetFoldout(object key, bool value)
         {
             foldouts[key] = value;
-        }
-        // --- メインスレッド判定と安全な再描画 ---
-        private bool IsMainThreadSafe()
-        {
-            try
-            {
-                // main-thread-only APIs throw if called from loading thread; Screen.width is safe to probe
-                var _ = UnityEngine.Screen.width;
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private void SafeRepaint(SerializedProperty property)
-        {
-            try
-            {
-                if (property == null || property.serializedObject == null) return;
-                // Repaint inspector of the target object
-                var editors = UnityEditor.Editor.CreateEditor(property.serializedObject.targetObject);
-                if (editors != null) editors.Repaint();
-            }
-            catch { /* swallow */ }
         }
     }
 }

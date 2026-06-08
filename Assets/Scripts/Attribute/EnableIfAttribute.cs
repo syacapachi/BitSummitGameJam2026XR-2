@@ -21,6 +21,7 @@
         /// 名前の先頭に!をつけた場合否定になる
         /// </summary>
         public readonly string[] conditionFieldNames;
+        public readonly bool[] conditionNegates;
         public readonly bool hideWhenFalse;
         public readonly ConditionLogic logic;
 
@@ -34,7 +35,15 @@
         // 複数条件用コンストラクタ
         public EnableIfAttribute(string[] conditionFieldNames, ConditionLogic logic = ConditionLogic.AND, bool hideWhenFalse = false) : base(true)
         {
-            this.conditionFieldNames = conditionFieldNames;
+            this.conditionFieldNames = new string[conditionFieldNames.Length];
+            conditionNegates = new bool[conditionFieldNames.Length];
+            for (int i = 0; i < conditionFieldNames.Length; i++)
+            {
+                string fieldName = conditionFieldNames[i];
+                bool isNegate = !string.IsNullOrEmpty(fieldName) && fieldName[0] == '!';
+                conditionNegates[i] = isNegate;
+                this.conditionFieldNames[i] = isNegate ? fieldName.Substring(1) : fieldName;
+            }
             this.hideWhenFalse = hideWhenFalse;
             this.logic = logic;
         }

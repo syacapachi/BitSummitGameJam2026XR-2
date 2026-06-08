@@ -15,7 +15,8 @@ namespace Syacapachi.util
     {
         static AutoEventGenerator()
         {
-            GenerateAll();
+            //コンストラクタない呼ぶ必要ない(2回呼ぶことになる)
+            //GenerateAll();
         }
         //スクリプト更新時に呼ばれる
         [DidReloadScripts]

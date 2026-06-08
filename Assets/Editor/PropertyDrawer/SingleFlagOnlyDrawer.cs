@@ -5,6 +5,7 @@ namespace Syacapachi.Editor
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using UnityEditor;
     using UnityEditorInternal;
     using UnityEngine;
@@ -48,11 +49,12 @@ namespace Syacapachi.Editor
                 }
             }
         }
-
+        private static readonly GUIContent warningLabel = new GUIContent($"Use with Enum or LayerMask fields only.");
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUI.BeginProperty(position, label, property);
             var attr = (SingleFlagOnlyAttribute)attribute;
+            EditorGUI.BeginProperty(position, label, property);
+            
             switch (property.propertyType)
             {
                 // Enum型の場合、単一選択のUIを表示するためにカスタム描画を行います。
@@ -65,7 +67,7 @@ namespace Syacapachi.Editor
                     break;
                 default:
                     //EditorGUI.PropertyField(position, property, label,true);
-                    EditorGUI.LabelField(position, label.text, $"{nameof(SingleFlagOnlyAttribute)} with Enum or LayerMask fields only.");
+                    EditorGUI.LabelField(position, label, warningLabel);
                     break;
             }
 
@@ -84,7 +86,7 @@ namespace Syacapachi.Editor
         // =========================
         // Enum
         // =========================
-        void DrawEnum(Rect position, SerializedProperty property, GUIContent label, SingleFlagOnlyAttribute attr)
+        void DrawEnum(in Rect position, SerializedProperty property, GUIContent label, SingleFlagOnlyAttribute attr)
         {
             int rawValue = property.intValue;
             Enum enumValue = (Enum)Enum.ToObject(fieldInfo.FieldType, rawValue);
@@ -113,7 +115,7 @@ namespace Syacapachi.Editor
         /// <param name="property"></param>
         /// <param name="label"></param>
         /// <param name="attr"></param>
-        private void DrawEnumWithArrayOrList(Rect position, SerializedProperty property, GUIContent label, SingleFlagOnlyAttribute attr)
+        private void DrawEnumWithArrayOrList(in Rect position, SerializedProperty property, GUIContent label, SingleFlagOnlyAttribute attr)
         {
             // enum情報取得
             string[] displayNames = property.enumDisplayNames;
@@ -140,6 +142,7 @@ namespace Syacapachi.Editor
             Type enumType = GetEnumType();
             // enum実値取得
             int intValue = Convert.ToInt32(
+                //index をenumに変換
                 Enum.Parse(
                     enumType,
                     property.enumNames[newIndex]));
@@ -196,7 +199,7 @@ namespace Syacapachi.Editor
         // =========================
         // LayerMask
         // =========================
-        static void DrawLayerMask(Rect position, SerializedProperty property, GUIContent label, SingleFlagOnlyAttribute attr)
+        static void DrawLayerMask(in Rect position, SerializedProperty property, GUIContent label, SingleFlagOnlyAttribute attr)
         {
             // LayerMaskはintで保持されているため、MaskとLayerの変換が必要
             int mask = property.intValue;
@@ -206,15 +209,15 @@ namespace Syacapachi.Editor
             //EditorGUI.MaskField(position, label, currentLayer, InternalEditorUtility.layers);
 
             // LayerFild（単一選択UI）
-            int selectedLayer = EditorGUI.LayerField(position,label, currentLayer);
-            
+            int selectedLayer = EditorGUI.LayerField(position, label, currentLayer);
+
             // Nothing許可しない場合
             if (!attr.allowNothing && selectedLayer == -1)
             {
                 selectedLayer = 0; // Defaultにフォールバック
             }
 
-            property.intValue = LayerToMask(selectedLayer);   
+            property.intValue = LayerToMask(selectedLayer);
         }
 
         // =========================
@@ -285,6 +288,24 @@ namespace Syacapachi.Editor
                 }
             };
             return 0;//Defaultにする
+        }
+        /// <summary>
+        /// Enumをulongに読み替える(object)(参照)->Enum(値)だと結局boxingが起きるので意味ない。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static ulong EnumToUInt64<T>(T value) where T : unmanaged, Enum
+        {
+            return Unsafe.SizeOf<T>() switch
+            {
+                1 => Unsafe.As<T, byte>(ref value),
+                2 => Unsafe.As<T, ushort>(ref value),
+                4 => Unsafe.As<T, uint>(ref value),
+                8 => Unsafe.As<T, ulong>(ref value),
+                _ => throw new InvalidOperationException()
+            };
         }
     }
 }

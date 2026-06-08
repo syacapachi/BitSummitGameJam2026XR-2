@@ -8,6 +8,7 @@ namespace Syacapachi.Editor
     [CustomPropertyDrawer(typeof(LayerAttribute))]
     public class LayerDrawer : PropertyDrawer
     {
+        private static readonly GUIContent warningLabel = new GUIContent("Use with int fields only.","int only");
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (property.propertyType == SerializedPropertyType.Integer)
@@ -35,7 +36,7 @@ namespace Syacapachi.Editor
             }
             else
             {
-                EditorGUI.LabelField(position, label.text, "Use with int fields only.");
+                EditorGUI.LabelField(position, label, warningLabel);
             }
         }
     }
