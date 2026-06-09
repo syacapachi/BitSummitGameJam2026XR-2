@@ -22,7 +22,8 @@ namespace Syacapachi.Editor
             OnInstectorButtonDrawLogic = 1 << 0,
             DrawNestedScriptableObject = 1 << 1,
         }
-
+        //staticやreadoblyは、アセンブリロード時(スクリプト編集後など)や、Play時に再生成される。
+        //正しく言えば、Unityがシリアライズできるデータは、アセンブリロード前に一時退避しアセンブリロード後に再生成&代入される仕様。
         private static readonly Dictionary<UnityEngine.Object, OptionalDrawLogic> drawLogicCache = new();
 
         static NetCodeButtonEditor()

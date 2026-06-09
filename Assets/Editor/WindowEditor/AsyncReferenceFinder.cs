@@ -28,6 +28,7 @@ namespace Syacapachi.util
        };
         private Object target;
         private string[] guids;
+        private float invTotal;
         private int guidsIndex;
         private int objectIndex;
         private GameObject[] sceneObjects;
@@ -41,13 +42,16 @@ namespace Syacapachi.util
         public float Progress { 
             get 
             {
-                int total = (guids?.Length ?? 0) + (sceneObjects?.Length ?? 0);
-                if (total == 0) return 0;
-                return (float)(guidsIndex + objectIndex) / total; 
+                return (guidsIndex + objectIndex) * invTotal; 
             } 
         }
         public bool IsRunning { get; private set; }
 
+        /// <summary>
+        /// 指定したUnityEngine.Objectを含むフィールドを検索します。
+        /// </summary>
+        /// <param name="target">検索するUnityEngine.Obejct</param>
+        /// <param name="onComplete"> 結果を返すイベント 結果は(assigned,assignable) </param>
         public void StartSearchRefernce(Object target, Action<List<Object>, List<Object>> onComplete)
         {
             if (IsRunning)
@@ -62,6 +66,8 @@ namespace Syacapachi.util
             //現在のシーンからシーンないルートオブジェクトを取得
             Scene currentScene = SceneManager.GetActiveScene();
             sceneObjects = currentScene.GetRootGameObjects();
+            int total = guids.Length + sceneObjects.Length;
+            invTotal = total > 0 ? 1f / total : 0f;
             guidsIndex = 0;
             objectIndex = 0;
             assginedResults.Clear();

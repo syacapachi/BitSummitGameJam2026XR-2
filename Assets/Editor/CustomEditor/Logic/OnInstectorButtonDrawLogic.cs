@@ -135,7 +135,6 @@
         private static readonly GUIContent Size = new GUIContent("Size","Size");
         private static readonly GUIContent Add = new GUIContent("Add", "Add");
         private static readonly GUIContent Delete = new GUIContent("Delete", "Delete");
-        private static readonly GUILayoutOption width100 = GUILayout.Width(100);
         //全てのキャッシュを初期化して持っておく
         private static readonly MethodCache[] allMethods;
         private static readonly FieldCache[] allFields;
@@ -165,8 +164,11 @@
                     field.GetCustomAttribute<ShowInspectorAttribute>())
                 ).ToArray();
         }
+        //staticやreadoblyは、アセンブリロード時(スクリプト編集後など)や、Play時に再生成される。
+        //正しく言えば、Unityがシリアライズできるデータは、アセンブリロード前に一時退避しアセンブリロード後に再生成&代入される仕様。
+        //もし、保存したい値がある場合は、非staticクラスでISerializationCallbackReceiverを継承すること。
+
         //DrawInspectorButtonsで使用する、クラスごとのOnInspectorButtonをもつ関数のキャッシュ。クラスごとにキャッシュすることで、同じクラスのオブジェクトを複数描画している場合でも、リフレクションのコストを削減できる。
-        //staticは、アセンブリロード時(スクリプト編集後など)や、Play時に再生成される。
         //クラスとOnInspectorButtonをもつ関数のキャッシュ,このデータは静的なのでstaticにすることでパフォーマンス向上
         private static readonly Dictionary<Type, MethodCache[]> methodCaches = new();
         //非UnityEngine.Onbjectのフィールド変数情報のキャッシュ
@@ -186,7 +188,7 @@
         /// </summary>
         /// <param name="obj"> 描画対象のインスタンス(関数の発火元) </param>
         /// <returns> 結果状態を表すenum </returns>
-        internal static InspectorButtonResult DrawInspectorButtons(object obj)
+        public static InspectorButtonResult DrawInspectorButtons(object obj)
         {
             //各インスペクターで呼ばれる。
             var targetType = obj.GetType();
@@ -623,7 +625,7 @@
                 var key = keys[i];
                 EditorGUILayout.BeginVertical();
 
-                if (GUILayout.Button("-", GUILayout.Width(20)))
+                if (GUILayout.Button("-", GUIContentCache.GetWidth(20)))
                 {
                     dict.Remove(key);
                     break;
@@ -782,7 +784,7 @@
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     EditorGUILayout.LabelField($"{type.Name} ▶ {concreteType.Name}", EditorStyles.boldLabel);
-                    if (GUILayout.Button(Delete, width100))
+                    if (GUILayout.Button(Delete, GUIContentCache.GetWidth(100)))
                     {
                         abstractToClass.Remove(path);
                         return null;
