@@ -10,8 +10,6 @@ using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class ResultUI : MonoBehaviour
 {
-    private static readonly WaitForSeconds _waitForSeconds1 = new WaitForSeconds(1f);
-
     [SerializeField] GameObject panel;
     [SerializeField] Button enableButton;
     [SerializeField] LazyFollow follow;
@@ -110,7 +108,7 @@ public class ResultUI : MonoBehaviour
     /// <returns></returns>
     IEnumerator DisableLazyFollow()
     {
-        yield return _waitForSeconds1;
+        yield return WaitForSecondsCache.Get(1f);
         follow.enabled = false;
     }
     private void OnGameStateChanged(GameState state)

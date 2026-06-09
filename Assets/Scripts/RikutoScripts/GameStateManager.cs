@@ -195,15 +195,15 @@ public class GameStateManager : NetworkBehaviour
     /// <param name="fromState"></param>
     /// <param name="toState"></param>
     /// <returns></returns>
-    private bool CanTransition(LocalState fromState, LocalState toState)
+    private static bool CanTransition(LocalState fromState, LocalState toState)
     {
         return true;
     }
 
-    private bool CanTransition(GameState fromState, GameState toState)
+    private static bool CanTransition(GameState fromState, GameState toState, bool isSpawned)
     {
         //切断されたらHomeへ行く。
-        if (!IsSpawned && toState == GameState.Home) return true;
+        if (!isSpawned && toState == GameState.Home) return true;
         return fromState switch
         {
             GameState.Home
@@ -239,7 +239,7 @@ public class GameStateManager : NetworkBehaviour
         GameState currentState = gameState.Value;
         if (currentState == nextState) return true;
 
-        if (!CanTransition(currentState, nextState))
+        if (!CanTransition(currentState, nextState, IsSpawned))
         {
             Debug.LogWarning(
                 $"[{nameof(GameStateManager)}] Invalid GameState transition: {currentState} -> {nextState}",

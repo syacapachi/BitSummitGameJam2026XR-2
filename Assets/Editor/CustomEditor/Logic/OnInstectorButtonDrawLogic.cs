@@ -21,6 +21,7 @@
             ParameterChanged = 1 << 1,
             RequiresRepaint = 1 << 2,
             Exception = 1 << 3,
+            DrawedButton = 1 << 4,
         }
         public enum CreateFailureReason
         {
@@ -68,12 +69,19 @@
                     : $"{type.Name} は自動生成できません By {reason}";
             }
         }
+        /// <summary>
+        /// validateInvokeEnabled,parametersFoldoutsについてはreadonlyじゃないので、そこで、内部効率化が行われていない場合がある。
+        /// </summary>
         sealed class MethodDetails
         {
             /// <summary>
             /// パラメータの情報
             /// </summary>
             public readonly ParameterInfo[] ParameterInfos;
+            /// <summary>
+            /// パラメータのパス配列のキャッシュ
+            /// </summary>
+            public readonly string[] ParameterPathSuffixes;
             /// <summary>
             /// パラメータのキャッシュ
             /// </summary>
@@ -102,6 +110,23 @@
                 ParameterLabel = new GUIContent($"{methodName} Parameters", methodName);
                 MethodLabel = new GUIContent(methodLabel, methodName);
                 AutoInvokeLabel = new GUIContent($"Auto Invoke {methodName}", methodName);
+
+                ParameterPathSuffixes = new string[ParameterInfos.Length];
+                for(int i = 0; i < ParameterInfos.Length; i++)
+                {
+                    ParameterPathSuffixes[i] = $"{methodName}#{ParameterInfos[i].MetadataToken}";
+                }
+            }
+        }
+
+        sealed class ParamDetails
+        {
+            object value;
+            readonly string path;
+
+            public ParamDetails(object invokeTarget,string methodName,int paramToken)
+            {
+                path = $"{invokeTarget.GetHashCode()}#{methodName}#{paramToken}";
             }
         }
         /// <summary>
@@ -109,6 +134,8 @@
         /// </summary>
         private static readonly GUIContent Size = new GUIContent("Size","Size");
         private static readonly GUIContent Add = new GUIContent("Add", "Add");
+        private static readonly GUIContent Delete = new GUIContent("Delete", "Delete");
+        private static readonly GUILayoutOption width100 = GUILayout.Width(100);
         //全てのキャッシュを初期化して持っておく
         private static readonly MethodCache[] allMethods;
         private static readonly FieldCache[] allFields;
@@ -224,10 +251,10 @@
                 //stringだと、一時GUIContextが生成されるので、GUIContentをキャッシュ化
                 if (GUILayout.Button(details.MethodLabel))
                 {
-                    return InvokeMethod(invokeTarget, method, null);
+                    return InspectorButtonResult.DrawedButton | InvokeMethod(invokeTarget, method, null);
                 }
 
-                return InspectorButtonResult.None;
+                return InspectorButtonResult.DrawedButton;
             }
 
             //初回は辞書に登録することで次回以降の検索の手間を省く
@@ -239,7 +266,7 @@
 
             //この描画中に値が更新されたか
             bool isValueChangedThisFrame = false;
-            InspectorButtonResult result = InspectorButtonResult.None;
+            InspectorButtonResult result = InspectorButtonResult.DrawedButton;
             using (new EditorGUILayout.VerticalScope("box"))
             {
                 details.parametersFoldouts = EditorGUILayout.Foldout(details.parametersFoldouts, details.ParameterLabel, true);
@@ -250,11 +277,11 @@
                     EditorGUI.indentLevel++;
                     for (int i = 0; i < details.ParameterInfos.Length; i++)
                     {
+                        var param = details.ParameterInfos[i];
                         //変更を検知するエリア
                         EditorGUI.BeginChangeCheck();
-                        var param = details.ParameterInfos[i];
                         //引数の値を描画して更新,パスは、対象のHashCode(),(UnityEngine.ObjectならインスタンスIDがくる)と関数名と引数名で一意になるようにする。これで、同じ関数を複数描画している場合でも、引数の値が混ざらないようにする。
-                        values[i] = DrawField(param.ParameterType, param.Name, values[i], $"{invokeTarget.GetHashCode()}#{method.Name}#{param.MetadataToken}");
+                        values[i] = DrawField(param.ParameterType, param.Name, values[i], $"{invokeTarget.GetHashCode()}#{details.ParameterPathSuffixes[i]}");
                         //変更を検知
                         if (EditorGUI.EndChangeCheck())
                         {
@@ -273,7 +300,7 @@
 
                 if (GUILayout.Button(details.MethodLabel))
                 {
-                    return InvokeMethod(invokeTarget, method, values);
+                    return InspectorButtonResult.DrawedButton | InvokeMethod(invokeTarget, method, values);
                 }
 
                 //自動発火機能がある場合
@@ -286,7 +313,7 @@
 
                     if (details.validateInvokeEnabled && isValueChangedThisFrame)
                     {
-                        return InspectorButtonResult.ParameterChanged | InvokeMethod(invokeTarget, method, values);
+                        return InspectorButtonResult.DrawedButton | InspectorButtonResult.ParameterChanged | InvokeMethod(invokeTarget, method, values);
                     }
                 }
             }
@@ -755,7 +782,7 @@
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     EditorGUILayout.LabelField($"{type.Name} ▶ {concreteType.Name}", EditorStyles.boldLabel);
-                    if (GUILayout.Button("Delete", GUILayout.Width(100)))
+                    if (GUILayout.Button(Delete, width100))
                     {
                         abstractToClass.Remove(path);
                         return null;

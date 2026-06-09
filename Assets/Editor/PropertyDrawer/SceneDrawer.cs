@@ -8,6 +8,7 @@ namespace Syacapachi.Editor
     [CustomPropertyDrawer(typeof(SceneAttribute))]
     public class SceneDrawer : PropertyDrawer
     {
+        private static readonly GUIContent warningLabel = new GUIContent("Use with string fields only.", "string only");
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (property.propertyType == SerializedPropertyType.String)
@@ -44,7 +45,7 @@ namespace Syacapachi.Editor
             }
             else
             {
-                EditorGUI.LabelField(position, label.text, "Use with string fields only.");
+                EditorGUI.LabelField(position, label, warningLabel);
             }
         }
         private static SceneAsset GetSceneAsset(string sceneObjectName)
@@ -60,7 +61,7 @@ namespace Syacapachi.Editor
                     return AssetDatabase.LoadAssetAtPath(scene.path, typeof(SceneAsset)) as SceneAsset;
                 }
             }
-            Debug.Log("Scene [" + sceneObjectName + "] cannot be used. Add this scene to the 'Scenes in the Build' in the build settings.");
+            Debug.LogWarning("Scene [" + sceneObjectName + "] cannot be used. Add this scene to the 'Scenes in the Build' in the build settings.");
             return null;
         }
     }

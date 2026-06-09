@@ -10,7 +10,7 @@ namespace Syacapachi.Data
     /// データを全員分集めたもの
     /// </summary>
     [Serializable]
-    public class RankingListWrapper
+    public sealed class RankingListWrapper
     {
         public List<ResultData> Rankings = new();
     }

@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using Syacapachi.Data;
+using System.Runtime.CompilerServices;
 
 public class RankingEntryUI : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class RankingEntryUI : MonoBehaviour
     private int currentRank;
     private float currentCooperation;
     private int currentRemainHP;
+    private static readonly Color gold = new Color(1f, 0.84f, 0f);
+    private static readonly Color silver = new Color(0.75f, 0.75f, 0.75f);
+    private static readonly Color copper = new Color(0.8f, 0.5f, 0.2f);
 
     public void UpdateLanguage(Language langage)
     {
@@ -44,9 +48,9 @@ public class RankingEntryUI : MonoBehaviour
         // 順位によってテキスト色を変える
         Color rankColor = rank switch
         {
-            1 => new Color(1f, 0.84f, 0f),        // 金
-            2 => new Color(0.75f, 0.75f, 0.75f),  // 銀
-            3 => new Color(0.8f, 0.5f, 0.2f),     // 銅
+            1 => gold,        // 金
+            2 => silver,  // 銀
+            3 => copper,     // 銅
             _ => Color.white
         };
 

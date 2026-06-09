@@ -20,8 +20,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
 
     protected virtual IResultCollector Collector { get; } = null;
 
-
-    private static readonly WaitForSeconds wait100ms = new WaitForSeconds(0.1f);
     private float nextFire;
     //こいつは、残段数のみを同期してればわかる
     private bool isReloading = false;
@@ -101,7 +99,7 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         for (float t = 0; t < ReloadTime; t += 0.1f)
         {
             UpdateProgress(t * invReloadTime);
-            yield return wait100ms;
+            yield return WaitForSecondsCache.Get(0.1f);
         }
         UpdateProgress(0);
 

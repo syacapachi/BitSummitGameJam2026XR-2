@@ -21,10 +21,6 @@ public class TutorialUI : MonoBehaviour
     private Coroutine currentRoutine;
     private bool isJapanese;
 
-    private static readonly WaitForSeconds wait1500ms = new WaitForSeconds(1.5f);
-    private static readonly WaitForSeconds wait1s = new WaitForSeconds(1f);
-    private static readonly WaitForSeconds wait2s = new WaitForSeconds(2f);
-
     enum TutorialUIState
     {
         Idle,
@@ -181,13 +177,13 @@ public class TutorialUI : MonoBehaviour
 
         // --- タイトル表示（1秒） ---
         text.text = title;
-        yield return wait1s;
+        yield return WaitForSecondsCache.Get(1f);
 
         // --- 内容表示（1.5秒） ---
         text.transform.localScale = Vector3.one;
         text.text = desc;
         yield return GrowAnimation();
-        yield return wait1500ms;
+        yield return WaitForSecondsCache.Get(1.5f);
 
         ChangeState(TutorialUIState.Idle);
     }
@@ -197,11 +193,11 @@ public class TutorialUI : MonoBehaviour
     // =========================
     IEnumerator StepClearRoutine()
     {
-        yield return wait1s;
+        yield return WaitForSecondsCache.Get(1f);
         root.SetActive(true);
 
         text.text = "SUCCEED!";
-        yield return wait2s;
+        yield return WaitForSecondsCache.Get(2f);
 
         ChangeState(TutorialUIState.Idle);
     }

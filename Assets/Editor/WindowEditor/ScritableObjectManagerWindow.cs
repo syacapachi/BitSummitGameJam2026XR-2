@@ -5,25 +5,47 @@ namespace Syacapachi.util
     using System.Collections.Generic;
     using System.Linq;
     using UnityEditor;
+    using UnityEditor.TerrainTools;
     using UnityEngine;
 
     public class ScritableObjectManagerWindow : EditorWindow
     {
-        
-        //ScriptableObjectのリスト
-        readonly Dictionary<System.Type, List<ScriptableObject>> groupedEvents = new();
-        //参照キャッシュ
-        readonly Dictionary<ScriptableObject, List<UnityEngine.Object>> objectCache = new();
-        readonly Dictionary<Type, List<UnityEngine.Object>> assginCache = new();
+
+        static readonly GUIContent RefreshLabel = new GUIContent("Refresh", "Refresh");
+        static readonly GUIContent FindLabel = new GUIContent("Find", "Find");
+        static readonly GUIContent FindAssginableLabel = new GUIContent("Find Assginable", "Find Assginable");
+        static readonly GUIContent ReFindLabel = new GUIContent("ReFind", "ReFind");
+        static readonly GUIContent PingLabel = new GUIContent("Ping", "Ping");
+        static readonly GUIContent SelectLabel = new GUIContent("Select", "Select");
+        static readonly GUIContent SearchLabel = new GUIContent("Search", "Search");
+        static readonly GUIContent SearchingLabel = new GUIContent("Searching...", "Searching");
+        static readonly GUIContent ClearLabel = new GUIContent("Clear", "Clear");
+
+        static readonly GUILayoutOption width50 = GUILayout.Width(50);
+        static readonly GUILayoutOption width60 = GUILayout.Width(60);
+        static readonly GUILayoutOption width150 = GUILayout.Width(150);
+
+        //Type<ScriptableObjec>とそのScriptableObjectのインスタンスのリスト
+        static readonly Dictionary<System.Type, List<ScriptableObject>> typeToIntanceCache = new();
+        //あるScriptableObjectを参照しているObjectへの参照キャッシュ複数Windowで共有できるのでstatic
+        static readonly Dictionary<ScriptableObject, List<UnityEngine.Object>> objectReferenceCache = new();
+        static readonly Dictionary<Type, List<UnityEngine.Object>> assginCache = new();
         //折りたたみ状態
-        readonly Dictionary<System.Type, bool> typeFoldouts = new();
-        readonly Dictionary<ScriptableObject, bool> contentFoldouts = new();
+        static readonly Dictionary<System.Type, bool> typeFoldouts = new();
+        static readonly Dictionary<ScriptableObject, bool> contentFoldouts = new();
         //検索状態
         readonly Dictionary<ScriptableObject, bool> isSearching = new();
+        readonly List<ScriptableObject> cachedList = new();
+        
         Vector2 scroll;
         string searchText = string.Empty;
+        string[] tokens = null;
         bool isSearchClass = false;
         bool isSearchName = true;
+        static ScritableObjectManagerWindow()
+        {
+        }
+
         //メニューにこの間数を呼ぶボタンを追加
         [MenuItem("Tools/Event Manager Advanced")]
         public static void Open()
@@ -39,15 +61,15 @@ namespace Syacapachi.util
         //エディターの処理
         void OnGUI()
         {
-            if (GUILayout.Button("Refresh"))
+            if (GUILayout.Button(RefreshLabel))
                 Refresh();
 
             DrawToolbar();
             scroll = GUILayout.BeginScrollView(scroll);
 
-            foreach (var group in groupedEvents)
+            foreach (var group in typeToIntanceCache)
             {
-                IReadOnlyList<ScriptableObject> filtered = new List<ScriptableObject>();
+                List<ScriptableObject> filtered = new List<ScriptableObject>();
                 if (isSearchClass && MatchSearch(group.Key.Name))
                 {
                     filtered = group.Value;
@@ -55,7 +77,13 @@ namespace Syacapachi.util
                 else if (isSearchName)
                 {
                     // ▼ フィルタ済みリスト
-                    filtered = group.Value.Where(e => MatchSearch(e.name)).ToList();   
+                    foreach (var so in group.Value)
+                    {
+                        if (MatchSearch(so.name))
+                        {
+                            filtered.Add(so);
+                        }
+                    }
                 }
                 else
                 {
@@ -75,7 +103,7 @@ namespace Syacapachi.util
             {
                 if (!typeFoldouts.ContainsKey(type)) typeFoldouts[type] = false;
                 typeFoldouts[type] = EditorGUILayout.Foldout(typeFoldouts[type], type.Name, true);
-                if (GUILayout.Button("Find Assginable", GUILayout.Width(150)))
+                if (GUILayout.Button(FindAssginableLabel, width150))
                 {
                     Debug.Log("hey");
                 }
@@ -94,47 +122,47 @@ namespace Syacapachi.util
                         //折りたたみを更新
                         contentFoldouts[e] = EditorGUILayout.Foldout(contentFoldouts[e], e.name, true);
 
-                        if (GUILayout.Button("Find", GUILayout.Width(50)))
+                        if (GUILayout.Button(FindLabel, width50))
                         {
                             StartSearch(e, false);
                         }
 
-                        if (GUILayout.Button("ReFind", GUILayout.Width(60)))
+                        if (GUILayout.Button(ReFindLabel, width60))
                         {
                             StartSearch(e, true);
                         }
-                        if (GUILayout.Button("Ping", GUILayout.Width(50)))
+                        if (GUILayout.Button(PingLabel, width50))
                         {
                             EditorGUIUtility.PingObject(e);
                         }
 
-                        if (GUILayout.Button("Select", GUILayout.Width(60)))
+                        if (GUILayout.Button(SelectLabel, width60))
                         {
                             Selection.activeObject = e;
-                        }  
+                        }
                     }
 
                     // ▼ 検索中表示
                     if (isSearching[e])
                     {
-                        GUILayout.Label("Searching...");
+                        GUILayout.Label(SearchingLabel);
                     }
 
                     // ▼ 展開時に結果表示
-                    if (contentFoldouts[e] && objectCache.ContainsKey(e))
+                    if (contentFoldouts[e] && objectReferenceCache.TryGetValue(e, out var cachedList))
                     {
                         GUILayout.Space(3);
-                        foreach (var r in objectCache[e])
+                        foreach (var r in cachedList)
                         {
-                            if(r == null) continue;
+                            if (r == null) continue;
                             using (new GUILayout.HorizontalScope())
                             {
                                 GUILayout.Label(r.name);
 
-                                if (GUILayout.Button("Ping", GUILayout.Width(50)))
+                                if (GUILayout.Button(PingLabel, width50))
                                     EditorGUIUtility.PingObject(r);
 
-                                if (GUILayout.Button("Select", GUILayout.Width(60)))
+                                if (GUILayout.Button(SelectLabel, width60))
                                     Selection.activeObject = r;
                             }
                         }
@@ -147,7 +175,8 @@ namespace Syacapachi.util
             //usingを使ったスコープなら、勝手にEndを呼んでくれる。
             using (new GUILayout.HorizontalScope("box"))
             {
-                GUILayout.Label("Search:", GUILayout.Width(50));
+                //GUILayoutOptionもキャッシュ化できる。
+                GUILayout.Label(SearchLabel, width50);
 
                 isSearchClass = GUILayout.Toggle(isSearchClass, "Include ClassName");
                 isSearchName = GUILayout.Toggle(isSearchName, "Include FileName");
@@ -157,12 +186,15 @@ namespace Syacapachi.util
                 if (newSearch != searchText)
                 {
                     searchText = newSearch;
+                    //文字変化時に分割
+                    tokens = searchText.Split(' ');
                     Repaint();
                 }
 
-                if (GUILayout.Button("Clear", GUILayout.Width(60)))
+                if (GUILayout.Button(ClearLabel, width60))
                 {
                     searchText = "";
+                    tokens = null;
                     GUI.FocusControl(null);
                 }
             }
@@ -174,30 +206,30 @@ namespace Syacapachi.util
         /// <returns></returns>
         bool MatchSearch(string name)
         {
-            if (string.IsNullOrEmpty(searchText)) return true;
-            var tokens = searchText.Split(' ');
+            if (tokens == null) return true; 
             return tokens.All(t => name.Contains(t, StringComparison.OrdinalIgnoreCase));
         }
         void Refresh()
         {
-            var events = FindAllScriptableObjects();
+            FindAllScriptableObjects(cachedList);
 
             //リスト部分だけ初期化
-            foreach(var kvp in groupedEvents)
+            foreach (var kvp in typeToIntanceCache)
             {
                 kvp.Value.Clear();
             }
-            foreach (var e in events)
+            foreach (var e in cachedList)
             {
                 System.Type rootType = GetRootType(e.GetType());
-                if (!groupedEvents.ContainsKey(rootType))
+                if (!typeToIntanceCache.TryGetValue(rootType, out var cachedList))
                 {
-                    groupedEvents[rootType] = new List<ScriptableObject>();
+                    cachedList = new List<ScriptableObject>();
+                    typeToIntanceCache[rootType] = cachedList;
                 }
-                groupedEvents[rootType].Add(e);
+                cachedList.Add(e);
             }
         }
-        System.Type GetRootType(System.Type t)
+        static System.Type GetRootType(System.Type t)
         {
             while (t.BaseType != null && t.BaseType != typeof(ScriptableObject) && !t.BaseType.IsGenericType)
                 t = t.BaseType;
@@ -206,37 +238,44 @@ namespace Syacapachi.util
         }
 
         /// <summary>
-        /// ScriptabkleObjectを検索して返す。
+        /// ScriptableObjectを検索して返す。
         /// </summary>
-        /// <returns></returns>
-        List<ScriptableObject> FindAllScriptableObjects()
+        /// <param name="result">結果をいれるリスト</param>
+        /// <returns>見つかった数 </returns>
+        static int FindAllScriptableObjects(List<ScriptableObject> result)
         {
+            result.Clear();
             //Assets内の検索返り値はGUID(string)
-            return AssetDatabase.FindAssets("t:ScriptableObject")
-                //パスに変換
-                .Select(g => AssetDatabase.GUIDToAssetPath(g))
-                //参照取得
-                .Select(p => AssetDatabase.LoadAssetAtPath<ScriptableObject>(p))
-                //存在していれば
-                .Where(o => o != null)
-                .ToList();
+            foreach(string guid in AssetDatabase.FindAssets("t:ScriptableObject"))
+            {
+                //ファイル参照に変換
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                //アセット読み込み
+                ScriptableObject so = AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+                if(so != null)
+                {
+                    result.Add(so);
+                }
+            }
+            return result.Count;
         }
-        void StartSearch(ScriptableObject target, bool force)
+        bool StartSearch(ScriptableObject target, bool force)
         {
-            if (!force && objectCache.ContainsKey(target))
-                return;
+            if (!force && objectReferenceCache.ContainsKey(target))
+                return false;
 
             isSearching[target] = true;
             AsyncReferenceFinder finder = new();
-            finder.StartSearchRefernce(target, (result1,result2) =>
+            finder.StartSearchRefernce(target, (result1, result2) =>
             {
-                objectCache[target] = result1;
+                objectReferenceCache[target] = result1;
                 CreateWindow<AssginableReferenceEditorWindow>().Init(result2);
                 isSearching[target] = false;
                 AsyncRefrenceFinderGlobal.Unresister(finder);
                 Repaint();
             });
             AsyncRefrenceFinderGlobal.Resister(finder);
+            return true;
         }
     }
 }

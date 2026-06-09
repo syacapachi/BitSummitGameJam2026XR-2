@@ -96,7 +96,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
     IEnumerator AnimationCoroutine()
     {
         // 今は簡易（後でここにアニメーション入れる）
-        yield return new WaitForSeconds(0.2f);
+        yield return WaitForSecondsCache.Get(0.2f);
 
         if (crystal != null)
         {

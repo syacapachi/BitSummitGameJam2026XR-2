@@ -7,17 +7,29 @@ using UnityEngine;
 using UnityEngine.Events;
 public class SampleScript : AbstructSample
 {
-    [ShowInspector, SerializeField] int a;
-    [ShowInspector, SerializeField] int? nullableA;
-    [ShowInspector, SerializeField] float b;
-    [ShowInspector, SerializeField] Vector3 vec;
-    [ShowInspector, SerializeField] Color color;
-    [ShowInspector, SerializeField] GameObject obj;
+    //[ShowInspector, SerializeField] int a;
+    //[ShowInspector, SerializeField] int? nullableA;
+    //[ShowInspector, SerializeField] float b;
+    //[ShowInspector, SerializeField] Vector3 vec;
+    //[ShowInspector, SerializeField] Color color;
+    //[ShowInspector, SerializeField] GameObject obj;
+    //[ShowInspector, SerializeField] List<float> list = new List<float>();
+    //[ShowInspector, SerializeField] List<InlineClass> classList = new List<InlineClass>();
+    //[ShowInspector, SerializeField] Dictionary<int, string> adic = new Dictionary<int, string>();
+    [SerializeField] PhaseSO phase;
+    [Header("customProp")]
+    [SerializeField, Tag] string tagName;
+    [SerializeField, Tag] Vector2 vector;
+    [SerializeField, Layer] int layerIndex;
+    [SerializeField, Layer] Vector2 vector1;
+    [SerializeField, Scene] string scenename;
+    [SerializeField, Scene] Vector2 vector2;
+    [SerializeField, SingleFlagOnly] LayerMask mask;
+    [SerializeField, SingleFlagOnly] SampleEnum enums;
+    [SerializeField, SingleFlagOnly] Vector2 vector3;
     [SerializeField] InlineClass clazz;
     [SerializeField] InLineClass2 clazz2;
-    [ShowInspector, SerializeField] List<float> list = new List<float>();
-    [ShowInspector, SerializeField] List<InlineClass> classList = new List<InlineClass>();
-    [ShowInspector, SerializeField] Dictionary<int, string> adic = new Dictionary<int, string>();
+    [Header("enableif")]
     [SerializeField] bool boolValue;
     [SerializeField] bool boolValue2;
     [SerializeField] SampleEnum sampleEnum;
@@ -26,11 +38,7 @@ public class SampleScript : AbstructSample
     [SerializeField, EnableIf(nameof(boolValue), true), Tag] string[] sceneNameArray;
     [SerializeField, EnableIf(nameof(boolValue2)), Tag] List<string> sceneNameList;
     [SerializeField, EnableIf(nameof(boolValue2), true)] List<InlineClass> classes = new List<InlineClass>();
-    [SerializeField, Layer] Vector2 vector1;
-    [SerializeField, Scene] Vector2 vector2;
-    [SerializeField, SingleFlagOnly] Vector2 vector3;
     [SerializeField, EnableIfEnum(nameof(sampleEnum), false, true, (int)SampleEnum.Value1)] Vector2 vector4;
-    [SerializeField, Tag] Vector2 vector5;
     [SerializeReference, SerializeReferenceView, SerializeField]
     IInLineInterface resultCollector;
     [SerializeReference, SerializeReferenceView]
@@ -59,7 +67,7 @@ public class SampleScript : AbstructSample
         [EnableIf(nameof(boolValue), true)]
         public int[] ints;
         public string Name => name;
-        
+
         [EnableIf(nameof(boolValue), true)]
         public Vector2? vector2;
         [OnInspectorButton("Throw Exception")]
@@ -123,8 +131,8 @@ public class SampleScript : AbstructSample
         {
             return new HideConstructorClass(Name);
         }
-        private HideConstructorClass(string Name) 
-        { 
+        private HideConstructorClass(string Name)
+        {
             this.Name = Name;
         }
     }

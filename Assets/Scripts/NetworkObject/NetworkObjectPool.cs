@@ -132,14 +132,14 @@ namespace Syacapachi.util
                 networkObject.gameObject.SetActive(true);
             }
 
-            void ActionOnRelease(NetworkObject networkObject)
+            static void ActionOnRelease(NetworkObject networkObject)
             {
                 if(networkObject.gameObject.TryGetComponent<Rigidbody>(out var rb) && !rb.isKinematic)
                 {
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
                 }
-                if (networkObject.IsSpawned && IsServer)
+                if (networkObject.IsSpawned && NetworkManager.Singleton.IsServer)
                 {
                     //破壊しないで、Despawn()
                     networkObject.Despawn(false);
@@ -181,7 +181,7 @@ namespace Syacapachi.util
         public int PrewarmCount;
     }
 
-    class PooledPrefabInstanceHandler : INetworkPrefabInstanceHandler
+    sealed class PooledPrefabInstanceHandler : INetworkPrefabInstanceHandler
     {
         readonly GameObject m_Prefab;
         readonly NetworkObjectPool m_Pool;

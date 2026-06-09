@@ -6,7 +6,7 @@ public class Step4_Coop : TutorialBase
     {
     }
 
-    public override void OnStart()
+    public sealed override void OnStart()
     {
         spawner.OnAllEnemyDead += base.HandleAllDead;
 
@@ -18,7 +18,7 @@ public class Step4_Coop : TutorialBase
         spawner.ApplyAttackableAfterSpawn(true);
     }
 
-    public override void OnEnd()
+    public sealed override void OnEnd()
     {
         spawner.OnAllEnemyDead -= base.HandleAllDead;
     }

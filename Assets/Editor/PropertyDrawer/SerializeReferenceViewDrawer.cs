@@ -13,6 +13,21 @@ namespace Syacapachi.Editor
     [CustomPropertyDrawer(typeof(SerializeReferenceViewAttribute))]
     public class SerializeReferenceViewDrawer : PropertyDrawer
     {
+        readonly struct TypeNameCache
+        {
+            public readonly GUIContent TypeName;
+            public readonly GUIContent GUIContent;
+
+            public TypeNameCache(Type type)
+            {
+                TypeName = new GUIContent($"▶ {type.Name}");
+                GUIContent = new GUIContent(type.FullName.Replace('.', '/'));
+            }
+        }
+        private static readonly GUIContent selectButtonLabel = new GUIContent("＋ 型を選択");
+        private static readonly GUIContent deleteButtonLabel = new GUIContent("削除");
+        //TypeとGUIContentのキャッシュ
+        private static readonly Dictionary<Type, TypeNameCache> typeNameCache = new();
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var attr = (SerializeReferenceViewAttribute)attribute;
@@ -21,10 +36,10 @@ namespace Syacapachi.Editor
             if (property.managedReferenceValue == null)
             {
                 // タイプ選択ボタン
-                if (GUI.Button(position, "＋ 型を選択"))
+                if (GUI.Button(position, selectButtonLabel))
                 {
                     //Debug.Log($"Search {fieldInfo.FieldType}");
-                    ShowTypeMenu(property, attr.BaseType);
+                    ShowTypeMenu(property, attr, fieldInfo.FieldType);
                 }
             }
             else
@@ -32,11 +47,12 @@ namespace Syacapachi.Editor
                 // クラス名をタイトルに表示
                 var type = property.managedReferenceValue.GetType();
                 Rect headerRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
-                EditorGUI.LabelField(headerRect, $"▶ {type.Name}", EditorStyles.boldLabel);
+                var cache = GetOrCreateCache(type);
+                EditorGUI.LabelField(headerRect, cache.TypeName, EditorStyles.boldLabel);
 
                 // 削除ボタン 属性をnullにして更新
                 Rect btnRect = new Rect(position.x + position.width - 60, position.y, 60, EditorGUIUtility.singleLineHeight);
-                if (GUI.Button(btnRect, "削除"))
+                if (GUI.Button(btnRect, deleteButtonLabel))
                 {
                     property.managedReferenceValue = null;
                     property.serializedObject.ApplyModifiedProperties();
@@ -62,12 +78,15 @@ namespace Syacapachi.Editor
 
             return EditorGUI.GetPropertyHeight(property, label, true) + EditorGUIUtility.singleLineHeight;
         }
-
-        private void ShowTypeMenu(SerializedProperty property, Type baseType)
+        /// <summary>
+        /// 派生クラスを決定するGenericMenuを作成する。
+        /// </summary>
+        /// <param name="property"> 描画するSerializedProperty </param>
+        /// <param name="attr">FieldのSerializeReferenceViewAttribute </param>
+        /// <param name="fieldType">　filedInfo.FieldType </param>
+        private static void ShowTypeMenu(SerializedProperty property, SerializeReferenceViewAttribute attr, Type fieldType)
         {
             GenericMenu menu = new GenericMenu();
-
-            Type fieldType = fieldInfo.FieldType;
             //Array
             if (fieldType.IsArray)
             {
@@ -78,7 +97,7 @@ namespace Syacapachi.Editor
             {
                 fieldType = fieldType.GetGenericArguments()[0];
             }
-            Type targetBase = baseType ?? fieldType;
+            Type targetBase = attr.BaseType ?? fieldType;
 
             // ジェネリックなども含め全型,基底クラスを継承するクラスを探索
             //var types = AppDomain.CurrentDomain.GetAssemblies()
@@ -92,10 +111,10 @@ namespace Syacapachi.Editor
             var types = TypeCache.GetTypesDerivedFrom(targetBase);
 
             //自身
-            if(!targetBase.IsAbstract && !targetBase.IsInterface)
+            if (!targetBase.IsAbstract && !targetBase.IsInterface)
             {
-                string menuName = targetBase.FullName.Replace('.', '/');
-                menu.AddItem(new GUIContent(menuName), false, () =>
+                var cache = GetOrCreateCache(targetBase);
+                menu.AddItem(cache.GUIContent, false, () =>
                 {
                     property.managedReferenceValue = Activator.CreateInstance(targetBase);
                     property.serializedObject.ApplyModifiedProperties();
@@ -103,8 +122,8 @@ namespace Syacapachi.Editor
             }
             foreach (var type in types)
             {
-                string menuName = type.FullName.Replace('.', '/');
-                menu.AddItem(new GUIContent(menuName), false, () =>
+                var cache = GetOrCreateCache(type);
+                menu.AddItem(cache.GUIContent, false, () =>
                 {
                     property.managedReferenceValue = Activator.CreateInstance(type);
                     property.serializedObject.ApplyModifiedProperties();
@@ -112,6 +131,20 @@ namespace Syacapachi.Editor
             }
 
             menu.ShowAsContext();
+        }
+        /// <summary>
+        /// キャッシュ取得
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static TypeNameCache GetOrCreateCache(Type type)
+        {
+            if (!typeNameCache.TryGetValue(type, out var cache))
+            {
+                cache = new TypeNameCache(type);
+                typeNameCache[type] = cache;
+            }
+            return cache;
         }
     }
 }

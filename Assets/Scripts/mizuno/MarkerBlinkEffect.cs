@@ -124,7 +124,7 @@ public class MarkerBlinkEffect : NetworkBehaviour
     }
 
     // PingPong を smootherstep で丸めて、山と谷の切り替わりをやわらかくする。
-    float EvaluatePulse(float speed)
+    static float EvaluatePulse(float speed)
     {
         float t = Mathf.PingPong(Time.time * speed, 1f);
         return t * t * t * (t * (t * 6f - 15f) + 10f);

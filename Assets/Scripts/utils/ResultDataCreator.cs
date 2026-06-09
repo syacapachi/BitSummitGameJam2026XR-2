@@ -45,7 +45,7 @@ public class ResultDataCreator : NetworkBehaviour
             playerResultDataCacheList.Add(stats.CreateResultDataServerOnly());
         }
         PlayerResultData[] datas = playerResultDataCacheList.ToArray();
-        float cooporate = ResultDataCreator.CalculateCooperation(datas);
+        float cooporate = ResultDataCreator.CalculateCooperation(datas.AsSpan());
         ResultData data = new ResultData()
         {
             DateTime = DateTime.Now.ToString(),
@@ -64,7 +64,7 @@ public class ResultDataCreator : NetworkBehaviour
     {
         resultDataRpcEvent.Invoke(result);
     }
-    static float CalculateCooperation(IReadOnlyList<PlayerResultData> results)
+    static float CalculateCooperation(ReadOnlySpan<PlayerResultData> results)
     {
         float totalShots = 0;
         float totalHits = 0;

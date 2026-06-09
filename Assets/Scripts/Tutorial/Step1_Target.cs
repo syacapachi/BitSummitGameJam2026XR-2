@@ -15,13 +15,13 @@ public class Step1_Target : TutorialBase
         this.step1Enemies = step1Enemies;
     }
 
-    public override void OnStart()
+    public sealed override void OnStart()
     {
         spawner.OnAllEnemyDead += base.HandleAllDead;
         spawner.SpawnTargetsForEachPlayer(step1Enemies.Count, step1Enemies);
     }
 
-    public override void OnEnd()
+    public sealed override void OnEnd()
     {
         spawner.OnAllEnemyDead -= HandleAllDead;
         spawner.KillAll();

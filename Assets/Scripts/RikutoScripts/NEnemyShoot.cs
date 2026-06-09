@@ -92,9 +92,9 @@ public class NEnemyShoot : GunController
     {
         //トリガー以外はこっち
         //networkAnimator?.Animator.SetFloat("Speed", 2.0f);
-        WaitForSeconds waitInterval = new WaitForSeconds(weaponSORpc.fireInterval);
-        WaitForSeconds waitReload = new WaitForSeconds(weaponSORpc.reloadTime);
-        yield return new WaitForSeconds(weaponSORpc.FirstShootDelayTime);
+        WaitForSeconds waitInterval = WaitForSecondsCache.Get(weaponSORpc.fireInterval);
+        WaitForSeconds waitReload = WaitForSecondsCache.Get(weaponSORpc.reloadTime);
+        yield return WaitForSecondsCache.Get(weaponSORpc.FirstShootDelayTime);
         //トリガーはこっち
         networkAnimator?.SetTrigger("Attack");
 

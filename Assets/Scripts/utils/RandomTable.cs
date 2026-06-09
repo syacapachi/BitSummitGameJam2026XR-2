@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 [Serializable]
-public class RandomTable
+public sealed class RandomTable
 {
     private System.Random rng;
     private readonly float[] values;
@@ -12,7 +12,8 @@ public class RandomTable
     {
         if (size <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(size));
+            //例外を投げる関数は内部最適化されないので、別メソッドにする
+            ThrowArgException(nameof(size));
         }
         rng = new System.Random(seed);
 
@@ -81,5 +82,9 @@ public class RandomTable
             int j = RangeInt(0, i + 1);
             (list[i], list[j]) = (list[j], list[i]);
         }
+    }
+    private static void ThrowArgException(string name)
+    {
+        throw new ArgumentOutOfRangeException(name);
     }
 }

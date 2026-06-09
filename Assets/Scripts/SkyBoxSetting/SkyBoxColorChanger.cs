@@ -1,4 +1,5 @@
 ﻿using Syacapachi.Attribute;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -54,7 +55,7 @@ public class SkyBoxColorChanger : MonoBehaviour
 
     private void Awake()
     {
-        waitForStartSkyTime = new WaitForSeconds(startDayLoopTime);
+        waitForStartSkyTime = WaitForSecondsCache.Get(startDayLoopTime);
         ApplyColor(noonSky);
         OnLocalStateChanged(LocalState.LanguageSelect);
     }
@@ -144,22 +145,22 @@ public class SkyBoxColorChanger : MonoBehaviour
         {
             maxPhaseTime += phase.PhaseTime;
         }
-        StartCoroutine(SkyBoxChangeCorutine(maxPhaseTime));
+        StartCoroutine(SkyBoxChangeCorutine(skyBoxColorSettings, maxPhaseTime));
     }
-    private IEnumerator SkyBoxChangeCorutine(float maxTime)
+    private IEnumerator SkyBoxChangeCorutine(SkyBoxColorSetting[] settings,float maxTime)
     {
-        int startTime = (int)skyBoxColorSettings[0].timeOfDay;
-        int endTime = (int)skyBoxColorSettings[^1].timeOfDay;
+        int startTime = (int)settings[0].timeOfDay;
+        int endTime = (int)settings[^1].timeOfDay;
         int duratinTime = endTime - startTime > 0
             ? endTime - startTime
             : (24 - startTime) + (endTime);
 
         float hourTime = maxTime / duratinTime;
 
-        for (int index = 0; index < skyBoxColorSettings.Length; index++)
+        for (int index = 0; index < settings.Length; index++)
         {
-            if (index == skyBoxColorSettings.Length - 1) yield return ApplyColorCorutineByHour(skyBoxColorSettings[^1], clearSky, hourTime);
-            else yield return ApplyColorCorutineByHour(index, index + 1, hourTime);
+            if (index == settings.Length - 1) yield return ApplyColorCorutineByHour(settings[^1], clearSky, hourTime);
+            else yield return ApplyColorCorutineByHour(settings[index], settings[index + 1], hourTime);
         }
     }
 

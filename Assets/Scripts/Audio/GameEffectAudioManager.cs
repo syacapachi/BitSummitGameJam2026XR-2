@@ -90,7 +90,7 @@ public class GameEffectAudioManager : MonoBehaviour
 
     private IEnumerator PlayAfterDelay(AudioSource source, float delay)
     {
-        yield return new WaitForSeconds(delay);
+        yield return WaitForSecondsCache.Get(delay);
         yield return PlayAndRelease(source);
     }
 
@@ -161,7 +161,7 @@ public class GameEffectAudioManager : MonoBehaviour
     }
     private IEnumerator PlayFxAfterDelay(FxEffect fxEffect, GameObject fxPrefab, ParticleSystem[] particleSystems, float delay)
     {
-        yield return new WaitForSeconds(delay);
+        yield return WaitForSecondsCache.Get(delay);
         PlayFx(fxEffect, fxPrefab, particleSystems);
     }
 
@@ -194,7 +194,7 @@ public class GameEffectAudioManager : MonoBehaviour
     }
     private IEnumerator StopLoopFxAfterLifetime(GameObject obj, ParticleSystem[] particleSystems, float lifeTime)
     {
-        yield return new WaitForSeconds(lifeTime);
+        yield return WaitForSecondsCache.Get(lifeTime);
 
         if (obj == null)
         {

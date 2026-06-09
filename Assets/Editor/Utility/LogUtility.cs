@@ -6,7 +6,7 @@
     using System.Reflection;
     using UnityEngine;
 
-    public class LogUtility
+    public static class LogUtility
     {
         public static string BuildParameterLog(MethodInfo method, object[] values)
         {

@@ -30,7 +30,7 @@ public class GameClearEffectManager : MonoBehaviour
     void OnDisable() => gameStateRpcEvent.Unregister(OnStateChanged);
     void CacheDefaults()
     {
-        waitForInterval = new WaitForSeconds(confettiInterval);
+        waitForInterval = WaitForSecondsCache.Get(confettiInterval);
         defaultLightIntensities = new float[roomLights != null ? roomLights.Length : 0];
         for (int i = 0; i < defaultLightIntensities.Length; i++)
             defaultLightIntensities[i] = roomLights[i] ? roomLights[i].intensity : 1f;
