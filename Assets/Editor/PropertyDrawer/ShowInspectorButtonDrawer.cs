@@ -8,7 +8,6 @@ namespace Syacapachi.Editor
     using System.Reflection;
     using UnityEditor;
     using UnityEngine;
-    using UnityEngine.TextCore.Text;
     using UnityEngine.UIElements;
 
     [CustomPropertyDrawer(typeof(ShowInspectorAttribute))]
@@ -63,7 +62,7 @@ namespace Syacapachi.Editor
             return EditorGUI.GetPropertyHeight(property, label, true);
         }
         //ネストにも対応させる
-        private object DrawField(Rect rect,Type t, string name, object currentValue)
+        private static object DrawField(in Rect rect,Type t, string name, object currentValue)
         {
             name = ObjectNames.NicifyVariableName(name);
             if (t == typeof(int))
@@ -147,7 +146,7 @@ namespace Syacapachi.Editor
             // ScriptableObjectをインラインで描画
             return DrawObject(name, rect, t, currentValue);
         }
-        IList DrawList(string name, Rect rect, Type elementType, IList list)
+        static IList DrawList(string name, in Rect rect, Type elementType, IList list)
         {
             // nullの場合は新しいリストを作成
             list ??= (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
@@ -184,7 +183,7 @@ namespace Syacapachi.Editor
             return list;
         }
 
-        object DrawDictionary(string name, Rect rect, Type dictType, object dictObj)
+        static object DrawDictionary(string name,in Rect rect, Type dictType, object dictObj)
         {
             var args = dictType.GetGenericArguments();
 
@@ -229,7 +228,7 @@ namespace Syacapachi.Editor
                     dict[key] = newValue;
                 }
 
-                if (GUILayout.Button("-", GUILayout.Width(20)))
+                if (GUILayout.Button("-", GUIContentCache.GetWidth(20)))
                 {
                     dict.Remove(key);
                     break;
@@ -247,7 +246,7 @@ namespace Syacapachi.Editor
 
             return dict;
         }
-        object DrawObject(string name, Rect rect, Type type, object value)
+        static object DrawObject(string name, Rect rect, Type type, object value)
         {
             value ??= Activator.CreateInstance(type);
 
@@ -282,7 +281,7 @@ namespace Syacapachi.Editor
 
             return value;
         }
-        void DrawScriptableObjectInline(ScriptableObject so)
+        static void DrawScriptableObjectInline(ScriptableObject so)
         {
             //if (so == null)
             //    return;
@@ -299,7 +298,7 @@ namespace Syacapachi.Editor
 
             //EditorGUI.EndChangeCheck();
         }
-        object GetDefault(Type t)
+        static object GetDefault(Type t)
         {
             if (t.IsValueType)
                 return Activator.CreateInstance(t);
@@ -307,7 +306,7 @@ namespace Syacapachi.Editor
             return null;
         }
 
-        bool GetFoldout(object key)
+        static bool GetFoldout(object key)
         {
             if (!foldouts.TryGetValue(key, out bool value))
             {
@@ -318,7 +317,7 @@ namespace Syacapachi.Editor
             return value;
         }
 
-        void SetFoldout(object key, bool value)
+        static void SetFoldout(object key, bool value)
         {
             foldouts[key] = value;
         }

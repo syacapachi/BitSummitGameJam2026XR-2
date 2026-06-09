@@ -515,7 +515,7 @@
             UnaryExpression castResult =
                 Expression.Convert(fieldAccess, typeof(object));
 
-            // instance => (object)((TargetType)instance).field
+            // object instance => (object)((TargetType)instance).field
             // 上記の Expression をラムダ式としてまとめ、Func<object, object> 型のデリゲートにコンパイルする
             return Expression
                 .Lambda<Func<object, object>>(
