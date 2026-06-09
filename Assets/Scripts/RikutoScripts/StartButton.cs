@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using Unity.Netcode;
+using Syacapachi.Attribute;
 
 public class StartButton : NetworkBehaviour
 {
@@ -100,7 +101,7 @@ public class StartButton : NetworkBehaviour
     {
         StartGameRpc();
     }
-
+    [OnInspectorButton]
     public void SelectResetGame()
     {
         ResetGameRpc();
@@ -117,6 +118,7 @@ public class StartButton : NetworkBehaviour
     {
         gameStateManager.OnBackToHomeServerOnly();
         resetUI.SetActive(false);
+
     }
 
     private void GameStartHandle()
@@ -137,4 +139,5 @@ public class StartButton : NetworkBehaviour
         startUI.SetActive(false);
         resetUI.SetActive(false);
     }
+
 }

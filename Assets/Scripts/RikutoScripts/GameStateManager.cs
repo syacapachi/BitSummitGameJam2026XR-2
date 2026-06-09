@@ -58,6 +58,7 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] LocalStateEvent localStateChangeLocalEvent;
     [SerializeField] DifficultyEvent difficultyEvent;
     [SerializeField] LanguageEvent langageEvent;
+    [SerializeField] VoidEvent gameResetEvent;
 
     public bool IsGamePlaying => CurrentGameState == GameState.Playing || CurrentGameState == GameState.Tutorial;
     public bool IsGameOver => CurrentGameState == GameState.GameOver;
@@ -384,7 +385,15 @@ public class GameStateManager : NetworkBehaviour
     {
         if (!IsServer) return;
         CurrentGameState = GameState.Home;
+        NotifyResetRpc();
     }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void NotifyResetRpc()
+    {
+        gameResetEvent.Invoke();
+    }
+
     public void EnterLanguageSelect()
     {
         LocalState = LocalState.LanguageSelect;
