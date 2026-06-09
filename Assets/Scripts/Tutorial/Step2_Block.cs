@@ -14,7 +14,7 @@ public class Step2_Block : TutorialBase
         this.step2Enemies = step2Enemies;
     }
 
-    public override void OnStart()
+    public sealed override void OnStart()
     {
         counts.Clear();
         spawner.SpawnTargetsForEachPlayer(playerCount, step2Enemies);
@@ -24,12 +24,12 @@ public class Step2_Block : TutorialBase
     }
 
 
-    public override void OnEnd()
+    public sealed override void OnEnd()
     {
     }
 
     // ★ここがメインロジック
-    public override void OnAttackBlocked(ulong playerId)
+    public sealed override void OnAttackBlocked(ulong playerId)
     {
         if (!counts.ContainsKey(playerId))
             counts[playerId] = 0;

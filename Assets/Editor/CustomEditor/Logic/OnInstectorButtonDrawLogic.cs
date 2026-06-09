@@ -134,6 +134,8 @@
         /// </summary>
         private static readonly GUIContent Size = new GUIContent("Size","Size");
         private static readonly GUIContent Add = new GUIContent("Add", "Add");
+        private static readonly GUIContent Delete = new GUIContent("Delete", "Delete");
+        private static readonly GUILayoutOption width100 = GUILayout.Width(100);
         //全てのキャッシュを初期化して持っておく
         private static readonly MethodCache[] allMethods;
         private static readonly FieldCache[] allFields;
@@ -780,7 +782,7 @@
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     EditorGUILayout.LabelField($"{type.Name} ▶ {concreteType.Name}", EditorStyles.boldLabel);
-                    if (GUILayout.Button("Delete", GUILayout.Width(100)))
+                    if (GUILayout.Button(Delete, width100))
                     {
                         abstractToClass.Remove(path);
                         return null;

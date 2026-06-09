@@ -108,8 +108,8 @@ namespace Syacapachi.util
                     var obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
                     if (obj == null) continue;
 
-                    //オブジェクトのプロパティを得るために変換(ほぼキャスト)
-                    var so = new SerializedObject(obj);
+                    //オブジェクトのプロパティを得るために変換(ほぼキャスト),開放を忘れずに。
+                    using var so = new SerializedObject(obj);
                     var prop = so.GetIterator();
                     //参照を上から順に調べる。
                     while (prop.NextVisible(true))
@@ -151,9 +151,11 @@ namespace Syacapachi.util
             {
                 if (comp == null) continue;
 
-                var so = new SerializedObject(comp);
+                using var so = new SerializedObject(comp);
                 var prop = so.GetIterator();
 
+                //全ての参照ツリーを検索
+                //Monobehaviour->InlineClass->...のように
                 while (prop.NextVisible(true))
                 {
                     if (IsAssignableField(prop, target))
@@ -169,7 +171,7 @@ namespace Syacapachi.util
                 }
             }
         }
-        private Type GetFieldType(SerializedProperty prop)
+        private static Type GetFieldType(SerializedProperty prop)
         {
             //対象のオブジェクトを取得する
             var targetObject = prop.serializedObject.targetObject;
@@ -184,7 +186,13 @@ namespace Syacapachi.util
 
             return field?.FieldType;
         }
-        bool IsAssignableField(SerializedProperty prop, Object target)
+        /// <summary>
+        /// 検索中のSerializedPropのフィールドにtargetを入れられるか.
+        /// </summary>
+        /// <param name="prop">検索中のフィールド</param>
+        /// <param name="target">アサインしたいオブジェクト</param>
+        /// <returns></returns>
+        static bool IsAssignableField(SerializedProperty prop, Object target)
         {
             //[System.Serializeable]か、
             //UnityEngine.Obejctを継承してないと、ScriptableObjectを埋め込めない
@@ -211,7 +219,7 @@ namespace Syacapachi.util
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        bool IsSearchTarget(Type type)
+        static bool IsSearchTarget(Type type)
         {
             return
                 typeof(GameObject).IsAssignableFrom(type) || // Prefab

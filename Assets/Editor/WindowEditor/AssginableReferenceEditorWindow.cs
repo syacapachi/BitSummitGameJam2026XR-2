@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 public class AssginableReferenceEditorWindow : EditorWindow
 {
+    static readonly GUIContent PingLabel = new GUIContent("Ping", "Ping");
+    static readonly GUIContent SelectLabel = new GUIContent("Select", "Select");
+    static readonly GUILayoutOption width50 = GUILayout.Width(50);
+    static readonly GUILayoutOption width60 = GUILayout.Width(60);
+
     private Vector2 scroll;
     private readonly List<UnityEngine.Object> refrencesList = new();
     //GUIに追加
@@ -38,22 +44,34 @@ public class AssginableReferenceEditorWindow : EditorWindow
             {
                 GUILayout.Label(obj.name, EditorStyles.boldLabel);
 
-                if (GUILayout.Button("Ping", GUILayout.Width(50)))
+                if (GUILayout.Button(PingLabel, width50))
                 {
                     EditorGUIUtility.PingObject(obj);
                 }
 
-                if (GUILayout.Button("Select", GUILayout.Width(60)))
+                if (GUILayout.Button(SelectLabel, width60))
                 {
                     Selection.activeObject = obj;
                 }
             }
         }
     }
-    public void Init(List<UnityEngine.Object> refrences)
+    public void Init(IReadOnlyList<UnityEngine.Object> refrences)
     {
         refrencesList.Clear();
-        refrencesList.AddRange(refrences);
+        foreach (var obj in refrences)
+        {
+            refrencesList.Add(obj);
+        }
+        Repaint();
+    }
+    public void Init(Span<UnityEngine.Object> refrences)
+    {
+        refrencesList.Clear();
+        foreach (var obj in refrences)
+        {
+            refrencesList.Add(obj);
+        }
         Repaint();
     }
     

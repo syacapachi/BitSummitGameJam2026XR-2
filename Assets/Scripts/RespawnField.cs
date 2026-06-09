@@ -23,15 +23,15 @@ public class RespawnField : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log($"Collison {collision.gameObject.name} to {collision.body}", collision.gameObject);
-        Respawn(collision.gameObject);  
+        Respawn(collision.gameObject, respawnPositon);  
     }
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log($"Trigger {other.name}", other);
-        Respawn(other.gameObject);
+        Respawn(other.gameObject, respawnPositon);
     }
     [OnInspectorButton("Respawn Objects")]
-    private void Respawn(GameObject obj)
+    private static void Respawn(GameObject obj, Vector3 respawnPositon)
     {
         obj.transform.SetPositionAndRotation(respawnPositon, Quaternion.Euler(Vector3.zero));
         if (obj.TryGetComponent<Rigidbody>(out Rigidbody rb))
@@ -42,7 +42,5 @@ public class RespawnField : MonoBehaviour
                 rb.angularVelocity = Vector3.zero;
             }
         }
-
-        
     }
 }

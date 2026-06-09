@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 public class Step3_Marker : TutorialBase
@@ -16,16 +16,16 @@ public class Step3_Marker : TutorialBase
         this.playerCount = playerCount;
     }
 
-    public override void OnStart()
+    public sealed override void OnStart()
     {
         markedPlayers.Clear();
     }
 
-    public override void OnEnd()
+    public sealed override void OnEnd()
     {
     }
 
-    public override void OnMarkerPlaced(ulong playerId)
+    public sealed override void OnMarkerPlaced(ulong playerId)
     {
         markedPlayers.Add(playerId);
 

@@ -9,7 +9,7 @@ public static class AsyncRefrenceFinderGlobal
     //エディター更新時に呼ばれる
     static AsyncRefrenceFinderGlobal()
     {
-        StopAll();
+        StopAll(activeFinder);
     }
     public static void Resister(AsyncReferenceFinder finder)
     {
@@ -20,7 +20,7 @@ public static class AsyncRefrenceFinderGlobal
         activeFinder.Remove(finder);
     }
     //全部止める
-    private static void StopAll()
+    private static void StopAll(List<AsyncReferenceFinder> activeFinder)
     {
         foreach (var finder in activeFinder)
         {
