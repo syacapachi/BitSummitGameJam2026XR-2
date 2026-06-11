@@ -24408,6 +24408,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 804038578}
   m_CullTransparentMesh: 1
+--- !u!1 &813865746 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 258138761573416757, guid: 7d9d91c76c2876942b37359359b93681, type: 3}
+  m_PrefabInstance: {fileID: 2078580346}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &815105631
 GameObject:
   m_ObjectHideFlags: 0
@@ -52074,7 +52079,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786624247185409141, guid: 800658db6a9b15345b032ec9bfa8f644, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5786624247185409141, guid: 800658db6a9b15345b032ec9bfa8f644, type: 3}
       propertyPath: m_SizeDelta.y
@@ -79450,9 +79455,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 423640509}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: resetUI
+      value: 
+      objectReference: {fileID: 813865746}
+    - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: tutorialUI
       value: 
       objectReference: {fileID: 1406749563}
+    - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: useTutorial
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: connectCanvas
       value: 

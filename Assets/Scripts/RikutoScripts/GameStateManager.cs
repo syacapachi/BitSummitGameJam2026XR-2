@@ -53,6 +53,7 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] Collider worldViewCollider;
     [SerializeField] Canvas tutorialUI;
     [SerializeField] GameObject difficultyCanvas;
+    [SerializeField] GameObject resetUI;
     [Header("Publish Event")]
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     [SerializeField] LocalStateEvent localStateChangeLocalEvent;
@@ -133,6 +134,11 @@ public class GameStateManager : NetworkBehaviour
             case GameState.Playing:
                 LocalState = LocalState.Playing;
                 break;
+
+            case GameState.GameClear:
+            case GameState.GameOver:
+                LocalState = LocalState.End;
+                break;
         }
     }
     private void SetState(LocalState state)
@@ -159,6 +165,9 @@ public class GameStateManager : NetworkBehaviour
 
         difficultyCanvas.SetActive(
             state == LocalState.SelectDifficulty);
+
+        resetUI.SetActive( 
+            state == LocalState.End);
     }
 
 
@@ -205,6 +214,7 @@ public class GameStateManager : NetworkBehaviour
     {
         //切断されたらHomeへ行く。
         if (!isSpawned && toState == GameState.Home) return true;
+        // 展示用リセット
         return fromState switch
         {
             GameState.Home
@@ -213,14 +223,16 @@ public class GameStateManager : NetworkBehaviour
             GameState.Initializing
                 => toState == GameState.SelecrDifficulty
                 || toState == GameState.Tutorial
-                || toState == GameState.Playing,
+                || toState == GameState.Playing
+                || toState == GameState.Home,
 
             GameState.Tutorial
                 => toState == GameState.Playing,
 
             GameState.SelecrDifficulty
                 => toState == GameState.Tutorial
-                || toState == GameState.Playing,
+                || toState == GameState.Playing
+                || toState == GameState.Home,
 
             GameState.Playing
                 => toState == GameState.GameClear
@@ -414,6 +426,17 @@ public class GameStateManager : NetworkBehaviour
     {
         LocalState = LocalState.WorldView;
     }
+
+    [OnInspectorButton(drawOrder: 100)]
+    public void ResetGame()
+    {
+        if (!IsServer) return;
+
+        if (TrySetGameState(GameState.Home))
+        {
+            NotifyResetRpc();
+        }
+    }
 }
 public enum GameState
 {
@@ -455,6 +478,7 @@ public enum LocalState
     Tutorial,//チュートリアル
     SelectDifficulty,//難易度選択
     Playing,//ゲーム開始
+    End,//ゲーム終了
 }
 //LocalStateの動き
 //Lang -> (connect) -> worldView -> Playing ->GameState
