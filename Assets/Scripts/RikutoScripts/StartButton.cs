@@ -117,19 +117,19 @@ public class StartButton : NetworkBehaviour
     void ResetGameRpc()
     {
         gameStateManager.OnBackToHomeServerOnly();
-        resetUI.SetActive(false);
+        //resetUI.SetActive(false);
 
     }
 
     private void GameStartHandle()
     {
         startUI.SetActive(false);
-        resetUI.SetActive(false);
+        //resetUI.SetActive(false);
     }
     private void GameEndHandle()
     {
         startUI.SetActive(false);
-        resetUI.SetActive(true);
+        //resetUI.SetActive(true);
     }
 
     private void OnGameInitialize()
@@ -137,7 +137,7 @@ public class StartButton : NetworkBehaviour
         //startUI.SetActive(true);
         //難易度選択追加したためいったん非表示
         startUI.SetActive(false);
-        resetUI.SetActive(false);
+        //resetUI.SetActive(false);
     }
 
 }
