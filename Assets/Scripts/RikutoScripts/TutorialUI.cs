@@ -159,18 +159,19 @@ public class TutorialUI : MonoBehaviour
                 desc = isJapanese ? "全ての的を破壊せよ！" : "Destroy all targets!";
                 break;
 
+            /*
             case TutorialStep.Step2:
                 title = isJapanese ? "チュートリアル2" : "Tutorial 2";
                 desc = isJapanese ? "見えている敵を攻撃しろ！" : "Attack visible enemies!";
                 break;
-
-            case TutorialStep.Step3:
-                title = isJapanese ? "チュートリアル3" : "Tutorial 3";
+            */
+            case TutorialStep.Step2:
+                title = isJapanese ? "チュートリアル2" : "Tutorial 2";
                 desc = isJapanese ? "マーカーを置いて敵の位置を示せ！" : "Place a marker to indicate the enemy's position!";
                 break;
 
-            case TutorialStep.Step4:
-                title = isJapanese ? "チュートリアル4" : "Tutorial 4";
+            case TutorialStep.Step3:
+                title = isJapanese ? "チュートリアル3" : "Tutorial 3";
                 desc = isJapanese ? "見えない敵を倒せ！" : "Defeat invisible enemies!";
                 break;
         }

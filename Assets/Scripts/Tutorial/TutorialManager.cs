@@ -28,6 +28,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
     [SerializeField] IntEvent OnTutorialStepChanged;
     [SerializeField] ULongEvent markerPlaceServerEvent;
     private bool isTutorlalStartedServerOnly;
+    private bool tutorialClearByEnemyKill = false;
 
     public override void OnNetworkSpawn()
     {
@@ -36,6 +37,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
         {
             attackBlockedEvent.Register(OnAttackBlocked);
             markerPlaceServerEvent.Register(OnMarkerPlacedServer);
+            spawner.OnAllEnemyDead += OnAllEnemyDead;
         }
         CurrentStep.OnValueChanged += OnStepChanged;
     }
@@ -46,6 +48,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
         {
             attackBlockedEvent.Unregister(OnAttackBlocked);
             markerPlaceServerEvent.Unregister(OnMarkerPlacedServer);
+            spawner.OnAllEnemyDead -= OnAllEnemyDead;
         }
     }
     public void OnTutorialStartServerOnly()
@@ -61,6 +64,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
 
         isTutorlalStartedServerOnly = true;
         isWaitingNext = false;
+        tutorialClearByEnemyKill = false;
 
         CurrentStep.Value = TutorialStep.Step1;
 
@@ -83,19 +87,17 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
                 currentStepLogic = new Step1_Target(playerCount, spawner, OnStepCompleted, step1Enemies);
                 break;
 
+
             case TutorialStep.Step2:
-                currentStepLogic = new Step2_Block(playerCount, spawner, OnStepCompleted, step2Enemies);
+                currentStepLogic = new Step2_Marker(
+                    playerCount,
+                    spawner,
+                    OnStepCompleted,
+                    step2Enemies);
                 break;
 
             case TutorialStep.Step3:
-                currentStepLogic = new Step3_Marker(
-                    playerCount,
-                    spawner,
-                    OnStepCompleted);
-                break;
-
-            case TutorialStep.Step4:
-                currentStepLogic = new Step4_Coop(
+                currentStepLogic = new Step3_Coop(
                     spawner,
                     OnStepCompleted);
                 break;
@@ -149,23 +151,20 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
                 break;
 
             case TutorialStep.Step2:
-                CurrentStep.Value = TutorialStep.Step3;
+                CurrentStep.Value = tutorialClearByEnemyKill ? TutorialStep.End : TutorialStep.Step3;
                 break;
 
             case TutorialStep.Step3:
-                CurrentStep.Value = TutorialStep.Step4;
-                break;
-
-            case TutorialStep.Step4:
                 CurrentStep.Value = TutorialStep.End;
                 break;
+
         }
     }
 
     [Rpc(SendTo.Server)]
     public void NextStepRequretRpc()
     {
-        if (CurrentStep.Value != TutorialStep.Step4) return;
+        if (CurrentStep.Value != TutorialStep.Step3) return;
         NextStep();
     }
 
@@ -200,5 +199,21 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
         if (!IsServer) return;
 
         currentStepLogic?.OnMarkerPlaced(playerId);
+    }
+
+    void OnAllEnemyDead()
+    {
+        if (!IsServer) return;
+
+        if (!isTutorlalStartedServerOnly) return;
+
+        switch (CurrentStep.Value)
+        {
+            case TutorialStep.Step2:
+            case TutorialStep.Step3:
+                tutorialClearByEnemyKill = true;
+                OnStepCompleted();
+                break;
+        }
     }
 }
