@@ -22,6 +22,7 @@ public class NEnemyShoot : GunController
     PlayerManager playerManager;
     float remainServerOnly = 0;
     Transform nearestPlayerTransfrom = null;
+    [SerializeField] bool isUseBullet = true;
     private void Start()
     {
         gameManager = ManagerLocator.Instance.AllGameManager;
@@ -52,7 +53,8 @@ public class NEnemyShoot : GunController
     }
     private void ShootLocal()
     {
-        
+        if (!isUseBullet) return;
+
         Vector3 direction = (nearestPlayerTransfrom.position - FirePoint.position).normalized;
 
         GameObject bulletObject = ManagerLocator.Instance.LocalObjectPool.Get(
@@ -72,18 +74,29 @@ public class NEnemyShoot : GunController
     protected override void OnShootServer()
     {
         if (nearestPlayerTransfrom == null) return;
-        Vector3 direction = (nearestPlayerTransfrom.position - FirePoint.position).normalized;
 
-        NetworkObject networkObject = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(
-            BulletPrefab,
-            FirePoint.position,
-            Quaternion.LookRotation(direction)
-        );
+        Vector3 spawnPosition;
+        Quaternion spawnRotation;
+
+        if (isUseBullet)
+        {
+            Vector3 direction = (nearestPlayerTransfrom.position - FirePoint.position).normalized;
+            spawnPosition = FirePoint.position;
+            spawnRotation = Quaternion.LookRotation(direction);
+        }
+        else
+        {
+            spawnPosition = nearestPlayerTransfrom.position;
+            spawnRotation = Quaternion.identity;
+        }
+
+        NetworkObject networkObject = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(BulletPrefab, spawnPosition,spawnRotation);
 
         networkObject.gameObject.layer = this.gameObject.layer;
-
         var bullet = networkObject.GetComponent<BulletBaseController>();
+
         bullet.BulletInit(null, nEnemy.EnemyJob, weaponSORpc.bulletSetting);
+        bullet.SetShooter(nEnemy.NetworkObject);
 
         networkObject.Spawn();
     }

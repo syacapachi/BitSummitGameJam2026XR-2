@@ -21,6 +21,9 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
 
     protected BulletSetting BulletServerOnly => bulletSettingServerOnly;
 
+    public ulong ShooterNetworkObjectId { get; private set; }
+
+
 
     void Start()
     {
@@ -55,6 +58,11 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
                 childs.gameObject.layer = layersetting.CollidersLayer;
             }
         }
+    }
+
+    public void SetShooter(NetworkObject shooter)
+    {
+        ShooterNetworkObjectId = shooter.NetworkObjectId;
     }
     private IEnumerator DespawnCorutine(float time)
     {

@@ -13,6 +13,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
     );
     [Header("Publish Event")]
     [SerializeField] HPInfoEvent HpInfoRpcEvent;
+    [SerializeField] DamageIndicatorEvent damageIndicatorEvent;
 
     public GameObject GameObject => this.gameObject;
     public float CurrentHealth => currentHP.Value;
@@ -34,7 +35,15 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
 
     public void TakeDamage(IDamageSender sender, float damage)
     {
+        Debug.Log("TakeDamage");
         if (!IsServer) return;
+
+        if (sender is BulletBaseController bullet)
+        {
+            ShowDamageIndicatorRpc(
+                bullet.ShooterNetworkObjectId
+            );
+        }
 
         if (currentHP.Value <= 0)
         {
@@ -48,6 +57,20 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
             OnPlayerDead();
         }
     }
+
+    [Rpc(SendTo.Owner)]
+    private void ShowDamageIndicatorRpc(
+    ulong enemyNetworkId)
+    {
+        Debug.Log($"RPC {enemyNetworkId}");
+        damageIndicatorEvent.Invoke(
+            new DamageIndicatorInfo(
+                enemyNetworkId
+            )
+        );
+        Debug.Log("Invoke Event");
+    }
+
     private void OnServerHPChanged(float oldHP, float newHP)
     {
         // ★追加: UIにHP変化を通知
