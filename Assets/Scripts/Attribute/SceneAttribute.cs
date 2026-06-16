@@ -5,10 +5,10 @@
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class SceneAttribute : PropertyAttribute
     {
-        public bool buildSettingsSceneOnly;
+        public readonly bool BuildSettingsSceneOnly;
         public SceneAttribute(bool allowBuildSettingsSceneOnly = false)
         {
-            this.buildSettingsSceneOnly = allowBuildSettingsSceneOnly;
+            this.BuildSettingsSceneOnly = allowBuildSettingsSceneOnly;
         }
     }
 }

@@ -16,9 +16,11 @@
 
         // ScriptableObjectごとのFoldout状態のキャッシュ。ScriptableObjectはUnityEngine.Objectを継承しているので、インスタンスごとに状態を管理できる。
         // ScriptableObjectのFoldout状態のキャッシュ (複数インスペクターでの状態管理のため)
-        private static readonly Dictionary<UnityEngine.Object, bool> foldoutStates = new();
+        // KeyはUnityEngine.Object.GetInstanceID()
+        private static readonly Dictionary<int, bool> foldoutStates = new();
+        // KeyはUnityEngine.Object.GetInstanceID()
         // ネストしたEditorキャッシュ (パフォーマンス向上のため)ここだけの別クラスにできる。
-        private static readonly Dictionary<UnityEngine.Object, Editor> editorCache = new();
+        private static readonly Dictionary<int, Editor> editorCache = new();
 
         public static bool TryGetOrCreateEditorCache(UnityEngine.Object obj, out Editor editor)
         {
@@ -28,10 +30,11 @@
 
         public static Editor GetOrCreateEditorCache(UnityEngine.Object obj)
         {
-            if (!editorCache.TryGetValue(obj, out var editor))
+            int instanceId = obj.GetInstanceID();
+            if (!editorCache.TryGetValue(instanceId, out var editor) || editor == null)
             {
                 Editor.CreateCachedEditor(obj, null, ref editor);
-                editorCache[obj] = editor;
+                editorCache[instanceId] = editor;
             }
             return editor;
         }
@@ -106,22 +109,23 @@
 
             NestedScriptableObjectResult result = NestedScriptableObjectResult.DrawedObject;
 
-            if (!foldoutStates.TryGetValue(nestedSO, out var enable))
+            int instanceId = nestedSO.GetInstanceID();
+            if (!foldoutStates.TryGetValue(instanceId, out var enable))
             {
                 enable = false;// 初期状態は折りたたみ
-                foldoutStates[nestedSO] = enable;
+                foldoutStates[instanceId] = enable;
             }
             string label = overrideLabel ?? prop.displayName;
             label = $"{label} ▶ {nestedSO.name} ({nestedSO.GetType().Name})";
 
             EditorGUILayout.Space(3);
 
-            foldoutStates[nestedSO] = EditorGUILayout.Foldout(
+            foldoutStates[instanceId] = EditorGUILayout.Foldout(
                 enable,
                 label,
                 true
             );
-            if (!foldoutStates[nestedSO]) return result;
+            if (!foldoutStates[instanceId]) return result;
 
             int prevIndent = EditorGUI.indentLevel;
             EditorGUI.indentLevel = 0;
@@ -130,10 +134,10 @@
                 // -------------------------
                 // Editorキャッシュ使用
                 // -------------------------
-                if (!editorCache.TryGetValue(nestedSO, out var cachedEditor) || cachedEditor == null)
+                if (!editorCache.TryGetValue(instanceId, out var cachedEditor) || cachedEditor == null)
                 {
                     Editor.CreateCachedEditor(nestedSO, null, ref cachedEditor);
-                    editorCache[nestedSO] = cachedEditor;
+                    editorCache[instanceId] = cachedEditor;
                 }
 
                 //エディター描画(この中でも呼ばれするので実質再帰)

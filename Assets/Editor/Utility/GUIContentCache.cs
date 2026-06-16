@@ -1,72 +1,75 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-public static class GUIContentCache
+﻿namespace Syacapachi.util
 {
-    /// <summary>
-    /// GUILayoutOptionのキャッシュ
-    /// GUILayout.Width(width)は内部でnewされる。
-    /// </summary>
-    private static readonly Dictionary<int, GUILayoutOption> widthCache = new();
-    /// <summary>
-    /// GUIContentのキャッシュ
-    /// あまり使う効果なし。
-    /// これは、メモリ確保でアクセス高速化
-    /// </summary>
-    private static readonly Dictionary<string, GUIContent> contentCache = new();
-    /// <summary>
-    /// GUILayoutOptionのキャッシュ
-    /// GUILayout.Width(width)は内部でnewされる。
-    /// </summary>
-    /// <param name="width"></param>
-    /// <returns></returns>
-    public static GUILayoutOption GetWidth(float width)
+    using System.Collections.Generic;
+    using UnityEngine;
+
+    public static class GUIContentCache
     {
-        int key = Mathf.RoundToInt(width * 1000);
-        if (!widthCache.TryGetValue(key, out GUILayoutOption option))
+        /// <summary>
+        /// GUILayoutOptionのキャッシュ
+        /// GUILayout.Width(width)は内部でnewされる。
+        /// </summary>
+        private static readonly Dictionary<int, GUILayoutOption> widthCache = new();
+        /// <summary>
+        /// GUIContentのキャッシュ
+        /// あまり使う効果なし。
+        /// これは、メモリ確保でアクセス高速化
+        /// </summary>
+        private static readonly Dictionary<string, GUIContent> contentCache = new();
+        /// <summary>
+        /// GUILayoutOptionのキャッシュ
+        /// GUILayout.Width(width)は内部でnewされる。
+        /// </summary>
+        /// <param name="width"></param>
+        /// <returns></returns>
+        public static GUILayoutOption GetWidth(float width)
         {
-            option = GUILayout.Width(width);
-            widthCache.Add(key, option);
+            int key = Mathf.RoundToInt(width * 1000);
+            if (!widthCache.TryGetValue(key, out GUILayoutOption option))
+            {
+                option = GUILayout.Width(width);
+                widthCache.Add(key, option);
+            }
+            return option;
         }
-        return option;
-    }
-    /// <summary>
-    /// GUIContentのキャッシュを取得
-    /// あまり使う効果なし。
-    /// 理由:stringを入れたら、使いまわされるObjectが更新されて帰ってくるGUIContnt.Temp();
-    /// 要するにこの関数はこれは、メモリ確保することでアクセス高速化
-    /// </summary>
-    public static GUIContent GetContent(string contentKey)
-    {
-        if (!contentCache.TryGetValue(contentKey, out var cache))
+        /// <summary>
+        /// GUIContentのキャッシュを取得
+        /// あまり使う効果なし。
+        /// 理由:stringを入れたら、使いまわされるObjectが更新されて帰ってくるGUIContnt.Temp();
+        /// 要するにこの関数はこれは、メモリ確保することでアクセス高速化
+        /// </summary>
+        public static GUIContent GetContent(string contentKey)
         {
-            cache = new GUIContent(contentKey, contentKey);
-            contentCache[contentKey] = cache;
+            if (!contentCache.TryGetValue(contentKey, out var cache))
+            {
+                cache = new GUIContent(contentKey, contentKey);
+                contentCache[contentKey] = cache;
+            }
+            return cache;
         }
-        return cache;
-    }
-    public static bool TryGetContent(string contentKey ,out GUIContent cache)
-    {
-        if(contentCache.TryGetValue(contentKey, out cache))
+        public static bool TryGetContent(string contentKey, out GUIContent cache)
         {
-            return cache != null;
+            if (contentCache.TryGetValue(contentKey, out cache))
+            {
+                return cache != null;
+            }
+            return false;
         }
-        return false;
-    }
-    public static void ResistContent(string key, GUIContent content)
-    {
-        if (contentCache.ContainsKey(key))
+        public static void ResistContent(string key, GUIContent content)
         {
-            Debug.LogWarning($"{key} is already resisted");
+            if (contentCache.ContainsKey(key))
+            {
+                Debug.LogWarning($"{key} is already resisted");
+            }
+            contentCache[key] = content;
         }
-        contentCache[key] = content;
-    }
-    public static void ResistContent(string key, string label, Texture image = null, string toolip = "")
-    {
-        if(contentCache.ContainsKey(key))
+        public static void ResistContent(string key, string label, Texture image = null, string toolip = "")
         {
-            Debug.LogWarning($"{key} is already resisted");
+            if (contentCache.ContainsKey(key))
+            {
+                Debug.LogWarning($"{key} is already resisted");
+            }
+            contentCache[key] = new GUIContent(label, image, toolip);
         }
-        contentCache[key] = new GUIContent(label, image, toolip);
     }
 }

@@ -108,7 +108,7 @@ namespace Syacapachi.Editor
             {
                 return;
             }
-
+            
             Type enumType = GetEnumType(type);
             // enum実値取得
             int intValue = Convert.ToInt32(
@@ -116,6 +116,7 @@ namespace Syacapachi.Editor
                 Enum.Parse(
                     enumType,
                     property.enumNames[newIndex]));
+         
 
             // Flags enum の場合のみ単一化チェック
             if (!IsSingleFlag(intValue, attr) && IsFlagsEnum(enumType))
@@ -193,7 +194,7 @@ namespace Syacapachi.Editor
             int selectedLayer = EditorGUI.LayerField(position, label, currentLayer);
 
             // Nothing許可しない場合
-            if (!attr.allowNothing && selectedLayer == -1)
+            if (!attr.AllowNothing && selectedLayer == -1)
             {
                 selectedLayer = 0; // Defaultにフォールバック
             }
@@ -207,12 +208,12 @@ namespace Syacapachi.Editor
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool IsSingleFlag(int value, SingleFlagOnlyAttribute attr)
         {
-            return (attr.allowNothing || value != 0) && (value & (value - 1)) == 0;
+            return (attr.AllowNothing || value != 0) && (value & (value - 1)) == 0;
         }
 
         static int FixEnum(Type enumType, int value, SingleFlagOnlyAttribute attr)
         {
-            if (value == 0 && !attr.allowNothing)
+            if (value == 0 && !attr.AllowNothing)
                 return GetFirstEnumValue(enumType);
 
             return GetFirstBit(value);

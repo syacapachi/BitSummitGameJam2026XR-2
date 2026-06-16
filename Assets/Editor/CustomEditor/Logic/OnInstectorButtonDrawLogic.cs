@@ -1,6 +1,7 @@
 ﻿namespace Syacapachi.Editor
 {
     using Syacapachi.Attribute;
+    using Syacapachi.util;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -927,10 +928,9 @@
                 EditorUtility.DisplayDialog("No Concrete Class Found", $"No concrete class found that implements/inherits {baseType.Name}.", "OK");
                 return;
             }
-            string path = GetPathString(pathKey);
             foreach (var type in types)
             {
-                menu.AddItem(new GUIContent(type.FullName, path), false, () =>
+                menu.AddItem(GUIContentCache.GetContent(type.FullName), false, () =>
                 {
                     abstractToClass[pathKey] = type;
                 });

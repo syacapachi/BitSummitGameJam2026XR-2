@@ -56,13 +56,15 @@ namespace Syacapachi.Editor
             DrawDefaultInspector();
 
             UnityEngine.Object currentTarget = target;
+            //辞書に使うインスタンスID(UnityEngine.Objectの強参照を残さないため)
+            int targetInstanceID = currentTarget.GetInstanceID();
             if (currentTarget == null)
             {
                 serializedObject.ApplyModifiedProperties();
                 return;
             }
 
-            if (!drawLogicCache.TryGetValue(currentTarget.GetInstanceID(), out var drawLogic))
+            if (!drawLogicCache.TryGetValue(targetInstanceID, out var drawLogic))
             {
                 drawLogic =
                     OptionalDrawLogic.OnInstectorButtonDrawLogic |
@@ -91,12 +93,12 @@ namespace Syacapachi.Editor
                 }
             }
 
-            drawLogicCache[currentTarget.GetInstanceID()] = nextDrawLogic;
+            drawLogicCache[targetInstanceID] = nextDrawLogic;
 
             //変更を保存
             if (serializedObject.ApplyModifiedProperties())
             {
-                drawLogicCache.Remove(currentTarget.GetInstanceID());
+                drawLogicCache.Remove(targetInstanceID);
             }
         }
     }

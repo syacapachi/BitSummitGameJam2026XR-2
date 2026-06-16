@@ -1,4 +1,4 @@
-﻿namespace Syacapachi.Editor
+﻿namespace Syacapachi.util
 {
     using System;
     using System.Collections;

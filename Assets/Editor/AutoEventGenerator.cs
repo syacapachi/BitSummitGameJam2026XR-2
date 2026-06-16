@@ -49,14 +49,14 @@ namespace Syacapachi.util
                 //<T>か調べる
                 if (!attr.GenerateClass.IsGenericType)
                 {
-                    Debug.Log($"[EventGen] {attr.GenerateClass} は GenericTypeではありません"); 
+                    Debug.Log($"[{nameof(AutoEventGenerator)}] {attr.GenerateClass} は GenericTypeではありません"); 
                     continue;
                 }
                 // ■ 制約チェック
                 if (attr.RequireScriptableObject &&
                     !typeof(ScriptableObject).IsAssignableFrom(attr.GenerateClass))
                 {
-                    Debug.LogError($"[EventGen] {attr.GenerateClass} は ScriptableObject を継承していません");
+                    Debug.LogError($"[{nameof(AutoEventGenerator)}] {attr.GenerateClass} は ScriptableObject を継承していません");
                     continue;
                 }
                 //ジェネリック型は、NameSpace.ClassName`1 のように型が1つ入ることを書くので`以降を無視。
