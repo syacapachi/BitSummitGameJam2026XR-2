@@ -204,7 +204,7 @@ namespace Syacapachi.Editor
         // =========================
         // 共通処理
         // =========================
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool IsSingleFlag(int value, SingleFlagOnlyAttribute attr)
         {
             return (attr.allowNothing || value != 0) && (value & (value - 1)) == 0;
@@ -217,13 +217,13 @@ namespace Syacapachi.Editor
 
             return GetFirstBit(value);
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int GetFirstBit(int value)
         {
             if (value == 0) return 0;
             return value & -value; // 最下位ビットだけ残す
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int GetFirstEnumValue(Type enumType)
         {
             foreach (int v in Enum.GetValues(enumType))
@@ -235,7 +235,7 @@ namespace Syacapachi.Editor
         // =========================
         // Utility
         // =========================
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int MaskToLayer(int mask)
         {
             if (mask <= 0) return 0;
@@ -249,7 +249,7 @@ namespace Syacapachi.Editor
 
             return 0;
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int LayerToMask(int layer)
         {
             if (layer < 0) return 0;

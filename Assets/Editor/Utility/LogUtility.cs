@@ -53,7 +53,7 @@
             // IList
             if (value is IList list)
             {
-                return $"List[{list.Count}]";
+                return $"guidList[{list.Count}]";
             }
 
             // Dictionary

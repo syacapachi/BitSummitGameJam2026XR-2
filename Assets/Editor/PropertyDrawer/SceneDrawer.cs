@@ -2,6 +2,7 @@
 namespace Syacapachi.Editor
 {
     using Syacapachi.Attribute;
+    using System.Collections.Generic;
     using UnityEditor;
     using UnityEngine;
 
@@ -9,6 +10,25 @@ namespace Syacapachi.Editor
     public class SceneDrawer : PropertyDrawer
     {
         private static readonly GUIContent warningLabel = new GUIContent("Use with string fields only.", "string only");
+        //private static readonly Dictionary<string, string> sceneNameToPathCache = new();
+        private static readonly Dictionary<string, SceneAsset> sceneAssetCahce = new();
+        //static SceneDrawer()
+        //{
+
+        //}
+        static void ReBuildCache(Dictionary<string, string> nametoPathDic)
+        {
+            nametoPathDic.Clear();
+            GUID[] guids = AssetDatabase.FindAssetGUIDs("t:Scene");
+            string path = "";
+            foreach (GUID guid in guids)
+            {
+                path = AssetDatabase.GUIDToAssetPath(guid);
+                AssetDatabase.LoadAssetByGUID(guid,typeof(SceneAsset));
+
+            }
+        }
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (property.propertyType == SerializedPropertyType.String)
@@ -23,7 +43,7 @@ namespace Syacapachi.Editor
                 {
                     property.stringValue = "";
                 }
-                else if (!attr.allowBuildSettingsSceneOnly)
+                else if (!attr.buildSettingsSceneOnly)
                 {
                     
                     property.stringValue = newScene.name;
@@ -51,14 +71,20 @@ namespace Syacapachi.Editor
         private static SceneAsset GetSceneAsset(string sceneObjectName)
         {
             if (string.IsNullOrEmpty(sceneObjectName)) return null;
+            if (sceneAssetCahce.TryGetValue(sceneObjectName, out var sceneAsset))
+            {
+                return sceneAsset;
+            }
             //エディターで登録されている使われているシーンを検索
             for (int i = 0; i < EditorBuildSettings.scenes.Length; i++)
             {
                 EditorBuildSettingsScene scene = EditorBuildSettings.scenes[i];
                 if (scene.path.IndexOf(sceneObjectName) != -1)
                 {
+                    sceneAsset = AssetDatabase.LoadAssetAtPath(scene.path, typeof(SceneAsset)) as SceneAsset;
+                    sceneAssetCahce[sceneObjectName] = sceneAsset;
                     //見つかった場合、SceneAssetにして返す。
-                    return AssetDatabase.LoadAssetAtPath(scene.path, typeof(SceneAsset)) as SceneAsset;
+                    return sceneAsset;
                 }
             }
             Debug.LogWarning("Scene [" + sceneObjectName + "] cannot be used. Add this scene to the 'Scenes in the Build' in the build settings.");

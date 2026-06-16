@@ -24,7 +24,9 @@ namespace Syacapachi.Editor
         }
         //staticやreadoblyは、アセンブリロード時(スクリプト編集後など)や、Play時に再生成される。
         //正しく言えば、Unityがシリアライズできるデータは、アセンブリロード前に一時退避しアセンブリロード後に再生成&代入される仕様。
-        private static readonly Dictionary<UnityEngine.Object, OptionalDrawLogic> drawLogicCache = new();
+        //UnityEngine.Object.GetInstanceID()をキーとする。
+        //UnityEngine.Objectの参照があるとGCできない
+        private static readonly Dictionary<int, OptionalDrawLogic> drawLogicCache = new();
 
         static NetCodeButtonEditor()
         {
@@ -60,7 +62,7 @@ namespace Syacapachi.Editor
                 return;
             }
 
-            if (!drawLogicCache.TryGetValue(currentTarget, out var drawLogic))
+            if (!drawLogicCache.TryGetValue(currentTarget.GetInstanceID(), out var drawLogic))
             {
                 drawLogic =
                     OptionalDrawLogic.OnInstectorButtonDrawLogic |
@@ -89,12 +91,12 @@ namespace Syacapachi.Editor
                 }
             }
 
-            drawLogicCache[currentTarget] = nextDrawLogic;
+            drawLogicCache[currentTarget.GetInstanceID()] = nextDrawLogic;
 
             //変更を保存
             if (serializedObject.ApplyModifiedProperties())
             {
-                drawLogicCache.Remove(currentTarget);
+                drawLogicCache.Remove(currentTarget.GetInstanceID());
             }
         }
     }

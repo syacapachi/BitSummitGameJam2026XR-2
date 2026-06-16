@@ -20,13 +20,13 @@
         // ネストしたEditorキャッシュ (パフォーマンス向上のため)ここだけの別クラスにできる。
         private static readonly Dictionary<UnityEngine.Object, Editor> editorCache = new();
 
-        internal static bool TryGetOrCreateEditorCache(UnityEngine.Object obj, out Editor editor)
+        public static bool TryGetOrCreateEditorCache(UnityEngine.Object obj, out Editor editor)
         {
             editor = GetOrCreateEditorCache(obj);
             return editor != null;
         }
 
-        internal static Editor GetOrCreateEditorCache(UnityEngine.Object obj)
+        public static Editor GetOrCreateEditorCache(UnityEngine.Object obj)
         {
             if (!editorCache.TryGetValue(obj, out var editor))
             {
@@ -36,7 +36,7 @@
             return editor;
         }
 
-        internal static NestedScriptableObjectResult DrawNestedScriptableObject(UnityEngine.Object obj)
+        public static NestedScriptableObjectResult DrawNestedScriptableObject(UnityEngine.Object obj)
         {
             return DrawNestedScriptableObjectsRecrusiveInternal(obj);
         }

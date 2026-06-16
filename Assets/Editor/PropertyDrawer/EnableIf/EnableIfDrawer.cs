@@ -4,6 +4,7 @@ namespace Syacapachi.Editor
     using Syacapachi.Attribute;
     using System;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using UnityEditor;
     using UnityEngine;
 
@@ -23,19 +24,20 @@ namespace Syacapachi.Editor
                 propertyPath = property.propertyPath;
                 attributeId = attribute.GetHashCode();
             }
-
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly bool Equals(EvaluationCacheKey other)
             {
                 return targetId == other.targetId
                     && attributeId == other.attributeId
                     && propertyPath == other.propertyPath;
             }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
 
             public readonly override bool Equals(object obj)
             {
                 return obj is EvaluationCacheKey other && Equals(other);
             }
-
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly override int GetHashCode()
             {
                 return HashCode.Combine(targetId, attributeId, propertyPath);

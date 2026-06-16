@@ -3,18 +3,45 @@ namespace Syacapachi.util
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using Unity.Collections;
     using UnityEditor;
     using UnityEngine;
 
     public class ScritableObjectManagerWindow : EditorWindow, ISerializationCallbackReceiver
     {
         [Serializable]
-        sealed class ListWrapper
+        public struct ListWrapper
         {
-            public List<UnityEngine.Object> List = new();
+            public List<UnityEngine.Object> List;
             public ListWrapper(List<UnityEngine.Object> list)
             {
                 this.List = list;
+            }
+        }
+        [Serializable]
+        public struct ListGUIDWrapper
+        {
+            public List<GUID> GuidList;
+            public ListGUIDWrapper(List<GUID> list)
+            {
+                this.GuidList = list;
+            }
+            public ListGUIDWrapper(List<UnityEngine.Object> list)
+            {
+                //Allocator.Temp,このスコープ内でのみ有効なNativeArray,Disposeは自動
+                NativeArray<int> instanceIDs = new NativeArray<int>(list.Count, Allocator.Temp);
+                NativeArray<GUID> guidOuts = new NativeArray<GUID>(list.Count, Allocator.Temp);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    instanceIDs[i] = list[i].GetInstanceID();
+                }
+                //Unityが用意している高速な配列
+                AssetDatabase.InstanceIDsToGUIDs(instanceIDs, guidOuts);
+                GuidList = guidOuts.ToList();
+
+                instanceIDs.Dispose();  
+                guidOuts.Dispose();
             }
         }
         [Flags]
@@ -46,28 +73,32 @@ namespace Syacapachi.util
         //正しく言えば、Unityがシリアライズできるデータは、アセンブリロード前に一時退避しアセンブリロード後に再生成&代入される仕様。
 
         // Type<ScriptableObjec>とそのScriptableObjectのインスタンスのリスト
+        //強参照があるとGCできないので、intとかstringにしたい。
         static readonly Dictionary<System.Type, List<ScriptableObject>> typeToIntanceCache = new();
         // 検索文字列、検索対象と、対応するScriptableObjectのリストのキャッシュ
         static readonly Dictionary<(Type,string[]), List<ScriptableObject>> searchInstanceCache = new();
-        // あるScriptableObjectを参照しているObjectへの参照キャッシュ 複数Windowで共有できるのでstatic
-        static readonly Dictionary<ScriptableObject, List<UnityEngine.Object>> objectReferenceCache = new();
-        // あるScriptableObjectを参照できるObjectへの参照キャッシュ 複数Windowで共有できるのでstatic
-        static readonly Dictionary<ScriptableObject, List<UnityEngine.Object>> assginableCache = new();
+        // あるScriptableObjectを参照しているObjectへの参照キャッシュ(KeyはインスタンスID) 複数Windowで共有できるのでstatic
+        static readonly Dictionary<int, List<UnityEngine.Object>> objectReferenceCache = new();
+        // あるScriptableObjectを参照できるObjectへの参照キャッシュ(KeyはインスタンスID) 複数Windowで共有できるのでstatic
+        static readonly Dictionary<int, Dictionary<string,List<UnityEngine.Object>>> assginableCache = new();
         // 折りたたみ状態
         static readonly Dictionary<System.Type, bool> typeFoldouts = new();
-        static readonly Dictionary<ScriptableObject, bool> contentFoldouts = new();
-        // 検索状態
-        static readonly Dictionary<ScriptableObject, bool> isSearching = new();
+        //(KeyはインスタンスID)
+        static readonly Dictionary<int, bool> contentFoldouts = new();
+        // 検索状態(KeyはインスタンスID) 
+        static readonly Dictionary<int, bool> isSearching = new();
         static readonly List<ScriptableObject> cachedList = new();
 
         //ここ以下シリアライズ対象
         //検索結果を保存するために逃がすリスト
         //アセンブリロード時、Play時にこれはシリアライズされる。
-        List<ScriptableObject> objectReferenceCacheKeys = new();
+        List<int> objectReferenceCacheKeysInstanceId = new();
         List<ListWrapper> objectReferenceCacheValues = new();
 
-        List<ScriptableObject> assginableCacheKeys = new();
-        List<ListWrapper> assginableCacheValues = new();
+        List<int> assginableCacheKeysInstanceId = new();
+        List<int> assginableCacheKeysCount = new();
+        List<string> assginableCacheValuesKey = new();
+        List<ListWrapper> assginableCacheValuesValues = new();
 
         Vector2 scroll;
         string searchText = string.Empty;
@@ -79,33 +110,53 @@ namespace Syacapachi.util
         //DictをListに変換
         public void OnBeforeSerialize()
         {
-            objectReferenceCacheKeys.Clear();
+            objectReferenceCacheKeysInstanceId.Clear();
             objectReferenceCacheValues.Clear();
-            assginableCacheKeys.Clear();
-            assginableCacheValues.Clear();
+            assginableCacheKeysInstanceId.Clear();
+            assginableCacheKeysCount.Clear();
+            assginableCacheValuesKey.Clear();
+            assginableCacheValuesValues.Clear();
+
             foreach (var kvp in objectReferenceCache)
             {
-                objectReferenceCacheKeys.Add(kvp.Key);
+                objectReferenceCacheKeysInstanceId.Add(kvp.Key);
                 objectReferenceCacheValues.Add(new ListWrapper(kvp.Value));
             }
             foreach (var kvp in assginableCache)
             {
-                assginableCacheKeys.Add(kvp.Key);
-                assginableCacheValues.Add(new ListWrapper(kvp.Value));
+                assginableCacheKeysInstanceId.Add(kvp.Key);
+                assginableCacheKeysCount.Add(kvp.Value.Count);
+                foreach (var kvp2 in kvp.Value)
+                {
+                    assginableCacheValuesKey.Add(kvp2.Key);
+                    assginableCacheValuesValues.Add(new ListWrapper(kvp2.Value));
+                }
             }
         }
         //ListをDictに変換
         public void OnAfterDeserialize()
         {
-            for (int i = 0; i < objectReferenceCacheKeys.Count; i++)
+            objectReferenceCache.Clear();
+            assginableCache.Clear();
+            for (int i = 0; i < objectReferenceCacheKeysInstanceId.Count; i++)
             {
-                objectReferenceCache[objectReferenceCacheKeys[i]] = objectReferenceCacheValues[i].List;
+                objectReferenceCache[objectReferenceCacheKeysInstanceId[i]] = objectReferenceCacheValues[i].List;
             }
-            for (int i = 0; i < assginableCacheKeys.Count; i++)
+            for (int i = 0, access = 0; i < assginableCacheKeysInstanceId.Count; i++)
             {
-                assginableCache[assginableCacheKeys[i]] = assginableCacheValues[i].List;
+                if (!assginableCache.TryGetValue(assginableCacheKeysInstanceId[i], out var inlineDict))
+                {
+                    inlineDict = new Dictionary<string, List<UnityEngine.Object>>();
+                    assginableCache[assginableCacheKeysInstanceId[i]] = inlineDict;
+                }
+                inlineDict.Clear();
+                for (int k = 0; k < assginableCacheKeysCount[i]; k++, access++)
+                {
+                    inlineDict[assginableCacheValuesKey[access]] = assginableCacheValuesValues[access].List;
+                } 
             }
         }
+
 
         //メニューにこの間数を呼ぶボタンを追加
         [MenuItem("Tools/Event Manager Advanced")]
@@ -114,10 +165,15 @@ namespace Syacapachi.util
             //新しいWindowsを生成,既存のものがある場合は、最後に生成されたものそれを表示(疑似シングルトン)
             GetWindow<ScritableObjectManagerWindow>();
         }
-        //エディター生成時にリフレッシュ
+        //Window生成時にリフレッシュ
         void OnEnable()
         {
             Refresh();
+        }
+        //Window非表示にキャッシュ削除
+        void OnDisable()
+        {
+            ClearCahce();
         }
         //エディターの処理
         void OnGUI()
@@ -162,6 +218,17 @@ namespace Syacapachi.util
             }
             //Endしないと終わらない
             GUILayout.EndScrollView();
+        }
+        static void ClearCahce()
+        {
+            AsyncReferenceFinder.ClearCahce();
+            typeToIntanceCache.Clear();
+            searchInstanceCache.Clear();
+            objectReferenceCache.Clear();
+            assginableCache.Clear();
+            isSearching.Clear();
+            typeFoldouts.Clear();
+            contentFoldouts.Clear();
         }
         static void Refresh()
         {
@@ -245,7 +312,7 @@ namespace Syacapachi.util
 
             foreach (var so in list)
             {
-                bool hasCache = objectReferenceCache.TryGetValue(so, out var cachedList);
+                bool hasCache = objectReferenceCache.TryGetValue(so.GetInstanceID(), out var cachedList);
 
                 using (new GUILayout.VerticalScope("box"))
                 {
@@ -253,13 +320,13 @@ namespace Syacapachi.util
                     {    
                         if (hasCache)
                         {
-                            if (!contentFoldouts.TryGetValue(so, out bool foldout))
+                            if (!contentFoldouts.TryGetValue(so.GetInstanceID(), out bool foldout))
                             {
                                 foldout = true;
-                                contentFoldouts[so] = foldout;
+                                contentFoldouts[so.GetInstanceID()] = foldout;
                             }
                             //折りたたみを更新
-                            contentFoldouts[so] = EditorGUILayout.Foldout(foldout, so.name, true);
+                            contentFoldouts[so.GetInstanceID()] = EditorGUILayout.Foldout(foldout, so.name, true);
                         }
                         else
                         {
@@ -286,10 +353,10 @@ namespace Syacapachi.util
                         }
                     }
 
-                    if (!isSearching.TryGetValue(so, out bool searching))
+                    if (!isSearching.TryGetValue(so.GetInstanceID(), out bool searching))
                     {
                         searching = false;
-                        isSearching[so] = searching;
+                        isSearching[so.GetInstanceID()] = searching;
                     }
 
                     // ▼ 検索中表示
@@ -299,7 +366,7 @@ namespace Syacapachi.util
                     }
 
                     // ▼ 展開時に結果表示
-                    if (cachedList != null && contentFoldouts[so])
+                    if (cachedList != null && contentFoldouts[so.GetInstanceID()])
                     {
                         GUILayout.Space(3);
                         foreach (var finded in cachedList)
@@ -327,7 +394,7 @@ namespace Syacapachi.util
         /// <param name="tokens">検索対象の文字配列</param>
         /// <param name="name"></param>
         /// <returns></returns>
-        static bool MatchSearch(string name, Span<string> tokens, SearchLogic mode = SearchLogic.AND)
+        static bool MatchSearch(string name, in Span<string> tokens, SearchLogic mode = SearchLogic.AND)
         {
             if (tokens == null) return true;
             foreach (string s in tokens)
@@ -370,12 +437,12 @@ namespace Syacapachi.util
         {
             result.Clear();
             //Assets内の検索返り値はGUID(string)
-            foreach (string guid in AssetDatabase.FindAssets("t:ScriptableObject"))
+            foreach (GUID guid in AssetDatabase.FindAssetGUIDs("t:ScriptableObject"))
             {
-                //ファイル参照に変換
-                string path = AssetDatabase.GUIDToAssetPath(guid);
+                //ファイル参照に変換 なくていいむしろGUIDはファイルが移動しても大丈夫だから堅牢
+                //string path = AssetDatabase.GUIDToAssetPath(guid);
                 //アセット読み込み
-                ScriptableObject so = AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+                ScriptableObject so = AssetDatabase.LoadAssetByGUID<ScriptableObject>(guid);
                 if (so != null)
                 {
                     result.Add(so);
@@ -385,21 +452,21 @@ namespace Syacapachi.util
         }
         static bool StartSearch(ScriptableObject target, bool force)
         {
-            if (!force && assginableCache.TryGetValue(target, out var cache))
+            if (!force && assginableCache.TryGetValue(target.GetInstanceID(), out var cache))
             {
                 //最後に作られた既存のWindowを上書きして表示
                 GetWindow<AssginableReferenceEditorWindow>(target.name).Init(cache);
                 return false;
             }
 
-            isSearching[target] = true;
+            isSearching[target.GetInstanceID()] = true;
             AsyncReferenceFinder finder = new();
             finder.StartSearchRefernce(target, (assigned, assginable) =>
             {
-                objectReferenceCache[target] = assigned;
-                assginableCache[target] = assginable;
+                objectReferenceCache[target.GetInstanceID()] = assigned;
+                assginableCache[target.GetInstanceID()] = assginable;
                 CreateWindow<AssginableReferenceEditorWindow>(target.name).Init(assginable);
-                isSearching[target] = false;
+                isSearching[target.GetInstanceID()] = false;
                 AsyncRefrenceFinderGlobal.Unresister(finder);
                 //Repaint();
             });

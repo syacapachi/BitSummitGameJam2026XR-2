@@ -107,7 +107,7 @@
         /// </summary>
         /// <param name="property">評価対象のプロパティ</param>
         /// <returns>フィールドを含むオブジェクト、見つからなければ null</returns>
-        internal static object GetParentTarget(SerializedProperty property)
+        public static object GetParentTarget(SerializedProperty property)
         {
             //最上位のオブジェクト
             var rootObject = property.serializedObject.targetObject;
@@ -171,7 +171,7 @@
         /// <param name="property">評価対象のプロパティ</param>
         /// <param name="root">ルートオブジェクト</param>
         /// <returns>フィールドを含むオブジェクト、見つからなければ null</returns>
-        internal static object GetObjectContainingField(SerializedProperty property, object root)
+        public static object GetObjectContainingField(SerializedProperty property, object root)
         {
             // GetParentTarget で得たものが root のはずなのでそのまま返す（冗長だが将来の拡張用）
             return root ?? GetParentTarget(property);
@@ -181,7 +181,7 @@
         /// フィールド値取得用Getterを取得
         /// キャッシュ済みならそれを返す
         /// </summary>
-        internal static Func<object, object> GetOrCreateGetter(Type type, string fieldName)
+        public static Func<object, object> GetOrCreateGetter(Type type, string fieldName)
         {
             if (getterCache.TryGetValue(
                 (type, fieldName),
@@ -201,7 +201,7 @@
             getterCache[(type, fieldName)] = getter;
             return getter;
         }
-        internal static Func<object, object> GetOrCreateGetter(FieldInfo fieldInfo)
+        public static Func<object, object> GetOrCreateGetter(FieldInfo fieldInfo)
         {
             if (getterCache.TryGetValue((fieldInfo.DeclaringType, fieldInfo.Name), out var getter))
             {

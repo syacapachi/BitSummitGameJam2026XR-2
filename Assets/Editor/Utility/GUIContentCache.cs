@@ -36,13 +36,30 @@ public static class GUIContentCache
     /// 理由:stringを入れたら、使いまわされるObjectが更新されて帰ってくるGUIContnt.Temp();
     /// 要するにこの関数はこれは、メモリ確保することでアクセス高速化
     /// </summary>
-    public static GUIContent GetContent(string content)
+    public static GUIContent GetContent(string contentKey)
     {
-        if (!contentCache.TryGetValue(content, out var cache))
+        if (!contentCache.TryGetValue(contentKey, out var cache))
         {
-            cache = new GUIContent(content, content);
+            cache = new GUIContent(contentKey, contentKey);
+            contentCache[contentKey] = cache;
         }
         return cache;
+    }
+    public static bool TryGetContent(string contentKey ,out GUIContent cache)
+    {
+        if(contentCache.TryGetValue(contentKey, out cache))
+        {
+            return cache != null;
+        }
+        return false;
+    }
+    public static void ResistContent(string key, GUIContent content)
+    {
+        if (contentCache.ContainsKey(key))
+        {
+            Debug.LogWarning($"{key} is already resisted");
+        }
+        contentCache[key] = content;
     }
     public static void ResistContent(string key, string label, Texture image = null, string toolip = "")
     {

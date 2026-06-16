@@ -16,7 +16,7 @@
         /// <param name="property">評価対象のプロパティ</param>
         /// <param name="attribute">EnableIf 属性</param>
         /// <returns>条件がすべて満たされている場合は true、それ以外は false</returns>
-        internal static bool EvaluateConditionsRecursive(SerializedProperty property, EnableIfAttribute attribute)
+        public static bool EvaluateConditionsRecursive(SerializedProperty property, EnableIfAttribute attribute)
         {
             // 条件フィールドを探すための「このプロパティが属するオブジェクト(Monobehaviour, ScriptableObject, etc.)」を取得
             // property.serializedObject.targetObject は常に最上位のオブジェクトを指すため、ネストされたプロパティの場合はそこからさらにたどる必要がある
@@ -92,7 +92,7 @@
                 _ => true// NOT はここには来ないはずなのでデフォルトに吸収して true を返す
             };
         }
-        internal static bool EvaluateEnumConditionRecursive(SerializedProperty property, EnableIfEnumAttribute attribute)
+        public static bool EvaluateEnumConditionRecursive(SerializedProperty property, EnableIfEnumAttribute attribute)
         {
             // 条件フィールドを探すための「このプロパティが属するオブジェクト(Monobehaviour, ScriptableObject, etc.)」を取得
             // property.serializedObject.targetObject は常に最上位のオブジェクトを指すため、ネストされたプロパティの場合はそこからさらにたどる必要がある
