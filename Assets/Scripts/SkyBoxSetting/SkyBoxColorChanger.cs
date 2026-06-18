@@ -44,10 +44,6 @@ public class SkyBoxColorChanger : MonoBehaviour
     private int currentIndex = 0;
     private GameState previousState = GameState.Home;
     /// <summary>
-    /// プレーヤーが一定時間操作しなかったとき、待つ
-    /// </summary>
-    private static WaitForSeconds waitForStartSkyTime;
-    /// <summary>
     /// 一日の状態変化を行うコルーチン
     /// </summary>
     private Coroutine dayLoopCoroutine;
@@ -55,7 +51,6 @@ public class SkyBoxColorChanger : MonoBehaviour
 
     private void Awake()
     {
-        waitForStartSkyTime = WaitForSecondsCache.Get(startDayLoopTime);
         ApplyColor(noonSky);
         OnLocalStateChanged(LocalState.LanguageSelect);
     }
@@ -185,7 +180,12 @@ public class SkyBoxColorChanger : MonoBehaviour
     private IEnumerator DayLoopSkyCoroutine()
     {
         ApplyColor(noonSky);
-        yield return waitForStartSkyTime;
+        float timer = 0;
+        while(timer < startDayLoopTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
         while (previousState == GameState.Home && useDayLoop)
         {
             foreach (var nextSky in dayLoopSkyColorSettings)

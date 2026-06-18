@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4776716032548669191
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 10
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -20,53 +7,34 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Cattail
-  m_Shader: {fileID: -6465566751694194690, guid: 3230f6c5d09dd114c82b2287fcc7e15b, type: 3}
+  m_Name: GhostSkyBox
+  m_Shader: {fileID: 4800000, guid: 788592ee5f85e984fa17e05fdc2156d8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _COLOR_OVERLAY_VERTEX_POSITION
-  - _SPECULAR_SETUP
+  m_ValidKeywords: []
   m_InvalidKeywords:
-  - _OVERLAY_VERTEX_POSITION
-  - _WIND_OVERLAY_VERTEX_POSITION
+  - _MAPPING_LATITUDE_LONGITUDE_LAYOUT
+  - _SUNDISK_HIGH_QUALITY
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BackTex:
+        m_Texture: {fileID: 2800000, guid: c9a51f7ed57546f4eb533a56bef8ba39, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Base_Map:
-        m_Texture: {fileID: 2800000, guid: 9341cd24532a143429e0743f2de77588, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Coverage_Base_Map:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Coverage_Mask:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Coverage_Metallic_Map:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Coverage_Normal_Map:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -82,23 +50,27 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DownTex:
+        m_Texture: {fileID: 2800000, guid: eff506c84ac90d34c81e139f3e96a2ba, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _FrontTex:
+        m_Texture: {fileID: 2800000, guid: db3e7b7c8db355e499429545071a0321, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LeftTex:
+        m_Texture: {fileID: 2800000, guid: 66f06726158899242adaf95180360b7b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 6777642cd428536498d841a99326c4a1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Metallic_Map:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Normal_Map:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -110,12 +82,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RightTex:
+        m_Texture: {fileID: 2800000, guid: f4dfd334cfda2b546a3abe1f5d6bde56, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Texture:
-        m_Texture: {fileID: 2800000, guid: 9341cd24532a143429e0743f2de77588, type: 3}
+    - _Tex:
+        m_Texture: {fileID: 8900000, guid: 08ea713d0e79d8e4aa41c53a0bad3fa5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _UpTex:
+        m_Texture: {fileID: 2800000, guid: 7461125ec591a1548883bd61123e9138, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -132,76 +112,84 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Alpha_Cutoff: 0.5
-    - _BLEND_NORMALS: 0
-    - _Base_Map_Scale: 1
-    - _Bend_Strength: 0.245
+    - _AtmosphereThickness: 0.67
     - _Blend: 0
-    - _BlendModePreserveSpecular: 0
-    - _Blend_Height: 0
+    - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
-    - _COLOR_OVERLAY: 0
-    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Contrast: 0.1
-    - _Coverage_Map_Scale: 1
-    - _Coverage_Mask_Scale: 6
-    - _Coverage_Normal_Strength: 1
-    - _Coverage_Smoothness: 0
     - _Cull: 2
-    - _Custom_Color: 0
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _ENABLE_COVERAGE: 0
-    - _Enable_Top_Color: 0
     - _EnvironmentReflections: 1
-    - _Fade: 0
+    - _Exponent1: 0.5
+    - _Exponent2: 8
+    - _Exposure: 0.72
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Level: 0
+    - _ImageType: 0
+    - _Intensity: 4
+    - _Layout: 0
+    - _Mapping: 1
     - _Metallic: 0
-    - _Noise_Scale: 0
-    - _Normal_Strength: 0
-    - _OVERLAY: 0
-    - _Object_Bend_Range: 1
+    - _MirrorOnBack: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
-    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0
+    - _Rotate: 1
+    - _Rotation: 0
+    - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _Start_Bend_Range: 0.508
-    - _Start_to_bend_range: 1
+    - _SunAngularRadius: 0.001
+    - _SunDisk: 2
+    - _SunElevationAmplitude: 0
+    - _SunIntensity: 0
+    - _SunSize: 0.047
+    - _SunSizeConvergence: 1
+    - _SunTime24h: 0
     - _Surface: 0
-    - _WIND_OVERLAY: 0
-    - _Wave_Scale: 0.5
-    - _Wind_Direction: 0
-    - _Wind_Speed: 0.14
-    - _Wind_Strength: 0.25
-    - _Wind_Variation: 1
-    - _WorkflowMode: 0
-    - _ZTest: 4
+    - _TexIntensity: 1
+    - _TextureClamp: 0
+    - _TextureMaxY: 1
+    - _TextureMinY: -1
+    - _TextureStrength: 1
+    - _WorkflowMode: 1
     - _ZWrite: 1
-    - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Bottom_Color: {r: 1, g: 1, b: 1, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Coverage_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _Color1: {r: 0.23529412, g: 0.54901963, b: 0.8627451, a: 1}
+    - _Color2: {r: 0.50980395, g: 0.78431374, b: 1, a: 1}
+    - _Color3: {r: 0.78431374, g: 0.8627451, b: 0.9411765, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _Top_Color: {r: 1, g: 1, b: 1, a: 0}
-    - _Wind_Direction: {r: 0.1, g: 0.1, b: 0, a: 0}
+    - _GroundColor: {r: 1, g: 0.2857143, b: 0, a: 1}
+    - _SkyTint: {r: 0.74213827, g: 0.24504557, b: 0.24504557, a: 1}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _SunColor: {r: 1, g: 0.92, b: 0.75, a: 1}
+    - _Tint: {r: 0.0039215684, g: 0.77219194, b: 1, a: 0.5}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
+--- !u!114 &7572755637111295660
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 10

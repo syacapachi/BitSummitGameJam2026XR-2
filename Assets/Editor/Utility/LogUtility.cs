@@ -1,4 +1,4 @@
-﻿namespace Syacapachi.Editor
+﻿namespace Syacapachi.util
 {
     using System;
     using System.Collections;
@@ -53,7 +53,7 @@
             // IList
             if (value is IList list)
             {
-                return $"List[{list.Count}]";
+                return $"guidList[{list.Count}]";
             }
 
             // Dictionary

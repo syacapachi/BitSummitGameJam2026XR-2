@@ -108,7 +108,7 @@ namespace Syacapachi.Editor
             {
                 return;
             }
-
+            
             Type enumType = GetEnumType(type);
             // enum実値取得
             int intValue = Convert.ToInt32(
@@ -116,6 +116,7 @@ namespace Syacapachi.Editor
                 Enum.Parse(
                     enumType,
                     property.enumNames[newIndex]));
+         
 
             // Flags enum の場合のみ単一化チェック
             if (!IsSingleFlag(intValue, attr) && IsFlagsEnum(enumType))
@@ -193,7 +194,7 @@ namespace Syacapachi.Editor
             int selectedLayer = EditorGUI.LayerField(position, label, currentLayer);
 
             // Nothing許可しない場合
-            if (!attr.allowNothing && selectedLayer == -1)
+            if (!attr.AllowNothing && selectedLayer == -1)
             {
                 selectedLayer = 0; // Defaultにフォールバック
             }
@@ -204,26 +205,26 @@ namespace Syacapachi.Editor
         // =========================
         // 共通処理
         // =========================
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool IsSingleFlag(int value, SingleFlagOnlyAttribute attr)
         {
-            return (attr.allowNothing || value != 0) && (value & (value - 1)) == 0;
+            return (attr.AllowNothing || value != 0) && (value & (value - 1)) == 0;
         }
 
         static int FixEnum(Type enumType, int value, SingleFlagOnlyAttribute attr)
         {
-            if (value == 0 && !attr.allowNothing)
+            if (value == 0 && !attr.AllowNothing)
                 return GetFirstEnumValue(enumType);
 
             return GetFirstBit(value);
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int GetFirstBit(int value)
         {
             if (value == 0) return 0;
             return value & -value; // 最下位ビットだけ残す
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int GetFirstEnumValue(Type enumType)
         {
             foreach (int v in Enum.GetValues(enumType))
@@ -235,7 +236,7 @@ namespace Syacapachi.Editor
         // =========================
         // Utility
         // =========================
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int MaskToLayer(int mask)
         {
             if (mask <= 0) return 0;
@@ -249,7 +250,7 @@ namespace Syacapachi.Editor
 
             return 0;
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int LayerToMask(int layer)
         {
             if (layer < 0) return 0;

@@ -11,7 +11,7 @@ namespace Syacapachi.Editor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             ReadOnlyAttribute attr = (ReadOnlyAttribute)attribute;
-            if (attr.showOnlyPlayMode && !Application.isPlaying) return;
+            if (attr.ShowOnlyPlayMode && !Application.isPlaying) return;
             // ここでDisabledScopeを使用して、プロパティを読み取り専用にします。
             //スコープを抜けると、プロパティは元に戻ります。
             using (new EditorGUI.DisabledScope(true))

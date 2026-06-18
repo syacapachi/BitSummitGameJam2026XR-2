@@ -18,7 +18,7 @@ namespace Syacapachi.Editor
                 EditorGUI.BeginProperty(position, label, property);
                 int layer = property.intValue;
                 int newLayer;
-                if (attr.useMask)
+                if (attr.UseMask)
                 {
                     newLayer = EditorGUI.MaskField(position, label, layer, InternalEditorUtility.layers);
                 }

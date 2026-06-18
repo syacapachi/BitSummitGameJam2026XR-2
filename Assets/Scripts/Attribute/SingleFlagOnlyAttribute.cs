@@ -5,11 +5,11 @@
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class SingleFlagOnlyAttribute : PropertyAttribute
     {
-        public bool allowNothing { get; private set; }
+        public readonly bool AllowNothing;
 
         public SingleFlagOnlyAttribute(bool allowNothing = true)
         {
-            this.allowNothing = allowNothing;
+            this.AllowNothing = allowNothing;
         }
     }
 }

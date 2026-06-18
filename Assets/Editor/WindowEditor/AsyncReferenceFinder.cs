@@ -5,6 +5,7 @@ namespace Syacapachi.util
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.SceneManagement;
@@ -26,7 +27,16 @@ namespace Syacapachi.util
         ".xml",
         ".bytes"
        };
+        //FieldInfoのキャッシュ
+        private static readonly Dictionary<(Type, string), FieldInfo> fieldInfoCache = new();
+
+        public static void ClearCahce()
+        {
+            fieldInfoCache.Clear();
+        }
+
         private Object target;
+        private string displayTitle = $"Searching References about ";
         private string[] guids;
         private float invTotal;
         private int guidsIndex;
@@ -35,15 +45,16 @@ namespace Syacapachi.util
         //埋め込まれている
         private readonly List<Object> assginedResults = new();
         //埋め込められる
-        private readonly List<Object> assignableResult = new();
-        private Action<List<Object>, List<Object>> onComplete;
+        private readonly Dictionary<string, List<Object>> assignableResult = new();
+        private Action<List<Object>, Dictionary<string, List<Object>>> onComplete;
 
         private string currentSearchName = "";
-        public float Progress { 
-            get 
+        public float Progress
+        {
+            get
             {
-                return (guidsIndex + objectIndex) * invTotal; 
-            } 
+                return (guidsIndex + objectIndex) * invTotal;
+            }
         }
         public bool IsRunning { get; private set; }
 
@@ -52,7 +63,7 @@ namespace Syacapachi.util
         /// </summary>
         /// <param name="target">検索するUnityEngine.Obejct</param>
         /// <param name="onComplete"> 結果を返すイベント 結果は(assigned,assignable) </param>
-        public void StartSearchRefernce(Object target, Action<List<Object>, List<Object>> onComplete)
+        public void StartSearchRefernce(Object target, Action<List<Object>, Dictionary<string, List<Object>>> onComplete)
         {
             if (IsRunning)
             {
@@ -60,6 +71,7 @@ namespace Syacapachi.util
                 return;
             }
             this.target = target;
+            this.displayTitle = $"Searching References about {target.name}";
             this.onComplete = onComplete;
             //アセットへのGUIDがもらえる(検索範囲は、プレハブと、ScriptableObject)
             guids = AssetDatabase.FindAssets("t:Prefab t:ScriptableObject");
@@ -71,7 +83,7 @@ namespace Syacapachi.util
             guidsIndex = 0;
             objectIndex = 0;
             assginedResults.Clear();
-
+            assignableResult.Clear();
             IsRunning = true;
             //Editorの更新と共に非同期的に実行
             EditorApplication.update += SearchReference;
@@ -90,7 +102,7 @@ namespace Syacapachi.util
 
             for (; i < batch && guidsIndex < guids.Length; i++, guidsIndex++)
             {
-                //GUIDをパスへ変換
+                //GUIDをパスへ変換(拡張子を得るため)
                 string path = AssetDatabase.GUIDToAssetPath(guids[guidsIndex]);
 
                 //拡張子でスキップ
@@ -120,22 +132,38 @@ namespace Syacapachi.util
                     //参照を上から順に調べる。
                     while (prop.NextVisible(true))
                     {
-                        if (IsAssignableField(prop, target))
-                        {
-                            assignableResult.Add(obj);
-                        }
-                        if (prop.propertyType == SerializedPropertyType.ObjectReference
-                            && prop.objectReferenceValue == target)
+                        if (prop.propertyType != SerializedPropertyType.ObjectReference) continue;
+
+                        if (prop.objectReferenceValue == target)
                         {
                             assginedResults.Add(obj);
+                            if (!assignableResult.TryGetValue(target.GetType().FullName, out var result))
+                            {
+                                result = new List<Object>();
+                                assignableResult[target.GetType().FullName] = result;
+                            }
+                            result.Add(obj);
                             break;
                         }
+
+                        Type fieldType = (prop.objectReferenceValue != null) ? prop.objectReferenceValue.GetType() : GetFieldType(prop);
+                        if (fieldType == null) continue;
+
+                        if (!fieldType.IsAssignableFrom(target.GetType())) continue;
+
+                        if (!assignableResult.TryGetValue(fieldType.FullName, out var res))
+                        {
+                            res = new List<Object>();
+                            assignableResult[fieldType.FullName] = res;
+                        }
+                        res.Add(obj);
+                        //Debug.Log($"Add {obj}");
                     }
-                }    
+                }
             }
             // 進捗バー表示
             bool isCanceled = EditorUtility.DisplayCancelableProgressBar(
-                $"Searching References about {target.name}",
+                 displayTitle,
                  currentSearchName,
                  Progress
             );
@@ -164,16 +192,32 @@ namespace Syacapachi.util
                 //Monobehaviour->InlineClass->...のように
                 while (prop.NextVisible(true))
                 {
-                    if (IsAssignableField(prop, target))
-                    {
-                        assignableResult.Add(comp);
-                    }
-                    if (prop.propertyType == SerializedPropertyType.ObjectReference &&
-                        prop.objectReferenceValue == target)
+                    if (prop.propertyType != SerializedPropertyType.ObjectReference) continue;
+
+                    if (prop.objectReferenceValue == target)
                     {
                         assginedResults.Add(comp);
+                        if (!assignableResult.TryGetValue(target.GetType().FullName, out var result))
+                        {
+                            result = new List<Object>();
+                            assignableResult[target.GetType().FullName] = result;
+                        }
+                        result.Add(comp);
                         break;
                     }
+
+                    Type fieldType = (prop.objectReferenceValue != null)? prop.objectReferenceValue.GetType() : GetFieldType(prop);
+                    if (fieldType == null) continue;
+
+                    if (!fieldType.IsAssignableFrom(target.GetType())) continue;
+
+                    if (!assignableResult.TryGetValue(fieldType.FullName, out var res))
+                    {
+                        res = new List<Object>();
+                        assignableResult[fieldType.FullName] = res;
+                    }
+                    res.Add(comp);
+                    //Debug.Log($"Add comp {comp}");
                 }
             }
         }
@@ -184,13 +228,21 @@ namespace Syacapachi.util
             //そのタイプを得る。
             var type = targetObject.GetType();
 
-            //そのオブジェクトに記述されているpropと同じ名前のフィールドを取得する
-            var field = type.GetField(prop.name,
-                System.Reflection.BindingFlags.Public |
-                System.Reflection.BindingFlags.NonPublic |
-                System.Reflection.BindingFlags.Instance);
+            if (!fieldInfoCache.TryGetValue((type, prop.name), out var fieldCache))
+            {
+                //そのオブジェクトに記述されているpropと同じ名前のフィールドを取得する
+                fieldCache = type.GetField(prop.name,
+                    System.Reflection.BindingFlags.Public |
+                    System.Reflection.BindingFlags.NonPublic |
+                    System.Reflection.BindingFlags.Instance);
 
-            return field?.FieldType;
+                if (fieldCache != null)
+                {
+                    fieldInfoCache[(type, prop.name)] = fieldCache;
+                }
+            }
+
+            return fieldCache?.FieldType;
         }
         /// <summary>
         /// 検索中のSerializedPropのフィールドにtargetを入れられるか.
@@ -237,14 +289,18 @@ namespace Syacapachi.util
             EditorApplication.update -= SearchReference;
             //重複解除
             var distinct = assginedResults.Distinct().ToList();
-            var distinct2 = assignableResult.Distinct().ToList();
+            var distinct2 = new Dictionary<string, List<Object>>();
+            foreach (var kvp in assignableResult)
+            {
+                distinct2[kvp.Key] = kvp.Value.Distinct().ToList();
+            }
             IsRunning = false;
-            onComplete?.Invoke(distinct,distinct2);
+            onComplete?.Invoke(distinct, distinct2);
         }
         //とりあえず完了と同じに
         public void StopSearch()
         {
-            if(!IsRunning) return;
+            if (!IsRunning) return;
             Complete();
             Debug.Log($"Search canceled: {target.name} ({Progress}%)");
         }

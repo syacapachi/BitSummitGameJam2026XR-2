@@ -157,7 +157,9 @@ public class SampleScript : AbstructSample
         Value1 = 1,
         Value2 = 2,
         Value3 = 4,
-        Value12 = Value1 | Value2
+        Value4 = 8,
+        Value12 = Value1 | Value2,
+        Value123 = Value1 | Value2 | Value3 
     }
     //privateにすると見えない
     [OnInspectorButton(Order = -6)]

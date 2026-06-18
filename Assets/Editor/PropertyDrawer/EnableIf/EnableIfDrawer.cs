@@ -4,6 +4,7 @@ namespace Syacapachi.Editor
     using Syacapachi.Attribute;
     using System;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using UnityEditor;
     using UnityEngine;
 
@@ -12,33 +13,39 @@ namespace Syacapachi.Editor
     {
         private readonly struct EvaluationCacheKey : IEquatable<EvaluationCacheKey>
         {
-            private readonly int targetId;
-            private readonly string propertyPath;
-            private readonly int attributeId;
+            readonly int targetId;
+            readonly int propertyHash;
+            readonly int conditionHash;
 
             public EvaluationCacheKey(SerializedProperty property, EnableIfAttribute attribute)
             {
-                UnityEngine.Object targetObject = property.serializedObject.targetObject;
-                targetId = targetObject != null ? targetObject.GetInstanceID() : 0;
-                propertyPath = property.propertyPath;
-                attributeId = attribute.GetHashCode();
-            }
+                targetId =
+                    property.serializedObject.targetObject
+                    .GetInstanceID();
 
+                propertyHash =
+                    property.GetHashCode();
+
+                conditionHash =
+                    HashCode.Combine(
+                        attribute.GetType(),
+                        attribute.conditionFieldNames);
+            }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly bool Equals(EvaluationCacheKey other)
             {
-                return targetId == other.targetId
-                    && attributeId == other.attributeId
-                    && propertyPath == other.propertyPath;
+                return GetHashCode() == other.GetHashCode();
             }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
 
             public readonly override bool Equals(object obj)
             {
                 return obj is EvaluationCacheKey other && Equals(other);
             }
-
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public readonly override int GetHashCode()
             {
-                return HashCode.Combine(targetId, attributeId, propertyPath);
+                return HashCode.Combine(targetId, conditionHash, propertyHash);
             }
         }
 

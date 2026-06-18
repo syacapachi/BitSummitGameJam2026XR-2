@@ -19,17 +19,20 @@
             /// <summary>
             /// SerializeReference属性が付いているフィールドを含むプロパティパスかどうかのフラグ
             /// </summary>
-            public readonly bool HasSerializeReference;
+            public readonly bool HasSerializeReference => ReflectionStartIndex >= 0;
             /// <summary>
             /// プロパティパスの要素（例: "myList[0].myField" -> ["myList[0]", "myField"]）
             /// </summary>
-            public readonly PathElement[] FullElements;//完全パス
-            public readonly PathElement[] ReflectionPath;//途中までgetterがあるやつ。自分で探すとこ。
-            public PathInfo(bool hasSerializeReference, PathElement[] fullElements, PathElement[] reflectionPath)
+            public readonly PathElement[] FullElements;//フィールドへの完全パス
+            /// <summary>
+            /// SerializeReference属性が付いているフィールドの。自分で探し始める最初のインデックス。
+            /// 途中までゲッターがある。
+            /// </summary>
+            public readonly int ReflectionStartIndex;
+            public PathInfo(PathElement[] fullElements, int reflectionPath = -1)
             {
-                this.HasSerializeReference = hasSerializeReference;
                 this.FullElements = fullElements;
-                this.ReflectionPath = reflectionPath;
+                this.ReflectionStartIndex = reflectionPath;
             }
         }
         /// <summary>
@@ -49,39 +52,123 @@
             /// </summary>
             /// <param name="elements"></param>
             /// <returns></returns>
-            public static PathElement[] Parse(string elements)
+            public PathElement WithIndex(int index) => new(Name, index);
+
+            public static PathElement[] Parse(string path)
             {
+                //ReadOnlySpanでGCを消す
+                ReadOnlySpan<char> span = path.AsSpan();
 
-                elements = elements.Replace(".Array.data[", "[");
-                string[] pathes = elements.Split('.');
-                PathElement[] result = new PathElement[pathes.Length];
-                string element;
-                for (int i = 0; i < pathes.Length; i++)
+                // Array は除外されるので実際の要素数を数える
+                int count = 0;
+                int start = 0;
+
+                while (start < span.Length)
                 {
-                    element = pathes[i];
-                    int bracket = element.IndexOf('[');
+                    // '.'で区切る
+                    int end = span[start..].IndexOf('.');
 
-                    //Contains("[") でもいいが、IndexOfだと使いまわせる。
-                    if (bracket >= 0)
+                    ReadOnlySpan<char> part;
+
+                    if (end < 0)
                     {
-                        string fieldName = element.Substring(0, bracket);
-                        int index = int.Parse(element.Substring(bracket).Replace("[", "").Replace("]", ""));
-                        result[i] = new PathElement(fieldName, index);
+                        part = span[start..];
+                        start = span.Length;
                     }
                     else
                     {
-                        result[i] = new PathElement(pathes[i]);
+                        part = span.Slice(start, end);
+                        start += end + 1;
                     }
+
+                    if (!part.SequenceEqual("Array"))
+                        count++;
                 }
+
+                PathElement[] result = new PathElement[count];
+
+                int resultIndex = 0;
+                start = 0;
+
+                while (start < span.Length)
+                {
+                    // '.'で区切る
+                    int end = span[start..].IndexOf('.');
+
+                    ReadOnlySpan<char> part;
+
+                    //最後の要素
+                    if (end < 0)
+                    {
+                        part = span[start..];
+                        start = span.Length;
+                    }
+                    else
+                    {
+                        part = span.Slice(start, end);
+                        start += end + 1;
+                    }
+
+                    //--------------------------------------------------
+                    // Array は捨てる
+                    //--------------------------------------------------
+
+                    if (part.SequenceEqual("Array"))
+                        continue;
+
+                    //--------------------------------------------------
+                    // data[123]
+                    //--------------------------------------------------
+
+                    if (part.StartsWith("data["))
+                    {
+                        int index = ParseIndex(part);
+
+                        result[resultIndex - 1] =
+                            result[resultIndex - 1].WithIndex(index);
+
+                        continue;
+                    }
+
+                    //--------------------------------------------------
+                    // 通常フィールド
+                    //--------------------------------------------------
+
+                    result[resultIndex++] =
+                        new PathElement(part.ToString());
+                }
+
                 return result;
             }
+
+            private static int ParseIndex(ReadOnlySpan<char> span)
+            {
+                // data[123]
+
+                int value = 0;
+
+                for (int i = 5; i < span.Length - 1; i++)
+                {
+                    value = value * 10 + (span[i] - '0');
+                }
+
+                return value;
+            }
+        }
+        // 拡張するなら、GetterCache<TArg,TResult>
+        // 返り値ごとに必要なので、static + ジェネリック
+        // 条件フィールドの値を高速に取得するためのキャッシュ(Typeとフィールド名の組み合わせで一意に特定でき、instanceを渡して実行するのでstatic)
+        static class GetterCache<T>
+        {
+            internal static readonly Dictionary<
+                (Type, string),
+                Func<object, T>
+            > Cache = new();
         }
         // 条件フィールドの FieldInfo をキャッシュするための辞書(FieldInfo は型から一意に求まるのでstatic)
         private static readonly Dictionary<(Type, string), FieldInfo> fieldCache = new();
         // Pathのフィールドを含むオブジェクトのゲッターのキャッシュ(Typeとフィールド名の組み合わせで一意に特定でき、instanceを渡して実行するのでstatic)
         private static readonly Dictionary<(Type, string), Func<object, object>> propertyPathGetterCache = new();
-        // 条件フィールドの値を高速に取得するためのキャッシュ(Typeとフィールド名の組み合わせで一意に特定でき、instanceを渡して実行するのでstatic)
-        private static readonly Dictionary<(Type, string), Func<object, object>> getterCache = new();
         // propertyPath をたどるためのアクセサーのキャッシュ（TypeとpropertyPathの組み合わせで一意に特定でき、instanceを渡して実行するのでstatic）
         private static readonly Dictionary<(Type, string), PathInfo> pathCache = new();
 
@@ -96,7 +183,6 @@
         {
             fieldCache.Clear();
             propertyPathGetterCache.Clear();
-            getterCache.Clear();
             pathCache.Clear();
         }
 
@@ -107,7 +193,7 @@
         /// </summary>
         /// <param name="property">評価対象のプロパティ</param>
         /// <returns>フィールドを含むオブジェクト、見つからなければ null</returns>
-        internal static object GetParentTarget(SerializedProperty property)
+        public static object GetParentTarget(SerializedProperty property)
         {
             //最上位のオブジェクト
             var rootObject = property.serializedObject.targetObject;
@@ -118,13 +204,13 @@
             Func<object, object> getter = CreateOrGetPropertyPathGetter(rootObject, propertyPath);
             if (getter == null)
             {
-                Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to create getter for property path '{propertyPath}' on type '{rootType}'. Please check the property path and ensure it is valid for the target type.", rootObject as UnityEngine.Object);
+                Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to create getter for property path '{propertyPath}' on targetType '{rootType}'. Please check the property path and ensure it is valid for the target targetType.", rootObject as UnityEngine.Object);
                 return null;
             }
             //一応キャッシュにあるはずだが、念のため確認しておく。
             if (!pathCache.TryGetValue((rootType, propertyPath), out var cachedPathInfo))
             {
-                Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to find cached path info for property path '{propertyPath}' on type '{rootType}'. This should not happen if the getter was created successfully. Please check the caching logic.", rootObject as UnityEngine.Object);
+                Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to find cached path info for property path '{propertyPath}' on targetType '{rootType}'. This should not happen if the getter was created successfully. Please check the caching logic.", rootObject as UnityEngine.Object);
                 return null;
             }
             //SerializeReferenceは実装の型を動的に決定するため、直前までキャッシュを作りそれ以降は自力で辿る。
@@ -135,16 +221,16 @@
                     object parent = getter(rootObject);
                     if (parent == null)
                     {
-                        Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to access parent object for property path '{propertyPath}' on type '{rootType}'. The parent object is null, which may indicate an issue with the property path or the target object's state.", rootObject as UnityEngine.Object);
+                        Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to access parent object for property path '{propertyPath}' on targetType '{rootType}'. The parent object is null, which may indicate an issue with the property path or the target object's state.", rootObject as UnityEngine.Object);
                         return null;
                     }
-                    return GetValueByPath(parent, cachedPathInfo.ReflectionPath);
+                    return GetValueByPath(parent, cachedPathInfo.FullElements, cachedPathInfo.ReflectionStartIndex);
                 }
                 catch (Exception e)
                 {
                     Debug.LogException(
                         new Exception(
-                            $"[{nameof(EditorReflectionCache)}] Failed to access parent object for property path '{propertyPath}' on type '{rootType}'. Please check the property path and ensure it is valid for the target type.",
+                            $"[{nameof(EditorReflectionCache)}] Failed to access parent object for property path '{propertyPath}' on targetType '{rootType}'. Please check the property path and ensure it is valid for the target targetType.",
                             e),
                         rootObject as UnityEngine.Object);
                     return null;
@@ -158,7 +244,7 @@
             {
                 Debug.LogException(
                     new Exception(
-                        $"[{nameof(EditorReflectionCache)}] Failed to access property path '{propertyPath}' on type '{rootType}'."
+                        $"[{nameof(EditorReflectionCache)}] Failed to access property path '{propertyPath}' on targetType '{rootType}'."
                         , e),
                     rootObject as UnityEngine.Object);
                 return null;
@@ -171,7 +257,7 @@
         /// <param name="property">評価対象のプロパティ</param>
         /// <param name="root">ルートオブジェクト</param>
         /// <returns>フィールドを含むオブジェクト、見つからなければ null</returns>
-        internal static object GetObjectContainingField(SerializedProperty property, object root)
+        public static object GetObjectContainingField(SerializedProperty property, object root)
         {
             // GetParentTarget で得たものが root のはずなのでそのまま返す（冗長だが将来の拡張用）
             return root ?? GetParentTarget(property);
@@ -180,37 +266,46 @@
         /// <summary>
         /// フィールド値取得用Getterを取得
         /// キャッシュ済みならそれを返す
+        /// <param name="targetType"/> 参照するフィールドをもつType
+        /// <param name="fieldName"> 参照するフィールド名
+        /// <typeparamref name="TReturn"/> 返り値の型
         /// </summary>
-        internal static Func<object, object> GetOrCreateGetter(Type type, string fieldName)
+        public static Func<object, TReturn> GetOrCreateGetter<TReturn>(Type targetType, string fieldName)
         {
-            if (getterCache.TryGetValue(
-                (type, fieldName),
-                out Func<object, object> getter))
+            if (GetterCache<TReturn>.Cache.TryGetValue(
+                (targetType, fieldName),
+                out var getter))
             {
                 return getter;
             }
             //Debug.Log($"[{nameof(FieldUtility)}] Add new getterCache Type {type},Name {fieldName}");
-            FieldInfo field = GetFieldRecursive(type, fieldName);
+            FieldInfo field = GetFieldRecursive(targetType, fieldName);
 
             if (field == null)
             {
                 return null;
             }
             //フィールドが宣言されたクラスのゲッターでないといけない
-            getter = CreateGetter(field.DeclaringType, field);
-            getterCache[(type, fieldName)] = getter;
+            getter = CreateGetter<TReturn>(field.DeclaringType, field);
+            GetterCache<TReturn>.Cache[(targetType, fieldName)] = getter;
             return getter;
         }
-        internal static Func<object, object> GetOrCreateGetter(FieldInfo fieldInfo)
+        /// <summary>
+        /// フィールド用のキャッシュ済みゲッターを取得する。 
+        /// </summary>
+        /// <typeparam name="TReturn">返り値の型</typeparam>
+        /// <param name="fieldInfo"> 参照するFieldInfo </param>
+        /// <returns></returns>
+        public static Func<object, TReturn> GetOrCreateGetter<TReturn>(FieldInfo fieldInfo)
         {
-            if (getterCache.TryGetValue((fieldInfo.DeclaringType, fieldInfo.Name), out var getter))
+            if (GetterCache<TReturn>.Cache.TryGetValue((fieldInfo.DeclaringType, fieldInfo.Name), out var getter))
             {
                 return getter;
             }
 
             //フィールドが宣言されたクラスのゲッターでないといけない
-            getter = CreateGetter(fieldInfo.DeclaringType, fieldInfo);
-            getterCache[(fieldInfo.DeclaringType, fieldInfo.Name)] = getter;
+            getter = CreateGetter<TReturn>(fieldInfo.DeclaringType, fieldInfo);
+            GetterCache<TReturn>.Cache[(fieldInfo.DeclaringType, fieldInfo.Name)] = getter;
             return getter;
         }
         /// <summary>
@@ -218,22 +313,23 @@
         /// （SerializeReference属性が付いているフィールドを含むプロパティパスの処理用）
         /// </summary>
         /// <param name="root">開始する点</param>
-        /// <param name="pathes">自力でたどる点</param>
+        /// <param name="fullPathes">自力でたどる点</param>
         /// <returns></returns>
-        private static object GetValueByPath(object root,in PathElement[] pathes)
+        private static object GetValueByPath(object root, in PathElement[] fullPathes, int startIndex)
         {
             if (root == null) return null;
+            if (startIndex < 0) return null;
             object current = root;
             Type currentType = root.GetType();
-            //1つ手前まで行く
-            for (int i = 0; i < pathes.Length - 1; i++)
+            //開始点から1つ手前まで行く
+            for (int i = startIndex; i < fullPathes.Length - 1; i++)
             {
-                int index = pathes[i].Index;
-                string fieldName = pathes[i].Name;
+                int index = fullPathes[i].Index;
+                string fieldName = fullPathes[i].Name;
                 FieldInfo field = GetFieldRecursive(currentType, fieldName);
                 if (field == null)
                 {
-                    Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to find field '{fieldName}' on type '{currentType}' while processing property path. Please check the field name and ensure it exists in the target type.");
+                    Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to find field '{fieldName}' on targetType '{currentType}' while processing property path. Please check the field name and ensure it exists in the target targetType.");
                     return null;
                 }
                 current = field.GetValue(current);
@@ -248,7 +344,7 @@
                         Array array = current as Array;
                         if (index < 0 || index >= array.Length)
                         {
-                            Debug.LogError($"[{nameof(EditorReflectionCache)}] Index {index} out of range for '{fieldName}' on type '{currentType}' while processing property path. Please check the collection size and ensure the index is valid.");
+                            Debug.LogError($"[{nameof(EditorReflectionCache)}] Index {index} out of range for '{fieldName}' on targetType '{currentType}' while processing property path. Please check the collection size and ensure the index is valid.");
                             return null;
                         }
                         current = array.GetValue(index);
@@ -258,7 +354,7 @@
                     {
                         if (index < 0 || index >= list.Count)
                         {
-                            Debug.LogError($"[{nameof(EditorReflectionCache)}] Index {index} out of range for '{fieldName}' on type '{currentType}' while processing property path. Please check the collection size and ensure the index is valid.");
+                            Debug.LogError($"[{nameof(EditorReflectionCache)}] Index {index} out of range for '{fieldName}' on targetType '{currentType}' while processing property path. Please check the collection size and ensure the index is valid.");
                             return null;
                         }
                         current = list[index];
@@ -271,7 +367,7 @@
                         {
                             if (!enumerator.MoveNext())
                             {
-                                Debug.LogError($"[{nameof(EditorReflectionCache)}] Index {index} out of range for '{fieldName}' on type '{currentType}' while processing property path. Please check the collection size and ensure the index is valid.");
+                                Debug.LogError($"[{nameof(EditorReflectionCache)}] Index {index} out of range for '{fieldName}' on targetType '{currentType}' while processing property path. Please check the collection size and ensure the index is valid.");
                                 return null;
                             }
                         }
@@ -280,7 +376,7 @@
                     }
                     else
                     {
-                        Debug.LogError($"[{nameof(EditorReflectionCache)}] Field '{fieldName}' on type '{currentType}' is not a collection while processing property path. Please check the field type and ensure it supports indexing.");
+                        Debug.LogError($"[{nameof(EditorReflectionCache)}] Field '{fieldName}' on targetType '{currentType}' is not a collection while processing property path. Please check the field targetType and ensure it supports indexing.");
                         return null;
                     }
                 }
@@ -337,7 +433,7 @@
                 FieldInfo field = GetFieldRecursive(currentType, fieldName);
                 if (field == null)
                 {
-                    Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to find field '{fieldName}' on type '{currentType}' while processing property path '{propertyPath}'. Please check the field name and ensure it exists in the target type.");
+                    Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to find field '{fieldName}' on targetType '{currentType}' while processing property path '{propertyPath}'. Please check the field name and ensure it exists in the target targetType.");
                     return null;
                 }
                 //SerializeReference 属性が付いているフィールドは、途中まで作る。(残りは自分で探索してもらう。)
@@ -359,7 +455,7 @@
 
                     if (indexed == null)
                     {
-                        Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to build indexer for '{fieldName}' on type '{currentType}' while processing property path '{propertyPath}'. Please check the field type and ensure it supports indexing.");
+                        Debug.LogError($"[{nameof(EditorReflectionCache)}] Failed to build indexer for '{fieldName}' on targetType '{currentType}' while processing property path '{propertyPath}'. Please check the field targetType and ensure it supports indexing.");
                         return null;
                     }
 
@@ -379,11 +475,11 @@
             // キャッシュに保存（SerializeReference 属性が付いているフィールドを含むかどうかの情報も一緒に保存）
             if (breakIndex >= 0)
             {
-                pathCache[(rootType, propertyPath)] = new PathInfo(true, cachedPath, cachedPath.Skip(breakIndex).ToArray());
+                pathCache[(rootType, propertyPath)] = new PathInfo(cachedPath, breakIndex);
             }
             else
             {
-                pathCache[(rootType, propertyPath)] = new PathInfo(false, cachedPath, null);
+                pathCache[(rootType, propertyPath)] = new PathInfo(cachedPath);
             }
             //Debug.Log($"[{nameof(EditorReflectionCache)}] Created new getter for property path '{property.propertyPath}' on type '{rootType}'. This getter will be cached for future use.");
             propertyPathGetterCache[(rootType, propertyPath)] = compiledGetter;
@@ -519,6 +615,41 @@
             // 上記の Expression をラムダ式としてまとめ、Func<object, object> 型のデリゲートにコンパイルする
             return Expression
                 .Lambda<Func<object, object>>(
+                    castResult,
+                    instanceParam)
+                .Compile();
+        }
+        private static Func<object, TReturn> CreateGetter<TReturn>(Type targetType, FieldInfo field)
+        {
+            // object instance
+            // 引数情報を表す Expression.Parameter を作成
+            // fun(object instance) と同じ
+            //名前はなくてもよいが、デバッグ時にわかりやすいように "instance" としています。
+            ParameterExpression instanceParam =
+                Expression.Parameter(typeof(object), "instance");
+
+            // (TargetType)instance
+            // instance を targetType にキャストする Expression を作成
+            // 一項演算子関数の作成クラス
+            UnaryExpression castInstance =
+                Expression.Convert(instanceParam, targetType);
+
+            // instance.field
+            // castInstance から field にアクセスする Expression を作成
+            // フィールドアクセスを表す Expression クラス
+            // castInstance.field と同等の処理を表す Expression を作成
+            MemberExpression fieldAccess =
+                Expression.Field(castInstance, field);
+
+            // boxing
+            // fieldAccess(返り値) を T にキャストする Expression を作成
+            // キャストできない場合は、例外を吐く。
+            UnaryExpression castResult =
+                Expression.Convert(fieldAccess, typeof(TReturn));
+            // object instance => (T)((TargetType)instance).field
+            // 上記の Expression をラムダ式としてまとめ、Func<object, T> 型のデリゲートにコンパイルする
+            return Expression
+                .Lambda<Func<object, TReturn>>(
                     castResult,
                     instanceParam)
                 .Compile();

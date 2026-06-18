@@ -16,7 +16,7 @@
         /// <param name="property">評価対象のプロパティ</param>
         /// <param name="attribute">EnableIf 属性</param>
         /// <returns>条件がすべて満たされている場合は true、それ以外は false</returns>
-        internal static bool EvaluateConditionsRecursive(SerializedProperty property, EnableIfAttribute attribute)
+        public static bool EvaluateConditionsRecursive(SerializedProperty property, EnableIfAttribute attribute)
         {
             // 条件フィールドを探すための「このプロパティが属するオブジェクト(Monobehaviour, ScriptableObject, etc.)」を取得
             // property.serializedObject.targetObject は常に最上位のオブジェクトを指すため、ネストされたプロパティの場合はそこからさらにたどる必要がある
@@ -42,7 +42,7 @@
                 //SerializedProperty prop = property.serializedObject.FindProperty(path);
 
                 //動的アクセス関数のキャッシュにより高速化
-                Func<object, object> getter = EditorReflectionCache.GetOrCreateGetter(containingObject.GetType(), name);
+                var getter = EditorReflectionCache.GetOrCreateGetter<bool>(containingObject.GetType(), name);
 
                 if (getter == null)
                 {
@@ -50,13 +50,14 @@
                     return true;
                 }
                 // 条件フィールドの値を取得
-                object fieldValue = getter(containingObject);
-                bool result = fieldValue switch
-                {
-                    bool b => b,
-                    Enum e => Convert.ToInt64(e) != 0,
-                    _ => fieldValue != null
-                };
+                //bool fieldValue = getter(containingObject);
+                bool result = getter(containingObject);
+                //bool result = fieldValue switch
+                //{
+                //    bool b => b,
+                //    Enum e => Convert.ToInt64(e) != 0,
+                //    _ => fieldValue != null
+                //};
 
                 result = attribute.conditionNegates[i] ? !result : result;
                 switch (attribute.logic)
@@ -92,7 +93,7 @@
                 _ => true// NOT はここには来ないはずなのでデフォルトに吸収して true を返す
             };
         }
-        internal static bool EvaluateEnumConditionRecursive(SerializedProperty property, EnableIfEnumAttribute attribute)
+        public static bool EvaluateEnumConditionRecursive(SerializedProperty property, EnableIfEnumAttribute attribute)
         {
             // 条件フィールドを探すための「このプロパティが属するオブジェクト(Monobehaviour, ScriptableObject, etc.)」を取得
             // property.serializedObject.targetObject は常に最上位のオブジェクトを指すため、ネストされたプロパティの場合はそこからさらにたどる必要がある
@@ -113,7 +114,7 @@
             //string path = property.propertyPath.Replace(property.name, attribute.name);
             //SerializedProperty prop = property.serializedObject.FindProperty(path);
             //動的アクセス関数のキャッシュにより高速化
-            Func<object, object> getter = EditorReflectionCache.GetOrCreateGetter(containingObject.GetType(), name);
+            var getter = EditorReflectionCache.GetOrCreateGetter<long>(containingObject.GetType(), name);
             if (getter == null)
             {
                 Debug.LogWarning($"[EnableIfDrawer] Condition field '{name}' not found in {containingObject.GetType().Name}", targetObject as UnityEngine.Object);
@@ -121,18 +122,14 @@
 
             }
             // 条件フィールドの値を取得(どちらかと言えば参照)
-            object fieldValue = getter(containingObject);
+            long fieldValue = getter(containingObject);
 
             foreach (int enumValue in attribute.enumValues)
             {
-                
-                bool result = fieldValue switch
-                {
-                    Enum e => attribute.useFlagMask 
-                        ? ((int)Convert.ToInt64(e) & enumValue) != 0
-                        : (int)Convert.ToInt64(e) == enumValue,
-                    _ => false
-                };
+                bool result =
+                    attribute.useFlagMask
+                    ? (fieldValue & enumValue) != 0
+                    : fieldValue == enumValue;
                 result = attribute.negate ? !result : result;
                 if (result)
                     return true; // OR 条件なので、一つでも条件を満たせば true を返す

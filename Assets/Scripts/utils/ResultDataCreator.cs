@@ -26,7 +26,7 @@ public class ResultDataCreator : NetworkBehaviour
             TotalBonus = totalBonus;
             Difficulty = difficulty;
         }
-        public override string ToString()
+        public readonly override string ToString()
         {
             return $"Seed[{Seed}], isGameOver[{IsGameOver}], TotalScore[{TotalScore}], TotalBonus[{TotalBonus}], Difficulty[{Difficulty}]";
         }
@@ -64,7 +64,7 @@ public class ResultDataCreator : NetworkBehaviour
     {
         resultDataRpcEvent.Invoke(result);
     }
-    static float CalculateCooperation(ReadOnlySpan<PlayerResultData> results)
+    static float CalculateCooperation(in ReadOnlySpan<PlayerResultData> results)
     {
         float totalShots = 0;
         float totalHits = 0;

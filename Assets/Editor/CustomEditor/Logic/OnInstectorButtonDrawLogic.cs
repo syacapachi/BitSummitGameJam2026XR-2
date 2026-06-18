@@ -1,11 +1,13 @@
 ﻿namespace Syacapachi.Editor
 {
     using Syacapachi.Attribute;
+    using Syacapachi.util;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.Events;
@@ -55,6 +57,67 @@
                 Attribute = attribute;
             }
         }
+        /// <summary>
+        /// 描画対象のキーとなる構造体
+        /// stringでキー比較だと、結合でGCがあるほかヒープに確保されるので効率が悪いので
+        /// スタックにある+小さい構造体で比較。
+        /// </summary>
+        readonly struct DrawPathKey : IEquatable<DrawPathKey>
+        {
+            public readonly int rootId;
+            public readonly int methodToken;
+            public readonly int paramToken;
+            public readonly int depth;
+            public readonly int index;
+
+            public DrawPathKey(int rootId, int methodToken, int paramToken, int depth, int index)
+            {
+                this.rootId = rootId;
+                this.methodToken = methodToken;
+                this.paramToken = paramToken;
+                this.depth = depth;
+                this.index = index;
+            }
+
+            public DrawPathKey Child(int token, int childIndex = 0)
+            {
+                int parentToken = CombineToken(paramToken, index);
+                return new DrawPathKey(
+                    rootId,
+                    methodToken,
+                    CombineToken(parentToken, token),
+                    depth + 1,
+                    childIndex);
+            }
+
+            public readonly bool Equals(DrawPathKey other)
+            {
+                return rootId == other.rootId
+                    && methodToken == other.methodToken
+                    && paramToken == other.paramToken
+                    && depth == other.depth
+                    && index == other.index;
+            }
+
+            public readonly override bool Equals(object obj)
+            {
+                return obj is DrawPathKey other && Equals(other);
+            }
+
+            public readonly override int GetHashCode()
+            {
+                //オーバーフローを無視する
+                unchecked
+                {
+                    int hash = rootId;
+                    hash = (hash * 397) ^ methodToken;
+                    hash = (hash * 397) ^ paramToken;
+                    hash = (hash * 397) ^ depth;
+                    hash = (hash * 397) ^ index;
+                    return hash;
+                }
+            }
+        }
         readonly struct CreateFailure
         {
             public readonly CreateFailureReason Reason;
@@ -78,10 +141,6 @@
             /// パラメータの情報
             /// </summary>
             public readonly ParameterInfo[] ParameterInfos;
-            /// <summary>
-            /// パラメータのパス配列のキャッシュ
-            /// </summary>
-            public readonly string[] ParameterPathSuffixes;
             /// <summary>
             /// パラメータのキャッシュ
             /// </summary>
@@ -110,23 +169,6 @@
                 ParameterLabel = new GUIContent($"{methodName} Parameters", methodName);
                 MethodLabel = new GUIContent(methodLabel, methodName);
                 AutoInvokeLabel = new GUIContent($"Auto Invoke {methodName}", methodName);
-
-                ParameterPathSuffixes = new string[ParameterInfos.Length];
-                for(int i = 0; i < ParameterInfos.Length; i++)
-                {
-                    ParameterPathSuffixes[i] = $"{methodName}#{ParameterInfos[i].MetadataToken}";
-                }
-            }
-        }
-
-        sealed class ParamDetails
-        {
-            object value;
-            readonly string path;
-
-            public ParamDetails(object invokeTarget,string methodName,int paramToken)
-            {
-                path = $"{invokeTarget.GetHashCode()}#{methodName}#{paramToken}";
             }
         }
         /// <summary>
@@ -180,9 +222,45 @@
         // パラメータのFoldout,関数の引数情報,自動発火機能のキャッシュ
         private static readonly Dictionary<MethodInfo, MethodDetails> methodDetails = new();
         // 抽象クラスやインターフェースと、それを実装/継承する具体的なクラスのキャッシュ (描画できない型を識別するため)
-        private static readonly Dictionary<string, Type> abstractToClass = new();
+        private static readonly Dictionary<DrawPathKey, Type> abstractToClass = new();
         // Foldoutの状態のキャッシュ pathは一意なのでstatic
-        private static readonly Dictionary<string, bool> foldouts = new();
+        private static readonly Dictionary<DrawPathKey, bool> foldouts = new();
+        // DrawPathKeyを文字列として使う必要がある場合のキャッシュ
+        private static readonly Dictionary<DrawPathKey, string> pathStrings = new();
+
+        private const int NullableToken = -1;
+        private const int ListElementToken = -2;
+        private const int ArrayElementToken = -3;
+        private const int DictionaryKeyToken = -4;
+        private const int DictionaryValueToken = -5;
+        private const int ConcreteTypeToken = -6;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int GetRootId(object target)
+        {
+            return target is UnityEngine.Object unityObject
+                ? unityObject.GetInstanceID()
+                : target.GetHashCode();
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int CombineToken(int parentToken, int childToken)
+        {
+            unchecked
+            {
+                return (parentToken * 397) ^ childToken;
+            }
+        }
+
+        private static string GetPathString(DrawPathKey pathKey)
+        {
+            if (!pathStrings.TryGetValue(pathKey, out string path))
+            {
+                path = $"{pathKey.rootId}#{pathKey.methodToken}#{pathKey.paramToken}#{pathKey.depth}#{pathKey.index}";
+                pathStrings[pathKey] = path;
+            }
+            return path;
+        }
+
         /// <summary>
         /// [OnInspectorButtonEditor]がある関数を描画します。
         /// </summary>
@@ -282,8 +360,17 @@
                         var param = details.ParameterInfos[i];
                         //変更を検知するエリア
                         EditorGUI.BeginChangeCheck();
-                        //引数の値を描画して更新,パスは、対象のHashCode(),(UnityEngine.ObjectならインスタンスIDがくる)と関数名と引数名で一意になるようにする。これで、同じ関数を複数描画している場合でも、引数の値が混ざらないようにする。
-                        values[i] = DrawField(param.ParameterType, param.Name, values[i], $"{invokeTarget.GetHashCode()}#{details.ParameterPathSuffixes[i]}");
+                        //引数の値を描画して更新,
+                        //パスは、対象のHashCode(),(UnityEngine.ObjectならインスタンスIDがくる)と
+                        //関数IDと引数IDで一意になるようにする。これで、同じ関数を複数描画している場合でも、引数の値が混ざらないようにする。
+                        //stringだと、結合でGCがあるほか、ヒープに確保されるので効率が悪い
+                        DrawPathKey pathKey = new(
+                            GetRootId(invokeTarget),
+                            method.MetadataToken,
+                            param.MetadataToken,
+                            0,
+                            i);
+                        values[i] = DrawField(param.ParameterType, param.Name, values[i], pathKey);
                         //変更を検知
                         if (EditorGUI.EndChangeCheck())
                         {
@@ -342,14 +429,14 @@
                 return InspectorButtonResult.Exception;
             }
         }
-        private static object DrawField(Type t, string name, object currentValue, string path)
+        private static object DrawField(Type t, string name, object currentValue, DrawPathKey pathKey)
         {
             name = ObjectNames.NicifyVariableName(name);
             //Nullableな型は、nullを許容するためにNullable.GetUnderlyingTypeで元の型を取得して描画する。
             if (Nullable.GetUnderlyingType(t) is Type underlyingType)
             {
                 currentValue ??= GetDefaultOrNull(underlyingType);
-                return DrawField(underlyingType, name + "?", currentValue, path + "?");
+                return DrawField(underlyingType, name + "?", currentValue, pathKey.Child(NullableToken));
             }
             //この辺あとで、型と描画方法の対応表みたいなの作って整理するかも
             if (t == typeof(int))
@@ -453,7 +540,7 @@
                 obj = EditorGUILayout.ObjectField(name, obj, t, true);
 
                 if (obj is ScriptableObject so)
-                    DrawScriptableObjectInline(so, path);
+                    DrawScriptableObjectInline(so, pathKey);
 
                 return obj;
             }
@@ -462,24 +549,24 @@
             {
                 Type elementType = t.GetElementType();
                 Array array = currentValue as Array;
-                return DrawArray(elementType, name, array, path);
+                return DrawArray(elementType, name, array, pathKey);
             }
             // List
             if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(List<>))
             {
                 Type elementType = t.GetGenericArguments()[0];
                 IList list = currentValue as IList;
-                return DrawList(elementType, name, list, path);
+                return DrawList(elementType, name, list, pathKey);
             }
             // 辞書
             if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
-                return DrawDictionary(t, name, currentValue, path);
+                return DrawDictionary(t, name, currentValue, pathKey);
             }
             // 抽象クラスやインターフェースは直接描画できないので、実装/継承する具体的なクラスを選択して描画する。選択されていない場合は、選択ボタンを表示する。
             if (t.IsAbstract || t.IsInterface)
             {
-                return DrawAbstractOrInterface(t, name, currentValue, path);
+                return DrawAbstractOrInterface(t, name, currentValue, pathKey);
             }
             //リスト、辞書、抽象クラス/インターフェース以外のジェネリック型
             if (t.IsGenericType)
@@ -501,18 +588,18 @@
                 //上記以外のジェネリック型は、通常のクラスと同様に描画する
             }
             // ScriptableObjectをインラインで描画
-            return DrawObject(t, name, currentValue, path);
+            return DrawObject(t, name, currentValue, pathKey);
         }
-        static IList DrawList(Type elementType, string name, IList list, string path)
+        static IList DrawList(Type elementType, string name, IList list, DrawPathKey pathKey)
         {
             // nullの場合は新しいリストを作成
             list ??= (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
             // Foldoutの状態をリスト自体で管理することで、同じリストを複数のインスペクターで描画している場合でも、展開状態を共有できる。
-            bool fold = GetFoldout(path);
+            bool fold = GetFoldout(pathKey);
 
             // Foldoutを描画して状態を更新
             fold = EditorGUILayout.Foldout(fold, $"{name} [{list.Count}]", true);
-            SetFoldout(path, fold);
+            SetFoldout(pathKey, fold);
 
             if (!fold)
                 return list;
@@ -531,7 +618,11 @@
             for (int i = 0; i < list.Count; i++)
             {
                 //要素を描画して更新
-                list[i] = DrawField(elementType, $"{name} Element[{i}]", list[i], $"{path}#Element[{i}]");
+                list[i] = DrawField(
+                    elementType,
+                    $"{name} Element[{i}]",
+                    list[i],
+                    pathKey.Child(ListElementToken, i));
             }
             if (GUILayout.Button(Add))
             {
@@ -542,7 +633,7 @@
 
             return list;
         }
-        static Array DrawArray(Type elementType, string name, Array array, string path)
+        static Array DrawArray(Type elementType, string name, Array array, DrawPathKey pathKey)
         {
             // 配列はサイズ変更のたびに新しい配列を作成して要素をコピーする必要があるため、Array.Resizeのような機能を自前で実装する。
             static Array ArrayResize(Array oldArray, int newSize, Type elementType)
@@ -558,9 +649,9 @@
 
             array ??= Array.CreateInstance(elementType, 0);
             // nullの場合は新しいリストを作成
-            bool fold = GetFoldout(path);
+            bool fold = GetFoldout(pathKey);
             fold = EditorGUILayout.Foldout(fold, $"{name} [{array.Length}]", true);
-            SetFoldout(path, fold);
+            SetFoldout(pathKey, fold);
 
 
             if (!fold)
@@ -581,7 +672,11 @@
             {
                 //要素を描画して更新
                 array.SetValue(
-                    DrawField(elementType, $"{name} Element[{i}]", array.GetValue(i), $"{path}#ArrayElement[{i}]"),
+                    DrawField(
+                        elementType,
+                        $"{name} Element[{i}]",
+                        array.GetValue(i),
+                        pathKey.Child(ArrayElementToken, i)),
                     i);
             }
             if (GUILayout.Button(Add))
@@ -594,7 +689,7 @@
             return array;
         }
 
-        static IDictionary DrawDictionary(Type dictType, string name, object dictObj, string path)
+        static IDictionary DrawDictionary(Type dictType, string name, object dictObj, DrawPathKey pathKey)
         {
             var args = dictType.GetGenericArguments();
 
@@ -605,10 +700,10 @@
 
             dict ??= (IDictionary)Activator.CreateInstance(dictType);
 
-            bool fold = GetFoldout(path);
+            bool fold = GetFoldout(pathKey);
 
             fold = EditorGUILayout.Foldout(fold, $"{name} [{dict.Count}]", true);
-            SetFoldout(path, fold);
+            SetFoldout(pathKey, fold);
 
             if (!fold)
                 return dict;
@@ -631,8 +726,16 @@
                     break;
                 }
 
-                object newKey = DrawField(keyType, $"{name} Key [{i}]", key, $"{path}#Key[{i}]");
-                object newValue = DrawField(valueType, $"{name} Value [{i}]", dict[key], $"{path}#Value[{i}]");
+                object newKey = DrawField(
+                    keyType,
+                    $"{name} Key [{i}]",
+                    key,
+                    pathKey.Child(DictionaryKeyToken, i));
+                object newValue = DrawField(
+                    valueType,
+                    $"{name} Value [{i}]",
+                    dict[key],
+                    pathKey.Child(DictionaryValueToken, i));
 
                 //キーが変更された場合は、古いキーを削除して新しいキーで追加。そうでない場合は値だけ更新。
                 if (!Equals(newKey, key))
@@ -664,7 +767,7 @@
             return dict;
         }
 
-        static object DrawObject(Type type, string name, object value, string path)
+        static object DrawObject(Type type, string name, object value, DrawPathKey pathKey)
         {
             CreateFailure result = CanCreate(type);
 
@@ -683,11 +786,11 @@
                 return value;
             }
 
-            bool fold = GetFoldout(path);
+            bool fold = GetFoldout(pathKey);
 
             fold = EditorGUILayout.Foldout(fold, name, true);
 
-            SetFoldout(path, fold);
+            SetFoldout(pathKey, fold);
 
             if (!fold)
                 return value;
@@ -709,7 +812,11 @@
             {
                 var fieldValue = f.GetValue(value);
 
-                var newValue = DrawField(f.FieldType, f.Name, fieldValue, $"{path}#{f.Name}");
+                var newValue = DrawField(
+                    f.FieldType,
+                    f.Name,
+                    fieldValue,
+                    pathKey.Child(f.MetadataToken));
                 if (!Equals(fieldValue, newValue))
                     f.SetValue(value, newValue);
             }
@@ -777,24 +884,28 @@
         /// <param name="type"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        static object DrawAbstractOrInterface(Type type, string name, object value, string path)
+        static object DrawAbstractOrInterface(Type type, string name, object value, DrawPathKey pathKey)
         {
-            if (abstractToClass.TryGetValue(path, out var concreteType))
+            if (abstractToClass.TryGetValue(pathKey, out var concreteType))
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     EditorGUILayout.LabelField($"{type.Name} ▶ {concreteType.Name}", EditorStyles.boldLabel);
                     if (GUILayout.Button(Delete, GUIContentCache.GetWidth(100)))
                     {
-                        abstractToClass.Remove(path);
+                        abstractToClass.Remove(pathKey);
                         return null;
                     }
                 }
-                return DrawField(concreteType, name, value, $"{path}#{concreteType}");
+                return DrawField(
+                    concreteType,
+                    name,
+                    value,
+                    pathKey.Child(CombineToken(ConcreteTypeToken, concreteType.MetadataToken)));
             }
             if (GUILayout.Button($"Select Class ({type.Name})"))
             {
-                ShowTypeMenu(type, path);
+                ShowTypeMenu(type, pathKey);
             }
 
             return value;
@@ -803,7 +914,7 @@
         /// 具象クラスの選択メニューを表示する。選択されたクラスは、抽象クラスやインターフェースのキャッシュに保存される。次回以降は直接描画されるようになる。
         /// </summary>
         /// <param name="baseType"></param>
-        private static void ShowTypeMenu(Type baseType, string path)
+        private static void ShowTypeMenu(Type baseType, DrawPathKey pathKey)
         {
             var menu = new GenericMenu();
             //var types = AppDomain.CurrentDomain.GetAssemblies()
@@ -819,23 +930,23 @@
             }
             foreach (var type in types)
             {
-                menu.AddItem(new GUIContent(type.FullName), false, () =>
+                menu.AddItem(GUIContentCache.GetContent(type.FullName), false, () =>
                 {
-                    abstractToClass[path] = type;
+                    abstractToClass[pathKey] = type;
                 });
             }
             menu.ShowAsContext();
         }
-        static void DrawScriptableObjectInline(ScriptableObject so, string path)
+        static void DrawScriptableObjectInline(ScriptableObject so, DrawPathKey pathKey)
         {
             if (so == null)
                 return;
 
-            bool fold = GetFoldout(path);
+            bool fold = GetFoldout(pathKey);
 
             fold = EditorGUILayout.Foldout(fold, so.name, true);
 
-            SetFoldout(path, fold);
+            SetFoldout(pathKey, fold);
 
             if (!fold)
                 return;
@@ -851,11 +962,15 @@
         {
             if (t == null)
                 return null;
+            //プリミティブ型は作れる
+            if (t.IsValueType)
+                return Activator.CreateInstance(t);
             //UnityEngine.Objectは、作っちゃダメ
             if (typeof(UnityEngine.Object).IsAssignableFrom(t))
                 return null;
-            if (t.IsValueType)
-                return Activator.CreateInstance(t);
+            //抽象クラスは作れない
+            if (t.IsAbstract || t.IsInterface)
+                return null;
 
             //生成できない型(プライベートコンストラクタしかない、デフォルトコンストラクタがない,etc...)の場合はnullを返す
             try
@@ -868,21 +983,20 @@
                 return null;
             }
         }
-        private static bool GetFoldout(string pathkey)
+        private static bool GetFoldout(in DrawPathKey pathKey)
         {
-            if (!foldouts.TryGetValue(pathkey, out bool value))
+            if (!foldouts.TryGetValue(pathKey, out bool value))
             {
                 value = false;
-                foldouts[pathkey] = value;
+                foldouts[pathKey] = value;
             }
 
             return value;
         }
 
-        private static void SetFoldout(string pathkey, bool value)
+        private static void SetFoldout(in DrawPathKey pathKey, bool value)
         {
-            foldouts[pathkey] = value;
-
+            foldouts[pathKey] = value;
         }
 
     }
