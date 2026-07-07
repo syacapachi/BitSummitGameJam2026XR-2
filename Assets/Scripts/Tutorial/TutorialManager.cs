@@ -53,6 +53,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
     }
     public void OnTutorialStartServerOnly()
     {
+        if (!IsServer) return;
         if (isTutorlalStartedServerOnly) return;
 
         spawner.KillAll();
