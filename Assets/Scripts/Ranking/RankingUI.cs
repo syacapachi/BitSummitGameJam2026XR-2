@@ -111,6 +111,8 @@ public class RankingUI : MonoBehaviour
             {
                 var entry = ManagerLocator.Instance.LocalObjectPool.Get(entryPrefab);
                 entry.transform.SetParent(entryParent);
+                entry.transform.localScale = Vector3.one;
+                entry.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
                 var entryUI = entry.GetComponent<RankingEntryUI>();
                 entryUI.Setup(i + 1, rankings[i], IsJapanese);
                 createdUIQueue.Enqueue(entryUI);
