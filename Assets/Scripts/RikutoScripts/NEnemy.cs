@@ -22,6 +22,7 @@ public class NEnemy : NetworkBehaviour, IDamageReciever, IEnemy
     [SerializeField] private Canvas hpCanvas;
     [SerializeField] private Image hpImage; // Filled Image
     [SerializeField] private TextMeshProUGUI hpText;
+    [SerializeField] HeartHPUI heartUI;
     [SerializeField] PlayerJob enemyJob;
     [SerializeField] NetworkAnimator networkAnimator;
     [Header("Publish Event")]
@@ -175,7 +176,7 @@ public class NEnemy : NetworkBehaviour, IDamageReciever, IEnemy
                 }
             }
         }
-        UpdateHPUI(currentHP.Value);
+        UpdateHPUI(0, currentHP.Value);
         //オーナーを見つける。
         targetPlayerOwnerOnly = locator.AllPlayerManager.NetworkOwnerPlayer.transform;
         //移動できる点を確認
@@ -307,15 +308,31 @@ public class NEnemy : NetworkBehaviour, IDamageReciever, IEnemy
     }
     void OnHPChanged(float oldValue, float newValue)
     {
-        UpdateHPUI(newValue);
+        UpdateHPUI(oldValue, newValue);
     }
-    void UpdateHPUI(float hp)
+    void UpdateHPUI(float oldHp,float newHp)
     {
         if (hpImage != null)
-            hpImage.fillAmount = hp * invMaxHealth;
+        {
+            StartCoroutine(HPChangedCorutine(oldHp * invMaxHealth, newHp * invMaxHealth, 10f));
+        }
 
         if (hpText != null)
-            hpText.text = $"{hp} / {rpcEnemySO.Hp}";
+            hpText.text = $"{newHp} / {rpcEnemySO.Hp}";
+        if (heartUI != null)
+            heartUI.SetHP(Mathf.FloorToInt(newHp / 100));
+    }
+    IEnumerator HPChangedCorutine(float oldRate, float newRate, float t)
+    {
+        float current = oldRate;
+        while (Mathf.Abs(current - newRate) > 0.01f)
+        {
+            // Time.deltaTime * tで、毎秒%ずつ変化する用に変化できる。
+            current = Mathf.Lerp(current, newRate, Time.deltaTime * t);
+            hpImage.fillAmount = current;
+            yield return null;
+        }
+        hpImage.fillAmount = newRate;
     }
     public void SetAttackabe(bool value)
     {

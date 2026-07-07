@@ -1,4 +1,5 @@
 ﻿using Syacapachi.Attribute;
+using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using UnityEngine;
 

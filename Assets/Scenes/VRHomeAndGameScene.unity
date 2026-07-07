@@ -52154,7 +52154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786624247185409141, guid: 800658db6a9b15345b032ec9bfa8f644, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5786624247185409141, guid: 800658db6a9b15345b032ec9bfa8f644, type: 3}
       propertyPath: m_SizeDelta.y
@@ -79739,6 +79739,18 @@ PrefabInstance:
       propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[0]'
       value: 
       objectReference: {fileID: 1725796290}
+    - target: {fileID: 4446207769095747314, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: pooledPrefabsList.Array.size
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 4446207769095747314, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: pooledPrefabsList.Array.data[25].Prefab
+      value: 
+      objectReference: {fileID: 5519199833341115113, guid: 27f315618eeacae4dadfed18dfe86a71, type: 3}
+    - target: {fileID: 4446207769095747314, guid: 07f51410c6523454580003730b31cfff, type: 3}
+      propertyPath: pooledPrefabsList.Array.data[25].PrewarmCount
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -56,9 +56,16 @@ public class SkyBoxColorSetting : ScriptableObject
         skyRootEular = new Vector3((int)timeOfDay * onehour + 180f, 170, 0);
     }
 #endif
-
+    /// <summary>
+    /// 現在の空模様をLerpによって更新します。
+    /// </summary>
+    /// <param name="fromSky"></param>
+    /// <param name="toSky"></param>
+    /// <param name="t"></param>
     public void UpdateLerpSky(SkyBoxColorSetting fromSky, SkyBoxColorSetting toSky, float t)
     {
+        //メモ 安全に低レベル操作 System.Runtime.InteropServices.Marshal
+        timeOfDay = (TimeOfDay)Mathf.FloorToInt(Mathf.Lerp((int)fromSky.timeOfDay, (int)toSky.timeOfDay, t));
         topColor = Color.Lerp(fromSky.topColor, toSky.topColor, t);
         horizonColor = Color.Lerp(fromSky.horizonColor, toSky.horizonColor, t);
         bottomColor = Color.Lerp(fromSky.bottomColor, toSky.bottomColor, t);
@@ -96,6 +103,10 @@ public class SkyBoxColorSetting : ScriptableObject
             skyRootEular = Vector3.Lerp(fromSky.SkyRootEular, toSky.SkyRootEular, t);
         }
     }
+    /// <summary>
+    /// 現在の空模様をコピーによって更新します。
+    /// </summary>
+    /// <param name="setting"></param>
     public void CopySky(SkyBoxColorSetting setting)
     {
         timeOfDay = setting.timeOfDay;
@@ -127,7 +138,7 @@ public class SkyBoxColorSetting : ScriptableObject
 /// 時間は24時間表記で、0時はTwentyFourとする。
 /// 時間以外入れてもいいよ。
 /// </summary>
-public enum TimeOfDay
+public enum TimeOfDay : int
 {
     TwentyFour = 0,
     One = 1,
