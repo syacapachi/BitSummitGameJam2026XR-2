@@ -129,4 +129,4 @@ git config --local --get merge.tool
 git config --local --get mergetool.unityyamlmerge.cmd
 
 Write-Host ""
-Write-Host "Setup completed successfully."A
+Write-Host "Setup completed successfully."
