@@ -1,5 +1,8 @@
 ﻿# SetupUnityYAMLMerge.ps1
 # 現在のUnityEditorのバージョンを確認して、自動でマージツールと紐づけるコマンド
+
+$ErrorActionPreference = "Stop"
+
 Write-Host ""
 Write-Host "========================================="
 Write-Host " UnityYAMLMerge Setup"
@@ -9,27 +12,23 @@ Write-Host ""
 #--------------------------------------------------
 # Git Repository確認
 #--------------------------------------------------
-try {
-    git rev-parse --show-toplevel *> $null
-}
-catch {
-    Write-Host "Error: Git Repositoryではありません。"
-    exit 1
-}
+
+git rev-parse --show-toplevel *> $null
 
 #--------------------------------------------------
 # Unity Hub
 #--------------------------------------------------
+
 $unityHub = "C:\Program Files\Unity\Hub\Editor"
 
 if (!(Test-Path $unityHub)) {
-    Write-Host "Unity Hubが見つかりません。"
-    exit 1
+    throw "Unity Hub が見つかりません。"
 }
 
 #--------------------------------------------------
-# ProjectVersion取得
+# Project Version
 #--------------------------------------------------
+
 $projectVersion = $null
 
 $versionFile = Join-Path (Get-Location) "ProjectSettings\ProjectVersion.txt"
@@ -41,12 +40,8 @@ if (Test-Path $versionFile) {
 
     if ($line) {
         $projectVersion = ($line -replace "^m_EditorVersion:\s*", "").Trim()
-
         Write-Host "Project Unity Version : $projectVersion"
     }
-}
-else {
-    Write-Host "ProjectVersion.txt が見つかりません。"
 }
 
 #--------------------------------------------------
@@ -56,45 +51,35 @@ else {
 $mergeExe = $null
 $selectedVersion = $null
 
-# ① ProjectVersionを優先
 if ($projectVersion) {
 
-    $candidate = Join-Path `
-        $unityHub `
-        "$projectVersion\Editor\Data\Tools\UnityYAMLMerge.exe"
+    $candidate = Join-Path $unityHub "$projectVersion\Editor\Data\Tools\UnityYAMLMerge.exe"
 
     if (Test-Path $candidate) {
 
         $mergeExe = Get-Item $candidate
         $selectedVersion = $projectVersion
 
-        Write-Host "Projectに一致するUnityを使用します。"
-    }
-    else {
-
-        Write-Host "一致するUnityが見つかりません。"
-        Write-Host "インストール済みUnityから検索します..."
+        Write-Host "Using matching Unity version."
     }
 }
 
-# ② 見つからなかったら従来方式
 if ($null -eq $mergeExe) {
 
+    Write-Host "Matching Unity not found."
+    Write-Host "Searching installed Unity versions..."
+
     $mergeExe = Get-ChildItem `
-        -Path $unityHub `
+        $unityHub `
         -Filter UnityYAMLMerge.exe `
-        -Recurse `
-        -ErrorAction SilentlyContinue |
+        -Recurse |
         Sort-Object FullName -Descending |
         Select-Object -First 1
 
     if ($null -eq $mergeExe) {
-
-        Write-Host "UnityYAMLMerge.exe が見つかりません。"
-        exit 1
+        throw "UnityYAMLMerge.exe が見つかりません。"
     }
 
-    # Editorフォルダ名からVersion取得
     $selectedVersion = Split-Path (
         Split-Path (
             Split-Path (
@@ -102,29 +87,27 @@ if ($null -eq $mergeExe) {
             ) -Parent
         ) -Parent
     ) -Leaf
-
-    Write-Host "最新版(Unity検索結果)を使用します。"
 }
 
 #--------------------------------------------------
 # Git設定
 #--------------------------------------------------
 
-$escapedPath = $mergeExe.FullName.Replace("\","\\")
+$path = $mergeExe.FullName.Replace("\","/")
 
-$cmd = "`"$escapedPath`" merge -p `"`$BASE`" `"`$REMOTE`" `"`$LOCAL`" `"`$MERGED`""
+$cmd = "$path merge -p `"`$BASE`" `"`$REMOTE`" `"`$LOCAL`" `"`$MERGED`""
 
-git config --local merge.tool unityyamlmerge
-git config --local mergetool.unityyamlmerge.trustExitCode false
-git config --local mergetool.unityyamlmerge.cmd $cmd
+git config --local "merge.tool" "unityyamlmerge"
+git config --local "mergetool.unityyamlmerge.trustExitCode" "false"
+git config --local "mergetool.unityyamlmerge.cmd" $cmd
 
 #--------------------------------------------------
-# 完了
+# Result
 #--------------------------------------------------
 
 Write-Host ""
 Write-Host "========================================="
-Write-Host " 設定完了"
+Write-Host " Completed"
 Write-Host "========================================="
 Write-Host ""
 
@@ -136,15 +119,14 @@ Write-Host "UnityYAMLMerge"
 Write-Host "  $($mergeExe.FullName)"
 Write-Host ""
 
-Write-Host "Git設定"
-
-Write-Host "  merge.tool"
-git config --local --get merge.tool
-
+Write-Host "Registered Command"
+Write-Host "  $cmd"
 Write-Host ""
 
-Write-Host "  mergetool.unityyamlmerge.cmd"
+Write-Host "Verify"
+
+git config --local --get merge.tool
 git config --local --get mergetool.unityyamlmerge.cmd
 
 Write-Host ""
-Write-Host "Setup completed successfully."
+Write-Host "Setup completed successfully."A
