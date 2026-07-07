@@ -107,7 +107,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
                 StartMainSimulation();
                 return;
         }
-
+        // ここで黒魔術を紹介,型チェックをしないから早いぞ Unsafe.As<TutorialStep, int>(ref step);
         OnTutorialStepChanged?.Invoke((int)step);
         currentStepLogic?.OnStart();
     }
