@@ -1,4 +1,4 @@
-# SetupUnityYAMLMerge.ps1
+﻿# SetupUnityYAMLMerge.ps1
 # 現在のUnityEditorのバージョンを確認して、自動でマージツールと紐づけるコマンド
 Write-Host ""
 Write-Host "========================================="
