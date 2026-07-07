@@ -5,6 +5,8 @@ using Syacapachi.Manager;
 using Syacapachi.Data;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEngine.UI;
 
 public class RankingUI : MonoBehaviour
 {
@@ -125,6 +127,7 @@ public class RankingUI : MonoBehaviour
                 ui.UpdateLanguage(language);
             }
         }
+        LayoutRebuilder.MarkLayoutForRebuild(entryParent as RectTransform);
 
         // 今回のスコアをハイライト表示
         var current = rankingManager.CurrentResult;
@@ -135,7 +138,7 @@ public class RankingUI : MonoBehaviour
                 : $"Your Cooperation: {current.Cooperation:F1}%, RemainHP {current.RemainHP}";
         }
     }
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void HideRanking()
     {
         StopAllCoroutines();

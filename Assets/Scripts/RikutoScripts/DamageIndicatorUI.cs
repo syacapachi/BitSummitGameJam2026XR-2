@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using System.Runtime.CompilerServices;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,9 +42,7 @@ public class DamageIndicatorUI : MonoBehaviour
     private void OnDamage(
         in DamageIndicatorInfo info)
     {
-        Debug.Log(
-    $"OnDamage {info.EnemyNetworkObjectId}"
-);
+        Debug.Log($"OnDamage {info.EnemyNetworkObjectId}");
         if (!NetworkManager.Singleton
             .SpawnManager
             .SpawnedObjects
@@ -51,9 +50,7 @@ public class DamageIndicatorUI : MonoBehaviour
                 info.EnemyNetworkObjectId,
                 out var obj))
         {
-            Debug.LogError(
-    $"Enemy not found : {info.EnemyNetworkObjectId}"
-);
+            Debug.LogError($"Enemy not found : {info.EnemyNetworkObjectId}");
             return;
         }
 
@@ -84,6 +81,7 @@ public class DamageIndicatorUI : MonoBehaviour
         UpdateIndicatorDirection();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void UpdateIndicatorDirection()
     {
         Vector3 toEnemy =
@@ -110,7 +108,7 @@ public class DamageIndicatorUI : MonoBehaviour
                 -angle
             );
     }
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void HideIndicator()
     {
         target = null;
