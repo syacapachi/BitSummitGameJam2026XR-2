@@ -139,8 +139,9 @@ namespace Syacapachi.Editor
                         newIndex = fixedIndex;
                     }
                 }
-            }
+            } 
 
+            //戻すのは、インデックス
             property.enumValueIndex = newIndex;
         }
         static bool IsFlagsEnum(Type type)

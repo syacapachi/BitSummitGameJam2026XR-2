@@ -13,7 +13,7 @@ namespace Syacapachi.Editor
         private static readonly GUIContent warningLabel = new GUIContent("Use with string fields only.", "string only");
         private static readonly Dictionary<string, string> sceneNameToPathCache = new();
         private static readonly Dictionary<string, SceneAsset> sceneAssetCache = new();
-        private static readonly Dictionary<string,bool> isBuildSceneCache = new();
+        private static readonly Dictionary<string, bool> isBuildSceneCache = new();
         static SceneDrawer()
         {
             sceneAssetCache.Clear();
