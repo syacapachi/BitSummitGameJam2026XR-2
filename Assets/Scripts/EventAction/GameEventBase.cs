@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 /// <summary>
 /// イベントを表すScriptableObjectクラス。イベントの発生を管理し、登録されたリスナーに通知するためのクラスです。
 /// </summary>
-public class GameEventSOBase<T> : ScriptableObject,IResisterable<Action<T>>,IInvokable<T>
+public class GameEventBase<T> : ScriptableObject,IResisterable<Action<T>>,IInvokable<T>
 {
     private T lastValue;
     private event Action <T> Listeners;
@@ -55,11 +56,25 @@ public class GameEventSOBase<T> : ScriptableObject,IResisterable<Action<T>>,IInv
         //参照コピーの恩恵を受けたい場合、自前delegateを作る(すぐできる)
         Listeners?.Invoke(value);
     }
+
+    // 演算子オーバーロード
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static GameEventBase<T> operator +(GameEventBase<T> eventBase, Action<T> invokable)
+    {
+        eventBase.Register(invokable);
+        return eventBase;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static GameEventBase<T> operator -(GameEventBase<T> eventBase, Action<T> invokeable)
+    {
+        eventBase.Unregister(invokeable);
+        return eventBase;
+    }
 }
 /// <summary>
 /// 因数なしバージョン
 /// </summary>
-public class GameEventSOBase : ScriptableObject, IResisterable<Action>, IInvokable
+public class GameEventBase : ScriptableObject, IResisterable<Action>, IInvokable
 {
     private event Action Linsteners;
 
@@ -75,5 +90,19 @@ public class GameEventSOBase : ScriptableObject, IResisterable<Action>, IInvokab
     public void Invoke()
     {
         Linsteners?.Invoke();
+    }
+
+    // 演算子オーバーロード
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static GameEventBase operator +(GameEventBase eventBase, Action invokable)
+    {
+        eventBase.Register(invokable);
+        return eventBase;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static GameEventBase operator -(GameEventBase eventBase, Action invokeable)
+    {
+        eventBase.Unregister(invokeable);
+        return eventBase;
     }
 }

@@ -1,5 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 [CreateAssetMenu(menuName = "GameEvents/DamageIndicatorEvent")]
-public class DamageIndicatorEvent : GameEventSOBase<DamageIndicatorInfo>
+public class DamageIndicatorEvent : ReadOnlyGameEventBase<DamageIndicatorInfo>
 {
 }

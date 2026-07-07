@@ -1,5 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 [CreateAssetMenu(menuName = "GameEvents/GameStateEvent")]
-public class GameStateEvent : GameEventSOBase<GameState>
+public class GameStateEvent : GameEventBase<GameState>
 {
 }

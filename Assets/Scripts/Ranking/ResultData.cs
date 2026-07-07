@@ -16,7 +16,7 @@ namespace Syacapachi.Data
     }
 
     [Serializable]
-    [GenerateEvent(typeof(GameEventSOBase<>))]
+    [GenerateEvent(typeof(ReadOnlyGameEventBase<>))]
     public class ResultData : INetworkSerializable
     {
         //共通情報

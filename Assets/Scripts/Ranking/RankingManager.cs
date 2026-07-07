@@ -38,7 +38,7 @@ namespace Syacapachi.Manager
         {
             resultEvent.Unregister(SaveJson);
         }
-        private void SaveJson(ResultData data)
+        private void SaveJson(in ResultData data)
         {
             CurrentResult = data;
 #if UNITY_EDITOR

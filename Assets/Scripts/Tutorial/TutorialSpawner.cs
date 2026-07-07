@@ -37,7 +37,7 @@ public class TutorialSpawner : NetworkBehaviour
         }
     }
 
-    void OnEnemyKilledEvent(EnemyKilled e)
+    void OnEnemyKilledEvent(in EnemyKilled e)
     {
         Debug.Log(
     $"[TutorialSpawner] EnemyKilledEvent : " +

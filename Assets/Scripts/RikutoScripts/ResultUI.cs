@@ -80,7 +80,7 @@ public class ResultUI : MonoBehaviour
         gameStateEvent.Unregister(OnGameStateChanged);
         LanguageEvent.Unregister(OnLanguageChanged);
     }
-    void OnGameFinished(ResultData resultData)
+    void OnGameFinished(in ResultData resultData)
     {
         Debug.Log($"OnGameFinished called: {Time.frameCount}");
         currentResultData = resultData;

@@ -18,7 +18,7 @@ public class PlayerHPBarUI : MonoBehaviour
         HpInfoEvent.Unregister(UpdateHPBar);
     }
 
-    private void UpdateHPBar(HPInfo info)
+    private void UpdateHPBar(in HPInfo info)
     {
         if (hpBarImage != null)
         {

@@ -60,7 +60,7 @@ public class RankingUI : MonoBehaviour
     // ResultDataEventを受け取ったら表示開始
     // RankingManagerのSaveJsonと同じイベントなので
     // 1フレーム待てばSaveJson完了後に確実にデータが揃っている
-    void OnResultReceived(ResultData data)
+    void OnResultReceived(in ResultData data)
     {
         StartCoroutine(ShowRankingDelayed());
     }
