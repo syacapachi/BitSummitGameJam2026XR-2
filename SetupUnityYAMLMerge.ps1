@@ -1,6 +1,7 @@
 ﻿# SetupUnityYAMLMerge.ps1
 # 現在のUnityEditorのバージョンを確認して、自動でマージツールと紐づけるコマンド
 
+try{
 $ErrorActionPreference = "Stop"
 
 Write-Host ""
@@ -130,3 +131,15 @@ git config --local --get mergetool.unityyamlmerge.cmd
 
 Write-Host ""
 Write-Host "Setup completed successfully."
+}
+catch{
+    Write-Host ""
+    Write-Host "Error:"
+    Write-Host $_ -ForegroundColor Red
+}
+finally{
+    Write-Host ""
+    Write-Host "Press any key to exit..."
+    # キー入力を待つ
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+}
