@@ -140,7 +140,11 @@
 
                 return result;
             }
-
+            /// <summary>
+            /// data[123] のフォーマットから、123を取得して数字に直します。
+            /// </summary>
+            /// <param name="span"> data[123]の形式のSpan </param>
+            /// <returns> 数字 </returns>
             private static int ParseIndex(ReadOnlySpan<char> span)
             {
                 // data[123]
@@ -160,10 +164,7 @@
         // 条件フィールドの値を高速に取得するためのキャッシュ(Typeとフィールド名の組み合わせで一意に特定でき、instanceを渡して実行するのでstatic)
         static class GetterCache<T>
         {
-            internal static readonly Dictionary<
-                (Type, string),
-                Func<object, T>
-            > Cache = new();
+            internal static readonly Dictionary<(Type, string), Func<object, T>> Cache = new();
         }
         // 条件フィールドの FieldInfo をキャッシュするための辞書(FieldInfo は型から一意に求まるのでstatic)
         private static readonly Dictionary<(Type, string), FieldInfo> fieldCache = new();
@@ -272,9 +273,7 @@
         /// </summary>
         public static Func<object, TReturn> GetOrCreateGetter<TReturn>(Type targetType, string fieldName)
         {
-            if (GetterCache<TReturn>.Cache.TryGetValue(
-                (targetType, fieldName),
-                out var getter))
+            if (GetterCache<TReturn>.Cache.TryGetValue((targetType, fieldName), out var getter))
             {
                 return getter;
             }

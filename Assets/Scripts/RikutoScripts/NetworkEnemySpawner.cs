@@ -85,7 +85,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
         if (!IsServer) return;
         EnemyKilled.Unregister(EnemyKilledEventHandle);
     }
-    private void EnemyKilledEventHandle(EnemyKilled killled)
+    private void EnemyKilledEventHandle(in EnemyKilled killled)
     {
         OnEnemyKilled(killled.KilledEnemy);
     }

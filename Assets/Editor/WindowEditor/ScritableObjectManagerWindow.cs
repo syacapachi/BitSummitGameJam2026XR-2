@@ -13,18 +13,44 @@ namespace Syacapachi.Editor
         public struct ListWrapper<TKey>
         {
             public TKey Key;
-            public List<UnityEngine.Object> List;
+            /// <summary>
+            /// こいつをシリアライズすると重いので、インスタンスIDをシリアライズして復元する。
+            /// </summary>
+            [NonSerialized] private List<UnityEngine.Object> list;
+            public List<UnityEngine.Object> Objects
+            {
+                get
+                {
+                    Rebuild();
+                    return list;
+                }
+            }
+
+            public List<int> InstanceIds;
+            private bool isRebuildred;
             public ListWrapper(TKey key, List<UnityEngine.Object> list)
             {
                 this.Key = key;
-                this.List = list;
+                this.list = list;
+                this.isRebuildred = false;
+                InstanceIds = new List<int>(list.Count);
+                foreach(var obj in list)
+                {
+                    InstanceIds.Add(obj.GetInstanceID());
+                }
             }
-        }
-        [Serializable]
-        struct CacheEntry
-        {
-            public int Key;
-            public GlobalObjectId[] Values;
+            private void Rebuild()
+            {
+                if (isRebuildred) return;
+                isRebuildred = true;
+                list ??= new List<UnityEngine.Object>();
+                list.Clear();
+                foreach (int  id in InstanceIds)
+                {
+                    // この関数はシリアライズ前後で呼んではいけない
+                    list.Add(EditorUtility.InstanceIDToObject(id));
+                }
+            }
         }
         [Flags]
         enum SearchMode
@@ -108,14 +134,21 @@ namespace Syacapachi.Editor
                 }
             }
         }
-        //ListをDictに変換
+        //ListをDictに変換(この中で EditorUtility.InstanceIDToObjectを呼んでいたのを直すためOnEnableに移動)
         public void OnAfterDeserialize()
+        {
+            
+        }
+        /// <summary>
+        /// Clears and rebuilds the object reference and assignable caches.
+        /// </summary>
+        void ReBuildCahce()
         {
             objectReferenceCache.Clear();
             assginableCache.Clear();
             foreach (var wrapper in objectReferenceKVPairs)
             {
-                objectReferenceCache[wrapper.Key] = wrapper.List;
+                objectReferenceCache[wrapper.Key] = wrapper.Objects;
             }
             for (int i = 0; i < assginableCacheKeysString.Count; i++)
             {
@@ -127,7 +160,7 @@ namespace Syacapachi.Editor
                 inlineDict.Clear();
                 foreach (var wrapper in assginableCacheValuesKVPairs)
                 {
-                    inlineDict[wrapper.Key] = wrapper.List;
+                    inlineDict[wrapper.Key] = wrapper.Objects;
                 }
             }
         }
@@ -144,6 +177,7 @@ namespace Syacapachi.Editor
         void OnEnable()
         {
             Refresh();
+            ReBuildCahce();
         }
         //Window非表示にキャッシュ削除
         void OnDestory()
@@ -158,6 +192,8 @@ namespace Syacapachi.Editor
 
             DrawToolbar();
             scroll = GUILayout.BeginScrollView(scroll);
+            //この関数中では、GUIContentのアイコンサイズが32x32になる
+            using var iconSizeScope = new EditorGUIUtility.IconSizeScope(new Vector2(16, 16));
 
             foreach (var group in typeToIntanceCache)
             {
@@ -273,10 +309,20 @@ namespace Syacapachi.Editor
         
         static void DrawGroup(System.Type type, IReadOnlyList<ScriptableObject> list)
         {
-            using (new GUILayout.HorizontalScope())
+            using (new GUILayout.HorizontalScope(GUIContentCache.GetHeight(20)))
             {
-                if (!typeFoldouts.ContainsKey(type)) typeFoldouts[type] = false;
-                typeFoldouts[type] = EditorGUILayout.Foldout(typeFoldouts[type], type.Name, true);
+                if (!typeFoldouts.TryGetValue(type, out bool enabled))
+                {
+                    enabled = false;
+                    typeFoldouts[type] = enabled;
+                }
+                if(!GUIContentCache.TryGetContent(type.FullName,out GUIContent content))
+                {
+                    Texture2D image = AssetPreview.GetMiniTypeThumbnail(type);
+                    content = new GUIContent(type.Name, image, type.FullName);
+                    GUIContentCache.ResistContent(type.FullName, content);
+                }
+                typeFoldouts[type] = EditorGUILayout.Foldout(enabled, content, true);
                 if (GUILayout.Button(FindAssginableLabel, GUIContentCache.GetWidth(150)))
                 {
                     if (assginableCache.TryGetValue(type.FullName, out var cache))

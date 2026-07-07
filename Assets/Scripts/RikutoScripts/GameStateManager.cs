@@ -20,7 +20,7 @@ public class GameStateManager : NetworkBehaviour
     [SerializeField] bool showWorldView = false;
     [SerializeField] Language currentLanguage = Language.Japanese;
     [SerializeField]
-    NetworkVariable<GameState> gameState = new(
+    NetworkVariable<GameState> gameStateServerWrite = new(
         GameState.Home,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
@@ -28,7 +28,7 @@ public class GameStateManager : NetworkBehaviour
     public bool ShowWorldView => showWorldView;
     public GameState CurrentGameState
     {
-        get => gameState.Value;
+        get => gameStateServerWrite.Value;
         private set
         {
             TrySetGameState(value);
@@ -82,16 +82,19 @@ public class GameStateManager : NetworkBehaviour
     {
         //強制初期化
         localState = LocalState.LanguageSelect;
-        gameState.Value = GameState.Home;
+        if (IsServer) 
+        {
+            gameStateServerWrite.Value = GameState.Home;
+        }
         localStateChangeLocalEvent.Invoke(LocalState.LanguageSelect);
     }
     private void OnEnable()
     {
-        gameState.OnValueChanged += HandleGameStateChanged;
+        gameStateServerWrite.OnValueChanged += HandleGameStateChanged;
     }
     private void OnDisable()
     {
-        gameState.OnValueChanged -= HandleGameStateChanged;
+        gameStateServerWrite.OnValueChanged -= HandleGameStateChanged;
     }
     /*
     void HandleGameStateChanged(GameState oldState, GameState newState)
@@ -249,7 +252,7 @@ public class GameStateManager : NetworkBehaviour
     {
         if (!IsServer) return false;
 
-        GameState currentState = gameState.Value;
+        GameState currentState = gameStateServerWrite.Value;
         if (currentState == nextState) return true;
 
         if (!CanTransition(currentState, nextState, IsSpawned))
@@ -260,7 +263,7 @@ public class GameStateManager : NetworkBehaviour
             return false;
         }
 
-        gameState.Value = nextState;
+        gameStateServerWrite.Value = nextState;
         return true;
     }
 

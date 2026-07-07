@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "GameEvents/AttackBlockedEvent")]
-public class AttackBlockedEvent : GameEventSOBase<AttackBlocked>
+public class AttackBlockedEvent : ReadOnlyGameEventBase<AttackBlocked>
 {
 }

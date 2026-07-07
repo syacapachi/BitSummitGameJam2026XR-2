@@ -1,4 +1,4 @@
-using Unity.Netcode;
+Ôªøusing Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,7 +39,7 @@ public class DamageIndicatorUI : MonoBehaviour
     }
 
     private void OnDamage(
-        DamageIndicatorInfo info)
+        in DamageIndicatorInfo info)
     {
         Debug.Log(
     $"OnDamage {info.EnemyNetworkObjectId}"
@@ -90,7 +90,7 @@ public class DamageIndicatorUI : MonoBehaviour
             target.position -
             playerHead.position;
 
-        // çÇÇ≥ÇÕñ≥éã
+        // È´ò„Åï„ÅØÁÑ°Ë¶ñ
         toEnemy.y = 0f;
 
         if (toEnemy.sqrMagnitude < 0.0001f)
@@ -102,7 +102,7 @@ public class DamageIndicatorUI : MonoBehaviour
                 toEnemy.normalized,
                 Vector3.up);
 
-        // ArcImage ÇÃèâä˙à íuÇ™ê^è„(Å‹)
+        // ArcImage „ÅÆÂàùÊúü‰ΩçÁΩÆ„ÅåÁúü‰∏ä(‚åí)
         arcImage.localRotation =
             Quaternion.Euler(
                 0f,

@@ -53,6 +53,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
     }
     public void OnTutorialStartServerOnly()
     {
+        if (!IsServer) return;
         if (isTutorlalStartedServerOnly) return;
 
         spawner.KillAll();
@@ -175,7 +176,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
         currentStepLogic?.OnTargetDestroyed(id);
     }
 
-    private void OnAttackBlocked(AttackBlocked blocked)
+    private void OnAttackBlocked(in AttackBlocked blocked)
     {
         if (!IsServer) return;
         if (!isTutorlalStartedServerOnly) return;

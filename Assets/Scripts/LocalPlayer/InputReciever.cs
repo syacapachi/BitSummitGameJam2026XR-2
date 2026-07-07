@@ -25,7 +25,7 @@ public class InputReciever : MonoBehaviour
         [Header("Input Action")]
         [SerializeField] InputActionReference action;
         [Header("Publish Event")]
-        [SerializeField] GameEventSOBase<T> gameEvent;
+        [SerializeField] GameEventBase<T> gameEvent;
         [SerializeField] InvokeSetting setting;
 
         private InputAction cachedAction;
@@ -82,7 +82,7 @@ public class InputReciever : MonoBehaviour
         [Header("Input Action")]
         [SerializeField] InputActionReference action;
         [Header("Publish Event")]
-        [SerializeField] GameEventSOBase gameEvent;
+        [SerializeField] GameEventBase gameEvent;
         [SerializeField] InvokeSetting setting;
 
         private InputAction cachedAction;

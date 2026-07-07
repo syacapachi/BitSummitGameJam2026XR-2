@@ -11,6 +11,11 @@
         /// </summary>
         private static readonly Dictionary<int, GUILayoutOption> widthCache = new();
         /// <summary>
+        /// GUILayoutOptionのキャッシュ
+        /// GUILayout.Height(height)は内部でnewされる。
+        /// </summary>
+        private static readonly Dictionary<int, GUILayoutOption> heightCache = new();
+        /// <summary>
         /// GUIContentのキャッシュ
         /// あまり使う効果なし。
         /// これは、メモリ確保でアクセス高速化
@@ -29,6 +34,16 @@
             {
                 option = GUILayout.Width(width);
                 widthCache.Add(key, option);
+            }
+            return option;
+        }
+        public static GUILayoutOption GetHeight(float height)
+        {
+            int key = Mathf.RoundToInt(height * 1000);
+            if (!heightCache.TryGetValue(key, out GUILayoutOption option))
+            {
+                option = GUILayout.Height(height);
+                heightCache.Add(key, option);
             }
             return option;
         }

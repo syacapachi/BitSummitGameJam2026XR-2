@@ -55,17 +55,28 @@
                     enable = false;
                     foldoutsCache[type] = enable;
                 }
-                foldoutsCache[type] = EditorGUILayout.Foldout(enable, type, true);
-                if (!foldoutsCache[type]) continue;
-                foreach (var obj in wrapper.List)
+                bool currentEnable = EditorGUILayout.Foldout(enable, type, true);
+                foldoutsCache[type] = currentEnable;
+                if (!currentEnable) continue;
+                for (int i = 0;i< wrapper.InstanceIds.Count;i++)
                 {
-                    if (obj == null) continue;
+                    var obj = wrapper.Objects[i];
+
+                    if (obj == null)
+                    {
+                        GUILayout.Label($"{wrapper.InstanceIds[i]} is null");
+                        continue;
+                    }
                     using (new GUILayout.HorizontalScope())
                     {
                         if (!GUIContentCache.TryGetContent(obj.name, out var content))
                         {
+                            // このクラスのアイコンを取得
+                            Texture2D image = AssetPreview.GetMiniTypeThumbnail(obj.GetType());
+                            // このオブジェクトのGUIContentを取得
                             //同じ参照が帰ってきたので、コピー
-                            content = new GUIContent(EditorGUIUtility.ObjectContent(obj, obj.GetType()));
+                            //content = new GUIContent(EditorGUIUtility.ObjectContent(obj, obj.GetType()));
+                            content = new GUIContent(obj.name, image, obj.name);
                             GUIContentCache.ResistContent(obj.name, content);
                         }
                         GUILayout.Label(content, EditorStyles.boldLabel);

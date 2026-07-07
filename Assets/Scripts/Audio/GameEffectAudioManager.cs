@@ -31,7 +31,7 @@ public class GameEffectAudioManager : MonoBehaviour
         }
     }
 
-    private void OnEventRecived(GameEffect e)
+    private void OnEventRecived(in GameEffect e)
     {
         // イベントの処理を追加する場合はここへ
         //イベントの中のstructをフィールドに保存してはいけない。

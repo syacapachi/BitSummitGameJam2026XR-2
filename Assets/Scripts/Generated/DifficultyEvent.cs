@@ -1,5 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 [CreateAssetMenu(menuName = "GameEvents/DifficultyEvent")]
-public class DifficultyEvent : GameEventSOBase<Difficulty>
+public class DifficultyEvent : GameEventBase<Difficulty>
 {
 }

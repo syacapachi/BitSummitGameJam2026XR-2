@@ -25,7 +25,7 @@ public class RpcGameEffectAudioManager : NetworkBehaviour
     // =========================
     // Event入口（サーバーのみ発火）
     // =========================
-    private void OnEventReceived(GameEffectData data)
+    private void OnEventReceived(in GameEffectData data)
     {
         if (!IsServer) return;
 
@@ -35,7 +35,7 @@ public class RpcGameEffectAudioManager : NetworkBehaviour
     // =========================
     // Server → Client
     // =========================
-    public void PlayEffectServer(GameEffectData data)
+    public void PlayEffectServer(in GameEffectData data)
     {
         if (!IsServer) return;
 
@@ -51,7 +51,7 @@ public class RpcGameEffectAudioManager : NetworkBehaviour
     // =========================
     // クライアント再生
     // =========================
-    private void PlayLocal(GameEffectData data)
+    private void PlayLocal(in GameEffectData data)
     {
         var def = database.GetAudio(data.type);
         if (def == null || def.Clip == null) return;

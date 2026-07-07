@@ -309,13 +309,13 @@ public class SkyBoxColorChanger : MonoBehaviour
         float invChangeTime = 1f / changeTime;
         while (timer < changeTime)
         {
+            yield return null;
+
             timer += Time.deltaTime;
 
             float t = timer * invChangeTime;
 
             ApplyLerp(from, to, t);
-
-            yield return null;
         }
 
         ApplyColor(to);
