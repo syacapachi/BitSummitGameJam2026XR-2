@@ -24,37 +24,32 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
     [SerializeField] EnemySO[] step2Enemies;
     [Header("Subscribe Event")]
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
+    [SerializeField] ULongEvent markerPlaceServerEvent;
+    [Header("Publich Event")]
     [SerializeField] VoidEvent OnTutorialStepCleared;
     [SerializeField] IntEvent OnTutorialStepChanged;
-    [SerializeField] ULongEvent markerPlaceServerEvent;
     private bool isTutorlalStartedServerOnly;
-    private bool tutorialClearByEnemyKill = false;
 
     public override void OnNetworkSpawn()
     {
         isTutorlalStartedServerOnly = false;
-        if (IsServer)
-        {
-            attackBlockedEvent.Register(OnAttackBlocked);
-            markerPlaceServerEvent.Register(OnMarkerPlacedServer);
-            spawner.OnAllEnemyDead += OnAllEnemyDead;
-        }
+        
         CurrentStep.OnValueChanged += OnStepChanged;
     }
     public override void OnNetworkDespawn()
     {
         CurrentStep.OnValueChanged -= OnStepChanged;
-        if (IsServer)
-        {
-            attackBlockedEvent.Unregister(OnAttackBlocked);
-            markerPlaceServerEvent.Unregister(OnMarkerPlacedServer);
-            spawner.OnAllEnemyDead -= OnAllEnemyDead;
-        }
     }
     public void OnTutorialStartServerOnly()
     {
         if (!IsServer) return;
         if (isTutorlalStartedServerOnly) return;
+
+        //　イベント購読
+        attackBlockedEvent.Register(OnAttackBlockedServerEvent);
+        markerPlaceServerEvent.Register(OnMarkerPlacedServerEvent);
+        spawner.OnAllEnemyDead += OnAllEnemyDead;
+
 
         spawner.KillAll();
 
@@ -65,7 +60,6 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
 
         isTutorlalStartedServerOnly = true;
         isWaitingNext = false;
-        tutorialClearByEnemyKill = false;
 
         CurrentStep.Value = TutorialStep.Step1;
 
@@ -104,7 +98,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
                 break;
 
             case TutorialStep.End:
-                StartMainSimulation();
+                StartMainSimulationServerOnly();
                 return;
         }
         // ここで黒魔術を紹介,型チェックをしないから早いぞ Unsafe.As<TutorialStep, int>(ref step);
@@ -152,7 +146,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
                 break;
 
             case TutorialStep.Step2:
-                CurrentStep.Value = tutorialClearByEnemyKill ? TutorialStep.End : TutorialStep.Step3;
+                CurrentStep.Value = TutorialStep.Step3;
                 break;
 
             case TutorialStep.Step3:
@@ -176,26 +170,31 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
         currentStepLogic?.OnTargetDestroyed(id);
     }
 
-    private void OnAttackBlocked(in AttackBlocked blocked)
+    private void OnAttackBlockedServerEvent(in AttackBlocked blocked)
     {
         if (!IsServer) return;
         if (!isTutorlalStartedServerOnly) return;
         currentStepLogic?.OnAttackBlocked(blocked.Collector.ClientId);
     }
 
-    public void OnEnemyKilled(EnemyKilled e)
+    public void OnEnemyKilledServerEvent(EnemyKilled e)
     {
         if (!IsServer) return;
         currentStepLogic?.OnEnemyKilled(e);
     }
 
-    private void StartMainSimulation()
+    private void StartMainSimulationServerOnly()
     {
         stateManager.OnTutorialEndServerOnly();
         isTutorlalStartedServerOnly = false;
+
+        // イベント購読解消
+        attackBlockedEvent.Unregister(OnAttackBlockedServerEvent);
+        markerPlaceServerEvent.Unregister(OnMarkerPlacedServerEvent);
+        spawner.OnAllEnemyDead -= OnAllEnemyDead;
     }
 
-    private void OnMarkerPlacedServer(ulong playerId)
+    private void OnMarkerPlacedServerEvent(ulong playerId)
     {
         if (!IsServer) return;
 
@@ -212,9 +211,13 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
         {
             case TutorialStep.Step2:
             case TutorialStep.Step3:
-                tutorialClearByEnemyKill = true;
+                TutorialClearByEnemyKillServerOnly();
                 OnStepCompleted();
                 break;
         }
+    }
+    void TutorialClearByEnemyKillServerOnly()
+    {
+        CurrentStep.Value = TutorialStep.End;
     }
 }
