@@ -83,7 +83,16 @@ public class TutorialSpawner : NetworkBehaviour
         }
         isSpawnFinished = true;
     }
-
+    public void SpawnTargetServerOnly(EnemySO enemySO,int spawnCount)
+    {
+        if (!IsServer) return;
+        for (int i = 0; i < spawnCount; i++)
+        {
+            SpawnTarget(i, enemySO);
+            remain++;
+        }
+        isSpawnFinished = true;
+    }
 
 
     void SpawnTarget(int spawnIndex, EnemySO enemyData)

@@ -96,22 +96,6 @@ public class GameStateManager : NetworkBehaviour
     {
         gameStateServerWrite.OnValueChanged -= HandleGameStateChanged;
     }
-    /*
-    void HandleGameStateChanged(GameState oldState, GameState newState)
-    {
-        OnGameStateChangeRpcEvent.Invoke(newState);
-        if(newState == GameState.Home)
-        {
-            LocalState = LocalState.LanguageSelect;
-        }
-        else
-        {
-            LocalState = LocalState.Playing;
-        }
-
-        UpdateTutorialUI();
-    }
-    */
 
     void HandleGameStateChanged(GameState oldState, GameState newState)
     {
@@ -174,33 +158,6 @@ public class GameStateManager : NetworkBehaviour
     }
 
 
-    /*
-    private bool CanTransition(GameState fromState, GameState toState)
-    {
-        return fromState switch
-        {
-            GameState.Home => toState == GameState.Initializing,
-            GameState.Initializing => toState == GameState.SelecrDifficulty || toState == GameState.Tutorial || toState == GameState.Playing,
-            GameState.SelecrDifficulty => toState == GameState.Tutorial || toState == GameState.Playing,
-            GameState.Tutorial => toState == GameState.Playing,
-            GameState.Playing => toState == GameState.GameClear || toState == GameState.GameOver,
-            GameState.GameClear or GameState.GameOver => toState == GameState.Home,
-            _ => false,
-        };
-    }
-
-    private bool CanTransition(LocalState fromState, LocalState toState)
-    {
-        return fromState switch
-        {
-            LocalState.LanguageSelect => IsSpawned ? toState == LocalState.WorldView : toState == LocalState.NetworkConnect,
-            LocalState.NetworkConnect => toState == LocalState.WorldView,
-            LocalState.WorldView => toState == LocalState.Playing,
-            LocalState.Playing => toState == LocalState.LanguageSelect,
-            _ => false,
-        };
-    }
-    */
     /// <summary>
     /// UI状態の変化。
     /// とりあえず、全部許可。
@@ -292,29 +249,8 @@ public class GameStateManager : NetworkBehaviour
         CurrentGameState = GameState.Playing;
     }
 
-    [OnInspectorButton(drawOrder: 0)]
-    public void StartEasy()
-    {
-        RequestStartGameRpc(Difficulty.Easy);
-    }
 
-    [OnInspectorButton(drawOrder: 1)]
-    public void StartNormal()
-    {
-        RequestStartGameRpc(Difficulty.Normal);
-    }
 
-    [OnInspectorButton(drawOrder: 2)]
-    public void StartHard()
-    {
-        RequestStartGameRpc(Difficulty.Hard);
-    }
-
-    [OnInspectorButton(drawOrder: 3)]
-    public void StartDebug()
-    {
-        RequestStartGameRpc(Difficulty.Debug);
-    }
     private void LoadLanguageSetting()
     {
         int savedLanguage = PlayerPrefs.GetInt(nameof(Language), (int)Language.Japanese);
@@ -429,17 +365,55 @@ public class GameStateManager : NetworkBehaviour
     {
         LocalState = LocalState.WorldView;
     }
-
-    [OnInspectorButton(drawOrder: 100)]
-    public void ResetGame()
+#if UNITY_EDITOR
+    [OnInspectorButton(drawOrder: 0)]
+    private void StartEasy()
     {
-        if (!IsServer) return;
-
-        if (TrySetGameState(GameState.Home))
-        {
-            NotifyResetRpc();
-        }
+        RequestStartGameRpc(Difficulty.Easy);
     }
+
+    [OnInspectorButton(drawOrder: 1)]
+    private void StartNormal()
+    {
+        RequestStartGameRpc(Difficulty.Normal);
+    }
+
+    [OnInspectorButton(drawOrder: 2)]
+    private void StartHard()
+    {
+        RequestStartGameRpc(Difficulty.Hard);
+    }
+
+    [OnInspectorButton(drawOrder: 3)]
+    private void StartDebug()
+    {
+        RequestStartGameRpc(Difficulty.Debug);
+    }
+    [OnInspectorButton("SetStateServerOnly", drawOrder: 4)]
+    [Rpc(SendTo.Server)]
+    private void SetStateRpc(GameState newState)
+    {
+        gameStateServerWrite.Value = newState;
+    }
+    [OnInspectorButton(drawOrder: 4, showOnlyInPlayMode: true)]
+    private void SetStateRequest(GameState newState)
+    {
+        SetStateRpc(newState);
+    }
+
+    [OnInspectorButton("Reset Game ServerOnly",drawOrder: 100)]
+    private void ResetGame()
+    {
+        RequestResetGameRpc();
+    }
+    [OnInspectorButton(drawOrder: 101,showOnlyInPlayMode:true)]
+    [Rpc(SendTo.Server)]
+    private void RequestResetGameRpc()
+    {
+        gameStateServerWrite.Value = GameState.Home;
+        NotifyResetRpc();
+    }
+#endif
 }
 public enum GameState
 {

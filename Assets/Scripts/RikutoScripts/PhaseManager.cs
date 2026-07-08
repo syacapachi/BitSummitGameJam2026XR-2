@@ -116,12 +116,12 @@ public class PhaseManager : NetworkBehaviour
 
         int count = uiSettings.CountdownStart;
         var waitBase = WaitForSecondsCache.Get(uiSettings.CountDownBaseDuration);
-        while (count > 0)
-        {
-            CountdownValue.Value = count;
-            yield return waitBase;
-            count--;
-        }
+        //while (count > 0)
+        //{
+        //    CountdownValue.Value = count;
+        //    yield return waitBase;
+        //    count--;
+        //}
 
         CountdownValue.Value = 0;
         IsCountingDown = false;
@@ -177,7 +177,8 @@ public class PhaseManager : NetworkBehaviour
     {
         IsCountingDown = true;
 
-        int count = uiSettings.CountdownStart;
+        //int count = uiSettings.CountdownStart;
+        int count = 0; 
         var waitlast = WaitForSecondsCache.Get(uiSettings.CountdownLastDuration);
         while (count > 0)
         {

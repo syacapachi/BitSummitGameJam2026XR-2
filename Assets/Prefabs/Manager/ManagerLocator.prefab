@@ -135,6 +135,8 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   - spawnPointTag: 4
     spawnPointmarkers:
     - {fileID: 0}
@@ -395,6 +397,8 @@ MonoBehaviour:
     PrewarmCount: 10
   - Prefab: {fileID: 976249959754663240, guid: 06d26555edf3166479e9fee5631ea60c, type: 3}
     PrewarmCount: 5
+  - Prefab: {fileID: 5519199833341115113, guid: 27f315618eeacae4dadfed18dfe86a71, type: 3}
+    PrewarmCount: 20
 --- !u!1 &2827320418798051780
 GameObject:
   m_ObjectHideFlags: 0
@@ -549,6 +553,8 @@ MonoBehaviour:
   - Prefab: {fileID: 4022916156752048900, guid: 4872dc7a8f3d11442be9d1786f6b997e, type: 3}
     PrewarmCount: 10
   - Prefab: {fileID: 4022916156752048900, guid: 18254f0b07ec8924d89429cf843b0c78, type: 3}
+    PrewarmCount: 10
+  - Prefab: {fileID: 1539575790087713676, guid: eeb7f12b370ca5342a164ccc80613edf, type: 3}
     PrewarmCount: 10
 --- !u!1 &5799241829086758109
 GameObject:
@@ -772,22 +778,16 @@ MonoBehaviour:
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   spawner: {fileID: 250586993705616725}
-  step1Enemies:
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  step1Enemy: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  step1EnemySpawnCount: 7
   step2Enemies:
   - {fileID: 11400000, guid: e46a108a5137e2840b992565f1659bcf, type: 2}
   - {fileID: 11400000, guid: f594e91d59269df42abf37e34d18e45f, type: 2}
   attackBlockedEvent: {fileID: 11400000, guid: 29e4db13b8933e44b8dfd9df362fd1d2, type: 2}
+  markerPlaceServerEvent: {fileID: 11400000, guid: 94c457b2ffa429f46954335afeff3e74, type: 2}
+  gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   OnTutorialStepCleared: {fileID: 11400000, guid: 64f3ed58da1abd54bb4e2c3464685d38, type: 2}
   OnTutorialStepChanged: {fileID: 11400000, guid: 4cdbcd5da1b58d048a39f9a786419768, type: 2}
-  markerPlaceServerEvent: {fileID: 11400000, guid: 94c457b2ffa429f46954335afeff3e74, type: 2}
 --- !u!1 &7385684458859226799
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,7 +836,6 @@ MonoBehaviour:
   enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
   EnemyKilled: {fileID: 11400000, guid: de23ed6cf8b50224f9cedd491c483460, type: 2}
   spawnPoints:
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1132,7 +1131,7 @@ MonoBehaviour:
   useLanguableSelect: 0
   showWorldView: 0
   currentLanguage: 0
-  gameState:
+  gameStateServerWrite:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
@@ -1143,10 +1142,12 @@ MonoBehaviour:
   worldViewCollider: {fileID: 0}
   tutorialUI: {fileID: 0}
   difficultyCanvas: {fileID: 0}
+  resetUI: {fileID: 0}
   OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   localStateChangeLocalEvent: {fileID: 11400000, guid: 8d864b8e0651a9e4398e513a726a87fc, type: 2}
   difficultyEvent: {fileID: 11400000, guid: e641f2abcabb4f8449947c45a980c10f, type: 2}
   langageEvent: {fileID: 11400000, guid: 4679bf21cf536b540b9507d956586d16, type: 2}
+  gameResetEvent: {fileID: 11400000, guid: 5a45583252cec6846be77ec38c4fa246, type: 2}
 --- !u!1 &8974977137299023905
 GameObject:
   m_ObjectHideFlags: 0

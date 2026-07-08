@@ -52154,7 +52154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786624247185409141, guid: 800658db6a9b15345b032ec9bfa8f644, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5786624247185409141, guid: 800658db6a9b15345b032ec9bfa8f644, type: 3}
       propertyPath: m_SizeDelta.y
@@ -79512,10 +79512,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 250586993705616725, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: spawnPoints.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 250586993705616725, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'spawnPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 733561028}
@@ -79543,10 +79539,6 @@ PrefabInstance:
       propertyPath: 'spawnPoints.Array.data[6]'
       value: 
       objectReference: {fileID: 423640509}
-    - target: {fileID: 250586993705616725, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: 'spawnPoints.Array.data[7]'
-      value: 
-      objectReference: {fileID: 423640509}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: resetUI
       value: 
@@ -79556,17 +79548,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1406749563}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: useTutorial
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: connectCanvas
       value: 
       objectReference: {fileID: 2084777998}
-    - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: gameResetEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 5a45583252cec6846be77ec38c4fa246, type: 2}
     - target: {fileID: 1142131513230880555, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: languageCanvas
       value: 
@@ -79664,10 +79648,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2007977915}
     - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: tagToTransfroms.Array.data[2].spawnPointmarkers.Array.size
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4441792715120167192, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: 'tagToTransfroms.Array.data[1].spawnPointmarkers.Array.data[0]'
       value: 
       objectReference: {fileID: 154002831}
@@ -79739,18 +79719,6 @@ PrefabInstance:
       propertyPath: 'tagToTransfroms.Array.data[4].spawnPointmarkers.Array.data[0]'
       value: 
       objectReference: {fileID: 1725796290}
-    - target: {fileID: 4446207769095747314, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: pooledPrefabsList.Array.size
-      value: 26
-      objectReference: {fileID: 0}
-    - target: {fileID: 4446207769095747314, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: pooledPrefabsList.Array.data[25].Prefab
-      value: 
-      objectReference: {fileID: 5519199833341115113, guid: 27f315618eeacae4dadfed18dfe86a71, type: 3}
-    - target: {fileID: 4446207769095747314, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: pooledPrefabsList.Array.data[25].PrewarmCount
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 4908882465109089120, guid: 07f51410c6523454580003730b31cfff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -79803,10 +79771,6 @@ PrefabInstance:
       propertyPath: localRoot
       value: 
       objectReference: {fileID: 663060509}
-    - target: {fileID: 8343285116251111980, guid: 07f51410c6523454580003730b31cfff, type: 3}
-      propertyPath: step1Enemies.Array.size
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
