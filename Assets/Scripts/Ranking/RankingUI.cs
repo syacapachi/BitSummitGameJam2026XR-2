@@ -80,22 +80,28 @@ public class RankingUI : MonoBehaviour
         language = newlangage;
         if (rankingCanvas != null && rankingCanvas.enabled)
         {
+            entryParent.gameObject.SetActive(false);
             ShowRanking(false);
+            entryParent.gameObject.SetActive(true);
         }
     }
     IEnumerator ShowRankingDelayed()
     {
+        entryParent.gameObject.SetActive(false);
         // RankingManagerのSaveJsonが完了するのを1フレーム待つ
         yield return null;
         yield return waitForShow;
         ShowRanking(true);
+        yield return null;
+
+        // ここでGUILauoutの計算(処理重め)
+        entryParent.gameObject.SetActive(true);
     }
 
     void ShowRanking(bool createNewRankings)
     {
         rankingCanvas.enabled = true;
         titleText.text = IsJapanese ? "ランキング" : "RANKING";
-
         if (createNewRankings)
         {
             // 既存エントリーをクリア
@@ -109,6 +115,7 @@ public class RankingUI : MonoBehaviour
             // ランキングデータを表示
             var rankings = rankingManager.Results;
             int showCount = Math.Min(showRankings, rankings.Count);
+            
             for (int i = 0; i < showCount; i++)
             {
                 var entry = ManagerLocator.Instance.LocalObjectPool.Get(entryPrefab);
@@ -127,7 +134,6 @@ public class RankingUI : MonoBehaviour
                 ui.UpdateLanguage(language);
             }
         }
-        LayoutRebuilder.MarkLayoutForRebuild(entryParent as RectTransform);
 
         // 今回のスコアをハイライト表示
         var current = rankingManager.CurrentResult;
