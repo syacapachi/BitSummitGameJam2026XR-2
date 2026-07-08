@@ -256,45 +256,45 @@ public class PhaseUI : MonoBehaviour
 
     IEnumerator PhaseIntroRoutine((int index, string text) data)
     {
-        SetupNormal();
+        //SetupNormal();
 
-        int index = data.index;
-        string text = data.text;
+        //int index = data.index;
+        //string text = data.text;
 
-        var phaseSetting = rpcDataBase.CurrentSetting;
-        int lastIndex = phaseSetting.Phases.Length - 1;
+        //var phaseSetting = rpcDataBase.CurrentSetting;
+        //int lastIndex = phaseSetting.Phases.Length - 1;
 
-        phaseText.fontSize = 120;
+        //phaseText.fontSize = 120;
 
-        // 最初のフェーズ（基本戦）の開始表示
-        if (index == 0)
-        {
-            phaseText.text = isJapanese ? "任務開始！" : "Mission Start!";
-            phaseText.gameObject.SetActive(true);
-            yield return WaitForSecondsCache.Get(1f);
+        //// 最初のフェーズ（基本戦）の開始表示
+        //if (index == 0)
+        //{
+        //    phaseText.text = isJapanese ? "任務開始！" : "Mission Start!";
+        //    phaseText.gameObject.SetActive(true);
+        //    yield return WaitForSecondsCache.Get(1f);
 
-            // phaseText.text = isJapanese ? "戦闘開始" : "Combat Phase";
-            // yield return new WaitForSeconds(1f);
-        }
-        // 最終フェーズ（ボス戦）の開始表示
-        else if (index == lastIndex)
-        {
-            phaseText.text = isJapanese ? "ボス戦突入！" : "Boss Battle!";
-            phaseText.gameObject.SetActive(true);
-            yield return WaitForSecondsCache.Get(1f);
-        }
-        // 中間フェーズがある場合はフェーズ名をそのまま表示
-        else
-        {
-            phaseText.text = text;
-            phaseText.gameObject.SetActive(true);
-            yield return WaitForSecondsCache.Get(1f);
-        }
+        //    // phaseText.text = isJapanese ? "戦闘開始" : "Combat Phase";
+        //    // yield return new WaitForSeconds(1f);
+        //}
+        //// 最終フェーズ（ボス戦）の開始表示
+        //else if (index == lastIndex)
+        //{
+        //    phaseText.text = isJapanese ? "ボス戦突入！" : "Boss Battle!";
+        //    phaseText.gameObject.SetActive(true);
+        //    yield return WaitForSecondsCache.Get(1f);
+        //}
+        //// 中間フェーズがある場合はフェーズ名をそのまま表示
+        //else
+        //{
+        //    phaseText.text = text;
+        //    phaseText.gameObject.SetActive(true);
+        //    yield return WaitForSecondsCache.Get(1f);
+        //}
 
-        phaseText.fontSize = 150;
-        phaseText.text = isJapanese ? "スタート!!" : "START!!";
+        //phaseText.fontSize = 150;
+        //phaseText.text = isJapanese ? "スタート!!" : "START!!";
 
-        yield return PopAnimation();
+        //yield return PopAnimation();
 
         yield return WaitForSecondsCache.Get(1.5f);
 
