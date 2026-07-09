@@ -327,7 +327,7 @@ public class NEnemy : NetworkBehaviour, IDamageReciever, IEnemy
         float current = oldRate;
         while (Mathf.Abs(current - newRate) > 0.01f)
         {
-            // Time.deltaTime * tで、毎秒%ずつ変化する用に変化できる。
+            // Time.deltaTime * tで、毎秒t%ずつ変化する用に変化できる。(秒数ではないので注意)
             current = Mathf.Lerp(current, newRate, Time.deltaTime * t);
             hpImage.fillAmount = current;
             yield return null;

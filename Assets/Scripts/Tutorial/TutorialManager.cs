@@ -74,6 +74,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
         if(newState != GameState.Tutorial)
         {
             spawner.KillAll();
+            TutorialEndServerOnly();
         }
     }
     void OnStepChangedServerEvent(TutorialStep oldStep, TutorialStep newStep)
@@ -84,6 +85,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
     void StartStepServerOnly(TutorialStep step)
     {
         currentStepLogic?.OnEnd();
+        currentStepLogic = null;
         int playerCount = NetworkManager.ConnectedClientsIds.Count;
 
         switch (step)
@@ -108,7 +110,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
                 break;
 
             case TutorialStep.End:
-                StartMainSimulationServerOnly();
+                TutorialEndServerOnly();
                 return;
         }
         // ここで黒魔術を紹介,型チェックをしないから早いぞ Unsafe.As<TutorialStep, int>(ref step);
@@ -139,7 +141,7 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
         OnTutorialStepCleared.Invoke();
     }
 
-    TutorialStep NextStep(TutorialStep step)
+    static TutorialStep NextStep(TutorialStep step)
     {
         return step switch
         {
@@ -179,13 +181,13 @@ public class TutorialManager : NetworkBehaviour, ITutorialStart
         currentStepLogic?.OnAttackBlocked(blocked.Collector.ClientId);
     }
 
-    public void OnEnemyKilledServerEvent(EnemyKilled e)
+    public void OnEnemyKilledServerEvent(in EnemyKilled e)
     {
         if (!IsServer) return;
         currentStepLogic?.OnEnemyKilled(e);
     }
 
-    private void StartMainSimulationServerOnly()
+    private void TutorialEndServerOnly()
     {
         stateManager.OnTutorialEndServerOnly();
         isTutorlalStartedServerOnly = false;
