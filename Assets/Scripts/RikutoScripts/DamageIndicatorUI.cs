@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DamageIndicatorUI : MonoBehaviour
 {
@@ -42,7 +41,7 @@ public class DamageIndicatorUI : MonoBehaviour
     private void OnDamage(
         in DamageIndicatorInfo info)
     {
-        Debug.Log($"OnDamage {info.EnemyNetworkObjectId}");
+        LogScope.Log($"OnDamage {info.EnemyNetworkObjectId}");
         if (!NetworkManager.Singleton
             .SpawnManager
             .SpawnedObjects
@@ -50,7 +49,7 @@ public class DamageIndicatorUI : MonoBehaviour
                 info.EnemyNetworkObjectId,
                 out var obj))
         {
-            Debug.LogError($"Enemy not found : {info.EnemyNetworkObjectId}");
+            LogScope.Error($"Enemy not found : {info.EnemyNetworkObjectId}");
             return;
         }
 

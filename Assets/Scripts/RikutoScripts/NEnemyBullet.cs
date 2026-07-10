@@ -89,6 +89,6 @@ public class NEnemyBullet : BulletBaseController
     private void ApplyProtectDamage(NetworkGameManager gameManager)
     {
         gameManager.BulletHitProtectArea((int)-Damage);
-        Debug.Log($"[NEnemyBullet] ProtectArea took {Damage} damage.");
+        LogScope.LogWithCaller($"[NEnemyBullet] ProtectArea took {Damage} damage.");
     }
 }

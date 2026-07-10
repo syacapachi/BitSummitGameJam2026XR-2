@@ -76,6 +76,7 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
         if (!IsServer) return;
 
         //Debug.Log("Hit " + other.name);
+        using var log = LogScope.Create(this);
         if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
         {
             OnHitServer(damageReciver, other.gameObject);

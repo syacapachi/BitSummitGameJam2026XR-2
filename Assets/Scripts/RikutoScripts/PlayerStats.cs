@@ -30,7 +30,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     {
         if (!IsServer)
         {
-            Debug.Log("Can call only Server");
+            LogScope.Log("Can call only Server");
             return;
         }
         if (!CanRecord)
@@ -45,7 +45,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     {
         if (!IsServer)
         {
-            Debug.Log("Can call only Server");
+            LogScope.Log("Can call only Server");
             return;
         }
         if (!CanRecord)
@@ -60,7 +60,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     {
         if (!IsServer)
         {
-            Debug.Log("Can call only Server");
+            LogScope.Log("Can call only Server");
             return;
         }
         if (!CanRecord)
@@ -75,7 +75,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     {
         if (!IsServer)
         {
-            Debug.Log("Can call only Server");
+            LogScope.Log("Can call only Server");
             return;
         }
         if (!CanRecord)
@@ -83,12 +83,12 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
             return;
         }
         int enemyId = enemyDataBase.GetIdFromEnemyData(enemyso);
-        Debug.Log($"Add kill{enemyso.name}({enemyId})");
+        LogScope.Log($"Add kill{enemyso.name}({enemyId})");
         score += scoreValue;
 
         if (!IsServer)
         {
-            Debug.Log("Can call only Server");
+            LogScope.Log("Can call only Server");
             return;
         }
         if (!CanRecord)
@@ -103,7 +103,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     {
         if (!IsServer)
         {
-            Debug.Log("Can call only Server");
+            LogScope.Log("Can call only Server");
             return;
         }
         if (!CanRecord)
@@ -118,7 +118,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     {
         if (!IsServer)
         {
-            Debug.Log("Can call only Server");
+            LogScope.Log("Can call only Server");
             return 0;
         }
         if (shotsFired == 0) return 0;
@@ -130,7 +130,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     {
         if (!IsServer)
         {
-            Debug.Log("Can call only Server");
+            LogScope.Log("Can call only Server");
         }
         return killCounts;
     }
@@ -139,7 +139,7 @@ public class PlayerStats : NetworkBehaviour,IResultCollector
     {
         if (!IsServer)
         {
-            Debug.Log("Can call only Server");
+            LogScope.Log("Can call only Server");
         }
         return new PlayerResultData
         {

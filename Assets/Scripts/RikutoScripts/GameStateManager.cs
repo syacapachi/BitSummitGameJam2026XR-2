@@ -214,9 +214,8 @@ public class GameStateManager : NetworkBehaviour
 
         if (!CanTransition(currentState, nextState, IsSpawned))
         {
-            Debug.LogWarning(
-                $"[{nameof(GameStateManager)}] Invalid GameState transition: {currentState} -> {nextState}",
-                gameObject);
+            LogScope.Warning(
+                $"[{nameof(GameStateManager)}] Invalid GameState transition: {currentState} -> {nextState}");
             return false;
         }
 
@@ -231,9 +230,8 @@ public class GameStateManager : NetworkBehaviour
 
         if (!CanTransition(currentState, nextState))
         {
-            Debug.LogWarning(
-                $"[{nameof(GameStateManager)}] Invalid LocalState transition: {currentState} -> {nextState}",
-                gameObject);
+            LogScope.Warning(
+                $"[{nameof(GameStateManager)}] Invalid LocalState transition: {currentState} -> {nextState}");
             return false;
         }
 
@@ -286,7 +284,7 @@ public class GameStateManager : NetworkBehaviour
 
         difficultyEvent.Invoke(difficulty);
 
-        Debug.Log($"Start Difficulty : {difficulty}");
+        LogScope.Log($"Start Difficulty : {difficulty}");
 
         CurrentGameState = useTutorial
             ? GameState.Tutorial

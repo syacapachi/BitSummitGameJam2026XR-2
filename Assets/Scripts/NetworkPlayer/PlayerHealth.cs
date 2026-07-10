@@ -35,7 +35,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
 
     public void TakeDamage(IDamageSender sender, float damage)
     {
-        Debug.Log("TakeDamage");
+        LogScope.LogWithCaller("TakeDamage");
         if (!IsServer) return;
 
         if (sender is BulletBaseController bullet)
@@ -59,32 +59,32 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
     }
 
     [Rpc(SendTo.Owner)]
-    private void ShowDamageIndicatorRpc(
-    ulong enemyNetworkId)
+    private void ShowDamageIndicatorRpc(ulong enemyNetworkId)
     {
-        Debug.Log($"RPC {enemyNetworkId}");
+        using LogScope log = LogScope.Create(this);
+        LogScope.Log($"RPC {enemyNetworkId}");
         damageIndicatorEvent.Invoke(
             new DamageIndicatorInfo(
                 enemyNetworkId
             )
         );
-        Debug.Log("Invoke Event");
+        LogScope.Log("Invoke Event");
     }
 
     private void OnServerHPChanged(float oldHP, float newHP)
     {
+        using var log = LogScope.Create(this);
         // ★追加: UIにHP変化を通知
         HpInfoRpcEvent.Invoke(new HPInfo(newHP, maxHP));
 
         if (newHP <= 0)
         {
-            Debug.Log($"Player {OwnerClientId} has died.",gameObject);
+            LogScope.Log($"Player {OwnerClientId} has died.");
         }
     }
     private void OnPlayerDead()
     {
-        Debug.Log($"[" +
-            $"[{nameof(PlayerHealth)}] OnPlayerDead called for Player {OwnerClientId}",gameObject);
+        LogScope.Log($"[{nameof(PlayerHealth)}] OnPlayerDead called for Player {OwnerClientId}");
     }
 }
 public readonly struct HPInfo

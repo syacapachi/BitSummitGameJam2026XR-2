@@ -37,7 +37,7 @@ public class Step2_Block : TutorialBase
         counts[playerId]++;
 
         // デバッグ（おすすめ）
-        UnityEngine.Debug.Log($"Player {playerId} Block Count: {counts[playerId]}");
+        LogScope.Log($"Player {playerId} Block Count: {counts[playerId]}");
 
         bool allDone = counts.Count >= playerCount;
 
@@ -52,7 +52,7 @@ public class Step2_Block : TutorialBase
 
         if (allDone)
         {
-            UnityEngine.Debug.Log("Step2 Complete!");
+            LogScope.Log("Step2 Complete!");
             onComplete?.Invoke();
         }
     }
