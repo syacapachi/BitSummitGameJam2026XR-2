@@ -211,7 +211,7 @@ public class SkyBoxColorChanger : MonoBehaviour
     {
         if (setting == null)
         {
-            Debug.LogWarning("setting is null", gameObject);
+            LogScope.Warning("setting is null");
             return;
         }
         currentSky.CopySky(setting);

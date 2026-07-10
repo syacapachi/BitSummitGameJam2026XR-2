@@ -66,19 +66,19 @@ public class NBullet : BulletBaseController
         }
         else
         {
-            Debug.LogWarning($"Unkown type", other);
+            LogScope.Warning($"Unkown type {other.name}");
         }
     }
     private void CheckEnemy(IDamageReciever reciever,IEnemy enemy)
     {
         if (!setting.TryGetPlayerLayerSettings(ShooterJob, out var layerMaskSetting))
         {
-            Debug.LogError($"LayerMask setting not found for job: {ShooterJob}");
+            LogScope.Error($"LayerMask setting not found for job: {ShooterJob}");
             NetworkObject.Despawn(true);
             return;
         }
 #if UNITY_EDITOR
-        Debug.Log(
+        LogScope.Log(
             $"ShooterJob={ShooterJob}, " +
             $"EnemyJob={enemy.EnemyJob}, " +
             $"AttackableJob={layerMaskSetting.AttackableJobs}, " +
@@ -91,7 +91,7 @@ public class NBullet : BulletBaseController
             //シールドがでなかったのと見えない敵を撃ってもstep2クリア可能だったため構造変更
             if (isAttackable)
             {
-                Debug.Log($"NotDamage By System", enemy.NetworkObject);
+                LogScope.Log($"NotDamage By System{enemy.NetworkObject.name}");
             }
             else
             {
@@ -102,7 +102,7 @@ public class NBullet : BulletBaseController
                     ));
                 // [追加] 攻撃が無効な敵に当たった場合のデバッグログ
                 SpawnShieldFxRpc(transform.position);
-                Debug.Log($"NotDamage By Job", enemy.NetworkObject);
+                LogScope.Log($"NotDamage By Job");
 
             }
             if (NetworkObject.IsSpawned)
@@ -114,7 +114,7 @@ public class NBullet : BulletBaseController
 
         if (ResultCollector == null || ResultCollector is not PlayerStats stats)
         {
-            Debug.LogWarning($"ResultCollector is not {nameof(PlayerStats)}");
+            LogScope.Warning($"ResultCollector is not {nameof(PlayerStats)}");
             return;
         }
 

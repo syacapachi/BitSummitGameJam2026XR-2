@@ -39,7 +39,7 @@ public class TutorialSpawner : NetworkBehaviour
 
     void OnEnemyKilledEvent(in EnemyKilled e)
     {
-        Debug.Log(
+        LogScope.Log(
     $"[TutorialSpawner] EnemyKilledEvent : " +
     $"enemy={e.KilledEnemy} " +
     $"contains={spawnedEnemies.Contains(e.KilledEnemy)} " +
@@ -50,7 +50,7 @@ public class TutorialSpawner : NetworkBehaviour
 
         spawnedEnemies.Remove(e.KilledEnemy);
 
-        Debug.Log(
+        LogScope.Log(
     $"[TutorialSpawner] removed enemy : " +
     $"remain(before decrement)={remain} " +
     $"spawnedCount(after remove)={spawnedEnemies.Count}");

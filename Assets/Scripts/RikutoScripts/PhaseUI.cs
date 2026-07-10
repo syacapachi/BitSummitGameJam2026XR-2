@@ -81,7 +81,7 @@ public class PhaseUI : MonoBehaviour
 
         nGameManager.PhaseManager.CountdownValue.OnValueChanged += OnCountdownChanged;
         isCountdownSubscribed = true;
-        Debug.Log("[PhaseUI] CountdownValue subscribed");
+        LogScope.Log("[PhaseUI] CountdownValue subscribed");
     }
 
     private void OnEnable()
@@ -151,12 +151,12 @@ public class PhaseUI : MonoBehaviour
     // =========================
     void ChangeState(UIState next, object payload = null)
     {
-        Debug.Log($"[PhaseUI][State] {currentState} → {next}");
+        LogScope.Log($"[PhaseUI][State] {currentState} → {next}");
 
         // PhaseIntro は同じ状態でも必ず実行する（フェーズ番号が変わるため）
         if (currentState == next && next != UIState.Countdown && next != UIState.PhaseIntro)
         {
-            Debug.Log($"[PhaseUI][State] Skipped (same state): {next}");
+            LogScope.Log($"[PhaseUI][State] Skipped (same state): {next}");
             return;
         }
 

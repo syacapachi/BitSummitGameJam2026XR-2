@@ -144,6 +144,8 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
             //初期値があると、軽い
             randomSpawnEventCacheList.Clear();
             spawnablePosCacheList.Clear();
+
+            using var log = LogScope.Create(this);
             while (time < setting.PhaseTime)
             {
                 float progress = Mathf.Clamp01(time * invPhaseTime);
@@ -163,11 +165,11 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
                             time);
                     randomSpawnEventCacheList.Add(spawnEvent);
 
-                    Debug.Log($"Create Random Spaen {spawnEvent}, Tag {spawnEnemy.SpawnPointTag}", gameObject);
+                    LogScope.Log($"Create Random Spaen {spawnEvent}, Tag {spawnEnemy.SpawnPointTag}");
                 }
                 else
                 {
-                    Debug.Log("EnemySpawnSetting is null", gameObject);
+                    LogScope.Log("EnemySpawnSetting is null");
                 }
                 float duration = randomSetting.GetSpawnDuration(progress);
 
@@ -320,7 +322,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
         }
         if (spawnIndex < 0 || spawnIndex >= checkPointManager.SpawnPoints.Length)
         {
-            Debug.LogWarning("Invalid spawn index!", gameObject);
+            LogScope.Warning("Invalid spawn index!");
             return false;
         }
         checkPointManager.TrySetUsePoint(spawnIndex, true);
@@ -346,7 +348,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
         if (!IsServer) return;
         if (gameStateManager.CurrentGameState != GameState.Playing) return;
         remain--;
-        Debug.Log($"[OnEnemyKilledServerEvent] remainServerOnly:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}", gameObject);
+        LogScope.Log($"[OnEnemyKilledServerEvent] remainServerOnly:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}");
         if (remain == 0 && isSpawnFinished && waitSpawnEnemyQueue.Count == 0)
         {
             isAllDead = true;

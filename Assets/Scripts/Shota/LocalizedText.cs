@@ -13,7 +13,7 @@ public class LocalizedText : ScriptableObject
     {
         if (japaneseTexts != null && englishTexts != null && japaneseTexts.Length != englishTexts.Length)
         {
-            Debug.LogWarning($"[{nameof(LocalizedText)}] {name} text length is not simmilar");
+            LogScope.Warning($"[{nameof(LocalizedText)}] {name} text length is not simmilar");
         }
     }
 #endif

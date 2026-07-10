@@ -201,7 +201,8 @@ public class NEnemy : NetworkBehaviour, IDamageReciever, IEnemy
     {
         if (!IsServer) return;
         if (isDieServerOnly) return;
-        if(currentHP.Value > 0)  currentHP.Value -= damage;
+        using var log = LogScope.Create(this);
+        if (currentHP.Value > 0)  currentHP.Value -= damage;
 
         if (currentHP.Value <= 0)
         {
@@ -271,13 +272,14 @@ public class NEnemy : NetworkBehaviour, IDamageReciever, IEnemy
 
     void DieOnServer(IResultCollector collector)
     {
+        
         if (collector != null && collector is PlayerStats stats)
         {
             stats.AddKill(rpcEnemySO, rpcEnemySO.ScoreValue);
         }
         else
         {
-            Debug.LogError("collector is null!", gameObject);
+            LogScope.Error("collector is null!");
         }
 
         enemyKilled.Invoke(new EnemyKilled(transform.position, this));

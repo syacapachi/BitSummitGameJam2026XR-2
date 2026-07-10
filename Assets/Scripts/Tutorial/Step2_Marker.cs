@@ -40,12 +40,12 @@ public class Step2_Marker : TutorialBase
     {
         markedPlayers.Add(playerId);
 
-        UnityEngine.Debug.Log(
+        LogScope.Log(
             $"Marker Player Count : {markedPlayers.Count}/{playerCount}");
 
         if (markedPlayers.Count >= playerCount)
         {
-            UnityEngine.Debug.Log("Step2 Marker Complete!");
+            LogScope.Log("Step2 Marker Complete!");
 
             onComplete?.Invoke();
         }

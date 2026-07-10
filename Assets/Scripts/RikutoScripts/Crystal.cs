@@ -54,7 +54,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
 
     void Broken()
     {
-        Debug.Log("Crystal Broken");
+        LogScope.Log("Crystal Broken");
 
         PlaySound();
         PlayEffect();
@@ -138,7 +138,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
 
     void Restore()
     {
-        Debug.Log("Crystal Restore");
+        LogScope.Log("Crystal Restore");
 
         StopAllCoroutines();
 

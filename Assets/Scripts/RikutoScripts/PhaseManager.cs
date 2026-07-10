@@ -183,7 +183,7 @@ public class PhaseManager : NetworkBehaviour
         {
             //CountdownValue.Value = count;
 #if UNITY_EDITOR
-            Debug.Log("End Phase Countdown: " + count, gameObject);
+            LogScope.Log("End Phase Countdown: " + count);
 #endif
             yield return waitlast;
             count--;

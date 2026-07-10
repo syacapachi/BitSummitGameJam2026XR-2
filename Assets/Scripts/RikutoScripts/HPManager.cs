@@ -72,7 +72,7 @@ public class HPManager : NetworkBehaviour
         if (remainHP.Value <= 0 && !isGameOver)
         {
             isGameOver = true;
-            Debug.Log("GAME OVER (HPManager)", gameObject);
+            LogScope.Log("GAME OVER (HPManager)");
             OnScoreReachZeroServerEvent.Invoke();
         }
     }
