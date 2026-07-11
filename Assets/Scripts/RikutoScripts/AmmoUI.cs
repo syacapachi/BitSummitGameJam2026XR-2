@@ -1,15 +1,14 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System.Collections;
 
 public class AmmoUI : MonoBehaviour,IProgressUI, ICountDownUI
 {
-    public TextMeshProUGUI ammoText;
-    public Image reloadBar; // ImageのTypeを Filled にする
+    [SerializeField] TextMeshProUGUI ammoText;
+    [SerializeField] Image reloadBar; // ImageのTypeを Filled にする
 
-    private Color normalColor = Color.black;
-    private Color reloadingColor = new Color(0.6f, 0.6f, 0.6f);
+    [SerializeField] private Color normalColor = Color.black;
+    [SerializeField] private Color reloadingColor = new Color(0.6f, 0.6f, 0.6f);
 
     public void UpdateProgress(float progress)
     {

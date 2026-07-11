@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e738f9d64c2d54b960159c48581a4c, type: 3}
+  m_Name: DiffcultyText
+  m_EditorClassIdentifier: 
+  japaneseTexts:
+  - titie: "\u30A4\u30FC\u30B8\u30FC"
+    Description: "\u51FA\u73FE\u3059\u308B\u6575\u306E\u6570\u304C\u5C11\u306A\u3044\u3067\u3059\u3002\u307E\u305F\u3001\u6575\u304C\u524D\u5074\u306E\u307F\u306B\u51FA\u73FE\u3059\u308B\u306E\u3067\u3001\u8996\u70B9\u79FB\u52D5\u304C\u5C11\u306A\u304F\u3001VR\u9154\u3044\u304C\u5FC3\u914D\u306A\u65B9\u306B\u304A\u52E7\u3081\u3067\u3059\u3002"
+  - titie: "\u30CE\u30FC\u30DE\u30EB"
+    Description: "\u6A19\u6E96\u7684\u306A\u96E3\u6613\u5EA6\u3067\u3059"
+  - titie: "\u30CF\u30FC\u30C9"
+    Description: "\u9AD8\u96E3\u6613\u5EA6\u3067\u3059\u3002\u6575\u306E\u7DCF\u6570\u304C\u591A\u304F\u3001\u51FA\u73FE\u9593\u9694\u304C\u77ED\u3044\u3067\u3059\u3002\u30B2\u30FC\u30E0\u30AF\u30EA\u30A2\u306B\u306F\u76F8\u68D2\u3068\u306E\u9AD8\u5EA6\u306A\u9023\u643A\u304C\u5FC5\u9808\u3067\u3059\u3002"
+  englishTexts:
+  - titie: Easy
+    Description: There are fewer enemies spawning, and they only appear in front
+      of you, so it is recommended for players who are concerned about VR motion
+      sickness due to less head movement.
+  - titie: Normal
+    Description: This is the standard difficulty level.
+  - titie: Hard
+    Description: This is a high difficulty level. A large number of enemies will
+      appear with short spawn intervals. Advanced cooperation with your partner is
+      essential to clear the game

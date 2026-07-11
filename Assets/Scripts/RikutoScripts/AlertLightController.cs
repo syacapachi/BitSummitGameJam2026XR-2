@@ -45,6 +45,7 @@ public class AlertLightController : MonoBehaviour
         {
             case GameState.Home:
             case GameState.Initializing:
+            case GameState.GameClear:
                 OnAlert(false);break;
         }
     }
@@ -90,7 +91,7 @@ public class AlertLightController : MonoBehaviour
     }
     IEnumerator BuzzerCoroutine()
     {
-        WaitForSeconds waitInterval = new WaitForSeconds(interval);
+        WaitForSeconds waitInterval = WaitForSecondsCache.Get(interval);
         while (isActive)
         {
             gameEffectEvent.Invoke(new GameEffect(buzzerEffectData.ToRuntimeData(), alertObject.transform.position));

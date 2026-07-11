@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a733a3c2f3c8240aeeb3a2e112824b, type: 3}
   m_Name: Noon
   m_EditorClassIdentifier: 
-  timeOfDay: 12
+  timeOfDay: 9
   topColor: {r: 0.23529412, g: 0.54901963, b: 0.8627451, a: 1}
   horizonColor: {r: 0.50980395, g: 0.78431374, b: 1, a: 1}
   bottomColor: {r: 0.78431374, g: 0.8627451, b: 0.9411765, a: 1}
@@ -26,5 +26,5 @@ MonoBehaviour:
   moonIntensity: 0.1
   moonMultiplier: 1
   textureStrength: 1
-  textureRotation: 0.5
-  skyRootEular: {x: 0, y: 170, z: 0}
+  textureRotation: 1
+  skyRootEular: {x: 315, y: 170, z: 0}

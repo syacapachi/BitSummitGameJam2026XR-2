@@ -1,5 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 [CreateAssetMenu(menuName = "GameEvents/LocalStateEvent")]
-public class LocalStateEvent : GameEventSOBase<LocalState>
+public class LocalStateEvent : GameEventBase<LocalState>
 {
 }

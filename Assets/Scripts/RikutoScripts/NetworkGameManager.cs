@@ -1,26 +1,29 @@
 ﻿using Syacapachi.Attribute;
+using System;
 using Unity.Netcode;
 using UnityEngine;
+using TMPro;
 
 public class NetworkGameManager : NetworkBehaviour
 {
-    
+
     [Header("ゲーム設定")]
+    [SerializeField] bool useCustomSeed = false;
+    [SerializeField,EnableIf(nameof(useCustomSeed))] int gameSeed;
     [SerializeField] NetworkVariable<Difficulty> difficulty = new(Difficulty.Easy);
     [SerializeField] GameMode gameMode = GameMode.Protect;
     [Header("Refernce")]
     [SerializeField] GameObject protectArea;
     [SerializeField] HPManager hpManager;
-    [SerializeField] GameObject tutorialLight;
     [SerializeField] PhaseManager phaseManager;
     [SerializeField] PlayerManager PlayerManager;
     [SerializeField] TutorialManager tutorialManager;
-    [SerializeField] ResultDataCreater resultDataCreater;
+    [SerializeField] ResultDataCreator resultDataCreator;
     [SerializeField] GameStateManager gameStateManager;
+    [Header("UIRef")]
+    [SerializeField] TMP_Dropdown difficultyDropDown;
     [Header("DataBase")]
     [SerializeField] DifficultyDataBase difficultyRpcDataBase;
-    //[Header("Scene Setting")]
-    //[SerializeField, Scene(true)] string homeScene;
     public GameMode CurrentGameMode => gameMode;
     public HPManager HPManager => hpManager;
     public PhaseManager PhaseManager => phaseManager;
@@ -72,10 +75,8 @@ public class NetworkGameManager : NetworkBehaviour
                 InitializeGameServerOnly(); break;
             case GameState.Playing:
                 StartGameServerOnly();
-                tutorialLight.SetActive(false);
                 break;
             case GameState.Tutorial:
-                tutorialLight.SetActive(true);
                 StartTutorialServerOnly();break;
             default:
                 break;
@@ -93,6 +94,7 @@ public class NetworkGameManager : NetworkBehaviour
     {
         //初期化。
         difficultyRpcDataBase.CurrectDifficulty = CurrentDifficulty;
+        //difficultyDropDown.value = (int)CurrentDifficulty;
         if (!IsServer) return;
         // 🔗 イベント接続
         OnAllPhaseEndedServerEvent.Register(HandleAllPhaseEndedServerOnly);
@@ -113,7 +115,6 @@ public class NetworkGameManager : NetworkBehaviour
     {
         tutorialManager.OnTutorialStartServerOnly();
     }
-    [OnInspectorButton("Start Game")]
     private void StartGameServerOnly()
     {
         Debug.Log("[NetworkGameManager] StartGameServerOnly");
@@ -121,7 +122,7 @@ public class NetworkGameManager : NetworkBehaviour
         
         //関数内部でデータベースを参照しているので、引数をとらなくても同期されているはず...
         hpManager.SetHPByDifficultyServerOnly();
-        phaseManager.StartPhasesServerOnly();
+        phaseManager.StartPhasesServerOnly(gameSeed);
     }
     /// <summary>
     /// ゲーム初期化
@@ -130,6 +131,10 @@ public class NetworkGameManager : NetworkBehaviour
     private void InitializeGameServerOnly()
     {
         if (!IsServer) return;
+        if (!useCustomSeed)
+        {
+            gameSeed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+        }
         phaseManager.ResetPhase();
         phaseManager.KillableHandle.KillAll();
         hpManager.ResetHP();
@@ -150,6 +155,7 @@ public class NetworkGameManager : NetworkBehaviour
     void HandleDifficltyChange(Difficulty oldDifficulty, Difficulty newDifficulty)
     {
         difficultyRpcDataBase.CurrectDifficulty = newDifficulty;
+        difficultyDropDown.value = (int)(newDifficulty);
     }
 
     
@@ -171,16 +177,32 @@ public class NetworkGameManager : NetworkBehaviour
     {
         phaseManager.KillableHandle.KillAll();
         phaseManager.StopAllCoroutines();
-        resultDataCreater.CreateAndSendResultData(
-            IsGameOver,
-            HPManager.GetHP(),
-            HPManager.TotalBonusHPServerOnly,
-            CurrentDifficulty);
+        resultDataCreator.CreateAndSendResultData(
+            new ResultDataCreator.ResultHeaderData(
+                IsGameOver,
+                gameSeed,
+                HPManager.GetHP(),
+                HPManager.TotalBonusHPServerOnly,
+                CurrentDifficulty
+            )
+        );
     }
     public void BulletHitProtectArea(int damage)
     {
         hpManager?.AddHPServerOnly(damage);
         InvokeEventRpc();
+    }
+    [Rpc(SendTo.Server)]
+    public void OnDifficultyChangeByUIRpc(int number)
+    {
+        foreach(var diff in Enum.GetValues(typeof(Difficulty)))
+        {
+            if(number == (int)diff)
+            {
+                CurrentDifficulty = (Difficulty)diff;
+                break;
+            }
+        }
     }
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Server)]
     private void InvokeEventRpc()

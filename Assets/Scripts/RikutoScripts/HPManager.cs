@@ -1,4 +1,5 @@
 ﻿using Syacapachi.Attribute;
+using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -42,7 +43,7 @@ public class HPManager : NetworkBehaviour
             aleartRpcEvent.Invoke(false);
         }
     }
-    [OnInspectorButton(showOnlyInPlayMode = true)]
+    [OnInspectorButton(ShowOnlyInPlayMode = true)]
     public void AddBonusHPServerOnly(int value)
     {
         if (!IsServer) return;
@@ -71,14 +72,13 @@ public class HPManager : NetworkBehaviour
         if (remainHP.Value <= 0 && !isGameOver)
         {
             isGameOver = true;
-            Debug.Log("GAME OVER (HPManager)", gameObject);
+            LogScope.Log("GAME OVER (HPManager)");
             OnScoreReachZeroServerEvent.Invoke();
         }
     }
     public void SetHPByDifficultyServerOnly()
     {
         int hp = rpcDataBase.CurrentSetting.PlayerHP;
-        Debug.Log($"rpcDataBase diff = {rpcDataBase.CurrectDifficulty} ", gameObject);
         remainHP.Value = hp;
         currentMaxHP = hp;
     }

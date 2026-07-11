@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using Unity.Netcode;
+using Syacapachi.Attribute;
 
 public class StartButton : NetworkBehaviour
 {
@@ -10,6 +11,7 @@ public class StartButton : NetworkBehaviour
 
     [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
+    [SerializeField] LanguageEvent languageEvent;
 
     [Header("Publich Event")]
     [SerializeField] PlayerJobEvent playerJobEvent;
@@ -19,6 +21,8 @@ public class StartButton : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI resetButtonText;
     [SerializeField] LocalizeSimpleText gameStartButton;
     [SerializeField] LocalizeSimpleText gameResetButton;
+    private Language language;
+    private bool IsJapanese => language == Language.Japanese;
 
     private void Start()
     {
@@ -27,27 +31,31 @@ public class StartButton : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        UpdateLanguageText();
+        language = languageEvent.CurrentValue;
+        UpdateLanguageText(IsJapanese);
     }
 
-    private void UpdateLanguageText()
+    private void UpdateLanguageText(bool isJapanese)
     {
-        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
-
         if (startButtonText != null)
             startButtonText.text = gameStartButton.GetText(isJapanese);
         if (resetButtonText != null)
             resetButtonText.text = gameResetButton.GetText(isJapanese);
     }
 
+
     private void OnEnable()
     {
+        language = languageEvent.CurrentValue;
         gameStateEvent.Register(OnGameStateChange);
+        languageEvent.Register(OnLanguageChanged);
+        UpdateLanguageText(IsJapanese);
     }
 
     private void OnDisable()
     {
         gameStateEvent.Unregister(OnGameStateChange);
+        languageEvent.Unregister(OnLanguageChanged);
     }
 
     public void SelectHuman()
@@ -67,7 +75,7 @@ public class StartButton : NetworkBehaviour
         switch (state)
         {
             case GameState.Initializing:
-                UpdateLanguageText();
+                UpdateLanguageText(IsJapanese);
                 OnGameInitialize(); break;
 
             case GameState.Home:
@@ -82,12 +90,18 @@ public class StartButton : NetworkBehaviour
             default: break;
         }
     }
+    private void OnLanguageChanged(Language newLanguage)
+    {
+        if (language == newLanguage) return;
+        language = newLanguage;
+        UpdateLanguageText(IsJapanese);
+    }
 
     public void SelectStartGame()
     {
         StartGameRpc();
     }
-
+    [OnInspectorButton]
     public void SelectResetGame()
     {
         ResetGameRpc();
@@ -103,23 +117,27 @@ public class StartButton : NetworkBehaviour
     void ResetGameRpc()
     {
         gameStateManager.OnBackToHomeServerOnly();
-        resetUI.SetActive(false);
+        //resetUI.SetActive(false);
+
     }
 
     private void GameStartHandle()
     {
         startUI.SetActive(false);
-        resetUI.SetActive(false);
+        //resetUI.SetActive(false);
     }
     private void GameEndHandle()
     {
         startUI.SetActive(false);
-        resetUI.SetActive(true);
+        //resetUI.SetActive(true);
     }
 
     private void OnGameInitialize()
     {
-        startUI.SetActive(true);
-        resetUI.SetActive(false);
+        //startUI.SetActive(true);
+        //難易度選択追加したためいったん非表示
+        startUI.SetActive(false);
+        //resetUI.SetActive(false);
     }
+
 }

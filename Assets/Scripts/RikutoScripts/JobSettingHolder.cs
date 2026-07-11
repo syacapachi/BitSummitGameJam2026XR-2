@@ -8,11 +8,11 @@
 
         if (Current == null)
         {
-            UnityEngine.Debug.LogError("JobSettingHolder: Current is NULL!");
+            LogScope.Error("JobSettingHolder: ActionScope is NULL!");
         }
         else
         {
-            UnityEngine.Debug.Log($"JobSetting switched to: {Current.name}");
+            LogScope.Log($"JobSetting switched to: {Current.name}");
         }
     }
 }

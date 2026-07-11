@@ -20,8 +20,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
 
     protected virtual IResultCollector Collector { get; } = null;
 
-
-    private static readonly WaitForSeconds wait01 = new WaitForSeconds(0.1f);
     private float nextFire;
     //こいつは、残段数のみを同期してればわかる
     private bool isReloading = false;
@@ -58,7 +56,13 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     [Rpc(SendTo.Server)]
     private void ShootRpc()
     {
-        if (isReloading) return;
+        if (isReloading) {
+            if (!IsOwner && IsClient)
+            {
+                PlayCantSound();
+            }
+            return;
+        }
         if (Time.time < nextFire) return;
         OnShootServer();
     }
@@ -90,11 +94,12 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
         {
             PlayReloadSound();
         }
+        float invReloadTime = 1f / ReloadTime;
         // ここでリロードのアニメーションやエフェクトを再生することができます。
         for (float t = 0; t < ReloadTime; t += 0.1f)
         {
-            UpdateProgress(t / ReloadTime);
-            yield return wait01;
+            UpdateProgress(t * invReloadTime);
+            yield return WaitForSecondsCache.Get(0.1f);
         }
         UpdateProgress(0);
 
@@ -115,8 +120,8 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     private void OnAmmoChanged(int oldVal, int newVal)
     {
         if (isReloading) return;
-        if(oldVal < newVal) return;
         UpdateCount(newVal, MaxAmmo);
+        if (oldVal < newVal) return;        
         //オーナー以外
         if (!IsOwner && IsClient)
         {
@@ -134,6 +139,6 @@ public class GunController : NetworkBehaviour, ICountDownUI, IProgressUI, IShotS
     public virtual void UpdateProgress(float progress){}
 
     public virtual void PlayShotSound(){}
-
+    public virtual void PlayCantSound(){}
     public virtual void PlayReloadSound(){} 
 }

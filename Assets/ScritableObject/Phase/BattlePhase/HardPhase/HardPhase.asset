@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: HardPhase
   m_EditorClassIdentifier: 
   phaseName: {fileID: 11400000, guid: bbbdb7d47bb0f30419e1f77ebfa97dba, type: 2}
-  phaseTime: 180
+  phaseTime: 210
   clearBonus: 1000
+  enemyCapacity: 8
   useRandomSpawn: 0
+  randomSpawnSettings: {fileID: 11400000, guid: 9f97307dfeadea7498b21373b21117db, type: 2}
   spawnEvents:
   - enemyType: {fileID: 11400000, guid: f2748f2d4664b884f88d90f42acc6a7f, type: 2}
     spawnPointIndex: 0

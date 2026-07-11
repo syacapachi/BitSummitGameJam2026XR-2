@@ -20,6 +20,10 @@ public class PlayerResultData : INetworkSerializable,IEquatable<PlayerResultData
     {
         return this.clientId == other.clientId;
     }
+    public override int GetHashCode()
+    {
+        return clientId.GetHashCode();
+    }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {

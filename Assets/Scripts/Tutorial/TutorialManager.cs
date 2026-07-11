@@ -9,7 +9,7 @@ public enum TutorialStep
     Step1, Step2, Step3, Step4, End
 }
 
-public class TutorialManager : NetworkBehaviour,ITutorialStart
+public class TutorialManager : NetworkBehaviour, ITutorialStart
 {
     [Header("Reference")]
     [SerializeField] GameStateManager stateManager;
@@ -20,37 +20,41 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
 
     TutorialBase currentStepLogic;
 
-    [SerializeField] List<EnemySO> step1Enemies;
-    [SerializeField] List<EnemySO> step2Enemies;
+    [SerializeField] EnemySO step1Enemy;
+    [SerializeField] int step1EnemySpawnCount = 7;
+    [SerializeField] EnemySO[] step2Enemies;
     [Header("Subscribe Event")]
     [SerializeField] AttackBlockedEvent attackBlockedEvent;
+    [SerializeField] ULongEvent markerPlaceServerEvent;
+    [SerializeField] GameStateEvent gameStateEvent;
+    [Header("Publich Event")]
     [SerializeField] VoidEvent OnTutorialStepCleared;
     [SerializeField] IntEvent OnTutorialStepChanged;
-    [SerializeField] ULongEvent markerPlaceServerEvent;
     private bool isTutorlalStartedServerOnly;
-    
+
     public override void OnNetworkSpawn()
     {
         isTutorlalStartedServerOnly = false;
-        if (IsServer)
-        {
-            attackBlockedEvent.Register(OnAttackBlocked);
-            markerPlaceServerEvent.Register(OnMarkerPlacedServer);
-        }
-        CurrentStep.OnValueChanged += OnStepChanged;
-    }    
+
+        if (!IsServer) return;
+        CurrentStep.OnValueChanged += OnStepChangedServerEvent;
+    }
     public override void OnNetworkDespawn()
     {
-        CurrentStep.OnValueChanged -= OnStepChanged;
-        if (IsServer)
-        {
-            attackBlockedEvent.Unregister(OnAttackBlocked);
-            markerPlaceServerEvent.Unregister(OnMarkerPlacedServer);
-        }
+        if (!IsServer) return;
+        CurrentStep.OnValueChanged -= OnStepChangedServerEvent;
     }
     public void OnTutorialStartServerOnly()
     {
+        if (!IsServer) return;
         if (isTutorlalStartedServerOnly) return;
+
+        //　イベント購読
+        attackBlockedEvent.Register(OnAttackBlockedServerEvent);
+        markerPlaceServerEvent.Register(OnMarkerPlacedServerEvent);
+        spawner.OnAllEnemyDead += OnAllEnemyDeadServerEvent;
+        gameStateEvent.Register(OnGameStateChangedServerOnly);
+
 
         spawner.KillAll();
 
@@ -60,113 +64,107 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
         StopAllCoroutines();
 
         isTutorlalStartedServerOnly = true;
-        isWaitingNext = false;
 
         CurrentStep.Value = TutorialStep.Step1;
 
-        StartStep(TutorialStep.Step1);
+        StartStepServerOnly(TutorialStep.Step1);
     }
-
-    void OnStepChanged(TutorialStep oldStep, TutorialStep newStep)
+    void OnGameStateChangedServerOnly(GameState newState)
     {
-        StartStep(newStep);
+        if(newState != GameState.Tutorial)
+        {
+            spawner.KillAll();
+            TutorialEndServerOnly();
+        }
     }
-
-    void StartStep(TutorialStep step)
+    void OnStepChangedServerEvent(TutorialStep oldStep, TutorialStep newStep)
+    {
+        StartStepServerOnly(newStep);
+    }
+    [OnInspectorButton]
+    void StartStepServerOnly(TutorialStep step)
     {
         currentStepLogic?.OnEnd();
+        currentStepLogic = null;
         int playerCount = NetworkManager.ConnectedClientsIds.Count;
 
         switch (step)
         {
             case TutorialStep.Step1:
-                currentStepLogic = new Step1_Target(playerCount, spawner, OnStepCompleted, step1Enemies);
+                currentStepLogic = new Step1_Target(playerCount, spawner, OnStepCompletedServerOnly, step1Enemy);
                 break;
 
+
             case TutorialStep.Step2:
-                currentStepLogic = new Step2_Block(playerCount, spawner, OnStepCompleted, step2Enemies);
+                currentStepLogic = new Step2_Marker(
+                    playerCount,
+                    spawner,
+                    OnStepCompletedServerOnly,
+                    step2Enemies);
                 break;
 
             case TutorialStep.Step3:
-                currentStepLogic = new Step3_Marker(
-                    playerCount,
+                currentStepLogic = new Step3_Coop(
                     spawner,
-                    OnStepCompleted);
-                break;
-
-            case TutorialStep.Step4:
-                currentStepLogic = new Step4_Coop(
-                    spawner,
-                    OnStepCompleted);
+                    OnStepCompletedServerOnly);
                 break;
 
             case TutorialStep.End:
-                StartMainSimulation();
+                TutorialEndServerOnly();
                 return;
         }
-
+        // ここで黒魔術を紹介,型チェックをしないから早いぞ Unsafe.As<TutorialStep, int>(ref step);
         OnTutorialStepChanged?.Invoke((int)step);
         currentStepLogic?.OnStart();
     }
 
-    bool isWaitingNext = false;
-
-    void OnStepCompleted()
+    void OnStepCompletedServerOnly()
     {
         if (!IsServer) return;
-        if (isWaitingNext) return;
-
-        isWaitingNext = true;
-        StartCoroutine(StepCompleteRoutine());
+        TutorialStep next = NextStep(CurrentStep.Value);
+        StartCoroutine(StepCompleteRoutine(next));
     }
 
-    IEnumerator StepCompleteRoutine()
+    IEnumerator StepCompleteRoutine(TutorialStep nextStep)
     {
         // UIに通知
         NotifyStepClearedClientRpc();
 
-        yield return new WaitForSeconds(3.1f);
+        yield return WaitForSecondsCache.Get(3.1f);
 
-        isWaitingNext = false;
-        NextStep();
-    }
+        CurrentStep.Value = nextStep;
+    } 
 
     [Rpc(SendTo.ClientsAndHost)]
     void NotifyStepClearedClientRpc()
     {
-        OnTutorialStepCleared?.Invoke();
+        OnTutorialStepCleared.Invoke();
     }
 
-    [OnInspectorButton("Next Step")]
-    void NextStep()
+    static TutorialStep NextStep(TutorialStep step)
     {
-        if (!IsServer) return;
-
-        switch (CurrentStep.Value)
+        return step switch
         {
-            case TutorialStep.Step1:
-                CurrentStep.Value = TutorialStep.Step2;
-                break;
+            TutorialStep.Step1 => TutorialStep.Step2,
 
-            case TutorialStep.Step2:
-                CurrentStep.Value = TutorialStep.Step3;
-                break;
+            TutorialStep.Step2 => TutorialStep.Step3,
 
-            case TutorialStep.Step3:
-                CurrentStep.Value = TutorialStep.Step4;
-                break;
+            TutorialStep.Step3 => TutorialStep.End,
 
-            case TutorialStep.Step4:
-                CurrentStep.Value = TutorialStep.End;
-                break;
-        }
+            TutorialStep.Step4 => TutorialStep.End,
+            
+            TutorialStep.End => TutorialStep.End,
+
+            _ => TutorialStep.End,
+        };
     }
 
     [Rpc(SendTo.Server)]
     public void NextStepRequretRpc()
     {
-        if (CurrentStep.Value != TutorialStep.Step4) return;
-        NextStep();
+        if (CurrentStep.Value != TutorialStep.Step3) return;
+        TutorialStep step = NextStep(CurrentStep.Value);
+        StartCoroutine(StepCompleteRoutine(step));
     }
 
     // --- イベント転送 ---
@@ -176,29 +174,54 @@ public class TutorialManager : NetworkBehaviour,ITutorialStart
         currentStepLogic?.OnTargetDestroyed(id);
     }
 
-    private void OnAttackBlocked(AttackBlocked blocked)
+    private void OnAttackBlockedServerEvent(in AttackBlocked blocked)
     {
         if (!IsServer) return;
-        if(!isTutorlalStartedServerOnly) return;
+        if (!isTutorlalStartedServerOnly) return;
         currentStepLogic?.OnAttackBlocked(blocked.Collector.ClientId);
     }
 
-    public void OnEnemyKilled(EnemyKilled e)
+    public void OnEnemyKilledServerEvent(in EnemyKilled e)
     {
         if (!IsServer) return;
         currentStepLogic?.OnEnemyKilled(e);
     }
 
-    private void StartMainSimulation()
+    private void TutorialEndServerOnly()
     {
         stateManager.OnTutorialEndServerOnly();
         isTutorlalStartedServerOnly = false;
+
+        // イベント購読解消
+        attackBlockedEvent.Unregister(OnAttackBlockedServerEvent);
+        markerPlaceServerEvent.Unregister(OnMarkerPlacedServerEvent);
+        spawner.OnAllEnemyDead -= OnAllEnemyDeadServerEvent;
+        gameStateEvent.Unregister(OnGameStateChangedServerOnly);
     }
 
-    private void OnMarkerPlacedServer(ulong playerId)
+    private void OnMarkerPlacedServerEvent(ulong playerId)
     {
         if (!IsServer) return;
 
         currentStepLogic?.OnMarkerPlaced(playerId);
+    }
+
+    void OnAllEnemyDeadServerEvent()
+    {
+        if (!IsServer) return;
+
+        if (!isTutorlalStartedServerOnly) return;
+
+        switch (CurrentStep.Value)
+        {
+            case TutorialStep.Step2:
+            case TutorialStep.Step3:
+                TutorialClearByEnemyKillServerOnly();
+                break;
+        }
+    }
+    void TutorialClearByEnemyKillServerOnly()
+    {
+        StartCoroutine(StepCompleteRoutine(TutorialStep.End));
     }
 }

@@ -121,8 +121,9 @@ MonoBehaviour:
   phaseBarPrefab: {fileID: 3726993551735620307, guid: 0bf3ca9b243f5b442b094758a364551a, type: 3}
   separatorPrefab: {fileID: 7588150835802480204, guid: ecb63a1604d8a1044be16b3669b27af3, type: 3}
   container: {fileID: 7801505109371665529}
-  rect: {fileID: 7801505109371665529}
-  GameStateEvent: {fileID: 0}
+  fixedBarWidth: 300
+  gameStateEvent: {fileID: 0}
+  onPhaseChangeRpcEvent: {fileID: 0}
 --- !u!114 &3316737053532548226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1230,6 +1231,8 @@ MonoBehaviour:
   damageBorders:
   - {fileID: 7453324963103222195}
   flashTime: 0.3
+  damageEffect: {fileID: 0}
+  effectEvent: {fileID: 0}
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
 --- !u!1 &9051391430683515357
 GameObject:
@@ -3532,9 +3535,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7211544049521143121, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8183446668185451150}
-    - targetCorrespondingSourceObject: {fileID: 7211544049521143121, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 5114117993183840635}
     - targetCorrespondingSourceObject: {fileID: 7211544049521143121, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       insertIndex: -1
@@ -3703,23 +3703,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7211544049521143121, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
   m_PrefabInstance: {fileID: 3956772877621310153}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8183446668185451150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5980159000183742360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0170c5522a87bda40b14cad7ed8f999e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftHand: {fileID: 4983985600312387237}
-  rightHand: {fileID: 4983985599767242308}
-  leftLaser: {fileID: 0}
-  rightLaser: {fileID: 0}
-  distance: 20
 --- !u!114 &5114117993183840635
 MonoBehaviour:
   m_ObjectHideFlags: 0

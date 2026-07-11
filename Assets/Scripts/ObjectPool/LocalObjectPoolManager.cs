@@ -18,6 +18,7 @@ public class LocalObjectPoolManager : MonoBehaviour
     /// </summary>
     readonly Dictionary<int, ObjectPool<GameObject>> objectPoolDic = new();
     readonly Dictionary<int,int> instanceToPrefabDic = new();
+    readonly List<GameObject> cacheList = new();
 
     private void Start()
     {
@@ -26,7 +27,13 @@ public class LocalObjectPoolManager : MonoBehaviour
             ResisterPrefab(config.Prefab, config.PrewarmCount);
         }
     }
-    private void ResisterPrefab(GameObject prefab,int PrewarmCount)
+    /// <summary>
+    /// GameObjectを初期値を用いてオブジェクトプールに登録します。
+    /// </summary>
+    /// <param name="prefab"> 登録するプレハブ </param>
+    /// <param name="PrewarmCount"> 初期化時に生成する数 </param>
+    /// <returns> 作成したオブジェクトプール </returns>
+    private ObjectPool<GameObject> ResisterPrefab(GameObject prefab,int PrewarmCount)
     {
         GameObject OnCreate()
         {
@@ -43,7 +50,7 @@ public class LocalObjectPoolManager : MonoBehaviour
                 rb.angularVelocity = Vector3.zero;
             }
         }
-        objectPoolDic[prefab.GetInstanceID()] = new ObjectPool<GameObject>(
+        ObjectPool<GameObject> pool = new ObjectPool<GameObject>(
                 createFunc: OnCreate,
                 actionOnGet: obj => obj.SetActive(true),
                 actionOnRelease: OnRelease,
@@ -52,32 +59,34 @@ public class LocalObjectPoolManager : MonoBehaviour
                 defaultCapacity: PrewarmCount * 10,
                 maxSize: 100
             );
-        
-        List<GameObject> list = new ();
-        for(int i=0; i < PrewarmCount; i++)
+        objectPoolDic[prefab.GetInstanceID()] = pool;
+
+        cacheList.Clear();
+        for (int i=0; i < PrewarmCount; i++)
         {
-            list.Add(objectPoolDic[prefab.GetInstanceID()].Get());
+            cacheList.Add(objectPoolDic[prefab.GetInstanceID()].Get());
         }
-        foreach(GameObject obj in list)
+        foreach(GameObject obj in cacheList)
         {
             objectPoolDic[prefab.GetInstanceID()].Release(obj);
         }
-
-
+        return pool;
     }
     public GameObject Get(GameObject prefab)
     {
-        if(!objectPoolDic.ContainsKey(prefab.GetInstanceID()))
+        if (!objectPoolDic.TryGetValue(prefab.GetInstanceID(), out var pool))
         {
             Debug.LogWarning($"Prefab {prefab.name}({prefab.GetInstanceID()}) is not registered in the pool. Registering it now.");
-            ResisterPrefab(prefab, 0);
-        }
-        if (objectPoolDic.TryGetValue(prefab.GetInstanceID(), out var pool))
-        {
+            // 内部で辞書に登録されています。
+            pool = ResisterPrefab(prefab, 0);
             return pool.Get();
         }
-        Debug.LogError($"Prefab {prefab.name}({prefab.GetInstanceID()}) not found in pool and failed to register.");
-        return null;
+        if (pool == null)
+        {
+            Debug.LogError($"Prefab {prefab.name}({prefab.GetInstanceID()}) not found in pool and failed to register.");
+            return null;
+        }
+        return pool.Get();
     }
     public void Release(GameObject gameObject)
     {
@@ -103,7 +112,13 @@ public class LocalObjectPoolManager : MonoBehaviour
     }
     private IEnumerator ReleaseAfterDelay(GameObject prefab, float delay)
     {
-        yield return new WaitForSeconds(delay);
+        // このタイプだと加算命令が減ってお得
+        float endTime = Time.time + delay;
+
+        while (Time.time < endTime)
+        {
+            yield return null;
+        }
         Release(prefab);
     }
 }

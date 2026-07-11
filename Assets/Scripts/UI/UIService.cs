@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class UIService : MonoBehaviour
 {
-    private Langage langageSetting;
+    private Language langageSetting;
 
-    public Langage LangageSetting => langageSetting;
+    public Language LangageSetting => langageSetting;
     [Header("Subscribe")]
-    [SerializeField] LangageEvent langEvent;
+    [SerializeField] LanguageEvent langEvent;
 
     private void OnEnable()
     {
@@ -17,13 +17,13 @@ public class UIService : MonoBehaviour
     {
         langEvent.Unregister(OnLangChange);
     }
-    private void OnLangChange(Langage langage)
+    private void OnLangChange(Language langage)
     {
         langageSetting = langage;
     }
 
 }
-public enum Langage
+public enum Language
 {
     Japanese,
     English

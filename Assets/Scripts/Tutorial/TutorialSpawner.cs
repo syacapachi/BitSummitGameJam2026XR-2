@@ -37,9 +37,9 @@ public class TutorialSpawner : NetworkBehaviour
         }
     }
 
-    void OnEnemyKilledEvent(EnemyKilled e)
+    void OnEnemyKilledEvent(in EnemyKilled e)
     {
-        Debug.Log(
+        LogScope.Log(
     $"[TutorialSpawner] EnemyKilledEvent : " +
     $"enemy={e.KilledEnemy} " +
     $"contains={spawnedEnemies.Contains(e.KilledEnemy)} " +
@@ -50,14 +50,20 @@ public class TutorialSpawner : NetworkBehaviour
 
         spawnedEnemies.Remove(e.KilledEnemy);
 
-        Debug.Log(
+        LogScope.Log(
     $"[TutorialSpawner] removed enemy : " +
     $"remain(before decrement)={remain} " +
     $"spawnedCount(after remove)={spawnedEnemies.Count}");
 
         OnEnemyKilled();
     }
-    public void SpawnTargetsForEachPlayer(int playerCount, List<EnemySO> enemyList)
+    /// <summary>
+    /// 敵を出現させる。プレイヤーの人数分だけ出現させる。
+    /// そのうちNetworkEnemySpawnerに統合するか、インターフェースを作りたい。
+    /// </summary>
+    /// <param name="playerCount">プレイヤーの人数</param>
+    /// <param name="enemyList">出現させる敵のリストか配列</param>
+    public void SpawnTargetsForEachPlayer(int playerCount, IReadOnlyList<EnemySO> enemyList)
     {
         if (!IsServer) return;
 
@@ -69,7 +75,7 @@ public class TutorialSpawner : NetworkBehaviour
 
         isSpawnFinished = false;
 
-        for (int i = 0; i < Mathf.Min(playerCount, enemyList.Count); i++)
+        for (int i = 0; i < Math.Min(playerCount, enemyList.Count); i++)
         {
             EnemySO enemy = enemyList[i];
             SpawnTarget(i, enemy);
@@ -77,7 +83,16 @@ public class TutorialSpawner : NetworkBehaviour
         }
         isSpawnFinished = true;
     }
-
+    public void SpawnTargetServerOnly(EnemySO enemySO,int spawnCount)
+    {
+        if (!IsServer) return;
+        for (int i = 0; i < spawnCount; i++)
+        {
+            SpawnTarget(i, enemySO);
+            remain++;
+        }
+        isSpawnFinished = true;
+    }
 
 
     void SpawnTarget(int spawnIndex, EnemySO enemyData)

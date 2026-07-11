@@ -26,14 +26,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3450721840671833659}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.9181009, z: 0, w: -0.39634666}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -200, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2248532487074731464}
   m_Father: {fileID: 7565055580231618159}
-  m_LocalEulerAnglesHint: {x: 0, y: -226.7, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &943045966487397424
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -131,7 +131,7 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 0.1
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -173,7 +173,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 2
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -257,7 +257,9 @@ MonoBehaviour:
   rpcDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
   timeOffset: 15
   clearChangeTime: 10
-  tutorialToEveningTime: 10
+  tutorialToEveningTime: 1.5
+  oneHourTime: 10
+  startDayLoopTime: 60
   skyboxMats:
   - {fileID: 2100000, guid: 5334f277fcb843944aebc29131d0b5a6, type: 2}
   - {fileID: 2100000, guid: 5abac05424d24a74abdb61b5e24d8acd, type: 2}
@@ -274,12 +276,23 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 22c980c46d86d70478b73be59f2e9fd6, type: 2}
   - {fileID: 11400000, guid: ce0e06e46263c4e4c9b0bde9b09858e0, type: 2}
   - {fileID: 11400000, guid: ca98012adb5c8f14c94b798da5ae9df8, type: 2}
+  dayLoopSkyColorSettings:
+  - {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
+  - {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
+  - {fileID: 11400000, guid: cdf2344405367c94e9d5aeb6eb72f5a8, type: 2}
+  - {fileID: 11400000, guid: aab534e90c923dd47b02f4361b9128fb, type: 2}
+  - {fileID: 11400000, guid: 22c980c46d86d70478b73be59f2e9fd6, type: 2}
+  - {fileID: 11400000, guid: ce0e06e46263c4e4c9b0bde9b09858e0, type: 2}
+  - {fileID: 11400000, guid: ca98012adb5c8f14c94b798da5ae9df8, type: 2}
+  - {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
   startSky: {fileID: 11400000, guid: 3f8d8c9cd23938148bde9cc1a566c1d7, type: 2}
   clearSky: {fileID: 11400000, guid: ccb75a00050fd6d44838f15055ef8521, type: 2}
   noonSky: {fileID: 11400000, guid: 924eb08799199cf438ce1d4109c43367, type: 2}
   gameOverSky: {fileID: 11400000, guid: dd51ec17ce49ad34aae6d4bdc7296619, type: 2}
   currentSky: {fileID: 11400000, guid: 4ea2e62182cceac4b84e3c79b996b16e, type: 2}
+  copySky: {fileID: 11400000, guid: b1fec5d40db27d249936b91d9e96f6ac, type: 2}
   gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
+  localStateEvent: {fileID: 11400000, guid: 8d864b8e0651a9e4398e513a726a87fc, type: 2}
   IsDebug: 0
   debugEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
 --- !u!1 &8893774260936343903
@@ -308,14 +321,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8893774260936343903}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.9181009, z: 0, w: -0.39634666}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 200, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5140876589459139820}
   m_Father: {fileID: 7565055580231618159}
-  m_LocalEulerAnglesHint: {x: 0, y: -226.7, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7239451020130075376
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -412,8 +425,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 1, g: 0.99607843, b: 0.78431374, a: 1}
-  m_Intensity: 1.5
+  m_Color: {r: 1, g: 0.78431374, b: 0.54901963, a: 1}
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -455,7 +468,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 0.5
+  m_BounceIntensity: 0.4
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}

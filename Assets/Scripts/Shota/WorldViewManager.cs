@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Syacapachi.Attribute;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,12 +22,6 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] Button backButton;
     [SerializeField] WorldViewData worldViewData;
 
-    /*
-    [Header("Canvas管理")]
-    [SerializeField] private BoolEvent connectCanvasEvent;
-    [SerializeField] private Canvas boardCanvas;
-    */
-
     [Header("ページ設定")]
     [SerializeField] private int totalBoards = 5;
 
@@ -36,51 +31,69 @@ public class WorldViewManager : NetworkBehaviour
     [SerializeField] LocalizeSimpleText backText;
     [Header("Subscribe Event")]
     [SerializeField] LocalStateEvent localStateEvent;
+    [SerializeField] LanguageEvent languageEvent;
+    private Language language;
+    private bool IsJapanese => language == Language.Japanese;
+    /// <summary>
+    /// このオブジェクトは持てるので、位置を戻すために使う。
+    /// </summary>
+    Vector3 initialPos;
+    private int maxShowBoards;
 
-    /*
-    [Header("シーン設定")]
-    SerializeField,Scene(true)] string tutorialScene;
-    SerializeField,Scene(true)] string gameScene;
-
-    [SerializeField,Scene(true)] string gameSceneName;
-    */
-    /*
-    private void Start()
+    /// <summary>
+    /// 再接続時に初期化
+    /// </summary>
+    public override void OnNetworkSpawn()
     {
-        // connectCanvasEvent?.Invoke(); ← 削除：Start()では呼ばない
-        if (!IsSpawned)
-        {
-            if (boardCanvas != null)
-                boardCanvas.enabled = false;
-        }
+        language = languageEvent.CurrentValue;
+        this.transform.SetPositionAndRotation(initialPos, Quaternion.identity);
     }
-    */
+
+    private void Awake()
+    {
+        initialPos = gameObject.transform.position;
+    }
+
     private void OnEnable()
     {
+        language = languageEvent.CurrentValue;
         localStateEvent.Register(OnLocalStateChanged);
+        languageEvent.Register(OnLanguageChanged);
         pageIndex.OnValueChanged += OnPageChanged;
     }
     private void OnDisable()
     {
         localStateEvent.Unregister(OnLocalStateChanged);
+        languageEvent.Unregister(OnLanguageChanged);
         pageIndex.OnValueChanged -= OnPageChanged;
     }
     //OnNetworkSpanは、ネット接続時にSetActive(true)でないと呼ばれないので、Canvsのみ無効にする。
     private void OnLocalStateChanged(LocalState localState)
     {
-        if(localState == LocalState.WorldView)
+        if (localState == LocalState.WorldView)
         {
-            ShowPage(pageIndex.Value);
+            maxShowBoards =
+                gameStateManager.ShowWorldView
+                ? totalBoards 
+                : 1;
+            //初期化
+            this.transform.SetPositionAndRotation(initialPos, Quaternion.identity);
+            ShowPage(pageIndex.Value, IsJapanese);
         }
     }
-    
+    private void OnLanguageChanged(Language newLanguage)
+    {
+        if (language == newLanguage) return;
+        language = newLanguage;
+        ShowPage(pageIndex.Value, IsJapanese);
+    }
 
     public void OnNextButtonClicked() => RequestNextPageRpc();
 
     [Rpc(SendTo.Server)]
     void RequestNextPageRpc()
     {
-        if (pageIndex.Value >= totalBoards - 1)
+        if (pageIndex.Value >= maxShowBoards - 1)
         {
             gameStateManager.OnGameInitializeServerOnly();
             pageIndex.Value = 0;
@@ -98,12 +111,11 @@ public class WorldViewManager : NetworkBehaviour
         pageIndex.Value--;
     }
 
-    void OnPageChanged(int oldValue, int newValue) => ShowPage(newValue);
+    [OnInspectorButton]
+    void OnPageChanged(int oldValue, int newValue) => ShowPage(newValue, IsJapanese);
 
-    void ShowPage(int index)
+    void ShowPage(int index, bool isJapanese)
     {
-        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
-
         if (boardText != null)
             boardText.text = isJapanese
                 ? worldViewData.japaneseTexts[index].Replace("\\n", "\n")
@@ -115,7 +127,7 @@ public class WorldViewManager : NetworkBehaviour
                 : worldViewData.englishTitles[index];
 
         if (buttonText != null)
-            buttonText.text = index >= totalBoards - 1
+            buttonText.text = index >= maxShowBoards - 1
                 ? closeText.GetText(isJapanese)
                 : nextButtonText.GetText(isJapanese);
 

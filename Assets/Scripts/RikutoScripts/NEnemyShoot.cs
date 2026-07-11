@@ -11,7 +11,6 @@ public class NEnemyShoot : GunController
     [SerializeField] GameObject localBulletPrefab;
     [SerializeField] NEnemy nEnemy;
     [SerializeField] AudioEffectData shotAudioEffect;
-    [SerializeField] AudioClip shotClip;
     [Header("Reference")]
     [SerializeField] NetworkAnimator networkAnimator;
     [Header("Publish Event")]
@@ -23,6 +22,7 @@ public class NEnemyShoot : GunController
     PlayerManager playerManager;
     float remainServerOnly = 0;
     Transform nearestPlayerTransfrom = null;
+    [SerializeField] bool isUseBullet = true;
     private void Start()
     {
         gameManager = ManagerLocator.Instance.AllGameManager;
@@ -39,7 +39,7 @@ public class NEnemyShoot : GunController
             shootCorutine = StartCoroutine(ShootCorutine());
         }
     }
-    [OnInspectorButton(showOnlyInPlayMode = true)]
+    [OnInspectorButton(ShowOnlyInPlayMode = true)]
     private void InspectorShoot()
     {
         shootCorutine = StartCoroutine(ShootCorutine());
@@ -53,7 +53,8 @@ public class NEnemyShoot : GunController
     }
     private void ShootLocal()
     {
-        
+        if (!isUseBullet) return;
+
         Vector3 direction = (nearestPlayerTransfrom.position - FirePoint.position).normalized;
 
         GameObject bulletObject = ManagerLocator.Instance.LocalObjectPool.Get(
@@ -73,18 +74,29 @@ public class NEnemyShoot : GunController
     protected override void OnShootServer()
     {
         if (nearestPlayerTransfrom == null) return;
-        Vector3 direction = (nearestPlayerTransfrom.position - FirePoint.position).normalized;
 
-        NetworkObject networkObject = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(
-            BulletPrefab,
-            FirePoint.position,
-            Quaternion.LookRotation(direction)
-        );
+        Vector3 spawnPosition;
+        Quaternion spawnRotation;
+
+        if (isUseBullet)
+        {
+            Vector3 direction = (nearestPlayerTransfrom.position - FirePoint.position).normalized;
+            spawnPosition = FirePoint.position;
+            spawnRotation = Quaternion.LookRotation(direction);
+        }
+        else
+        {
+            spawnPosition = nearestPlayerTransfrom.position;
+            spawnRotation = Quaternion.identity;
+        }
+
+        NetworkObject networkObject = ManagerLocator.Instance.AllNetworkObjectPool.GetNetworkObject(BulletPrefab, spawnPosition,spawnRotation);
 
         networkObject.gameObject.layer = this.gameObject.layer;
-
         var bullet = networkObject.GetComponent<BulletBaseController>();
+
         bullet.BulletInit(null, nEnemy.EnemyJob, weaponSORpc.bulletSetting);
+        bullet.SetShooter(nEnemy.NetworkObject);
 
         networkObject.Spawn();
     }
@@ -93,9 +105,9 @@ public class NEnemyShoot : GunController
     {
         //トリガー以外はこっち
         //networkAnimator?.Animator.SetFloat("Speed", 2.0f);
-        WaitForSeconds waitInterval = new WaitForSeconds(weaponSORpc.fireInterval);
-        WaitForSeconds waitReload = new WaitForSeconds(weaponSORpc.reloadTime);
-        yield return new WaitForSeconds(weaponSORpc.FirstShootDelayTime);
+        WaitForSeconds waitInterval = WaitForSecondsCache.Get(weaponSORpc.fireInterval);
+        WaitForSeconds waitReload = WaitForSecondsCache.Get(weaponSORpc.reloadTime);
+        yield return WaitForSecondsCache.Get(weaponSORpc.FirstShootDelayTime);
         //トリガーはこっち
         networkAnimator?.SetTrigger("Attack");
 
@@ -171,8 +183,8 @@ public class NEnemyShoot : GunController
     }
     public override void PlayShotSound()
     {
-        //gameEffect.Invoke(new GameEffect(shotAudioEffect.ToRuntimeData(), transform.position));
-        gameEffect.Invoke(GameEffect.CreateAudioEffect(shotClip, transform.position));
+        gameEffect.Invoke(new GameEffect(shotAudioEffect.ToRuntimeData(), transform.position));
+        //gameEffect.Invoke(GameEffect.CreateAudioEffect(shotClip, transform.position));
     }
 #if UNITY_EDITOR
     private void Reset()

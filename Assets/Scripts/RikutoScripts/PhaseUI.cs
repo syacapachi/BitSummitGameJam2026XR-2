@@ -12,6 +12,7 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] IntEvent OnPhaseChangeRpcEvent;
     [SerializeField] GameStateEvent GameStateChangeRpcEvent;
     [SerializeField] BoolEvent WarningStateEvent;
+    [SerializeField] LanguageEvent LanguageEvent;
     [Header("Reference")]
     [SerializeField] DifficultyDataBase rpcDataBase;
     [SerializeField] private NetworkGameManager nGameManager;
@@ -19,9 +20,13 @@ public class PhaseUI : MonoBehaviour
     [SerializeField] TMP_FontAsset englishFont;
     [SerializeField] TMP_FontAsset warningFont;
     [SerializeField] LoopScrollUI[] warningScrollers;
-
+    //[Header("Text")]
+    //[SerializeField] LocalizeSimpleText firstPhaseText;
+    //[SerializeField] LocalizeSimpleText lastPhaseText;
+    //[SerializeField] LocalizeSimpleText startText;
     private Coroutine currentRoutine;
     private int currentPhaseIndex;
+    private bool isCountdownSubscribed = false;
 
     bool isJapanese;
 
@@ -37,11 +42,20 @@ public class PhaseUI : MonoBehaviour
     }
 
     private UIState currentState = UIState.Idle;
-
-    
-    void Start()
+    private void Start()
     {
-        isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+        UpdateLangage();
+    }
+    /// <summary>
+    /// 言語設定を更新します。Startは一回しか呼ばれない。
+    /// </summary>
+    void UpdateLangage()
+    {
+        GameStateManager gameStateManager = ManagerLocator.Instance != null
+            ? ManagerLocator.Instance.GameStateManager
+            : null;
+        isJapanese = gameStateManager == null
+            || gameStateManager.CurrentLanguage == Language.Japanese;
         ApplyFont();
         InitializeUI();
     }
@@ -55,48 +69,102 @@ public class PhaseUI : MonoBehaviour
     {
         phaseText.gameObject.SetActive(false);
         phaseBoard.SetActive(false);
-
-        nGameManager.PhaseManager.CountdownValue.OnValueChanged += OnCountdownChanged; 
+        // CountdownValue の購読は OnPhaseChanged が来てから行う
+        // Start() 時点では PhaseManager がまだスポーンしていない可能性がある
     }
+
+    // CountdownValue の購読を安全に行うメソッド
+    void TrySubscribeCountdown()
+    {
+        if (isCountdownSubscribed) return;
+        if (nGameManager == null || nGameManager.PhaseManager == null) return;
+
+        nGameManager.PhaseManager.CountdownValue.OnValueChanged += OnCountdownChanged;
+        isCountdownSubscribed = true;
+        LogScope.Log("[PhaseUI] CountdownValue subscribed");
+    }
+
     private void OnEnable()
     {
         AllEnemyDeadRpcEvent.Register(OnAllEnemyKilled);
         OnPhaseChangeRpcEvent.Register(OnPhaseChanged);
         GameStateChangeRpcEvent.Register(OnGameStateChanged);
         WarningStateEvent.Register(OnWarningChanged);
+        LanguageEvent.Register(OnLanguageChanged);
+        OnLanguageChanged(LanguageEvent.CurrentValue);
     }
+
     private void OnDisable()
     {
         AllEnemyDeadRpcEvent.Unregister(OnAllEnemyKilled);
         OnPhaseChangeRpcEvent.Unregister(OnPhaseChanged);
         GameStateChangeRpcEvent.Unregister(OnGameStateChanged);
         WarningStateEvent.Unregister(OnWarningChanged);
-    }
-    private void OnGameStateChanged(GameState newState)
-    {
-        if(newState == GameState.GameOver || newState == GameState.GameClear)
+        LanguageEvent.Unregister(OnLanguageChanged);
+
+        // CountdownValue の購読解除
+        if (isCountdownSubscribed && nGameManager != null && nGameManager.PhaseManager != null)
         {
-            ChangeState(UIState.GameFinish);
+            nGameManager.PhaseManager.CountdownValue.OnValueChanged -= OnCountdownChanged;
+            isCountdownSubscribed = false;
         }
     }
+
+    private void OnGameStateChanged(GameState newState)
+    {
+        if (newState == GameState.GameOver)
+        {
+            ChangeState(UIState.GameFinish, true);
+        }
+        else if (newState == GameState.GameClear)
+        {
+            ChangeState(UIState.GameFinish, false);
+        }
+        else
+        {
+            //ゲーム状態が変わった場合も呼ぶ
+            //UpdateLangage();
+            GameStateManager gameStateManager = ManagerLocator.Instance != null
+                ? ManagerLocator.Instance.GameStateManager
+                : null;
+            isJapanese = gameStateManager == null
+                || gameStateManager.CurrentLanguage == Language.Japanese;
+            ApplyFont();
+        }
+    }
+
+    private void OnLanguageChanged(Language newLanguage)
+    {
+        bool newIsJapanese = newLanguage == Language.Japanese;
+        if (isJapanese == newIsJapanese) return;
+        isJapanese = newIsJapanese;
+        ApplyFont();
+    }
+
     private void OnAllEnemyKilled()
     {
         ChangeState(UIState.AllEnemyDead);
     }
+
     // =========================
-    // 🔥 ステート管理
+    // ステート管理
     // =========================
     void ChangeState(UIState next, object payload = null)
     {
-        Debug.Log($"[State] {currentState} → {next}");
-        if (currentState == next && next != UIState.Countdown) return;
-        // 同じ状態は無視（必要なら消す）
-        if (currentState == next) return;
+        LogScope.Log($"[PhaseUI][State] {currentState} → {next}");
+
+        // PhaseIntro は同じ状態でも必ず実行する（フェーズ番号が変わるため）
+        if (currentState == next && next != UIState.Countdown && next != UIState.PhaseIntro)
+        {
+            LogScope.Log($"[PhaseUI][State] Skipped (same state): {next}");
+            return;
+        }
 
         // 現在の演出停止
         if (currentRoutine != null)
         {
             StopCoroutine(currentRoutine);
+            currentRoutine = null;
         }
 
         currentState = next;
@@ -116,7 +184,7 @@ public class PhaseUI : MonoBehaviour
                 break;
 
             case UIState.GameFinish:
-                currentRoutine = StartCoroutine(GameFinishRoutine());
+                currentRoutine = StartCoroutine(GameFinishRoutine((bool)payload));
                 break;
 
             case UIState.AllEnemyDead:
@@ -134,20 +202,24 @@ public class PhaseUI : MonoBehaviour
     }
 
     // =========================
-    // 🎯 イベント受信
+    // イベント受信
     // =========================
     void OnPhaseChanged(int index)
     {
+        Debug.Log($"[PhaseUI] OnPhaseChanged called index:{index}");
+
+        // CountdownValue の購読をここで安全に行う
+        TrySubscribeCountdown();
+
         currentPhaseIndex = index;
-        if (currentPhaseIndex < 0 || currentPhaseIndex >= rpcDataBase.CurrentSetting.Phases.Length) return;
-        //var manager = nGameManager.PhaseManager;
+        if (currentPhaseIndex < 0 || currentPhaseIndex >= rpcDataBase.CurrentSetting.Phases.Length)
+        {
+            Debug.Log($"[PhaseUI] OnPhaseChanged index out of range: {index}");
+            return;
+        }
+
         var phaseSetting = rpcDataBase.CurrentSetting.Phases[currentPhaseIndex];
 
-        //if (index >= 0 && manager.Phases != null && index < manager.Phases.Length)
-        //{
-        //    string text = isJapanese ? manager.Phases[index].PhaseDisplayNameJP : manager.Phases[index].PhaseDisplayNameEN;
-        //    ChangeState(UIState.PhaseIntro, (index, text));
-        //}
         if (phaseSetting != null)
         {
             string text = isJapanese ? phaseSetting.PhaseDisplayNameJP : phaseSetting.PhaseDisplayNameEN;
@@ -165,9 +237,9 @@ public class PhaseUI : MonoBehaviour
             {
                 ChangeState(UIState.Idle);
             }
-
             return;
         }
+
         if (currentState == UIState.Countdown)
         {
             phaseText.text = newValue.ToString();
@@ -179,54 +251,52 @@ public class PhaseUI : MonoBehaviour
     }
 
     // =========================
-    // 🎬 各ステート処理
+    // 各ステート処理
     // =========================
 
     IEnumerator PhaseIntroRoutine((int index, string text) data)
     {
-        SetupNormal();
+        //SetupNormal();
 
-        int index = data.index;
-        string text = data.text;
+        //int index = data.index;
+        //string text = data.text;
 
-        //var manager = nGameManager.PhaseManager;
-        var phaseSetting = rpcDataBase.CurrentSetting;
-        //int lastIndex = manager.Phases.Length - 1;
-        int lastIndex = phaseSetting.Phases.Length - 1;
+        //var phaseSetting = rpcDataBase.CurrentSetting;
+        //int lastIndex = phaseSetting.Phases.Length - 1;
 
-        phaseText.fontSize = 120;
+        //phaseText.fontSize = 120;
 
-        // ★ 最初のフェーズだけ特別表示
-        if (index == 0)
-        {
-            phaseText.text = isJapanese ? "任務開始！" : "Game Start!";
-            phaseText.gameObject.SetActive(true);
-            yield return new WaitForSeconds(1f);
-        }
+        //// 最初のフェーズ（基本戦）の開始表示
+        //if (index == 0)
+        //{
+        //    phaseText.text = isJapanese ? "任務開始！" : "Mission Start!";
+        //    phaseText.gameObject.SetActive(true);
+        //    yield return WaitForSecondsCache.Get(1f);
 
-        if (index == lastIndex)
-        {
-            // 最終フェーズだけ元の名前
-            phaseText.text = text;
-        }
-        else
-        {
-            // 通常フェーズ
-            phaseText.text = isJapanese
-                ? $"第{index + 1}フェーズ"
-                : $"Phase {index + 1}";
-        }
+        //    // phaseText.text = isJapanese ? "戦闘開始" : "Combat Phase";
+        //    // yield return new WaitForSeconds(1f);
+        //}
+        //// 最終フェーズ（ボス戦）の開始表示
+        //else if (index == lastIndex)
+        //{
+        //    phaseText.text = isJapanese ? "ボス戦突入！" : "Boss Battle!";
+        //    phaseText.gameObject.SetActive(true);
+        //    yield return WaitForSecondsCache.Get(1f);
+        //}
+        //// 中間フェーズがある場合はフェーズ名をそのまま表示
+        //else
+        //{
+        //    phaseText.text = text;
+        //    phaseText.gameObject.SetActive(true);
+        //    yield return WaitForSecondsCache.Get(1f);
+        //}
 
-        phaseText.gameObject.SetActive(true);
+        //phaseText.fontSize = 150;
+        //phaseText.text = isJapanese ? "スタート!!" : "START!!";
 
-        yield return new WaitForSeconds(1f);
+        //yield return PopAnimation();
 
-        phaseText.fontSize = 150;
-        phaseText.text = isJapanese ? "スタート!!" : "START!!";
-
-        yield return PopAnimation();
-
-        yield return new WaitForSeconds(1.5f);
+        yield return WaitForSecondsCache.Get(1.5f);
 
         ChangeState(UIState.Idle);
     }
@@ -236,11 +306,8 @@ public class PhaseUI : MonoBehaviour
         SetupNormal();
 
         phaseText.text = index.ToString();
-
         phaseText.gameObject.SetActive(true);
         yield return PopAnimation();
-
-        //ChangeState(UIState.Idle);
     }
 
     IEnumerator PhaseFinishRoutine()
@@ -252,29 +319,33 @@ public class PhaseUI : MonoBehaviour
         phaseText.text = $"Phase {currentPhaseIndex + 1} FINISH!\nScore: {score}";
         phaseText.gameObject.SetActive(true);
 
-        yield return new WaitForSeconds(3f);
+        yield return WaitForSecondsCache.Get(3f);
 
         ChangeState(UIState.Idle);
     }
 
-    IEnumerator GameFinishRoutine()
+    IEnumerator GameFinishRoutine(bool isGameOver)
     {
         SetupNormal();
 
         phaseText.fontSize = 150;
-        phaseText.text = isJapanese ? "任務終了!" : "FINISH!";
+        phaseText.text = isGameOver
+                            ? isJapanese
+                                ? "任務失敗..." : "Mission Failed..."
+                            : isJapanese
+                                ? "任務完了！" : "Mission Complete!";
+
         phaseText.gameObject.SetActive(true);
 
         yield return PopAnimation();
 
-        yield return new WaitForSeconds(2f);
+        yield return WaitForSecondsCache.Get(2f);
 
         ChangeState(UIState.Idle);
     }
 
     IEnumerator AllEnemyDeadRoutine()
     {
-        //int bonus = nGameManager.ScoreManager.LastClearBonus;
         int bonus = rpcDataBase.CurrentSetting.Phases[currentPhaseIndex].ClearBonus;
 
         SetupNormal();
@@ -284,21 +355,21 @@ public class PhaseUI : MonoBehaviour
         phaseText.gameObject.SetActive(true);
 
         yield return PopAnimation();
-        yield return new WaitForSeconds(1f);
+        yield return WaitForSecondsCache.Get(1f);
 
         phaseText.text = isJapanese ? "クリアボーナス" : "CLEAR BONUS";
         yield return PopAnimation();
-        yield return new WaitForSeconds(1f);
+        yield return WaitForSecondsCache.Get(1f);
 
         phaseText.text = isJapanese ? $"スコア: +{bonus}" : $"SCORE: +{bonus}";
         yield return PopAnimation();
-        yield return new WaitForSeconds(1f);
+        yield return WaitForSecondsCache.Get(1f);
 
         ChangeState(UIState.Idle);
     }
 
     // =========================
-    // 🎨 共通処理
+    // 共通処理
     // =========================
 
     void SetupNormal()
@@ -327,12 +398,13 @@ public class PhaseUI : MonoBehaviour
 
         float t = 0f;
         float duration = 0.05f;
+        float invduration = 1f / duration;
 
         while (t < duration)
         {
             t += Time.deltaTime;
             phaseText.transform.localScale =
-                Vector3.Lerp(big, normal, t / duration);
+                Vector3.Lerp(big, normal, t * invduration);
             yield return null;
         }
 
@@ -341,7 +413,6 @@ public class PhaseUI : MonoBehaviour
 
     IEnumerator WarningRoutine()
     {
-
         phaseText.font = warningFont;
         phaseText.fontSize = 180;
         phaseText.color = Color.black;
@@ -357,21 +428,20 @@ public class PhaseUI : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             phaseText.enabled = false;
-            yield return new WaitForSeconds(0.4f);
+            yield return WaitForSecondsCache.Get(0.4f);
 
             phaseText.enabled = true;
-            yield return new WaitForSeconds(0.4f);
+            yield return WaitForSecondsCache.Get(0.4f);
         }
 
         phaseText.enabled = true;
-        yield return new WaitForSeconds(0.5f);
+        yield return WaitForSecondsCache.Get(0.5f);
 
         foreach (var scroller in warningScrollers)
         {
             scroller.StopScroll();
         }
 
-        // ★ 終わったらカウントダウンへ
         ChangeState(UIState.Idle);
     }
 
@@ -383,7 +453,6 @@ public class PhaseUI : MonoBehaviour
         }
         else
         {
-            // Countdown中なら触らない
             if (currentState != UIState.Countdown)
             {
                 ChangeState(UIState.Idle);

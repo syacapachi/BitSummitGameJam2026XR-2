@@ -15,10 +15,11 @@ MonoBehaviour:
   Name: KingGhost
   icon: {fileID: 21300000, guid: 218713e3c1e779a409597f28975c30ff, type: 3}
   enemyJob: 2
-  HP: 1000
+  HP: 500
   scoreValue: 10000
   canMove: 1
   MoveSpeed: 30
+  movablePointTag: -1
   prefab: {fileID: 6380092818085878473, guid: 106af4cebf8e6a44eaba7b8750652562, type: 3}
   canAttack: 1
   enemyWeapon: {fileID: 11400000, guid: c888351ad86b0b541a1f5b3c6f93969a, type: 2}

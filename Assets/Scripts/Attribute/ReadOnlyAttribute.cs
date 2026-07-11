@@ -5,10 +5,10 @@
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class ReadOnlyAttribute : PropertyAttribute
     {
-        public bool showOnlyPlayMode;
+        public readonly bool ShowOnlyPlayMode;
         public ReadOnlyAttribute(bool showOnlyPlayMode = false)
         {
-            this.showOnlyPlayMode = showOnlyPlayMode;
+            this.ShowOnlyPlayMode = showOnlyPlayMode;
         }
     }
 }

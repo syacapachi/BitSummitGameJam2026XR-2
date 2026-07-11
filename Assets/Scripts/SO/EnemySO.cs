@@ -16,6 +16,8 @@ public class EnemySO : ScriptableObject
     [SerializeField] int scoreValue = 100;
     [SerializeField] bool canMove = true;
     [SerializeField, EnableIf(nameof(canMove))] float MoveSpeed = 1;
+    [Header("動ける場所")]
+    [SerializeField,EnableIf(nameof(canMove))] SpawnPointTags movablePointTag = (SpawnPointTags)(-1);
     [SerializeField] GameObject prefab;
     [SerializeField] bool canAttack = true;
     [SerializeField, EnableIf(nameof(canAttack))] EnemyWeaponSettingsSO enemyWeapon;
@@ -24,6 +26,7 @@ public class EnemySO : ScriptableObject
     public PlayerJob EnemyJob => enemyJob;
     public int Hp => HP;
     public int ScoreValue => scoreValue;
+    public SpawnPointTags MovablePointTag => movablePointTag;
     public bool CanMove => canMove;
     public float MoveSpeedValue => MoveSpeed;
     public GameObject Prefab => prefab;

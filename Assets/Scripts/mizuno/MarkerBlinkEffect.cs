@@ -21,9 +21,19 @@ public class MarkerBlinkEffect : NetworkBehaviour
     [SerializeField] float scaleMultiplier = 1.08f;
     Color DefaultColor;
     Material[] materials;
-    bool isBlinking = false;
     Vector3 defaultScale;
     Coroutine blinkCoroutine;
+
+    private void Start()
+    {
+        materials = new Material[targetRenderers.Length];
+        for (int i = 0; i < targetRenderers.Length; i++)
+        {
+            if (targetRenderers[i] == null) continue;
+            materials[i] = targetRenderers[i].material;
+            ApplyColor(materials[i], DefaultColor);
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -35,38 +45,6 @@ public class MarkerBlinkEffect : NetworkBehaviour
             scaleTarget = transform;
 
         defaultScale = scaleTarget.localScale;
-
-        materials = new Material[targetRenderers.Length];
-        for (int i = 0; i < targetRenderers.Length; i++)
-        {
-            if (targetRenderers[i] == null) continue;
-            materials[i] = targetRenderers[i].material;
-            ApplyColor(materials[i], DefaultColor);
-        }
-    }
-
-    private void Update()
-    {
-        if (!isBlinking) return;
-
-        if (materials != null)
-        {
-            float colorT = EvaluatePulse(blinkSpeed);
-            Color currentColor = Color.Lerp(DefaultColor, GetBlinkDisplayColor(), colorT);
-
-            for (int i = 0; i < materials.Length; i++)
-            {
-                if (materials[i] == null) continue;
-                ApplyColor(materials[i], currentColor);
-            }
-        }
-
-        if (scaleTarget != null)
-        {
-            float t = EvaluatePulse(scaleSpeed);
-            float scale = Mathf.Lerp(1f, scaleMultiplier, t);
-            scaleTarget.localScale = defaultScale * scale;
-        }
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -75,20 +53,45 @@ public class MarkerBlinkEffect : NetworkBehaviour
         if (blinkCoroutine != null)
             StopCoroutine(blinkCoroutine);
 
-        isBlinking = true;
         blinkCoroutine = StartCoroutine(BlinkRoutine(duration));
     }
 
     IEnumerator BlinkRoutine(float duration)
     {
-        yield return new WaitForSeconds(duration);
+        float time = 0;
+        while (time <= duration)
+        {
+            time += Time.deltaTime;
+            if (materials != null)
+            {
+                float colorT = EvaluatePulse(blinkSpeed);
+                Color currentColor = Color.Lerp(DefaultColor, GetBlinkDisplayColor(), colorT);
+
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    if (materials[i] == null) continue;
+                    ApplyColor(materials[i], currentColor);
+                }
+            }
+
+            if (scaleTarget != null)
+            {
+                float t = EvaluatePulse(scaleSpeed);
+                float scale = Mathf.Lerp(1f, scaleMultiplier, t);
+                scaleTarget.localScale = defaultScale * scale;
+            }
+            yield return null;
+        }
         StopBlinkRpc();
-        blinkCoroutine = null;
     }
     [Rpc(SendTo.ClientsAndHost)]
     public void StopBlinkRpc()
     {
-        isBlinking = false;
+        if(blinkCoroutine != null)
+        {
+            StopCoroutine(blinkCoroutine);
+            blinkCoroutine = null;
+        }
 
         if (materials != null)
         {
@@ -121,7 +124,7 @@ public class MarkerBlinkEffect : NetworkBehaviour
     }
 
     // PingPong を smootherstep で丸めて、山と谷の切り替わりをやわらかくする。
-    float EvaluatePulse(float speed)
+    static float EvaluatePulse(float speed)
     {
         float t = Mathf.PingPong(Time.time * speed, 1f);
         return t * t * t * (t * (t * 6f - 15f) + 10f);

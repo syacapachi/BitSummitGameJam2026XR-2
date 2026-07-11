@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 public interface IEventBus
 {
-    void Publish<T>(T e);
+    void Publish<T>(in T e);
     void Subscribe<T>(Action<T> action);
     void Unsubscribe<T>(Action<T> action);
 }
@@ -14,11 +14,11 @@ public interface IEventBus
 /// 入力クラス Publish<WeaponEvent()>();
 /// 受信クラス Subscribe<WeaponEvent()>();
 /// </summary>
-public class EventBus
+public class EventBus : IEventBus
 {
-    private Dictionary<Type, Delegate> events = new();
+    private readonly Dictionary<Type, Delegate> events = new();
 
-    public void Publish<T>(T e)
+    public void Publish<T>(in T e)
     {
         if (events.TryGetValue(typeof(T), out var del))
         {
