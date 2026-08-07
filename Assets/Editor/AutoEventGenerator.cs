@@ -32,7 +32,7 @@ namespace Syacapachi.util
                 TypeCache.GetTypesDerivedFrom<object>()
                 .Select(t => t.Name)
             );
-
+        
         static void GenerateAll()
         {
             bool generated = false;
@@ -46,49 +46,67 @@ namespace Syacapachi.util
 
             foreach (var type in types)
             {
-                var attr = type.GetCustomAttribute<GenerateEventAttribute>(false);
-                //<T>か調べる
-                if (!attr.GenerateClass.IsGenericType)
-                {
-                    Debug.Log($"[{nameof(AutoEventGenerator)}] {attr.GenerateClass} は GenericTypeではありません"); 
-                    continue;
-                }
-                // ■ 制約チェック
-                if (attr.RequireScriptableObject &&
-                    !typeof(ScriptableObject).IsAssignableFrom(attr.GenerateClass))
-                {
-                    Debug.LogError($"[{nameof(AutoEventGenerator)}] {attr.GenerateClass} は ScriptableObject を継承していません");
-                    continue;
-                }
-                //ジェネリック型は、NameSpace.ClassName`1 のように型が1つ入ることを書くので`以降を無視。
-                ReadOnlySpan<char> GenerateClass = attr.GenerateClass.Name.AsSpan();
-                int index = GenerateClass.IndexOf('`');
-                string GenerateClassName = GenerateClass.Slice(0,index).ToString();
+                generated |= GenerateEvent(type);
+            }
+            //生成時のみリフレッシュ
+            if (generated)
+            {
+                AssetDatabase.Refresh();
+            }
+        }
 
-                string className = string.IsNullOrEmpty(attr.ClassName)
-                    ? attr.IsArray 
-                        ? $"{type.Name}ArrayEvent" 
-                        : $"{type.Name}Event"
-                    : attr.ClassName;
+        internal static bool GenerateEvent(Type type)
+        {
+            var attr = type.GetCustomAttribute<GenerateEventAttribute>(false);
+            return GenerateEvent(type, attr);
+        }
+        internal static bool GenerateEvent(Type type, GenerateEventAttribute attr)
+        {
+            //<T>か調べる
+            if (!attr.GenerateClass.IsGenericType)
+            {
+                Debug.Log($"[{nameof(AutoEventGenerator)}] {attr.GenerateClass} は GenericTypeではありません");
+                return false;
+            }
+            // ■ 制約チェック
+            if (attr.RequireScriptableObject &&
+                !typeof(ScriptableObject).IsAssignableFrom(attr.GenerateClass))
+            {
+                Debug.LogError($"[{nameof(AutoEventGenerator)}] {attr.GenerateClass} は ScriptableObject を継承していません");
+                return false;
+            }
+            //ジェネリック型は、NameSpace.ClassName`1 のように型が1つ入ることを書くので`以降を無視。
+            ReadOnlySpan<char> GenerateClass = attr.GenerateClass.Name.AsSpan();
+            int index = GenerateClass.IndexOf('`');
+            string GenerateClassName = GenerateClass.Slice(0, index).ToString();
 
-                string folder = string.IsNullOrEmpty(attr.Folder)
-                    ? "Assets/Scripts/Generated"
-                    : attr.Folder;
+            string className = string.IsNullOrEmpty(attr.ClassName)
+                ? attr.IsArray
+                    ? $"{type.Name}ArrayEvent"
+                    : $"{type.Name}Event"
+                : attr.ClassName;
 
-                EnsureFolder(folder);
+            string folder = string.IsNullOrEmpty(attr.Folder)
+                ? "Assets/Scripts/Generated"
+                : attr.Folder;
 
-                string path = Path.Combine(folder, className + ".cs");
+            EnsureFolder(folder);
 
-                // ■ 重複チェック（強化）
-                if (File.Exists(path) || AlreadyExists(className))
-                    continue;
-                //内部クラスは、NameSpace.SampleClass+InlineClassのように+で表されるが、書くときは.なので、書き換える。
-                string inlineClassName = type.FullName.Replace('+', '.');
-                if (attr.IsArray)
-                {
-                    inlineClassName += "[]";
-                }
-                string code =
+            string path = Path.Combine(folder, className + ".cs");
+
+            // ■ 重複チェック（強化）
+            if (File.Exists(path) || AlreadyExists(className))
+            {
+                Debug.LogWarning($"[{nameof(AutoEventGenerator)}] {path} はすでに存在します。生成をスキップします。");
+                return false;
+            }
+            //内部クラスは、NameSpace.SampleClass+InlineClassのように+で表されるが、書くときは.なので、書き換える。
+            string inlineClassName = type.FullName.Replace('+', '.');
+            if (attr.IsArray)
+            {
+                inlineClassName += "[]";
+            }
+            string code =
 $@"using UnityEngine;
 [CreateAssetMenu(menuName = ""GameEvents/{className}"")]
 public class {className} : {GenerateClassName}<{inlineClassName}>
@@ -96,15 +114,9 @@ public class {className} : {GenerateClassName}<{inlineClassName}>
 }}
 ";
 
-                File.WriteAllText(path, code);
-                generated = true;
-                Debug.Log($"[{nameof(AutoEventGenerator)}]Create new Script At :{path},Name = {className} extends {GenerateClassName}");
-            }
-            //生成時のみリフレッシュ
-            if (generated)
-            {
-                AssetDatabase.Refresh();
-            }
+            File.WriteAllText(path, code);
+            Debug.Log($"[{nameof(AutoEventGenerator)}]Create new Script At :{path},Name = {className} extends {GenerateClassName}");
+            return true;
         }
 
         static bool AlreadyExists(string className)
