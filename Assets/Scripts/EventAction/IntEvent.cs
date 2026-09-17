@@ -1,4 +1,4 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "IntEvent", menuName = "GameEvents/IntEventSO", order = 1)]
-public class IntEvent : GameEventSOBase<int> { }
+[CreateAssetMenu(fileName = "intEvent", menuName = "GameEvents/Primitive/intEvent", order = 4)]
+public class IntEvent : GameEventBase<int> { }

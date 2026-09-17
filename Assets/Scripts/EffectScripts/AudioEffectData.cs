@@ -14,13 +14,26 @@ public class AudioEffectData : ScriptableObject, IEffect
     [SerializeField,Range(-3f, 3f)]
     float pitch = 1f;
     [SerializeField] bool loop;
+    private AudioEffect cached;
+    private bool initialized = false;
     public AudioClip Clip => clip;
     public bool Loop => loop;
     public float Volume => volume;
-    public float Pitch => pitch;    
+    public float Pitch => pitch;  
     // AudioEffectへの変換メソッド
     public AudioEffect ToRuntimeData()
     {
-        return new AudioEffect(this);
+        if (!initialized)
+        {
+            cached = new AudioEffect(this);
+            initialized = true;
+        }
+        return cached;
     }
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        initialized = false;
+    }
+#endif
 }

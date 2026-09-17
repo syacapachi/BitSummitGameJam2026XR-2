@@ -1,5 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 [CreateAssetMenu(menuName = "GameEvents/HPInfoEvent")]
-public class HPInfoEvent : GameEventSOBase<HPInfo>
+public class HPInfoEvent : ReadOnlyGameEventBase<HPInfo>
 {
 }

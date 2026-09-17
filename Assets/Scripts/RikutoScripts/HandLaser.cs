@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Unity.Netcode;
 
 public class HandLaser : MonoBehaviour
 {
@@ -14,11 +13,11 @@ public class HandLaser : MonoBehaviour
 
     void Update()
     {
-        UpdateLaser(leftHand, leftLaser);
-        UpdateLaser(rightHand, rightLaser);
+        UpdateLaser(leftHand, leftLaser, distance);
+        UpdateLaser(rightHand, rightLaser, distance);
     }
 
-    void UpdateLaser(Transform hand, LineRenderer laser)
+    static void UpdateLaser(Transform hand, LineRenderer laser,float distance)
     {
         if (hand == null || laser == null) return;
 

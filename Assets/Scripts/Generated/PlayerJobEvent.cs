@@ -1,5 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 [CreateAssetMenu(menuName = "GameEvents/PlayerJobEvent")]
-public class PlayerJobEvent : GameEventSOBase<PlayerJob>
+public class PlayerJobEvent : GameEventBase<PlayerJob>
 {
 }

@@ -21,6 +21,9 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
 
     protected BulletSetting BulletServerOnly => bulletSettingServerOnly;
 
+    public ulong ShooterNetworkObjectId { get; private set; }
+
+
 
     void Start()
     {
@@ -56,9 +59,14 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
             }
         }
     }
+
+    public void SetShooter(NetworkObject shooter)
+    {
+        ShooterNetworkObjectId = shooter.NetworkObjectId;
+    }
     private IEnumerator DespawnCorutine(float time)
     {
-        yield return new WaitForSeconds(time);
+        yield return WaitForSecondsCache.Get(time);
         if(NetworkObject.IsSpawned)
             NetworkObject.Despawn(true);
     }
@@ -68,6 +76,7 @@ public abstract class BulletBaseController : NetworkBehaviour, IDamageSender
         if (!IsServer) return;
 
         //Debug.Log("Hit " + other.name);
+        using var log = LogScope.Create(this);
         if (other.TryGetComponent<IDamageReciever>(out var damageReciver))
         {
             OnHitServer(damageReciver, other.gameObject);

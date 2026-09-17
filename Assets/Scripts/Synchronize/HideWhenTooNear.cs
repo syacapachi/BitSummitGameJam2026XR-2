@@ -22,6 +22,7 @@ public class HideWhenTooNear : MonoBehaviour
     //OverlapSphereNonAllocのための配列
     readonly Collider[] hits = new Collider[10];
     readonly HashSet<PlayerCollider> lastHitsColliders = new();
+    private bool isActiveSearch = false;
     private void Awake()
     {
         foreach (var col in myColliders)
@@ -32,16 +33,25 @@ public class HideWhenTooNear : MonoBehaviour
 
     private void OnEnable()
     {
+        isActiveSearch = true;
         StartCoroutine(PlayerCheckCoruinte());
+    }
+    private void OnDisable()
+    {
+        isActiveSearch = false;
     }
     //Update()でやると重いのでコルーチンで定期的にPlayerとの距離をチェックする
     IEnumerator PlayerCheckCoruinte()
     {
-        WaitForSeconds wait = new WaitForSeconds(checkInterval);
-        while (true)
+        while (isActiveSearch)
         {
             CheckPlayer();
-            yield return wait;
+            float timer = 0f;
+            while(timer < checkInterval)
+            {
+                timer += Time.deltaTime;
+                yield return null;
+            }
         }
     }
 

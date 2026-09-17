@@ -61,7 +61,6 @@ public class PlayerLayerSettings : JobSettingBase
     }
     public bool IsVisibleLayer(int targetLayer)
     {
-        Debug.Log($"Checking visibility for ownerLayer {targetLayer} in CullingMask {CullingMask.value}");
         return (CullingMask.value & (1 << targetLayer)) != 0;
     }
     public bool IsVisibleLayer(LayerMask targetLayerMask)

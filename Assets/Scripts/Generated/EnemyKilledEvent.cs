@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
 [CreateAssetMenu(menuName = "GameEvents/EnemyKilledEvent")]
-public class EnemyKilledEvent : GameEventSOBase<EnemyKilled>
+public class EnemyKilledEvent : ReadOnlyGameEventBase<EnemyKilled>
 {
 }

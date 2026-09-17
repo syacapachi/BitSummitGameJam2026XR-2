@@ -10,20 +10,20 @@ namespace Syacapachi.Data
     /// データを全員分集めたもの
     /// </summary>
     [Serializable]
-    public class RankingListWrapper
+    public sealed class RankingListWrapper
     {
         public List<ResultData> Rankings = new();
     }
 
     [Serializable]
-    [GenerateEvent(typeof(GameEventSOBase<>))]
+    [GenerateEvent(typeof(ReadOnlyGameEventBase<>))]
     public class ResultData : INetworkSerializable
     {
         //共通情報
         /// <summary>
-        /// 時間
+        /// プレイした日時
         /// </summary>
-        public string Time;
+        public string DateTime;
         /// <summary>
         /// 残りスコア
         /// </summary>
@@ -56,7 +56,7 @@ namespace Syacapachi.Data
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
-            serializer.SerializeValue(ref Time);
+            serializer.SerializeValue(ref DateTime);
             serializer.SerializeValue(ref RemainHP);
             serializer.SerializeValue(ref TotalBonusHP);
             serializer.SerializeValue(ref GameSeed);

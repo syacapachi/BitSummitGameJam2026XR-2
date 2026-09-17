@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cfef76accbacf64684887f3fee7724c, type: 3}
+  m_Name: EasyKingGhost
+  m_EditorClassIdentifier: 
+  Name: KingGhost
+  icon: {fileID: 21300000, guid: 218713e3c1e779a409597f28975c30ff, type: 3}
+  enemyJob: 2
+  HP: 400
+  scoreValue: 10000
+  canMove: 1
+  MoveSpeed: 30
+  movablePointTag: 1
+  prefab: {fileID: 6380092818085878473, guid: 106af4cebf8e6a44eaba7b8750652562, type: 3}
+  canAttack: 1
+  enemyWeapon: {fileID: 11400000, guid: c888351ad86b0b541a1f5b3c6f93969a, type: 2}

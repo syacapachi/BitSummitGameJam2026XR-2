@@ -9,10 +9,14 @@ public class TutorialUI : MonoBehaviour
     [SerializeField] GameObject root;
     [SerializeField] TextMeshProUGUI text; // ← 1つだけ
 
+    [Header("操作説明画像")]
+    [SerializeField] private GameObject operationGuideImage;
+
     [Header("Subscribe Event")]
     [SerializeField] GameStateEvent gameStateEvent;
     [SerializeField] IntEvent OnTutorialStepChanged;
     [SerializeField] VoidEvent OnTutorialStepCleared;
+    [SerializeField] LanguageEvent LanguageEvent;
 
     private Coroutine currentRoutine;
     private bool isJapanese;
@@ -29,6 +33,8 @@ public class TutorialUI : MonoBehaviour
     private void Start()
     {
         root.SetActive(false);
+        if (operationGuideImage != null)
+            operationGuideImage.SetActive(false);
     }
 
     void OnEnable()
@@ -37,6 +43,8 @@ public class TutorialUI : MonoBehaviour
         OnTutorialStepCleared.Register(OnStepCleared);
         tutorialManager.CurrentStep.OnValueChanged += OnStepChangedNetwork;
         gameStateEvent.Register(OnStateChange);
+        LanguageEvent.Register(OnLanguageChanged);
+        OnLanguageChanged(LanguageEvent.CurrentValue);
     }
 
     void OnDisable()
@@ -45,29 +53,53 @@ public class TutorialUI : MonoBehaviour
         OnTutorialStepCleared.Unregister(OnStepCleared);
         tutorialManager.CurrentStep.OnValueChanged -= OnStepChangedNetwork;
         gameStateEvent.Unregister(OnStateChange);
+        LanguageEvent.Unregister(OnLanguageChanged);
     }
 
     void OnStepChangedNetwork(TutorialStep oldStep, TutorialStep newStep)
     {
+#if UNITY_EDITOR
         Debug.Log($"[UI] StepChangedNetwork: {oldStep} → {newStep} / currentState={currentState}");
+#endif
 
         if (currentState == TutorialUIState.StepClear)
             return;
         ChangeState(TutorialUIState.StepIntro, newStep);
     }
+
     void OnStateChange(GameState state)
     {
-        if(state == GameState.Tutorial)
+        if (state == GameState.Tutorial)
         {
-            isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+            GameStateManager gameStateManager = ManagerLocator.Instance != null
+                ? ManagerLocator.Instance.GameStateManager
+                : null;
+            isJapanese = gameStateManager == null
+                || gameStateManager.CurrentLanguage == Language.Japanese;
             root.SetActive(false);
+
+            // チュートリアル開始時に操作説明画像を表示
+            if (operationGuideImage != null)
+                operationGuideImage.SetActive(true);
 
             if (tutorialManager != null)
             {
                 OnStepChangedNetwork(default, tutorialManager.CurrentStep.Value);
             }
         }
+        else
+        {
+            // チュートリアル以外では操作説明画像を非表示
+            if (operationGuideImage != null)
+                operationGuideImage.SetActive(false);
+        }
     }
+
+    private void OnLanguageChanged(Language newLanguage)
+    {
+        isJapanese = newLanguage == Language.Japanese;
+    }
+
     // =========================
     // 状態管理
     // =========================
@@ -112,7 +144,9 @@ public class TutorialUI : MonoBehaviour
     // =========================
     IEnumerator StepIntroRoutine(TutorialStep step)
     {
+#if UNITY_EDITOR
         Debug.Log($"[UI] StepIntro START: {step}");
+#endif
         root.SetActive(true);
 
         string title = "";
@@ -125,31 +159,32 @@ public class TutorialUI : MonoBehaviour
                 desc = isJapanese ? "全ての的を破壊せよ！" : "Destroy all targets!";
                 break;
 
+            /*
             case TutorialStep.Step2:
                 title = isJapanese ? "チュートリアル2" : "Tutorial 2";
-                desc = isJapanese ? "見えている敵を3回攻撃しろ！" : "Attack visible enemies 3 times!";
+                desc = isJapanese ? "見えている敵を攻撃しろ！" : "Attack visible enemies!";
+                break;
+            */
+            case TutorialStep.Step2:
+                title = isJapanese ? "チュートリアル2" : "Tutorial 2";
+                desc = isJapanese ? "マーカーを置いて敵の位置を示せ！" : "Place a marker to indicate the enemy's position!";
                 break;
 
             case TutorialStep.Step3:
                 title = isJapanese ? "チュートリアル3" : "Tutorial 3";
-                desc = isJapanese ? "マーカーを置いて敵の位置を示せ！" : "Place a marker to indicate the enemy's position!";
-                break;
-
-            case TutorialStep.Step4:
-                title = isJapanese ? "チュートリアル4" : "Tutorial 4";
                 desc = isJapanese ? "見えない敵を倒せ！" : "Defeat invisible enemies!";
                 break;
         }
 
         // --- タイトル表示（1秒） ---
         text.text = title;
-        yield return new WaitForSeconds(1f);
+        yield return WaitForSecondsCache.Get(1f);
 
         // --- 内容表示（1.5秒） ---
         text.transform.localScale = Vector3.one;
         text.text = desc;
         yield return GrowAnimation();
-        yield return new WaitForSeconds(1.5f);
+        yield return WaitForSecondsCache.Get(1.5f);
 
         ChangeState(TutorialUIState.Idle);
     }
@@ -159,11 +194,11 @@ public class TutorialUI : MonoBehaviour
     // =========================
     IEnumerator StepClearRoutine()
     {
-        yield return new WaitForSeconds(1f);
+        yield return WaitForSecondsCache.Get(1f);
         root.SetActive(true);
 
         text.text = "SUCCEED!";
-        yield return new WaitForSeconds(2f);
+        yield return WaitForSecondsCache.Get(2f);
 
         ChangeState(TutorialUIState.Idle);
     }
@@ -174,6 +209,7 @@ public class TutorialUI : MonoBehaviour
     void Hide()
     {
         root.SetActive(false);
+        // 操作説明画像はチュートリアル中は非表示にしない
     }
 
     IEnumerator PopAnimation()
@@ -185,12 +221,12 @@ public class TutorialUI : MonoBehaviour
 
         float t = 0f;
         float duration = 0.1f;
-
+        float invduration = 1f / duration;
         while (t < duration)
         {
             t += Time.deltaTime;
             text.transform.localScale =
-                Vector3.Lerp(big, normal, t / duration);
+                Vector3.Lerp(big, normal, t * invduration);
             yield return null;
         }
 
@@ -200,9 +236,10 @@ public class TutorialUI : MonoBehaviour
     IEnumerator GrowAnimation()
     {
         Vector3 start = Vector3.one;
-        Vector3 end = Vector3.one * 1.1f; // 最終サイズ
+        Vector3 end = Vector3.one * 1.1f;
 
-        float duration = 2f; // ゆっくり感はここで調整
+        float duration = 2f;
+        float invDuration = 1f / duration;
         float t = 0f;
 
         text.transform.localScale = start;
@@ -211,9 +248,7 @@ public class TutorialUI : MonoBehaviour
         {
             t += Time.deltaTime;
 
-            float progress = t / duration;
-
-            // なめらかに（イージング）
+            float progress = t * invDuration;
             float ease = Mathf.SmoothStep(0f, 1f, progress);
 
             text.transform.localScale = Vector3.Lerp(start, end, ease);

@@ -12,11 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 143f561df1144aa42b45f6186789b04a, type: 3}
   m_Name: PurpleDemonWeapon
   m_EditorClassIdentifier: 
-  fireInterval: 6
+  fireInterval: 5
   maxAmmo: 20
   reloadTime: 10
   laserDistance: 50
-  speed: 10
   bulletSetting: {fileID: 11400000, guid: 3a9b79a5c86d22348b6412ec1fdd3dff, type: 2}
-  damage: 200
-  FirstShootDelay: 6
+  FirstShootDelay: 5

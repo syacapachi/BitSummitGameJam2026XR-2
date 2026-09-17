@@ -62,6 +62,7 @@ public class Scripts : MonoBehaviour
 
     [Header("Subscribe Event")]
     [SerializeField] LocalStateEvent localStateEvent;
+    [SerializeField] LanguageEvent languageEvent;
 
     readonly Dictionary<IPAddress, DiscoveryResponseData> discoveredServers = new();
     public UnityEvent OnClientStart = new UnityEvent();
@@ -69,6 +70,8 @@ public class Scripts : MonoBehaviour
     private TextMeshProUGUI discovertext;
     private string discoverTextDefault;
     private string refreshText;
+    private Language language = Language.Japanese;
+    private bool IsJapanese => language == Language.Japanese;
 #if UNITY_EDITOR
     private void Reset()
     {
@@ -114,10 +117,16 @@ public class Scripts : MonoBehaviour
     private void OnEnable()
     {
         localStateEvent.Register(OnLocalStateChanged);
+        languageEvent.Register(OnLanguageChanged);
+        if (titleFlowManager != null)
+        {
+            language = titleFlowManager.CurrentLanguage;
+        }
     }
     private void OnDisable()
     {
         localStateEvent.Unregister(OnLocalStateChanged);
+        languageEvent.Unregister(OnLanguageChanged);
     }
     private void OnLocalStateChanged(LocalState state)
     {
@@ -126,24 +135,37 @@ public class Scripts : MonoBehaviour
     }
     private void UpdateLanguageText()
     {
-        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
-
         if (titleText != null)
-            titleText.text = isJapanese ? japaneseTitleText : englishTitleText;
+            titleText.text = IsJapanese ? japaneseTitleText : englishTitleText;
         if (descriptionText != null)
-            descriptionText.text = isJapanese ? japaneseDescriptionText : englishDescriptionText;
+            descriptionText.text = IsJapanese ? japaneseDescriptionText : englishDescriptionText;
         if (hostButtonText != null)
-            hostButtonText.text = isJapanese ? japaneseHostText : englishHostText;
+            hostButtonText.text = IsJapanese ? japaneseHostText : englishHostText;
         if (stopDiscoverButtonText != null)
-            stopDiscoverButtonText.text = isJapanese ? japaneseStopDiscoverText : englishStopDiscoverText;
+            stopDiscoverButtonText.text = IsJapanese ? japaneseStopDiscoverText : englishStopDiscoverText;
         if (exitButtonText != null)
-            exitButtonText.text = isJapanese ? japaneseExitText : englishExitText;
+            exitButtonText.text = IsJapanese ? japaneseExitText : englishExitText;
 
-        discoverTextDefault = isJapanese ? japaneseDiscoverText : englishDiscoverText;
-        refreshText = isJapanese ? japaneseRefreshText : englishRefreshText;
+        discoverTextDefault = IsJapanese ? japaneseDiscoverText : englishDiscoverText;
+        refreshText = IsJapanese ? japaneseRefreshText : englishRefreshText;
 
         if (discovertext != null)
             discovertext.text = discoverTextDefault;
+
+        foreach (Button button in connectionButtonActiveQueue)
+        {
+            if (button == null) continue;
+            TextMeshProUGUI text = button.GetComponentInChildren<TextMeshProUGUI>();
+            if (text != null)
+                text.text = IsJapanese ? japaneseRoomFoundText : englishRoomFoundText;
+        }
+    }
+
+    private void OnLanguageChanged(Language newLanguage)
+    {
+        if (language == newLanguage) return;
+        language = newLanguage;
+        UpdateLanguageText();
     }
 
     private void OnStartHost()
@@ -240,9 +262,8 @@ public class Scripts : MonoBehaviour
         }
 
         // ★ テキストを日英対応に変更
-        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
         button.GetComponentInChildren<TextMeshProUGUI>().text =
-            isJapanese ? japaneseRoomFoundText : englishRoomFoundText;
+            IsJapanese ? japaneseRoomFoundText : englishRoomFoundText;
 
         // ★ ボタンの色を赤に変更
         ColorBlock colors = button.colors;

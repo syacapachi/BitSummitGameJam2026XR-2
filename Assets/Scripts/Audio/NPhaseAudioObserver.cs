@@ -32,7 +32,7 @@ public class NPhaseAudioObserver : MonoBehaviour
         }
     }
 
-    private void OnGameFinished(PlayerResultData[] data)
+    private void OnGameFinished(in PlayerResultData[] data)
     {
         gameEffectEvent.Invoke(new GameEffect(gameClearAudioData.ToRuntimeData(), transform.position));
     }

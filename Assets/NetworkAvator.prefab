@@ -25,12 +25,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 555798635792184957}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.50000006, y: 0, z: 0}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 669341337691739909}
+  m_Father: {fileID: 8427363926263104502}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &193665783160354166
 LineRenderer:
@@ -228,8 +228,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 385
   laserDistance: 50
-  markerBackTime: 5
+  markerBackTime: 3
   markerAudioController: {fileID: 5220367599130785473}
+  hasMarkerChargeTimeServerOnly: 1
   MarkerPlaceEventServerOnly: {fileID: 11400000, guid: 94c457b2ffa429f46954335afeff3e74, type: 2}
   markerEvent: {fileID: 11400000, guid: 4f90a0dcf15ac3346a5d4dc1ef33d19a, type: 2}
 --- !u!114 &5220367599130785473
@@ -248,7 +249,6 @@ MonoBehaviour:
   markerPlacedAudioDataAll: {fileID: 11400000, guid: 128455d11d69de24ea815f876ca42afb, type: 2}
   markerPlacedFxDataAll: {fileID: 11400000, guid: a9c5974956f61fc4bbd6d79257531ddc, type: 2}
   markerPlacedClipAll: {fileID: 8300000, guid: 84de006a9c69e05469e8e7402c58543f, type: 3}
-  markerFxPrefabAll: {fileID: 976249959754663240, guid: 06d26555edf3166479e9fee5631ea60c, type: 3}
   markerPlacedVolumeAll: 1
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &1788839377707714819
@@ -283,7 +283,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 169589799608965671}
-  - {fileID: 5262314060314959795}
   - {fileID: 8427363926263104502}
   m_Father: {fileID: 1358144342988845292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -837,6 +836,7 @@ MonoBehaviour:
   audioObserver: {fileID: 5127359584954661953}
   ammoUI: {fileID: 9093821189050792039}
   playerStats: {fileID: 2716896203315894636}
+  gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   fireEvent: {fileID: 11400000, guid: 4cbe807c5f2ef6d47b2440ff35bb0265, type: 2}
   networkEvent: {fileID: 11400000, guid: fe2752e9d3c1f124ea7f49481397c5be, type: 2}
 --- !u!114 &5127359584954661953
@@ -853,6 +853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   shotAudioEffect: {fileID: 11400000, guid: 46c5218051f758f4a98a58270a86b33b, type: 2}
+  noAudioEffect: {fileID: 11400000, guid: 00a4a09cdea22d14b8affae5b76885a8, type: 2}
   reloadAudioEffect: {fileID: 11400000, guid: 451aaabc63e31524189cef59b049f733, type: 2}
   gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
 --- !u!1 &7389243056239226300
@@ -939,6 +940,7 @@ MonoBehaviour:
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 1000
   HpInfoRpcEvent: {fileID: 11400000, guid: 4dc65a2fed759be4795b3a96e4d604c8, type: 2}
+  damageIndicatorEvent: {fileID: 11400000, guid: e8648ee34105d0b45a9169f38a3cfc05, type: 2}
 --- !u!114 &2716896203315894636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1280,6 +1282,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 669341337691739909}
     m_Modifications:
+    - target: {fileID: 2191682050843363490, guid: 3dd730b3b24f3fe4b9f000ebcda6be8f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 5854976514433775905, guid: 3dd730b3b24f3fe4b9f000ebcda6be8f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1326,7 +1332,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5854976514433775905, guid: 3dd730b3b24f3fe4b9f000ebcda6be8f, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 5262314060314959795}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7686609552436316008, guid: 3dd730b3b24f3fe4b9f000ebcda6be8f, type: 3}
       insertIndex: -1
@@ -1680,12 +1689,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  ownerLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  noOwnerLayer:
-    serializedVersion: 2
-    m_Bits: 1
+  ownerLayer: 9
+  noOwnerLayer: 0
   m_Renderer:
   - {fileID: 4096393781274725136}
   - {fileID: 1590501788724576743}
@@ -1922,6 +1927,58 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2041269855817382624}
     m_Modifications:
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -180
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959945384678204575, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2584837745650053822, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4667826402908098960, guid: 3065a8288855aa34ab52d973d1a11618, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.01
@@ -8767,12 +8824,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  ownerLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  noOwnerLayer:
-    serializedVersion: 2
-    m_Bits: 1
+  ownerLayer: 9
+  noOwnerLayer: 0
   m_Renderer:
   - {fileID: 5769032792379107435}
   - {fileID: 4174919459532210812}
@@ -12712,12 +12765,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  ownerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  noOwnerLayer:
-    serializedVersion: 2
-    m_Bits: 1
+  ownerLayer: 6
+  noOwnerLayer: 0
   m_Renderer:
   - {fileID: 6810250427484395343}
   - {fileID: 6148034718219833433}
@@ -12751,8 +12800,6 @@ MonoBehaviour:
   handOffsetAngle: 90
   calibrationCount: 10
   isDebugMode: 0
-  avatarEyeHeight: 0
-  avatarScale: 0
 --- !u!4 &8862074458254340242 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ab9aaea20be34134295e2d2b50b83922, type: 3}

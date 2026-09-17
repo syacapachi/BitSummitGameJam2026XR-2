@@ -52,7 +52,7 @@ public class RoleButton : NetworkBehaviour
             startButton.SelectGhost();
         }
 
-        Debug.Log("Current Job: " + player.Job);
+        Debug.Log("ActionScope Job: " + player.Job);
     }
 
     [Rpc(SendTo.ClientsAndHost)]

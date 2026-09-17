@@ -15,7 +15,7 @@ public class GameEffectParticleManager : MonoBehaviour
         gameEffectEvent.Unregister(OnEventReceived);
     }
 
-    private void OnEventReceived(GameEffect e)
+    private void OnEventReceived(in GameEffect e)
     {
         if (e.FxEffect is not FxEffect fx) return;
 

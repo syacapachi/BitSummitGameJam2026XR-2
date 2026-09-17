@@ -5,11 +5,11 @@
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct |AttributeTargets.Enum |AttributeTargets.Interface)]
     public class GenerateEventAttribute : Attribute
     {
-        public Type GenerateClass;
-        public bool IsArray;
-        public string Folder;
-        public string ClassName;
-        public bool RequireScriptableObject;
+        public readonly Type GenerateClass;
+        public readonly bool IsArray;
+        public readonly string Folder;
+        public readonly string ClassName;
+        public readonly bool RequireScriptableObject;
 
         public GenerateEventAttribute(
             Type generateClass,

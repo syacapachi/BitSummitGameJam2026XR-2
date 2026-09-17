@@ -69,7 +69,7 @@ public class JobSettingGenerator : ScriptableObject
                 }
                 var newSetting = new PlayerLayerSettings(playerJob, attackableJob, cullingMask, colliderLayer);
                 JobToLayerMaskDic[playerJob] = newSetting;
-                Debug.LogWarning($"[{nameof(JobSettingGenerator)}]Job {playerJob} is not defined in JobSettingSO. CollidersLayer set to {colliderLayer}, CullingMask set to {cullingMask} (intersection of all defined jobs).");
+                LogScope.Warning($"[{nameof(JobSettingGenerator)}]Job {playerJob} is not defined in JobSettingSO. CollidersLayer set to {colliderLayer}, CullingMask set to {cullingMask} (intersection of all defined jobs).");
             }
         }
     }

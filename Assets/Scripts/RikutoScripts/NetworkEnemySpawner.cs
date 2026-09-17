@@ -1,53 +1,31 @@
-﻿using Syacapachi.Attribute;
-using Syacapachi.util;
+﻿using Syacapachi.util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
-
+/// <summary>
+/// 敵を出現させるクラスです。出現した敵の参照を持ち、現在出現している数や出現待ちの敵を管理します。
+/// </summary>
+/// <remarks>
+/// Responsibilities:
+/// <br /> - 敵の出現
+/// <br /> - 現在出現している敵の数
+/// <br /> - 出現待ちの敵の数
+/// <br /> - 出現中の敵を一斉に殺す
+/// <br />
+/// Requires:
+/// <br /> - 出現ルール
+///
+/// <br />
+/// Events:
+/// <br /> - OnAllEnemyDeadRpcEvent:すべての敵がプレーヤーよってに死亡したら発行
+/// </remarks>
 public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpawnable, IKillable
 {
-    /// <summary>
-    /// 待ってる敵が出てくるタイプ
-    /// </summary>
-    enum WaitSpawnType
-    {
-        /// <summary>
-        /// 敵が分けるようになったらすぐに次の敵を出す
-        /// </summary>
-        WaitForNext,
-        /// <summary>
-        /// 全ての敵が倒されるまで次の敵を出さない
-        /// </summary>
-        WaitForAllEnemyDead,
-        /// <summary>
-        /// 一部の敵が倒されるまで次の敵を出さない
-        /// </summary>
-        WaitForSomeEnemyDead
-    }
-    /// <summary>
-    /// 次のフェイズに行った時の条件
-    /// </summary>
-    enum NextPhaseType
-    {
-        /// <summary>
-        /// 待ち行列を残す
-        /// </summary>
-        Remain,
-        /// <summary>
-        /// 待ち行列を削除する
-        /// </summary>
-        Delete
-    }
     [Header("Setting")]
-    [Tooltip("スポーンポイントの数とこの数値の内、小さいほうの値が使われる")]
-    [SerializeField] int maxEnemyCapacity = 10;
-    [SerializeField] WaitSpawnType waitSpawnType = WaitSpawnType.WaitForNext;
-    [SerializeField, EnableIfEnum(nameof(waitSpawnType), true, WaitSpawnType.WaitForSomeEnemyDead)]
-    int waitSpawnRemainCount = 5;
-    [SerializeField] NextPhaseType nextPhaseType = NextPhaseType.Remain;
     [SerializeField] EnemyDataBase enemyDataBase;
     [Header("Reference")]
     [SerializeField] NetworkObjectPool networkPool;
@@ -58,26 +36,45 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     [SerializeField] VoidEvent OnAllEnemyDeadRpcEvent;
     [Header("SubScribe Event")]
     [SerializeField] EnemyKilledEvent EnemyKilled;
+    //出現可能地点と、最大出現数のうち、小さいほうが採用される。
+    int waitSpawnRemainCount = 5;
+    WaitSpawnType waitSpawnType = WaitSpawnType.WaitForNext;
+    private RandomTable table;
+    private int gameSeedServerOnly;
+    private int maxEnemyCapacity = 10;
     private int remain;
+    /// <summary>
+    /// 残ってる敵　サーバーのみ
+    /// </summary>
     public int RemainServerOnly => remain;
     private bool isSpawnFinished = false;
     private bool isAllDead = false;
+    /// <summary>
+    /// スポーンが終わったか、サーバーのみ
+    /// </summary>
     public bool IsSpawnFinishedServerOnly => isSpawnFinished;
+    /// <summary>
+    /// 全敵が死んでいるか、サーバーのみ
+    /// </summary>
     public bool IsAllDeadServerOnly => isAllDead;
-    private readonly List<IEnemy> spawnedEnemies = new();
-    private readonly Queue<SpawnEvent> waitSpawnEnemyQueue = new();
+    //出現している敵のリスト　サーバーのみ,　最大数はスポーンポイントの数
+    private readonly List<IEnemy> spawnedEnemies = new(32);
+    //出現待ちの敵のキュー　サーバーのみ,最大数はない
+    private readonly Queue<SpawnEvent> waitSpawnEnemyQueue = new(32);
+    /// <summary>
+    /// スポーンイベントのキャッシュリスト。GCを防ぐ,とりあえず、32で初期化。必要に応じて増やす。
+    /// </summary>
+    readonly List<SpawnEvent> spawnEventCacheList = new(32);
+    /// <summary>
+    /// キャッシュリスト。GCを防ぐ,とりあえず、32で初期化。必要に応じて増やす。
+    /// </summary>
+    readonly List<SpawnEvent> randomSpawnEventCacheList = new(32);
+    /// <summary>
+    /// 出現可能な場所のキャッシュリスト。GCを防ぐ,とりあえず、32で初期化。必要に応じて増やす。
+    /// </summary>
+    readonly List<CheckPointManager.IndexToTransform> spawnablePosCacheList = new(32);
     Coroutine waitForSpawn;
-    bool[] useSpawnPointArr;
-
-    void Start()
-    {
-        useSpawnPointArr = new bool[checkPointManager.SpawnPoints.Length];
-        for (int i = 0; i < useSpawnPointArr.Length; i++)
-        {
-            useSpawnPointArr[i] = false;
-        }
-        maxEnemyCapacity = Mathf.Min(maxEnemyCapacity, useSpawnPointArr.Length);
-    }
+    Coroutine spawnCorutine;
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
@@ -88,48 +85,121 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
         if (!IsServer) return;
         EnemyKilled.Unregister(EnemyKilledEventHandle);
     }
-    private void EnemyKilledEventHandle(EnemyKilled killled)
+    private void EnemyKilledEventHandle(in EnemyKilled killled)
     {
         OnEnemyKilled(killled.KilledEnemy);
     }
-    public void SpawnFromEvent(List<SpawnEvent> events, bool useRandomSpawn)
+    /// <summary>
+    /// シード値を設定します。サーバーしか使わないので、サーバーのみです。
+    /// </summary>
+    /// <param name="gameSeed">
+    /// シード値
+    /// </param>
+    public void SetRandomSeedServerOnly(int gameSeed)
+    {
+        gameSeedServerOnly = gameSeed;
+        table = new RandomTable(gameSeedServerOnly, 5000);
+        //代替案
+        //Unity.Mathematics.Random random;
+    }
+    /// <summary>
+    /// 敵を出現させるコルーチンを起動します。
+    /// サーバーかつゲームがプレイ中でないと実行されません。
+    /// </summary>
+    /// <param name="setting">
+    /// 出現設定
+    /// </param>
+    public void SpawnFromEvent(SpawnSetting setting)
     {
         if (!IsServer) return;
         if (!ManagerLocator.Instance.AllGameManager.IsGamePlaying) return;
 
-        StopAllCoroutines();
-        waitForSpawn = null;
-        if (nextPhaseType == NextPhaseType.Delete)
+        if (spawnCorutine != null)
         {
+            StopCoroutine(spawnCorutine);
+        }
+        waitSpawnType = setting.WaitSpawnType;
+        waitSpawnRemainCount = setting.WaitSpawnRemainCount;
+        if (setting.NextPhaseType == NextPhaseType.Delete)
+        {
+            waitForSpawn = null;
             waitSpawnEnemyQueue.Clear();
         }
         //remain = 0;
-        // 追加（次のフェーズでリセット）　
+        //次のフェーズでリセット　
         isAllDead = false;
         isSpawnFinished = false;
-        //とりあえず、入力されたリストをそれっぽくまぜまぜ
-        if (useRandomSpawn)
+        spawnEventCacheList.Clear();
+        spawnEventCacheList.AddRange(setting.CustomSpawnEvents);
+        //前もってランダムイベントを作成。
+        if (setting.UseRandomSpawn)
         {
-            List<SpawnEvent> randomSpawnEvent = new List<SpawnEvent>();
-            foreach (SpawnEvent e in events)
+            //キャッシュ
+            var randomSetting = setting.RandomSpawnSettings;
+            //初期化
+            randomSetting.ResetSpawnCount();
+            //割り算は計算コストがあるので、先に計算。
+            float invPhaseTime = 1f / setting.PhaseTime;
+            float time = randomSetting.GetSpawnDuration(0f);
+            //初期値があると、軽い
+            randomSpawnEventCacheList.Clear();
+            spawnablePosCacheList.Clear();
+
+            using var log = LogScope.Create(this);
+            while (time < setting.PhaseTime)
             {
-                int point = Random.Range(0, checkPointManager.SpawnPoints.Length);
-                float time = Random.Range(0, e.SpawnTime);
-                SpawnEvent randomEvent = new SpawnEvent(e.EnemyType, point, time);
-                randomSpawnEvent.Add(randomEvent);
+                float progress = Mathf.Clamp01(time * invPhaseTime);
+
+                EnemySpawnSetting spawnEnemy =
+                    randomSetting.ChooseEnemyByWeight(
+                        progress,
+                        table.NextFloat());
+                if (spawnEnemy != null)
+                {
+                    checkPointManager.GetSpawnPointByTag(spawnEnemy.SpawnPointTag, spawnablePosCacheList);
+                    SpawnEvent spawnEvent = new SpawnEvent(
+                            spawnEnemy.TargetEnemy,
+                            spawnablePosCacheList[
+                                table.RangeInt(0, spawnablePosCacheList.Count)
+                            ].id,
+                            time);
+                    randomSpawnEventCacheList.Add(spawnEvent);
+
+                    LogScope.Log($"Create Random Spaen {spawnEvent}, Tag {spawnEnemy.SpawnPointTag}");
+                }
+                else
+                {
+                    LogScope.Log("EnemySpawnSetting is null");
+                }
+                float duration = randomSetting.GetSpawnDuration(progress);
+
+                //無限ループ防止
+                if (duration <= 0f)
+                {
+                    break;
+                }
+
+                time += duration;
             }
-            events.AddRange(randomSpawnEvent);
+            spawnEventCacheList.AddRange(randomSpawnEventCacheList);
         }
-        StartCoroutine(SpawnRoutine(events));
+        //最大を更新
+        maxEnemyCapacity = Math.Min(setting.MaxSpawn, checkPointManager.SpawnPoints.Length);
+        spawnCorutine = StartCoroutine(SpawnRoutine(spawnEventCacheList));
     }
-    public void StopSpaw()
+    public void StopSpawn()
     {
         if (!IsServer) return;
         StopAllCoroutines();
         waitForSpawn = null;
     }
-    //IListにすると、配列(読み取り専用)でも良くなる。
-    IEnumerator SpawnRoutine(IList<SpawnEvent> spawnEvents)
+    /// <summary>
+    /// 敵を出現させるコルーチンです。spawnEventsの内容に従って敵を出現させます。
+    /// </summary>
+    /// <param name="spawnEvents">出現させる敵のイベントリストか配列</param>
+    /// <returns></returns>
+    /// <remarks>IReadOnlyListにすると、配列でも良くなる。</remarks>
+    IEnumerator SpawnRoutine(IReadOnlyList<SpawnEvent> spawnEvents)
     {
         float timer = 0f;
 
@@ -140,7 +210,6 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
 
         int index = 0;
         isSpawnFinished = false; // 念のためリセット
-
 
         while (spawnQueue.Count > 0)
         {
@@ -166,17 +235,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
                 }
                 else
                 {
-                    int spawnIndex = e.SpawnPointIndex;
-                    if (useSpawnPointArr[spawnIndex])
-                    {
-                        for (int i = 0; i < useSpawnPointArr.Length; i++)
-                        {
-                            if (useSpawnPointArr[i]) continue;
-                            spawnIndex = i;
-                            break;
-                        }
-                    }
-                    if (SpawnEnemy(e.EnemyType, spawnIndex))
+                    if (SpawnEnemy(e.EnemyType, e.SpawnPointIndex))
                     {
                         remain++;
                     }
@@ -257,12 +316,16 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
 
     bool SpawnEnemy(EnemySO enemyData, int spawnIndex)
     {
+        if (checkPointManager.IsUsingPoint(spawnIndex))
+        {
+            spawnIndex = checkPointManager.GetEnablePoint();
+        }
         if (spawnIndex < 0 || spawnIndex >= checkPointManager.SpawnPoints.Length)
         {
-            Debug.LogWarning("Invalid spawn index!", gameObject);
+            LogScope.Warning("Invalid spawn index!");
             return false;
         }
-        useSpawnPointArr[spawnIndex] = true;
+        checkPointManager.TrySetUsePoint(spawnIndex, true);
         var point = checkPointManager.SpawnPoints[spawnIndex].transform;
 
         Vector3 dir = protectArea.position - point.position;
@@ -277,8 +340,6 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
         enemy.InjectSetting(enemyDataBase.GetIdFromEnemyData(enemyData), spawnIndex);
         spawnedEnemies.Add(enemy);
         networkObject.Spawn();
-        //int id = enemyDataBase.GetIdFromEnemyData(enemyData);
-        //enemy.InitEnemyRpc(id);
         return true;
     }
 
@@ -287,14 +348,14 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
         if (!IsServer) return;
         if (gameStateManager.CurrentGameState != GameState.Playing) return;
         remain--;
-        Debug.Log($"[OnEnemyKilled] remainServerOnly:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}", gameObject);
+        LogScope.Log($"[OnEnemyKilledServerEvent] remainServerOnly:{remain} spawnFinished:{isSpawnFinished} waitQueue:{waitSpawnEnemyQueue.Count}");
         if (remain == 0 && isSpawnFinished && waitSpawnEnemyQueue.Count == 0)
         {
             isAllDead = true;
             InvokeAllEnemyDeadRpc();
         }
         spawnedEnemies.Remove(enemy);
-        useSpawnPointArr[enemy.SpawnPointIndexServerOnly] = false;
+        checkPointManager.TrySetUsePoint(enemy.CurrentPointIndexServerOnly, false);
     }
     [Rpc(SendTo.ClientsAndHost)]
     private void InvokeAllEnemyDeadRpc()
@@ -309,6 +370,7 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
         {
             if (enemy != null && enemy.NetworkObject.IsSpawned)
             {
+                checkPointManager.TrySetUsePoint(enemy.CurrentPointIndexServerOnly, false);
                 enemy.NetworkObject.Despawn(true);
             }
         }
@@ -329,8 +391,45 @@ public class NetworkEnemySpawner : NetworkBehaviour, IEnemyBrokenReciever, ISpaw
     }
 }
 //[GenerateEvent(typeof(GameEventSOBase<>))]
-public class EnemyKilled 
+public readonly struct EnemyKilled 
 {
-    public IEnemy KilledEnemy;
-    public Vector3 positon;
+    public readonly IEnemy KilledEnemy;
+    public readonly Vector3 Positon;
+    public EnemyKilled(Vector3 pos, IEnemy killedEnemy)
+    {
+        this.Positon = pos;
+        this.KilledEnemy = killedEnemy;
+    }
+}
+/// <summary>
+/// 待ってる敵が出てくるタイプ
+/// </summary>
+public enum WaitSpawnType
+{
+    /// <summary>
+    /// 敵が分けるようになったらすぐに次の敵を出す
+    /// </summary>
+    WaitForNext,
+    /// <summary>
+    /// 全ての敵が倒されるまで次の敵を出さない
+    /// </summary>
+    WaitForAllEnemyDead,
+    /// <summary>
+    /// 一部の敵が倒されるまで次の敵を出さない
+    /// </summary>
+    WaitForSomeEnemyDead
+}
+/// <summary>
+/// 次のフェイズに行った時の待ち敵行列の条件
+/// </summary>
+public enum NextPhaseType
+{
+    /// <summary>
+    /// 待ち行列を残す
+    /// </summary>
+    Remain,
+    /// <summary>
+    /// 待ち行列を削除する
+    /// </summary>
+    Delete
 }

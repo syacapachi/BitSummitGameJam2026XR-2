@@ -8,6 +8,7 @@ public class DifficultySetting : ScriptableObject
     [SerializeField] PhaseSO[] phaseSO;
 
     public Difficulty Difficulty => difficulty;
+    
     public int PlayerHP => playerHP;
     public PhaseSO[] Phases => phaseSO;
 

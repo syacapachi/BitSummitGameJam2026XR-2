@@ -105,6 +105,7 @@ public class AvatarSynchronize : NetworkBehaviour
         float eyeHeight = 0;
         for (int i = 0; i < calibrationCount; i++)
         {
+            //カメラのローカル位置が、カメラの現実の位置。
             eyeHeight += xrOrigin.Camera.transform.localPosition.y;
             yield return null;
         }

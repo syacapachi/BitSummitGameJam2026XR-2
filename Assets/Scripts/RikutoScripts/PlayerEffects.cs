@@ -5,12 +5,17 @@ public class PlayerEffects : MonoBehaviour
 {
     [SerializeField] private GameObject[] damageBorders;
     [SerializeField] private float flashTime = 0.3f;
+    [SerializeField] AudioEffectData damageEffect;
+    [Header("Publish Eevnt")]
+    [SerializeField] GameEffectEvent effectEvent;
     [Header("Subscribe event")]
     [SerializeField] VoidEvent OnbulletComeRpcEvent;
     private CanvasGroup[] borderGroups;
+    private float invFlashTime;
 
     private void Awake()
     {
+        invFlashTime = 1f / flashTime;
         borderGroups = new CanvasGroup[damageBorders.Length];
         for (int i = 0; i < damageBorders.Length; i++)
         {
@@ -34,7 +39,8 @@ public class PlayerEffects : MonoBehaviour
 
     private void OnBulletComeChanged()
     {
-         StartCoroutine(DamageFlash());        
+         StartCoroutine(DamageFlash());   
+         effectEvent.Invoke(new GameEffect(damageEffect.ToRuntimeData(),transform.position));
     }
 
     private IEnumerator DamageFlash()
@@ -46,7 +52,7 @@ public class PlayerEffects : MonoBehaviour
         while (t < flashTime)
         {
             t += Time.deltaTime;
-            float alpha = Mathf.Sin((t / flashTime) * Mathf.PI);
+            float alpha = Mathf.Sin((t * invFlashTime) * Mathf.PI);
             for (int i = 0; i < borderGroups.Length; i++)
                 borderGroups[i].alpha = alpha;
 

@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
-using UnityEngine.UI;
+﻿using TMPro;
 using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class WorldTutorialManager : NetworkBehaviour
 {
@@ -31,6 +30,11 @@ public class WorldTutorialManager : NetworkBehaviour
     [SerializeField] LocalizeSimpleText nextButtonText;
     [SerializeField] LocalizeSimpleText backButtonText;
     [SerializeField] LocalizeSimpleText startButtonText;
+
+    [Header("操作説明画像")]
+    [SerializeField] private GameObject operationGuideImage;
+    [Header("Subscribe Event")]
+    [SerializeField] LanguageEvent languageEvent;
 
     private string[] japaneseTitles = {
         "チュートリアル1",
@@ -75,9 +79,10 @@ public class WorldTutorialManager : NetworkBehaviour
     private int totalPages = 4;
     private int currentPage;
     private int maxPage = 0;
+    private Language currentLanguage;
+    private bool IsJapanese => currentLanguage == Language.Japanese;
 
     /*
-
     void Start()
     {
         ShowPage(currentIndex);
@@ -86,14 +91,30 @@ public class WorldTutorialManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        currentLanguage = languageEvent.CurrentValue;
+        if (operationGuideImage != null)
+        {
+            operationGuideImage.SetActive(true);
+        }
+
         if (tutorialManager != null)
         {
             tutorialManager.CurrentStep.OnValueChanged += OnStepChanged;
-
-            // 初期表示
             OnStepChanged(default, tutorialManager.CurrentStep.Value);
         }
     }
+
+    private void OnEnable()
+    {
+        currentLanguage = languageEvent.CurrentValue;
+        languageEvent.Register(OnLanguageChanged);
+    }
+
+    private void OnDisable()
+    {
+        languageEvent.Unregister(OnLanguageChanged);
+    }
+
 
     void OnStepChanged(TutorialStep oldStep, TutorialStep newStep)
     {
@@ -105,23 +126,33 @@ public class WorldTutorialManager : NetworkBehaviour
 
         maxPage = Mathf.Max(maxPage, index);
         currentPage = index;
-        ShowPage(index);
+        ShowPage(index, IsJapanese);
 
         // 最後のステップならボタンを「開始」に
         if (nextButtonTextGUI != null)
         {
-            bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
-
             nextButtonTextGUI.text = newStep == TutorialStep.Step4
-                ? startButtonText.GetText(isJapanese)
-                : nextButtonText.GetText(isJapanese);
+                ? startButtonText.GetText(IsJapanese)
+                : nextButtonText.GetText(IsJapanese);
         }
     }
-    
-
-    void ShowPage(int index)
+    void OnLanguageChanged(Language language)
     {
-        bool isJapanese = PlayerPrefs.GetString("Language", "JP") == "JP";
+        if (currentLanguage == language) return;
+        currentLanguage = language;
+        ShowPage(currentPage, IsJapanese);
+
+        // 最後のステップならボタンを「開始」に
+        if (nextButtonTextGUI != null)
+        {
+            nextButtonTextGUI.text = currentPage == (int)TutorialStep.Step4
+                ? startButtonText.GetText(IsJapanese)
+                : nextButtonText.GetText(IsJapanese);
+        }
+    }
+
+    void ShowPage(int index, bool isJapanese)
+    {
 
         TitileAndText[] titileAndText = tutorialTexts.Get(isJapanese);
         if (index < 0 || index >= titileAndText.Length)
@@ -144,7 +175,7 @@ public class WorldTutorialManager : NetworkBehaviour
         if (backButton != null)
             backButton.gameObject.SetActive(index > 0);
 
-        if(nextButton != null)
+        if (nextButton != null)
         {
             nextButton.gameObject.SetActive(index < maxPage);
         }
@@ -154,15 +185,20 @@ public class WorldTutorialManager : NetworkBehaviour
     {
         if (currentPage == totalPages - 1)
         {
+            // チュートリアル終了時に操作説明画像を非表示
+            if (operationGuideImage != null)
+                operationGuideImage.SetActive(false);
+
             tutorialManager.NextStepRequretRpc();
             return;
         }
-        if(currentPage < totalPages -1)
+        if (currentPage < totalPages - 1)
         {
             currentPage++;
-            ShowPage(currentPage);
+            ShowPage(currentPage, IsJapanese);
         }
     }
+
     /*
     public void OnNextButtonClicked()
     {
@@ -206,7 +242,7 @@ public class WorldTutorialManager : NetworkBehaviour
         if (currentPage > 0)
         {
             currentPage--;
-            ShowPage(currentPage);
+            ShowPage(currentPage, IsJapanese);
         }
     }
 }

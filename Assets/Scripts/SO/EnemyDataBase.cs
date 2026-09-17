@@ -25,17 +25,17 @@ public class EnemyDataBase : ScriptableObject
     {
         get
         {
-            return enemyDataArray.ToList();
+            return enemyDataArray;
         }
     }
     public int GetIdFromEnemyData(EnemySO data)
     {
-        if (!EnemyDataToIdDict.ContainsKey(data))
+        if (!EnemyDataToIdDict.TryGetValue(data,out int index))
         {
             Debug.LogError($"EnemyData {data.name} is not found in EnemyDataBase.");
             return -1;
         }
-        return EnemyDataToIdDict[data];
+        return index;
     }
     public int Length => enemyDataArray.Length;
     public EnemySO GetEnemyDataFromId(int id)

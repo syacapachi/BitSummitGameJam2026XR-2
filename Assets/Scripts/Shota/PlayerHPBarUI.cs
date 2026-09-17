@@ -18,11 +18,11 @@ public class PlayerHPBarUI : MonoBehaviour
         HpInfoEvent.Unregister(UpdateHPBar);
     }
 
-    private void UpdateHPBar(HPInfo info)
+    private void UpdateHPBar(in HPInfo info)
     {
         if (hpBarImage != null)
         {
-            hpBarImage.fillAmount = Mathf.Max(0.01f, Mathf.Clamp01(info.CurrentHP / info.MaxHP));
+            hpBarImage.fillAmount = Mathf.Max(0.01f, Mathf.Clamp01(info.CurrentHP * info.InvMapHP));
         }
 
         // テキスト更新

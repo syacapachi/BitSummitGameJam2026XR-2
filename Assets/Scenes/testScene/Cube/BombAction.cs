@@ -83,9 +83,10 @@ public class BombAction : NetworkBehaviour,IDamageSender
     private IEnumerator ExplodeCoroutine()
     {
         isExploded.Value = true;
-        for(float explosionTimer = 0f; explosionTimer < explosionTime; explosionTimer+=Time.deltaTime)
+        float invExplosionTime = 1f / explosionTime;
+        for (float explosionTimer = 0f; explosionTimer < explosionTime; explosionTimer+=Time.deltaTime)
         {
-            explosionRadiusNetwork.Value = Mathf.Lerp(0f, explosionRadiusValue, explosionTimer / explosionTime);
+            explosionRadiusNetwork.Value = Mathf.Lerp(0f, explosionRadiusValue, explosionTimer * invExplosionTime);
             yield return null;
         }
         explosionCollider.enabled = false;

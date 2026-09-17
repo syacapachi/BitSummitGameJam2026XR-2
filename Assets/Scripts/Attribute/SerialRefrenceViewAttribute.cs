@@ -13,7 +13,7 @@
     public class SerializeReferenceViewAttribute : PropertyAttribute
     {
         // 特定の基底クラスに限定したい場合などのために
-        public Type BaseType { get; private set; }
+        public readonly Type BaseType;
 
         public SerializeReferenceViewAttribute(Type baseType = null)
         {

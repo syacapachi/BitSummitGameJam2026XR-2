@@ -13,6 +13,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
     );
     [Header("Publish Event")]
     [SerializeField] HPInfoEvent HpInfoRpcEvent;
+    [SerializeField] DamageIndicatorEvent damageIndicatorEvent;
 
     public GameObject GameObject => this.gameObject;
     public float CurrentHealth => currentHP.Value;
@@ -25,22 +26,27 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
         {
             currentHP.Value = maxHP;
         }
-        Debug.Log($"PlayerHealth spawned. owner:{OwnerClientId}, NetworkId:{NetworkObjectId}",gameObject);
     }
 
     public override void OnNetworkDespawn()
     {
         currentHP.OnValueChanged -= OnServerHPChanged;
-        Debug.Log($"PlayerHealth despawned. owner:{OwnerClientId}, NetworkId:{NetworkObjectId}",gameObject);
     }
 
     public void TakeDamage(IDamageSender sender, float damage)
     {
+        LogScope.LogWithCaller("TakeDamage");
         if (!IsServer) return;
+
+        if (sender is BulletBaseController bullet)
+        {
+            ShowDamageIndicatorRpc(
+                bullet.ShooterNetworkObjectId
+            );
+        }
 
         if (currentHP.Value <= 0)
         {
-            Debug.Log($"[PlayerHealth] Player {OwnerClientId} is already dead.",gameObject);
             return;
         }
 
@@ -48,36 +54,49 @@ public class PlayerHealth : NetworkBehaviour, IDamageReciever
 
         if (currentHP.Value <= 0)
         {
-            Debug.Log($"[PlayerHealth] Player {OwnerClientId} has died!",gameObject);
             OnPlayerDead();
         }
     }
+
+    [Rpc(SendTo.Owner)]
+    private void ShowDamageIndicatorRpc(ulong enemyNetworkId)
+    {
+        using LogScope log = LogScope.Create(this);
+        LogScope.Log($"RPC {enemyNetworkId}");
+        damageIndicatorEvent.Invoke(
+            new DamageIndicatorInfo(
+                enemyNetworkId
+            )
+        );
+        LogScope.Log("Invoke Event");
+    }
+
     private void OnServerHPChanged(float oldHP, float newHP)
     {
-        Debug.Log($"Player {OwnerClientId} HP changed from {oldHP} to {newHP}",gameObject);
-
+        using var log = LogScope.Create(this);
         // ★追加: UIにHP変化を通知
         HpInfoRpcEvent.Invoke(new HPInfo(newHP, maxHP));
 
         if (newHP <= 0)
         {
-            Debug.Log($"Player {OwnerClientId} has died.",gameObject);
+            LogScope.Log($"Player {OwnerClientId} has died.");
         }
     }
     private void OnPlayerDead()
     {
-        Debug.Log($"[" +
-            $"[{nameof(PlayerHealth)}] OnPlayerDead called for Player {OwnerClientId}",gameObject);
+        LogScope.Log($"[{nameof(PlayerHealth)}] OnPlayerDead called for Player {OwnerClientId}");
     }
 }
 public readonly struct HPInfo
 {
     public readonly float CurrentHP;
     public readonly float MaxHP;
+    public readonly float InvMapHP;
     public HPInfo(float currentHp, float maxHp)
     {
         this.CurrentHP = currentHp;
         this.MaxHP = maxHp;
+        InvMapHP = 1f / maxHp;
     }
     public readonly override string ToString()
     {

@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5383516842637931275
 Transform:
@@ -45,10 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  maxEnemyCapacity: 10
-  waitSpawnType: 0
-  waitSpawnRemainCount: 5
-  nextPhaseType: 0
   enemyDataBase: {fileID: 11400000, guid: f70a6f2100b97a04eaeb8c221544cd10, type: 2}
   networkPool: {fileID: 4084111059737820316}
   checkPointManager: {fileID: 4441792715120167192}
@@ -71,7 +67,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6995849510927855908
 Transform:
@@ -118,6 +114,35 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  tagToTransfroms:
+  - spawnPointTag: 0
+    spawnPointmarkers: []
+  - spawnPointTag: 2
+    spawnPointmarkers:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - spawnPointTag: 1
+    spawnPointmarkers:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - spawnPointTag: 4
+    spawnPointmarkers:
+    - {fileID: 0}
+  - spawnPointTag: 8
+    spawnPointmarkers:
+    - {fileID: 0}
 --- !u!1 &1615890855193563394
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +159,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4908882465109089120
 Transform:
@@ -225,7 +250,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &398813393620619208
 Transform:
@@ -292,7 +317,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8026582122581293765
 Transform:
@@ -372,6 +397,8 @@ MonoBehaviour:
     PrewarmCount: 10
   - Prefab: {fileID: 976249959754663240, guid: 06d26555edf3166479e9fee5631ea60c, type: 3}
     PrewarmCount: 5
+  - Prefab: {fileID: 5519199833341115113, guid: 27f315618eeacae4dadfed18dfe86a71, type: 3}
+    PrewarmCount: 20
 --- !u!1 &2827320418798051780
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +414,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1167583823639659102
 Transform:
@@ -432,7 +459,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4411501771318302359
 Transform:
@@ -482,7 +509,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2267953542621295095
 Transform:
@@ -527,6 +554,8 @@ MonoBehaviour:
     PrewarmCount: 10
   - Prefab: {fileID: 4022916156752048900, guid: 18254f0b07ec8924d89429cf843b0c78, type: 3}
     PrewarmCount: 10
+  - Prefab: {fileID: 1539575790087713676, guid: eeb7f12b370ca5342a164ccc80613edf, type: 3}
+    PrewarmCount: 10
 --- !u!1 &5799241829086758109
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,7 +571,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4322182251488153399
 Transform:
@@ -587,7 +616,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8007406186421599437
 Transform:
@@ -619,20 +648,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  useCustomSeed: 0
+  gameSeed: 12345
   difficulty:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 1
+    m_InternalValue: 3
   gameMode: 1
   protectArea: {fileID: 0}
   hpManager: {fileID: 7622921992766210704}
-  tutorialLight: {fileID: 0}
   phaseManager: {fileID: 1871165705981970814}
   PlayerManager: {fileID: 8012348177458703508}
   tutorialManager: {fileID: 8343285116251111980}
-  resultDataCreater: {fileID: 5193210326732251977}
+  resultDataCreator: {fileID: 5193210326732251977}
   gameStateManager: {fileID: 1142131513230880555}
+  difficultyDropDown: {fileID: 0}
   difficultyRpcDataBase: {fileID: 11400000, guid: 7ed52b00a6e4a5f4c84d48644b5254bc, type: 2}
   OnbulletComeRpcEvent: {fileID: 11400000, guid: 8f104428b5faf834990193a4c9a66d1c, type: 2}
   gunEnableRpcEvent: {fileID: 11400000, guid: c8ec81be65a3f1b459a48651324647bc, type: 2}
@@ -655,7 +686,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1495769789674046969
 Transform:
@@ -709,7 +740,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5418814566632101354
 Transform:
@@ -747,22 +778,16 @@ MonoBehaviour:
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
   spawner: {fileID: 250586993705616725}
-  step1Enemies:
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
-  - {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  step1Enemy: {fileID: 11400000, guid: 83ddf619799017d41aaf78addf636515, type: 2}
+  step1EnemySpawnCount: 7
   step2Enemies:
   - {fileID: 11400000, guid: e46a108a5137e2840b992565f1659bcf, type: 2}
   - {fileID: 11400000, guid: f594e91d59269df42abf37e34d18e45f, type: 2}
   attackBlockedEvent: {fileID: 11400000, guid: 29e4db13b8933e44b8dfd9df362fd1d2, type: 2}
+  markerPlaceServerEvent: {fileID: 11400000, guid: 94c457b2ffa429f46954335afeff3e74, type: 2}
+  gameStateEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   OnTutorialStepCleared: {fileID: 11400000, guid: 64f3ed58da1abd54bb4e2c3464685d38, type: 2}
   OnTutorialStepChanged: {fileID: 11400000, guid: 4cdbcd5da1b58d048a39f9a786419768, type: 2}
-  markerPlaceServerEvent: {fileID: 11400000, guid: 94c457b2ffa429f46954335afeff3e74, type: 2}
 --- !u!1 &7385684458859226799
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,7 +803,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6839344822153498842
 Transform:
@@ -818,7 +843,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
   networkPool: {fileID: 4084111059737820316}
 --- !u!1 &7509225818068572671
 GameObject:
@@ -835,7 +859,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4746944526076724239
 Transform:
@@ -865,19 +889,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameStateRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
-  logStateChange: 0
-  moonQuad: {fileID: 0}
   roomLights:
   - {fileID: 0}
   clearLightIntensity: 4
-  useCameraSolidColor: 0
-  targetCameras:
-  - {fileID: 0}
-  clearBackgroundColor: {r: 0.7, g: 0.8, b: 1, a: 1}
-  forceSolidColorClearFlags: 1
-  useRenderSettingsSkybox: 1
-  clearSkyboxExposure: 1.3
-  clearSkyboxTint: {r: 0.9559748, g: 0.93653965, b: 0.71848416, a: 1}
+  lightFadeDuration: 2
+  gameEffectEvent: {fileID: 11400000, guid: a24d13e02a018154383aa1fdc41adaf6, type: 2}
+  confettiEffectData: {fileID: 11400000, guid: 722a39bee118bee4d8c73be260f0a92a, type: 2}
+  confettiPosition: {x: 0, y: 3, z: 0}
+  confettiInterval: 0.8
+  confettiCount: 3
 --- !u!1 &7513993489619834028
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,7 +913,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8180314942974675238
 Transform:
@@ -946,11 +966,11 @@ MonoBehaviour:
   - action: {fileID: -3800612907701892205, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: 4f90a0dcf15ac3346a5d4dc1ef33d19a, type: 2}
     setting: 1
-  - action: {fileID: -2099379676528639254, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
-    gameEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
-    setting: 1
   - action: {fileID: 1218294735510755974, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: 3315b5820dc664c4f8ed6666777ebc48, type: 2}
+    setting: 1
+  - action: {fileID: -2099379676528639254, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
+    gameEvent: {fileID: 11400000, guid: cae033b5e0b8ecb4f9ad8fd3ae35862a, type: 2}
     setting: 1
   - action: {fileID: 5746621223023547563, guid: 8bb32f40b5409a94ca84546bf8883bf5, type: 3}
     gameEvent: {fileID: 11400000, guid: f9e23ca27358a3f419041719b45bce40, type: 2}
@@ -970,7 +990,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7953140068688855862
 Transform:
@@ -1017,7 +1037,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1689715881194066189
 Transform:
@@ -1052,10 +1072,8 @@ MonoBehaviour:
   useDailyFile: 0
   DaylyFileName: DailyRanking
   resultEvent: {fileID: 11400000, guid: f938f5fd3bfa6e949a8637e657b4cb88, type: 2}
-  rankingList:
-    Rankings: []
   CurrentResult:
-    Time: 
+    DateTime: 
     RemainHP: 0
     TotalBonusHP: 0
     GameSeed: 0
@@ -1078,7 +1096,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7939887515387561348
 Transform:
@@ -1110,7 +1128,10 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   gameStartMode: 1
   useTutorial: 1
-  gameState:
+  useLanguableSelect: 0
+  showWorldView: 0
+  currentLanguage: 0
+  gameStateServerWrite:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
@@ -1118,8 +1139,15 @@ MonoBehaviour:
   languageCanvas: {fileID: 0}
   connectCanvas: {fileID: 0}
   worldViewCanvas: {fileID: 0}
+  worldViewCollider: {fileID: 0}
+  tutorialUI: {fileID: 0}
+  difficultyCanvas: {fileID: 0}
+  resetUI: {fileID: 0}
   OnGameStateChangeRpcEvent: {fileID: 11400000, guid: 601bade2f0a246549a26ce50230bac9d, type: 2}
   localStateChangeLocalEvent: {fileID: 11400000, guid: 8d864b8e0651a9e4398e513a726a87fc, type: 2}
+  difficultyEvent: {fileID: 11400000, guid: e641f2abcabb4f8449947c45a980c10f, type: 2}
+  langageEvent: {fileID: 11400000, guid: 4679bf21cf536b540b9507d956586d16, type: 2}
+  gameResetEvent: {fileID: 11400000, guid: 5a45583252cec6846be77ec38c4fa246, type: 2}
 --- !u!1 &8974977137299023905
 GameObject:
   m_ObjectHideFlags: 0
@@ -1137,7 +1165,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4219804600817405800
 Transform:

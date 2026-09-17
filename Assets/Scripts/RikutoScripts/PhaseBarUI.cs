@@ -1,4 +1,203 @@
 ﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PhaseBarUI : MonoBehaviour
+{
+    [Header("Depend On")]
+    [SerializeField] DifficultyDataBase rpcDataBase;
+    [SerializeField] PhaseManager phaseManager;
+
+    [Header("UI")]
+    [SerializeField] Canvas timerCanvas;
+    [SerializeField] GameObject phaseBarPrefab;
+    [SerializeField] GameObject separatorPrefab;
+    [SerializeField] Transform container;
+
+    [Header("Bar Size")]
+    [SerializeField] float fixedBarWidth = 300f;
+
+    [Header("Subscribe Event")]
+    [SerializeField] GameStateEvent gameStateEvent;
+    [SerializeField] IntEvent onPhaseChangeRpcEvent;
+
+    private Image currentBar;
+    private Image currentSeparator;
+
+    private Coroutine progressCoroutine;
+
+    private Color defaultColor;
+
+    private GameState currentState;
+
+    // =========================================================
+    // Unity Event
+    // =========================================================
+
+    private void OnEnable()
+    {
+        gameStateEvent.Register(OnStateChange);
+        onPhaseChangeRpcEvent.Register(OnPhaseChanged);
+    }
+
+    private void OnDisable()
+    {
+        gameStateEvent.Unregister(OnStateChange);
+        onPhaseChangeRpcEvent.Unregister(OnPhaseChanged);
+    }
+
+    // =========================================================
+    // GameState
+    // =========================================================
+
+    private void OnStateChange(GameState state)
+    {
+        currentState = state;
+
+        switch (state)
+        {
+            case GameState.Playing:
+                timerCanvas.enabled = true;
+                break;
+
+            case GameState.GameOver:
+            case GameState.GameClear:
+            case GameState.Initializing:
+            case GameState.Home:
+
+                timerCanvas.enabled = false;
+
+                ClearCurrentBar();
+
+                break;
+        }
+    }
+
+    // =========================================================
+    // Phase Change
+    // =========================================================
+
+    private void OnPhaseChanged(int phaseIndex)
+    {
+        if (phaseIndex < 0)
+            return;
+
+        CreatePhaseBar(phaseIndex);
+
+        if (progressCoroutine != null)
+        {
+            StopCoroutine(progressCoroutine);
+            //残ってる途中にしない
+            ClearCurrentBar();
+        }
+
+        progressCoroutine = StartCoroutine(PhaseProgress());
+    }
+
+    // =========================================================
+    // Create
+    // =========================================================
+
+    private void CreatePhaseBar(int phaseIndex)
+    {
+        ClearCurrentBar();
+
+        //PhaseSO phase =
+        //    rpcDataBase.CurrentSetting.Phases[phaseIndex];
+
+        // =====================================
+        // Separator
+        // =====================================
+
+        if (currentSeparator == null && separatorPrefab != null)
+        {
+            GameObject sepObj =
+                Instantiate(separatorPrefab, container);
+
+            currentSeparator =
+                sepObj.GetComponent<Image>();
+        }
+
+        // =====================================
+        // Bar
+        // =====================================
+
+        if(currentBar == null && phaseBarPrefab != null)
+        {
+            GameObject barObj =
+                Instantiate(phaseBarPrefab, container);
+
+            currentBar =
+                barObj.GetComponent<Image>();
+        }
+        
+        defaultColor = currentBar.color;
+
+        // =====================================
+        // Width
+        // =====================================
+
+        RectTransform rt =
+            currentBar.rectTransform;
+
+        rt.sizeDelta = new Vector2(
+            fixedBarWidth,
+            rt.sizeDelta.y
+        );
+
+        currentBar.fillAmount = 1f;
+        currentBar.color = Color.yellow;
+    }
+
+    // =========================================================
+    // Destroy
+    // =========================================================
+
+    private void ClearCurrentBar()
+    {
+        if (currentBar != null)
+        {
+            currentBar.fillAmount = 0f;
+        }
+
+    }
+
+    // =========================================================
+    // Progress
+    // =========================================================
+
+    private IEnumerator PhaseProgress()
+    {
+        while (currentState == GameState.Playing)
+        {
+            if (currentBar == null)
+            {
+                yield break;
+            }
+
+            float progress =
+                phaseManager.phaseProgress.Value;
+
+            currentBar.fillAmount = progress;
+
+            // 現在フェーズ
+            currentBar.color = Color.yellow;
+
+            // フェーズ終了
+            if (progress <= 0f)
+            {
+                break;
+            }
+
+            yield return null;
+        }
+
+        ClearCurrentBar();
+    }
+}
+
+/*
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -141,3 +340,4 @@ public class PhaseBarUI : MonoBehaviour
         }
     }
 }
+*/

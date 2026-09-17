@@ -42,6 +42,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
             case GameState.GameOver:
                 OnGameOverChanged(); break;
             case GameState.Initializing:
+            case GameState.Home:
                 OnGameReset(); break;
             default: break;
         }
@@ -53,7 +54,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
 
     void Broken()
     {
-        Debug.Log("Crystal Broken");
+        LogScope.Log("Crystal Broken");
 
         PlaySound();
         PlayEffect();
@@ -95,7 +96,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
     IEnumerator AnimationCoroutine()
     {
         // 今は簡易（後でここにアニメーション入れる）
-        yield return new WaitForSeconds(0.2f);
+        yield return WaitForSecondsCache.Get(0.2f);
 
         if (crystal != null)
         {
@@ -137,7 +138,7 @@ public class Crystal : MonoBehaviour,IDamageReciever
 
     void Restore()
     {
-        Debug.Log("Crystal Restore");
+        LogScope.Log("Crystal Restore");
 
         StopAllCoroutines();
 

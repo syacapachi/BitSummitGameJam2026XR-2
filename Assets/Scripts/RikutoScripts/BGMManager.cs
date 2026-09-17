@@ -13,7 +13,6 @@ public class BGMManager : MonoBehaviour
     [SerializeField] GameStateEvent OnGameStateChangeRpcEvent;
     [SerializeField] BoolEvent WarningStateEvent;
     private AudioClip currentClip;
-    bool playFastNext = false;
     bool isWarning = false;
 
     public void PlayBGM(AudioClip clip, bool loop)

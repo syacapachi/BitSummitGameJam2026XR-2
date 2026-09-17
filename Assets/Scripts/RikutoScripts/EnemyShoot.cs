@@ -39,17 +39,16 @@ public class EnemyShoot : GunController
     }
     private IEnumerator ShootCorutine()
     {
-        WaitForSeconds wait01 = new(0.1f);
         while (true)
         {
             for (float i = weaponSO.fireInterval; i > 0f; i -= 0.1f)
             {
                 //演出
-                yield return wait01;
+                yield return WaitForSecondsCache.Get(0.1f);
             }
             Shoot();
             //打った後の待機時間
-            yield return wait01;
+            yield return WaitForSecondsCache.Get(0.1f);
         }
     }
 
